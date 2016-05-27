@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Cancer subclone Inference function\n#'\n#' @param dat A list of data frame for each patient containing the total copy number \\code{tcn}, the mirrored B allele fraction \\code{dh}.\n#' @param lambda1.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the minor copy number dimension\n#' @param lambda2.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the major copy number dimension\n#' @param nb.arch A vector of integers which is the number of archetypes in the model\n#' @param stat\n#' @return A list of archetypes (\\code{Z} the total copy number matrix,\\code{Z1} the minor copy number matrix and \\code{Z2} the major copy number matrix), matrix weight \\code{W} and the reconstructed minor and major copy numbers.\n#' @examples\n#' dataAnnotTP <- loadCnRegionData(dataSet=\"GSE11976\", tumorFrac=1)\n#' dataAnnotN <- loadCnRegionData(dataSet=\"GSE11976\", tumorFrac=0)\n#' len <- 500*10\n#' nbClones <- 3\n#' bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)\n#' regions <-list(c(\"(0,3)\", \"(0,2)\",\"(1,2)\"), c(\"(1,1)\", \"(0,1)\",\"(1,1)\"), c(\"(0,2)\", \"(0,1)\",\"(1,1)\"))\n#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)\n#' M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)\n#' dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)\n#' casResC1C2 <- InCaSCN(dat)\n#' casRes <- InCaSCN(dat, stat=\"TCN\")\n#' @export\nInCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat=\"C1C2\"){\n  if(is.null(lambda1.grid)){\n    lambda1.grid <- seq(from=1e-6, to=1e-5, length=10)\n      }\n  if(is.null(lambda2.grid)){\n    lambda2.grid <- seq(from=1e-6, to=1e-5, length=10)\n  }\n  n <- length(dat)\n  resSegmentation <- segmentData(dat, stat=stat)\n # pca.res <- PCA(resSegmentation$Y, graph=FALSE)\n#  pp <- min(min(which(diff(pca.res$eig[[3]])<1e-3)), round(n/2))\n  bkpList <- resSegmentation$bkp\n  ### To do : parallel on l1\n  reslist <- list()\n  BICp <- 1e8\n  ##print(sprintf(\"nb.arch=%s\",pp))\n  cond <- TRUE\n  it <- 1\n  pp <- nb.arch.grid[it]\n  while(cond){\n    print(pp)\n    BICp <- 1e8\n    for(l1 in lambda1.grid){\n      if(stat==\"C1C2\"){\n        Y1 <- t(resSegmentation$Y1)\n        Y2 <- t(resSegmentation$Y2)\n        for(l2 in lambda2.grid){\n          res <- InCaSCN:::positive.fused(Y1,Y2, pp, lambda1 = l1, lambda2 = l2)\n          loss <- sum(((Y1+Y2)-(res$Y.hat$Y1+res$Y.hat$Y2))^2)\n          kZ <- sum(apply(res$Z, 2, diff)!=0)\n          BIC <-  n*pp*log(loss/(n*pp))+kZ*log(n*pp)\n          PVE <- 1-loss/(sum(((Y1+Y2)-rowMeans(Y1+Y2))^2))\n          if(BIC<BICp){\n            res.l <- list(BIC=BIC, PVE=PVE, res=res, param=list(nb.arch=pp, lambda1=l1, lamda2=l2), bkp=bkpList)\n            BICp <- BIC\n          }\n        }\n      }else{\n        Y <- t(resSegmentation$Y)\n        res <- InCaSCN:::positive.fused(Y, Y2=NULL, nb.arch=pp, lambda1 = l1)\n        loss <- sum((Y-(res$Y.hat$Y1))^2)\n        kZ <- sum(apply(res$Z, 2, diff)!=0)\n        BIC <-  n*pp*log(loss/(n*pp))+kZ*log(n*pp)\n        PVE <- 1-loss/(sum((Y-rowMeans(Y))^2))\n        if(BIC<BICp){\n          res.l <- list(BIC=BIC, PVE=PVE, res=res, param=list(nb.arch=pp, lambda1=l1), bkp=bkpList)\n          BICp <- BIC\n        }\n      }\n    }\n  reslist[[it]] <- res.l\n  it <- it+1\n  pp <- nb.arch.grid[it]\n  cond <- (sum(apply(res.l$res$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0&sum(apply(res.l$res$W, 2,function(ww) (sum(ww^2)<1e-3)))==0&pp<max(nb.arch.grid))\n  }\n  return(reslist)\n}\n",
+    "created" : 1461594930856.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2828223952",
+    "id" : "1B6140FF",
+    "lastKnownWriteTime" : 1463493040,
+    "last_content_update" : 1463493040680,
+    "path" : "~/Documents/PhD/jointSeg/dev/archetypesC1C2/package/InCaSCN/R/InCaSCN.R",
+    "project_path" : "R/InCaSCN.R",
+    "properties" : {
+        "docOutlineVisible" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

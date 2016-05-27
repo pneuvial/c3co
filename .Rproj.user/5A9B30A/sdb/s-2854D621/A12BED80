@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "get.Z <- function(W, Y1, Y2=NULL, lambda1, lambda2) {\n  L <- ncol(Y1); p <- ncol(W)\n  Dm1 <- -bandSparse(L,L,k=0:(L-1))\n  X <- kronecker(Dm1,W)\n\n  z1.tilde <- glmnet(X,c(Y1), lambda=lambda1, intercept=F, standardize = FALSE)$beta\n  Z1 <- apply(matrix(z1.tilde,L,p,byrow=TRUE), 2, function(z) -rev(cumsum(rev(z))))\n  ## sanity check : check if z1>0\n  Z1 <- apply(Z1, 2, function(z){\n   ii <- which(z<0)\n   z[ii] <- 0\n   return(z)\n  })\n  if(!is.null(Y2)){\n    z2.tilde <- glmnet(X,c(Y2), lambda=lambda2, intercept=F, standardize = FALSE)$beta\n    Z2 <- apply(matrix(z2.tilde,L,p,byrow=TRUE), 2, function(z) -rev(cumsum(rev(z))))\n    ## sanity check : check if (z2>z1)\n    idx <- 1 : ncol(Z2)\n    Z1 <- sapply(idx, function(ii){\n      jj <- which(Z1[,ii]>Z2[,ii])\n      Z1[jj, ii] <- Z2[jj, ii]\n      return(Z1[,ii])\n    })\n  }else{\n    Z2 <- NULL\n  }\n\n  return(list(Z1=Z1,Z2=Z2))\n}\n",
+    "created" : 1462372979133.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "157499161",
+    "id" : "A12BED80",
+    "lastKnownWriteTime" : 1462804157,
+    "last_content_update" : 1462804157566,
+    "path" : "~/Documents/PhD/jointSeg/dev/archetypesC1C2/package/InCaSCN/R/getZ.R",
+    "project_path" : "R/getZ.R",
+    "properties" : {
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
