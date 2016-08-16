@@ -28,70 +28,79 @@
 #' lambda <- 1e-5
 #' rC1C2 <- InCaSCN:::positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda)
 #' rTCN <- InCaSCN:::positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
-positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2,
+positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random,
                            eps = 1e-2, max.iter = 50, verbose=F) {
 
-    ## problem dimensions
-    n <- nrow(Y1) # number of individuals
-    L <- ncol(Y1) # number of loci
+  ## problem dimensions
+  n <- nrow(Y1) # number of individuals
+  L <- ncol(Y1) # number of loci
 
-    ## _______________________________________________________
-    ## STEP 0: INITIALIZATION
-    ## Under recommandations of NMF and Archetypal analysis random initialization to find the global minimum.
-    if(is.null(Y2)){
-      Y=Y1
+  ## _______________________________________________________
+  ## STEP 0: INITIALIZATION
+  ## Under recommandations of NMF and Archetypal analysis random initialization to find the global minimum.
+  if(is.null(Y2)){
+    Y=Y1
+  }else{
+    Y=Y1+Y2
+  }
+  if(!init.random){
+    ## initializing Z by clustering on Y
+    cluster <- cutree(hclust(dist(Y),method="ward.D"), nb.arch)
+    ## averaging the Y over the clusters to initialize the archetypes
+    Z1.init <- sapply(split(as.data.frame(Y1), cluster), colMeans)
+    if(!is.null(Y2)){
+      Z2.init <- sapply(split(as.data.frame(Y2), cluster), colMeans)
     }else{
-      Y=Y1+Y2
+      Z2.init <- NULL
     }
-    ## initializing Z by clustering on PCA
-      cluster <- HCPC(PCA(Y, graph=FALSE), nb.clust=nb.arch, graph=FALSE)$data.clust$clust
+    Z <- list(Z1 = Z1.init, Z2 = Z2.init)
+  }else{
+    i <- sample(1:n,nb.arch)
+    Z1.init <- Y1[i,]
+     if(!is.null(Y2)){
+      Z2.init <- Y2[i]
+    }else{
+      Z2.init <- NULL
+    }
+  }
+  
+  ## main loop for alternate optimization
+  iter <- 0
+  cond <- FALSE
+  delta <- Inf
+  min.loss <- 1e5
+  while(!cond) {
+    iter <- iter + 1
+    if(verbose) cat("\niter number ",iter)
+    ## __________________________________________________
+    ## STEP 1: optimize over W (fixed Z1, Z2)
+    W <- get.W(rbind(Z$Z1,Z$Z2), cbind(Y1,Y2))
+    ## __________________________________________________
+    ## STEP 2: optimize over Z (fixed W)
+    Z <- get.Z(W, Y1, Y2, lambda1, lambda2)
+    ## __________________________________________________
+    ## STEP 3: check for convergence of the weights
+    if (iter>1) {delta <- sqrt(sum((W-W.old)^2))}
 
-      ## averaging the Y over the clusters to initialize the archetypes
-      Z1.init <- sapply(split(as.data.frame(Y1), cluster), colMeans)
-      if(!is.null(Y2)){
-        Z2.init <- sapply(split(as.data.frame(Y2), cluster), colMeans)
-      }else{
-        Z2.init <- NULL
-      }
-      Z <- list(Z1 = Z1.init, Z2 = Z2.init)
+    cond <- (iter > max.iter | delta < eps)
 
-      ## main loop for alternate optimization
-      iter <- 0
-      cond <- FALSE
-      delta <- Inf
-      min.loss <- 1e5
-      while(!cond) {
-          iter <- iter + 1
-          if(verbose) cat("\niter number ",iter)
-          ## __________________________________________________
-          ## STEP 1: optimize over W (fixed Z1, Z2)
-          W <- get.W(rbind(Z$Z1,Z$Z2), cbind(Y1,Y2))
-          ## __________________________________________________
-          ## STEP 2: optimize over Z (fixed W)
-          Z <- get.Z(W, Y1, Y2, lambda1, lambda2)
-          ## __________________________________________________
-          ## STEP 3: check for convergence of the weights
-          if (iter>1) {delta <- sqrt(sum((W-W.old)^2))}
+    if(verbose) cat("\ndelta =",round(delta, 4))
+    W.old <- W
+  }
+  if(!is.null(Y2)){
+    loss <- (sum((Y1-W %*% t(Z$Z1))^2)+sum((Y2-W %*% t(Z$Z2))^2))/(n*L)
+  }else{
+    loss <- (sum((Y1-W %*% t(Z$Z1))^2))/(n*L)
+  }
+  if(loss<min.loss){
+    if(!is.null(Y2)){
+      res <- list(Z=Z$Z1+Z$Z2, Z1=Z$Z1, Z2=Z$Z2, W=W, Y.hat=list(Y1 = W %*% t(Z$Z1), Y2 = W %*% t(Z$Z2)))
+    }else{
+      res <- list(Z=Z$Z1, Z1=Z$Z1, Z2=Z$Z2, W=W, Y.hat=list(Y1 = W %*% t(Z$Z1), Y2 = NULL))
+    }
+    min.loss <- loss
+  }
+  if(verbose) cat("\nDONE!\n")
 
-          cond <- (iter > max.iter | delta < eps)
-
-          if(verbose) cat("\ndelta =",round(delta, 4))
-          W.old <- W
-      }
-      if(!is.null(Y2)){
-        loss <- (sum((Y1-W %*% t(Z$Z1))^2)+sum((Y2-W %*% t(Z$Z2))^2))/(n*L)
-      }else{
-        loss <- (sum((Y1-W %*% t(Z$Z1))^2))/(n*L)
-      }
-      if(loss<min.loss){
-        if(!is.null(Y2)){
-          res <- list(Z=Z$Z1+Z$Z2, Z1=Z$Z1, Z2=Z$Z2, W=W, Y.hat=list(Y1 = W %*% t(Z$Z1), Y2 = W %*% t(Z$Z2)))
-        }else{
-          res <- list(Z=Z$Z1, Z1=Z$Z1, Z2=Z$Z2, W=W, Y.hat=list(Y1 = W %*% t(Z$Z1), Y2 = NULL))
-        }
-        min.loss <- loss
-      }
-      if(verbose) cat("\nDONE!\n")
-
-    return(res)
+  return(res)
 }

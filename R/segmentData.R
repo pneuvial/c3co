@@ -32,7 +32,7 @@ segmentData <- function(dat, stat="C1C2"){
   for(cc in chrs){
     print(sprintf("chr %s", cc))
     ww <- which(dat[[1]]$chr==cc)
-    ### Segmentation step on TCN and DH
+### Segmentation step on TCN and DH
     print("segmentation step")
     resSeg <- jointSeg(Y=dataToSeg[ww,],K=100, modelSelectionMethod="Birge")
     print("end segmentation")
@@ -75,24 +75,24 @@ segmentData <- function(dat, stat="C1C2"){
       Y1 <- rbind(Y1, binDatC1withoutNA)
       Y2 <- rbind(Y2, binDatC2withoutNA)
       Y <- Y1+Y2
-  }else{
-    binDatC <- matrix(NA_real_, nrow=length(xOut)-1, ncol=nrow(YTCNtoSeg))
-    for (bb in 1:nrow(YTCNtoSeg)) {
-      means <- matrixStats::binMeans(y=YTCNtoSeg[bb, ww], x=pos, bx=xOut, na.rm=TRUE)
-      binDatC[, bb] <- means
-    }
-    idxNA <- sort(unique(unlist(apply(cbind(binDatC), 2, function(ll) which(is.na(ll))))))
-    if(length(idxNA)){
-      binDatCwithoutNA <- binDatC[-idxNA,]
-      bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
     }else{
-      bkpPosByCHR[[cc]] <- bkpPos
-      binDatCwithoutNA <- binDatC
-    }
-    ## Define Y1 and Y2
-    Y <- rbind(Y, binDatC)
-    Y1 <- NA
-    Y2 <- NA
+      binDatC <- matrix(NA_real_, nrow=length(xOut)-1, ncol=nrow(YTCNtoSeg))
+      for (bb in 1:nrow(YTCNtoSeg)) {
+        means <- matrixStats::binMeans(y=YTCNtoSeg[bb, ww], x=pos, bx=xOut, na.rm=TRUE)
+        binDatC[, bb] <- means
+      }
+      idxNA <- sort(unique(unlist(apply(cbind(binDatC), 2, function(ll) which(is.na(ll))))))
+      if(length(idxNA)){
+        binDatCwithoutNA <- binDatC[-idxNA,]
+        bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
+      }else{
+        bkpPosByCHR[[cc]] <- bkpPos
+        binDatCwithoutNA <- binDatC
+      }
+      ## Define Y1 and Y2
+      Y <- rbind(Y, binDatC)
+      Y1 <- NA
+      Y2 <- NA
     }
   }
   return(list(Y1=Y1, Y2=Y2, Y=Y, bkp=bkpPosByCHR))
