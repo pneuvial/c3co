@@ -53,17 +53,16 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random,
     }else{
       Z2.init <- NULL
     }
-    Z <- list(Z1 = Z1.init, Z2 = Z2.init)
   }else{
-    i <- sample(1:n,nb.arch)
-    Z1.init <- Y1[i,]
-     if(!is.null(Y2)){
-      Z2.init <- Y2[i]
+    i <- sample(1:n,nb.arch, replace=FALSE)
+    Z1.init <- t(Y1[i,])
+    if(!is.null(Y2)){
+      Z2.init <- t(Y2[i,])
     }else{
       Z2.init <- NULL
     }
   }
-  
+  Z <- list(Z1 = Z1.init, Z2 = Z2.init)
   ## main loop for alternate optimization
   iter <- 0
   cond <- FALSE
