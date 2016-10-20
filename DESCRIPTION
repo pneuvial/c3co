@@ -4,7 +4,7 @@ Title: InCaS-cn : Inferring Cancer Subclones using copy-number
 Version: 0.1.4
 Author: Morgane Pierre-Jean, Julien Chiquet, Pierre Neuvial
 Maintainer: Morgane Pierre-Jean <morgane.pierrejean@genopole.cnrs.fr>
-Description: This package attempt to recover subclones in tumor using the copy
+Description: This package attempts to recover subclones in tumor using the copy
     number of several patients or several time events from a same patient.
 License: What license is it under?
 LazyData: TRUE
