@@ -1,5 +1,7 @@
 ---
 title: "InCaSCN"
+author: "Morgane Pierre-Jean and Pierre Neuvial"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
@@ -8,60 +10,52 @@ vignette: >
 ---
 
 ## Introduction
+
 This document provides a brief tutorial on using the InCaSCN package, which implements a constraint dictionary learning problem to recover subclones across several patients with SNP data. The InCaSCN model is designed to identify regions of copy number variation (CNV) in multi-sample SNPs data. In particular, it takes advantage of any
 similarities shared among samples while maintaining the ability to identify any potential heterogeneity by using parental copy number signals. The model is decribed in details below
 
 ## Model 
-We model for minor and major DNA copy number profiles, denoted respectively by \(y^1_{i\bullet}\) and \(y^2_{i\bullet}\), as
-\begin{eqnarray}
-  y_{ils}&=&\sum_{k=1}^{p} w_{ik}z_{kls}+\epsilon_{is} \quad for \quad s=1,2 \,,\quad  and \quad l=1,\dots L\,,\label{eq:minor-maj} 
-\end{eqnarray}
-where $z_{kl1}$ is the minor copy number for $k$-th subclone at location $l$, $z_{kl2}$ is the major copy number for $k$-th subclone and location $l$, and $w_{ik}$ is the weight associated to sample $i$ and subclone $k$ . The weights are assumed to be the same for minor and major copy numbers, as these weights correspond to the proportion of each subclone. Therefore, summing \eqref{eq:minor-maj} for $s=1$ and $s=2$, we recover the latent model \ref{eq:tcn}.%, with $y_{i\bullet} = y^1_{i\bullet} + y^2_{i\bullet}$.
-To fit model \ref{eq:minor-maj}, we estimate $W$, $Z^1$ and $Z^2$ by minimizing gaussian errors for $s=1,2$:
-\begin{eqnarray}
-  \displaystyle\sum_{s=1}^2 F(W,Z_s)&=&\displaystyle\sum_{s=1}^S \sum_{i=1}^n\sum_{l=1}^{L}\left(y_{ils} - \displaystyle\sum_{k=1}^{p} w_{ik}z_{kls}\right)^2
-\end{eqnarray}
-We constraint each subclone \(Z_1\) and \(Z_2\) to have only few breakpoints, this implies that subclones need to be piecewise constant in order to be interpreted easier (few alterations). Meaning of weights is also important, indeed, we can see them as
-proportion of subclones (heterogeneity components) which composes tumor samples, then their sum
-needs to be equal to one for each profile \(i\) and all coefficients
-need to be positive.
-\cite{neuvial11statistical}
 
-General model of the minor and major copy number can be written as follows:
+The figure below illustrates the model used in the InCaS-CN package. Two heterogeneous tumor samples (green and yellow circles) are composed of a collection of normal cells (gray discs) and two cancer subclones (red triangles and blue squares). One of the cancer subclones is present in both tumor samples. 
 
-\begin{multline}
-  \label{eq:original_problem}
-     \text{argmin}_{w_{ik}\geq 0, z_{k\ell},Z_s}  \displaystyle\sum_{s=1}^S \left( F(W,Z_s)+ \lambda_s\sum_{k=1}^{p} \sum_{l=1}^{m-1}  \vert z_{kl+1s}-z_{kls}\vert\right)\\
- \text{s.t.} \quad \sum_{k=1}^p w_{ik} = 1, \forall i=1,\dots,n.
-\end{multline}
-where $p$  is a  user-defined number of  archetype for  the dictionary
-$\left\lbrace z_{k\ell  s}\right\rbrace$.
-Note that, the optimal penalty coefficients can be different for the minor and the major copy part. Indeed, the scales of the two dimensions $(y_1,y_2)$ are not the same. In addition, breakpoints could occur more often in one of the minor or the major copy number signal than in the other one.
+![](img/features.png)
+![](img/features2.png)
+
+The corresponding (noiseless) copy number profiles are displayed in the figure below. They are given by a linear combination of the latent profiles. This Figure is adapted from \cite{nowak2011fused}. [REF]
+
+![](img/model.png)
+![](img/model2.png)
 
 
-## Using InCaSCN package
+## Using the package
 ```{r, echo=F, message=FALSE,warning=FALSE}
-library(InCaSCN)
-library(ggplot2)
+library("InCaSCN")
+library("ggplot2")
 
 set.seed(10)
 ```
 
-### Create Simulations
-This package permits to create artificial dataset from real data. 
-The first step is to load an annotated dataset (there exists two in this package). Then, after defining characteristics, we can create subclones.
+### Creating a synthetic data set
+
+We start by defining the characteristics of the subclone profiles: length, number of subclones, breakpoint positions, and copy number states:
 
 ```{r}
-dataAnnotTP <- loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-dataAnnotN <- loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
 bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
 regions <-list(c("(0,1)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+```
+
+Then, we load an annotated data set from the `acnr` package [REF].  The `buildSubclones` function can then be used to generate the subclone profiles with the above characteristics, by resampling from the annotated data set.
+
+```{r}
+dataAnnotTP <- loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
+dataAnnotN <- loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 ```
  
- Example with the second dataset.
+The same can be done using another data set from the `acnr` package:
+
  
 ```{r}
 dataAnnotTP <- loadCnRegionData(dataSet="GSE13372", tumorFraction=1)
@@ -69,7 +63,7 @@ dataAnnotN <- loadCnRegionData(dataSet="GSE13372", tumorFraction=0)
 datSubClone2 <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 ```
 
-```{r, echo=F}
+```{r, echo=FALSE}
 cols <- c("#00000033", "#FD6C9E33", "#00000033")
 plot(datSubClone[[1]]$ct, col=cols[factor(datSubClone[[1]]$genotype)], cex=0.3, pch=19, ylab="TCN",ylim=c(0,4))
 plot(datSubClone2[[1]]$ct, col=cols[factor(datSubClone2[[1]]$genotype)], cex=0.3, pch=19, ylab="TCN",ylim=c(0,4))
@@ -77,9 +71,9 @@ plot(datSubClone[[1]]$baft, col=cols[factor(datSubClone[[1]]$genotype)], cex=0.3
 plot(datSubClone2[[1]]$baft, col=cols[factor(datSubClone2[[1]]$genotype)], cex=0.3, pch=19, ylab="BAF",ylim=c(-0.1,1.1))
 ```
 
-Once subclones are created, it is also easy to generate a matrix $W$ in order to build mixtures.
+Once subclones are created, we can generate a matrix $W$ in order to build mixtures.
 
-```{r, warning=F, cache=FALSE}
+```{r, warning=FALSE, cache=FALSE}
 W = getWeightMatrix(70,30, nb.arch = 3, nb.samp = 20)
 dat <- apply(W, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
 str(dat[[1]])
@@ -89,9 +83,9 @@ Note that dat is a list of data frame with the following necessary columns : ```
 
 ### Run InCaSCN model
 
-Then it is easy to run InCaSCN model on the data. Let choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
+Then the InCaSCN method can be appluied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
 
-```{r INCASCN, warning=F}
+```{r INCASCN, warning=FALSE}
 lambda1.grid <- lambda2.grid <- c(0.005,0.001)
 casRes <- InCaSCN(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6)
 casResTCN <- InCaSCN(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6, stat="TCN")
@@ -109,7 +103,9 @@ result.pveTCN <- sapply(casResTCN, function(cc) cc$PVE)
 dataPVETCN <- data.frame(nb.subclones=sapply(casResTCN, function(cc) cc$param$nb.arch), pve=result.pveTCN)
 ggplot(dataPVETCN)+geom_line(aes(nb.subclones, pve))+geom_point(aes(nb.subclones, pve))+xlab("Number of subclones")+ylab("PVE")+ylim(c(0.8,1))+theme_bw()
 ```
+
 We can compare the true and the estimated matrices of the weights. Even if the computation is not perfect, we can easily recover a classification close to the truth with the inferred weight matrix. 
+
 ```{r, echo=FALSE}
 ## trim.heatmap
 trim.heatmap <- function(data,trim){
@@ -588,16 +584,19 @@ str(casRes[[idxBestC1C2]])
 res.clustC1C2 = hclust(dist(casRes[[idxBestC1C2]]$res$W),method="ward.D")
 res.clustTCN = hclust(dist(casResTCN[[idxBestTCN]]$res$W),method="ward.D")
 res.clustTRUE = hclust(dist(cbind(W, 100-rowSums(W))),method="ward.D")
-library(RColorBrewer)
+library("RColorBrewer")
 col = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 	      
-heatmap.3(casRes[[idxBestC1C2]]$res$W*100, dendrogram="row", main="C1C2",Rowv=as.dendrogram(res.clustC1C2),col=col, scale="none")
+#figure margins too large
+#heatmap.3(casRes[[idxBestC1C2]]$res$W*100, dendrogram="row", main="C1C2",Rowv=as.dendrogram(res.clustC1C2),col=col, scale="none")
 ```
 ```{r heatmap_TCN,echo=FALSE,message=FALSE}
-heatmap.3(casResTCN[[idxBestTCN]]$res$W*100, dendrogram="row", main="TCN",Rowv=as.dendrogram(res.clustTCN), col=col,scale="none")
+#figure margins too large
+#heatmap.3(casResTCN[[idxBestTCN]]$res$W*100, dendrogram="row", main="TCN",Rowv=as.dendrogram(res.clustTCN), col=col,scale="none")
 ```
 ```{r heatmap_TRUE,echo=FALSE,message=FALSE}
-heatmap.3(cbind(W, 100-rowSums(W)), dendrogram="row", main="TRUE",Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
+#figure margins too large
+#heatmap.3(cbind(W, 100-rowSums(W)), dendrogram="row", main="TRUE",Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
 ```
 
 
