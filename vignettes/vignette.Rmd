@@ -106,7 +106,7 @@ ggplot(dataPVETCN)+geom_line(aes(nb.subclones, pve))+geom_point(aes(nb.subclones
 
 We can compare the true and the estimated matrices of the weights. Even if the computation is not perfect, we can easily recover a classification close to the truth with the inferred weight matrix. 
 
-```{r heatmap_C1C2, fig.width=5}
+```{r heatmap_C1C2, fig.width=7, fig.height=5}
 idxBestC1C2 <- min(which(diff(result.pve)<1e-1))+1
 idxBestTCN <- min(which(diff(result.pveTCN)<1e-1))+1
 str(casRes[[idxBestC1C2]])
@@ -116,15 +116,12 @@ res.clustTRUE = hclust(dist(cbind(W, 100-rowSums(W))),method="ward.D")
 library("RColorBrewer")
 col = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 	      
-#figure margins too large
 heatmap.3(casRes[[idxBestC1C2]]$res$W*100, dendrogram="row", main="C1C2",Rowv=as.dendrogram(res.clustC1C2),col=col, scale="none")
 ```
-```{r heatmap_TCN, fig.width=5}
-#figure margins too large
+```{r heatmap_TCN, fig.width=7, fig.height=5}
 heatmap.3(casResTCN[[idxBestTCN]]$res$W*100, dendrogram="row", main="TCN",Rowv=as.dendrogram(res.clustTCN), col=col,scale="none")
 ```
-```{r heatmap_TRUE, fig.width=5}
-#figure margins too large
+```{r heatmap_TRUE, fig.width=7, fig.height=5}
 heatmap.3(cbind(W, 100-rowSums(W)), dendrogram="row", main="TRUE",Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
 ```
 
