@@ -28,7 +28,7 @@
 #' lambda <- 1e-5
 #' rC1C2 <- InCaSCN:::positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda)
 #' rTCN <- InCaSCN:::positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
-positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random,
+positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
                            eps = 1e-2, max.iter = 50, verbose=F) {
 
   ## problem dimensions

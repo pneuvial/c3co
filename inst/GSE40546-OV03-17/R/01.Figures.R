@@ -4,9 +4,9 @@ library(GEOquery)
 library(RColorBrewer)
 library(aroma.cn)
 library(gridExtra)
-source("R/heatmap.3.R")
-source("R/01.loadData.R")
 
+
+output.dir <- "resultsInCaSCN-OV03-17"
 resInC <- list.files(output.dir, pattern="featureData")
 resInCaSCN <- lapply(file.path(output.dir, resInC), readRDS)
 
@@ -38,19 +38,7 @@ chrs <- rep(1:22, times=lengthCHR)
 
 
 ## See aroma project for details
-minMaxPos <- do.call(rbind, lapply(1:22, function(chromosome){
-  chrTag <- sprintf("Chr%s", chromosome)
-  units <- getUnitsOnChromosome(ugp, chromosome=chromosome)
-  platform <- getPlatform(ugp)
-  unf <- getUnitNamesFile(ugp)
-  unitNames <- getUnitNames(unf, units=units)
-  ## Identify SNP units
-  snpPattern <- "^SNP"
-  keep <- (regexpr(snpPattern, unitNames) != -1)
-  units <- units[keep]
-  pos <- getPositions(ugp, units=units)
-  return(list(chr=chromosome, minPos=min(pos), maxPos=max(pos)))
-}))
+minMaxPos <- readRDS(sprintf("%s/positionsByCHR.rds", output.dir))
 
 start <- c(1,cumsum(lengthCHR)+1)
 df.CHR <- do.call(rbind, lapply(seq(along=lengthCHR), function(cc){
