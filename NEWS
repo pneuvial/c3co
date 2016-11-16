@@ -1,6 +1,10 @@
 Package: InCaSCN
 =================
-Version: 0.1.4 [2016-16-08]
+Version: 0.1.5 [2016-11-16]
+o Updated vignette
+o Added a minimal test script (from main function example)
+
+Version: 0.1.4 [2016-08-16]
 o Bug fixed to initialize algorithm with random rows of Y
 o Bug correction if dat is not provided but only the segment data 
 

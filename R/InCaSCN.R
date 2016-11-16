@@ -21,8 +21,10 @@
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 #' M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
 #' dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
-#' casResC1C2 <- InCaSCN(dat)
-#' casRes <- InCaSCN(dat, stat="TCN")
+#' l1 <- seq(from=1e-6, to=1e-5, length=3)
+#' l2 <- seq(from=1e-6, to=1e-5, length=3)
+#' casResC1C2 <- InCaSCN(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+#' casRes <- InCaSCN(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 #' @export
 InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2",output.dir="resultsInCaSCN", segment=TRUE,forceSeg=FALSE,forceInferrence=FALSE, init.random=FALSE){
   if(is.null(lambda1.grid)){
@@ -46,7 +48,7 @@ InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(l
   }
                                         # pca.res <- PCA(resSegmentation$Y, graph=FALSE)
                                         #  pp <- min(min(which(diff(pca.res$eig[[3]])<1e-3)), round(n/2))
-  
+
   reslist <- list()
   BICp <- 1e8
   ##print(sprintf("nb.arch=%s",pp))
@@ -70,7 +72,7 @@ InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(l
             Y2 <- YTCNtoSeg*(1+YDHtoSeg)/2
           }
           for(l2 in lambda2.grid){
-            n <- ncol(Y1)         
+            n <- ncol(Y1)
             res <- InCaSCN:::positive.fused(Y1,Y2, pp, lambda1 = l1, lambda2 = l2,init.random)
             loss <- sum(((Y1+Y2)-(res$Y.hat$Y1+res$Y.hat$Y2))^2)
             kZ <- sum(apply(res$Z, 2, diff)!=0)
@@ -84,11 +86,11 @@ InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(l
         }else{
           if(segment){
             Y <- t(resSegmentation$Y)
-            
+
           }else{
             Y <- t(sapply(dat, function(cc) cc$tcn))
           }
-          n <- ncol(Y)  
+          n <- ncol(Y)
           res <- InCaSCN:::positive.fused(Y, Y2=NULL, nb.arch=pp, lambda1 = l1,init.random)
           loss <- sum((Y-(res$Y.hat$Y1))^2)
           kZ <- sum(apply(res$Z, 2, diff)!=0)

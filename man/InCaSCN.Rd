@@ -5,7 +5,9 @@
 \title{Cancer subclone Inference function}
 \usage{
 InCaSCN(dat, lambda1.grid = NULL, lambda2.grid = NULL,
-  nb.arch.grid = 2:(length(dat) - 1), stat = "C1C2")
+  nb.arch.grid = 2:(length(dat) - 1), stat = "C1C2",
+  output.dir = "resultsInCaSCN", segment = TRUE, forceSeg = FALSE,
+  forceInferrence = FALSE, init.random = FALSE)
 }
 \arguments{
 \item{dat}{A list of data frame for each patient containing the total copy number \code{tcn}, the mirrored B allele fraction \code{dh}.}
@@ -13,6 +15,18 @@ InCaSCN(dat, lambda1.grid = NULL, lambda2.grid = NULL,
 \item{lambda1.grid}{A grid of real numbers which is the penalty coefficients for the fused lasso on the minor copy number dimension}
 
 \item{lambda2.grid}{A grid of real numbers which is the penalty coefficients for the fused lasso on the major copy number dimension}
+
+\item{stat}{TCN or C1C2}
+
+\item{output.dir}{directory to save segmentation and feature data}
+
+\item{segment}{By defaut \code{TRUE} (segment data before inferring features)}
+
+\item{forceSeg}{\code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileSeg="segData.rds"} already exists in \code{output.dir}}
+
+\item{forceInferrence}{\code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileFeat=featureData,p=p.rds} already exists in \code{output.dir}}
+
+\item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering}
 
 \item{nb.arch}{A vector of integers which is the number of archetypes in the model}
 }
@@ -32,7 +46,9 @@ regions <-list(c("(0,3)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"), c("(0,2
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
 dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
-casResC1C2 <- InCaSCN(dat)
-casRes <- InCaSCN(dat, stat="TCN")
+l1 <- seq(from=1e-6, to=1e-5, length=3)
+l2 <- seq(from=1e-6, to=1e-5, length=3)
+casResC1C2 <- InCaSCN(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+casRes <- InCaSCN(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 }
 

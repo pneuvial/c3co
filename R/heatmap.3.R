@@ -1,4 +1,5 @@
-## trim.heatmap
+## Source: Benjamin Sadacca, Institut Curie
+## ## trim.heatmap
 trim.heatmap <- function(data,trim){
 ## 	data <- data - mean(data, na.rm = TRUE)
  	data = t(scale(t(data)))
@@ -12,7 +13,7 @@ trim.heatmap <- function(data,trim){
 	return(data)
 }
 
-
+#' @export
 heatmap.3 <- function(x,
                       Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
                       distfun = dist,

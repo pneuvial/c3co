@@ -4,8 +4,8 @@
 \alias{positive.fused}
 \title{Positive fused lasso function}
 \usage{
-positive.fused(Y1, Y2, nb.arch, lambda1, lambda2, eps = 0.01, max.iter = 50,
-  verbose = F)
+positive.fused(Y1, Y2, nb.arch, lambda1, lambda2, init.random = FALSE,
+  eps = 0.01, max.iter = 50, verbose = F)
 }
 \arguments{
 \item{Y1}{A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)}

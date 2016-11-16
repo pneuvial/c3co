@@ -3,4 +3,5 @@
 export(InCaSCN)
 export(buildSubclones)
 export(getWeightMatrix)
+export(heatmap.3)
 export(mixSubclones)
