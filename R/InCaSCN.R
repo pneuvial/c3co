@@ -12,8 +12,8 @@
 #' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering
 #' @return A list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
 #' @examples
-#' dataAnnotTP <- loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-#' dataAnnotN <- loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
+#' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
+#' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 3
 #' bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
@@ -33,7 +33,7 @@ InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(l
   if(is.null(lambda2.grid)){
     lambda2.grid <- seq(from=1e-6, to=1e-5, length=10)
   }
-  output.dir <- Arguments$getWritablePath(output.dir)
+  output.dir <- R.utils::Arguments$getWritablePath(output.dir)
   if(segment){
     fileSeg <- file.path(output.dir,"segDat.rds")
     if(!file.exists(fileSeg)|| forceSeg){

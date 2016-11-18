@@ -8,15 +8,15 @@
 #' @param regions The list of altered regions by subclones
 #' @return The list of subclone.
 #' @examples
-#' dataAnnotTP <- loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-#' dataAnnotN <- loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
+#' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
+#' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 2
 #' bkps <- list(c(100,250)*10, c(150,400)*10)
 #' regions <-list(c("(0,3)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"))
-#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotTN, nbClones, bkps, regions)
-#' dataAnnotTP <- loadCnRegionData(dataSet="GSE13372", tumorFrac=1)
-#' dataAnnotN <- loadCnRegionData(dataSet="GSE13372", tumorFrac=0)
+#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
+#' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFrac=1)
+#' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 2
 #' bkps <- list(c(100,250)*10, c(150,400)*10)
@@ -41,11 +41,11 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
 
   subClone <- lapply(1:nbClones, function(ii){
     bkpsHet <- sapply(bkps[[ii]],function(bb) max(which(idxAB<=bb)))
-    ssAB <- getCopyNumberDataByResampling(length=length(idxAB), regData=subset(dataAnnot,genotype==0.5) , bkp=bkpsHet, regions=regions[[ii]])$profile
+    ssAB <- jointseg::getCopyNumberDataByResampling(length=length(idxAB), regData=subset(dataAnnot,genotype==0.5) , bkp=bkpsHet, regions=regions[[ii]])$profile
     bkpsAA <- sapply(bkps[[ii]],function(bb) max(which(idxAA<=bb)))
-    ssAA <- getCopyNumberDataByResampling(length=length(idxAA), regData=subset(dataAnnot,genotype==0) , bkp=bkpsAA, regions=regions[[ii]])$profile
+    ssAA <- jointseg::getCopyNumberDataByResampling(length=length(idxAA), regData=subset(dataAnnot,genotype==0) , bkp=bkpsAA, regions=regions[[ii]])$profile
     bkpsBB <- sapply(bkps[[ii]],function(bb) max(which(idxBB<=bb)))
-    ssBB <- getCopyNumberDataByResampling(length=length(idxBB), regData=subset(dataAnnot,genotype==1) , bkp=bkpsBB, regions=regions[[ii]])$profile
+    ssBB <- jointseg::getCopyNumberDataByResampling(length=length(idxBB), regData=subset(dataAnnot,genotype==1) , bkp=bkpsBB, regions=regions[[ii]])$profile
     pos <- c(idxAB, idxAA, idxBB)
 
     ss <- rbind(ssAB, ssAA,ssBB)

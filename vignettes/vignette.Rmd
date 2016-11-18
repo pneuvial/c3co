@@ -31,7 +31,6 @@ The corresponding (noiseless) copy number profiles are displayed in the figure b
 ```{r, echo=F, message=FALSE,warning=FALSE}
 library("InCaSCN")
 library("ggplot2")
-
 set.seed(10)
 ```
 
@@ -49,8 +48,8 @@ regions <-list(c("(0,1)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"), c("(0,2
 Then, we load an annotated data set from the `acnr` package [REF].  The `buildSubclones` function can then be used to generate the subclone profiles with the above characteristics, by resampling from the annotated data set.
 
 ```{r}
-dataAnnotTP <- loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-dataAnnotN <- loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
+dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
+dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 ```
  
@@ -58,8 +57,8 @@ The same can be done using another data set from the `acnr` package:
 
  
 ```{r}
-dataAnnotTP <- loadCnRegionData(dataSet="GSE13372", tumorFraction=1)
-dataAnnotN <- loadCnRegionData(dataSet="GSE13372", tumorFraction=0)
+dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFraction=1)
+dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFraction=0)
 datSubClone2 <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 ```
 
@@ -110,16 +109,13 @@ We can compare the true and the estimated matrices of the weights. Even if the c
 idxBestC1C2 <- min(which(diff(result.pve)<1e-1))+1
 idxBestTCN <- min(which(diff(result.pveTCN)<1e-1))+1
 str(casRes[[idxBestC1C2]])
-res.clustC1C2 = hclust(dist(casRes[[idxBestC1C2]]$res$W),method="ward.D")
-res.clustTCN = hclust(dist(casResTCN[[idxBestTCN]]$res$W),method="ward.D")
 res.clustTRUE = hclust(dist(cbind(W, 100-rowSums(W))),method="ward.D")
 library("RColorBrewer")
 col = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
-	      
-heatmap.3(casRes[[idxBestC1C2]]$res$W*100, dendrogram="row", main="C1C2",Rowv=as.dendrogram(res.clustC1C2),col=col, scale="none")
+Wplot(casRes[[idxBestC1C2]])
 ```
 ```{r heatmap_TCN, fig.width=7, fig.height=5}
-heatmap.3(casResTCN[[idxBestTCN]]$res$W*100, dendrogram="row", main="TCN",Rowv=as.dendrogram(res.clustTCN), col=col,scale="none")
+Wplot(casResTCN[[idxBestTCN]])
 ```
 ```{r heatmap_TRUE, fig.width=7, fig.height=5}
 heatmap.3(cbind(W, 100-rowSums(W)), dendrogram="row", main="TRUE",Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")

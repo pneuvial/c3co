@@ -1,5 +1,6 @@
 #' Positive fused lasso function
 #'
+#' @export
 #' @param Y1 A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)
 #' @param Y2 A matrix containing the segmented major copy number (\code{n} patients in row and \code{L} segments in columns)
 #' @param nb.arch An integer which is the number of archetypes in the model
@@ -7,8 +8,8 @@
 #' @param lambda2 A real number which is the penalty coefficient for the fused lasso on the major copy number dimension
 #' @return The list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
 #' @examples
-#' dataAnnotTP <- loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-#' dataAnnotN <- loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
+#' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
+#' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 3
 #' bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
@@ -19,15 +20,15 @@
 #' YTCNtoSeg <- t(sapply(simu, function(cc) cc$tcn))
 #' YDHtoSeg <- t(sapply(simu, function(cc) cc$dh))
 #' sim <- t(rbind(YTCNtoSeg,YDHtoSeg))
-#' res <- jointSeg(sim, method = "RBS", K=8)
+#' res <- jointseg::jointSeg(sim, method = "RBS", K=8)
 #' bkp <- res$bestBkp
 #' Y1 <- t(sapply(simu, function(cc) cc$c1))
 #' Y2 <-  t(sapply(simu, function(cc) cc$c2))
-#' Y1seg <- t(apply(Y1, 1, binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
-#' Y2seg <- t(apply(Y2, 1, binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
+#' Y1seg <- t(apply(Y1, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
+#' Y2seg <- t(apply(Y2, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
 #' lambda <- 1e-5
-#' rC1C2 <- InCaSCN:::positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda)
-#' rTCN <- InCaSCN:::positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
+#' rC1C2 <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda)
+#' rTCN <- positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
 positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
                            eps = 1e-2, max.iter = 50, verbose=F) {
 

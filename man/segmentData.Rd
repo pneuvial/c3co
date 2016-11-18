@@ -8,6 +8,8 @@ segmentData(dat, stat = "C1C2")
 }
 \arguments{
 \item{dat}{A list of data frame for each patient containing the total copy number \code{tcn}, the mirrored B allele fraction \code{dh} and \code{chr}.}
+
+\item{stat}{"TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.}
 }
 \value{
 Binned Minor and Major copy number with list of breakpoints
@@ -16,8 +18,8 @@ Binned Minor and Major copy number with list of breakpoints
 Segmentation function
 }
 \examples{
-dataAnnotTP <- loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-dataAnnotN <- loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
+dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
+dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
 bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
@@ -25,7 +27,7 @@ regions <-list(c("(0,3)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"), c("(0,2
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
 dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
-res <- InCaSCN:::segmentData(dat)
-res2 <- InCaSCN:::segmentData(dat, stat="TCN")
+res <- segmentData(dat)
+res2 <- segmentData(dat, stat="TCN")
 }
 

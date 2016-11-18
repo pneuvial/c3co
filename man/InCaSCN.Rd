@@ -37,8 +37,8 @@ A list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor 
 Cancer subclone Inference function
 }
 \examples{
-dataAnnotTP <- loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-dataAnnotN <- loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
+dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
+dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
 bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)

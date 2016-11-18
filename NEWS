@@ -1,5 +1,10 @@
 Package: InCaSCN
 =================
+Version: 0.1.6 [2016-11-18]
+o Add plot functions, PSCBS wrapper
+o Add new example on real data set 
+o Remove Depends
+
 Version: 0.1.5 [2016-11-16]
 o Updated vignette
 o Added a minimal test script (from main function example)

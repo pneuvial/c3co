@@ -25,8 +25,8 @@ The list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the mino
 Positive fused lasso function
 }
 \examples{
-dataAnnotTP <- loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-dataAnnotN <- loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
+dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
+dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
 bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
@@ -37,14 +37,14 @@ simu <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
 YTCNtoSeg <- t(sapply(simu, function(cc) cc$tcn))
 YDHtoSeg <- t(sapply(simu, function(cc) cc$dh))
 sim <- t(rbind(YTCNtoSeg,YDHtoSeg))
-res <- jointSeg(sim, method = "RBS", K=8)
+res <- jointseg::jointSeg(sim, method = "RBS", K=8)
 bkp <- res$bestBkp
 Y1 <- t(sapply(simu, function(cc) cc$c1))
 Y2 <-  t(sapply(simu, function(cc) cc$c2))
-Y1seg <- t(apply(Y1, 1, binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
-Y2seg <- t(apply(Y2, 1, binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
+Y1seg <- t(apply(Y1, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
+Y2seg <- t(apply(Y2, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
 lambda <- 1e-5
-rC1C2 <- InCaSCN:::positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda)
-rTCN <- InCaSCN:::positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
+rC1C2 <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda)
+rTCN <- positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
 }
 

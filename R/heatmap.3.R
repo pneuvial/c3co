@@ -13,7 +13,10 @@ trim.heatmap <- function(data,trim){
 	return(data)
 }
 
+#' Heatmap function
+#'
 #' @export
+#' @return A Heatmap
 heatmap.3 <- function(x,
                       Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
                       distfun = dist,
