@@ -31,8 +31,10 @@ Wplot <- function(dataBest, rownamesW=NULL, col= colorRampPalette(RColorBrewer::
   W <- dataBest$res$W
   rownames(W) <- rownamesW
   res.clust = hclust(dist(W),method="ward.D")
-  if(ncol(listPheno)!=ncol(colsPheno)){
-    stop("listPheno and colsPheno must have the same number of columns")
+  if(!is.na(listPheno)){
+    if(ncol(listPheno)!=ncol(colsPheno)){
+      stop("listPheno and colsPheno must have the same number of columns")
+    }
   }
   if(!missing(colsPheno)){
     heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=1.5, cexRow=1.5,margins = c(5,10))

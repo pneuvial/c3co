@@ -18,6 +18,7 @@ Imports:
     R.utils,
     ggplot2,
     RColorBrewer,
+    facets,
 Suggests: knitr,
     testthat
 VignetteBuilder: knitr
