@@ -80,5 +80,5 @@ PSCBSwrapper <- function (pathSegPSCBS,output.dir, stat){
 ### Joint segmentation of all samples
   resSeg <- segmentThroughInCaSCN(dat, stat)
   saveRDS(resSeg, file.path(output.dir, "segDat.rds"))
-  cat(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
+  message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
 }

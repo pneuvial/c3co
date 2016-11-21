@@ -33,5 +33,5 @@ Facetswrapper <- function (pathFacets,output.dir, stat){
   resSeg <- segmentThroughInCaSCN(dat, output.dir, stat)
 ### Perform the InCaSCN method
   saveRDS(resSeg, file.path(output.dir, "segDat.rds"))
-  cat(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
+  message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
 }
