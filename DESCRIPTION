@@ -23,5 +23,6 @@ Suggests: knitr,
     testthat
 VignetteBuilder: knitr
 Remotes: 
+    mpierrejean/acnr,
     mpierrejean/jointseg
 RoxygenNote: 5.0.1
