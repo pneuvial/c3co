@@ -24,5 +24,7 @@ Suggests: knitr,
 VignetteBuilder: knitr
 Remotes: 
     mpierrejean/acnr,
-    mpierrejean/jointseg
+    mpierrejean/jointseg,
+    mskcc/pctGCdata,
+    mskcc/facets
 RoxygenNote: 5.0.1

@@ -22,7 +22,9 @@ positive.fused(Y1, Y2, nb.arch, lambda1, lambda2, init.random = FALSE,
 
 \item{eps}{criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps)}
 
-\item{maxiter}{maximum number of iterations of the algorithm}
+\item{max.iter}{maximum number of iterations of the algorithm}
+
+\item{verbose}{if you want to print some information during running}
 }
 \value{
 The list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.

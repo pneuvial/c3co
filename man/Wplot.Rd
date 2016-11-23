@@ -27,6 +27,8 @@ Wplot(dataBest, rownamesW = NULL,
 \item{colLegend}{colors for clinical data}
 
 \item{labelLegend}{labels for clinical data}
+
+\item{...}{other paramater to personalize heatmap (see \code{heatmap.3.R})}
 }
 \value{
 Heatmap of W
