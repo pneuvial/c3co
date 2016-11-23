@@ -2,6 +2,7 @@
 #'
 #' @param subClones The subclones used to create the mixture ideally from the function \code{buildSubClones}.
 #' @param weights A vector of weights in percentage
+#' @param fracN Fraction of normal cell
 #' @return The mixture
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)

@@ -10,7 +10,7 @@ License: What license is it under?
 LazyData: TRUE
 Imports:
     jointseg,
-    acnr,
+    acnr (>= 0.2.6),
     limSolve,
     glmnet,
     Matrix,

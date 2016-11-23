@@ -29,6 +29,7 @@ The corresponding (noiseless) copy number profiles are displayed in the figure b
 
 ## Using the package
 ```{r, echo=F, message=FALSE,warning=FALSE}
+stopifnot(packageVersion("acnr") >= '0.2.6')
 library("InCaSCN")
 library("ggplot2")
 set.seed(10)

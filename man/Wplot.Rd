@@ -23,6 +23,10 @@ Wplot(dataBest, rownamesW = NULL,
 \item{listPheno}{A Matrix that contains details on phenotype for each patient. Could be location or time point of tumors for example}
 
 \item{colsPheno}{Matrix that containts colors for each type of variable in phenotype}
+
+\item{colLegend}{colors for clinical data}
+
+\item{labelLegend}{labels for clinical data}
 }
 \value{
 Heatmap of W

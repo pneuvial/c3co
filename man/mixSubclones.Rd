@@ -10,6 +10,8 @@ mixSubclones(subClones, weights, fracN = NULL)
 \item{subClones}{The subclones used to create the mixture ideally from the function \code{buildSubClones}.}
 
 \item{weights}{A vector of weights in percentage}
+
+\item{fracN}{Fraction of normal cell}
 }
 \value{
 The mixture

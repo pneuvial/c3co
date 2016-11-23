@@ -16,6 +16,8 @@ InCaSCN(dat, lambda1.grid = NULL, lambda2.grid = NULL,
 
 \item{lambda2.grid}{A grid of real numbers which is the penalty coefficients for the fused lasso on the major copy number dimension}
 
+\item{nb.arch.grid}{A vector of integers which is the number of archetypes in the model}
+
 \item{stat}{TCN or C1C2}
 
 \item{output.dir}{directory to save segmentation and feature data}
@@ -27,8 +29,6 @@ InCaSCN(dat, lambda1.grid = NULL, lambda2.grid = NULL,
 \item{forceInferrence}{\code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileFeat=featureData,p=p.rds} already exists in \code{output.dir}}
 
 \item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering}
-
-\item{nb.arch}{A vector of integers which is the number of archetypes in the model}
 }
 \value{
 A list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.

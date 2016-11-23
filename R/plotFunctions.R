@@ -26,6 +26,9 @@ pvePlot <- function(resInCaSCN,bestNbLatent=NULL, ylim=c(0,1)){
 #' @param posLegend position of the legend as for \code{plot}
 #' @param listPheno A Matrix that contains details on phenotype for each patient. Could be location or time point of tumors for example
 #' @param colsPheno Matrix that containts colors for each type of variable in phenotype
+#' @param colLegend colors for clinical data
+#' @param labelLegend labels for clinical data
+#' @param ... other paramater to personalize heatmap (see \code{heatmap.3.R})
 #' @return Heatmap of W
 Wplot <- function(dataBest, rownamesW=NULL, col= colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100),margins=c(5,7),posLegend=NA, listPheno, colsPheno, colLegend, labelLegend,...){
   W <- dataBest$res$W
@@ -51,7 +54,7 @@ Wplot <- function(dataBest, rownamesW=NULL, col= colorRampPalette(RColorBrewer::
 #'
 #' @export
 #' @param minMaxPos Matrix that contains min and max position for each chromosome
-#' @param chromsomes A vector that contains the focused chromosomes
+#' @param chromosomes A vector that contains the focused chromosomes
 #' @param var TCN, Minor or Major 
 #' @param dataBest A list from output of InCaSCN
 #' @return A data frame to plot Latent profiles with ggplot

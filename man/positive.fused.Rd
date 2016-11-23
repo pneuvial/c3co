@@ -17,6 +17,12 @@ positive.fused(Y1, Y2, nb.arch, lambda1, lambda2, init.random = FALSE,
 \item{lambda1}{A real number which is the penalty coefficient for the fused lasso on the minor copy number dimension}
 
 \item{lambda2}{A real number which is the penalty coefficient for the fused lasso on the major copy number dimension}
+
+\item{init.random}{if you want to use random initialization set paramater to TRUE}
+
+\item{eps}{criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps)}
+
+\item{maxiter}{maximum number of iterations of the algorithm}
 }
 \value{
 The list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.

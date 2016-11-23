@@ -14,7 +14,6 @@ trim.heatmap <- function(data,trim){
 }
 
 #' Heatmap function
-#'
 #' @export
 #' @return A Heatmap
 heatmap.3 <- function(x,

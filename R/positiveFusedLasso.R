@@ -6,6 +6,10 @@
 #' @param nb.arch An integer which is the number of archetypes in the model
 #' @param lambda1 A real number which is the penalty coefficient for the fused lasso on the minor copy number dimension
 #' @param lambda2 A real number which is the penalty coefficient for the fused lasso on the major copy number dimension
+#' @param init.random if you want to use random initialization set paramater to TRUE
+#' @param eps criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps) 
+#' @param max.iter maximum number of iterations of the algorithm
+#' @param verbose if you want to print some information during running
 #' @return The list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)

@@ -11,9 +11,9 @@ createZdf(minMaxPos, dataBest, chromosomes, var = "TCN")
 
 \item{dataBest}{A list from output of InCaSCN}
 
-\item{var}{TCN, Minor or Major}
+\item{chromosomes}{A vector that contains the focused chromosomes}
 
-\item{chromsomes}{A vector that contains the focused chromosomes}
+\item{var}{TCN, Minor or Major}
 }
 \value{
 A data frame to plot Latent profiles with ggplot

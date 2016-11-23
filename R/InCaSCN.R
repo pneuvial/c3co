@@ -3,7 +3,7 @@
 #' @param dat A list of data frame for each patient containing the total copy number \code{tcn}, the mirrored B allele fraction \code{dh}.
 #' @param lambda1.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the minor copy number dimension
 #' @param lambda2.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the major copy number dimension
-#' @param nb.arch A vector of integers which is the number of archetypes in the model
+#' @param nb.arch.grid A vector of integers which is the number of archetypes in the model
 #' @param stat TCN or C1C2
 #' @param segment By defaut \code{TRUE} (segment data before inferring features)
 #' @param output.dir directory to save segmentation and feature data
