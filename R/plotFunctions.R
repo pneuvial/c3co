@@ -27,22 +27,23 @@ pvePlot <- function(resInCaSCN,bestNbLatent=NULL, ylim=c(0,1)){
 #' @param listPheno A Matrix that contains details on phenotype for each patient. Could be location or time point of tumors for example
 #' @param colsPheno Matrix that containts colors for each type of variable in phenotype
 #' @return Heatmap of W
-Wplot <- function(dataBest, rownamesW=NULL, col= colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100),margins=c(5,7),posLegend=NA, listPheno=NA, colsPheno=NA, colLegend, labelLegend){
+Wplot <- function(dataBest, rownamesW=NULL, col= colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100),margins=c(5,7),posLegend=NA, listPheno, colsPheno, colLegend, labelLegend,...){
   W <- dataBest$res$W
   rownames(W) <- rownamesW
+  colnames(W) <- sprintf("Subclone %s", letters[1:ncol(W)])
   res.clust = hclust(dist(W),method="ward.D")
-  if(!is.na(listPheno)){
+  if(!missing(listPheno)){
     if(ncol(listPheno)!=ncol(colsPheno)){
       stop("listPheno and colsPheno must have the same number of columns")
     }
   }
   if(!missing(colsPheno)){
-    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=1.5, cexRow=1.5,margins = c(5,10))
+    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=1.5, cexRow=1.5,margins = c(5,10),...)
     if(!is.na(posLegend)){
       legend(posLegend,legend=labelLegend, fill=colLegend,border=FALSE, bty="n", y.intersp = 1, cex=1)
     }
   }else{
-    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row", col=col,scale="none", key=TRUE, cexCol=1.5, cexRow=1.5,margins = margins)
+    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row", col=col,scale="none", key=TRUE, cexCol=1.5, cexRow=1.5,margins = margins,...)
   }  
 }
 

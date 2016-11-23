@@ -1,0 +1,36 @@
+---
+title: "How to use InCaSCN with Facets data"
+author: "Morgane Pierre-Jean and Pierre Neuvial"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+This document provides a brief tutorial on using the InCaSCN package from Facets data.
+
+```{r}
+
+library(InCaSCN)
+library(facets)
+```
+
+## Using wrapper
+In this document we use the data from \code{facets} package.
+\code{Facetswrapper} function segments and saves data from \code{facets} format to InCaSCN format.
+```{r}
+pathFacets <- system.file("extdata",package="facets")
+output.dir <- R.utils::Arguments$getWritablePath("output")
+InCaSCN:::Facetswrapper(pathFacets,output.dir=output.dir, stat="TCN")
+```
+
+## Run InCaSCN ##
+Now, you can run InCaSCN by using this line:
+```{r, eval=FALSE}
+## Not run here (not enough samples)
+resInCaSCN <- InCaSCN(NULL,output.dir=output.dir)
+```

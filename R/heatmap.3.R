@@ -68,7 +68,7 @@ heatmap.3 <- function(x,
                       lwid = NULL,
                       ColSideColorsSize = 1,
                       RowSideColorsSize = 1,
-                      KeyValueName="Value",...){
+                      KeyValueName="",...){
  
     invalid <- function (x) {
       if (missing(x) || is.null(x) || length(x) == 0)
@@ -157,43 +157,8 @@ heatmap.3 <- function(x,
     else {
         rowInd <- nr:1
     }
-    if (inherits(Colv, "dendrogram")) {
-        ddc <- Colv
-        colInd <- order.dendrogram(ddc)
-    }
-    else if (identical(Colv, "Rowv")) {
-        if (nr != nc)
-            stop("Colv = \"Rowv\" but nrow(x) != ncol(x)")
-        if (exists("ddr")) {
-            ddc <- ddr
-            colInd <- order.dendrogram(ddc)
-        }
-        else colInd <- rowInd
-    }
-    else if (is.integer(Colv)) {
-        hcc <- hclustfun(distfun(if (symm)
-            x
-        else t(x)))
-        ddc <- as.dendrogram(hcc)
-        ddc <- reorder(ddc, Colv)
-        colInd <- order.dendrogram(ddc)
-        if (nc != length(colInd))
-            stop("column dendrogram ordering gave index of wrong length")
-    }
-    else if (isTRUE(Colv)) {
-        Colv <- colMeans(x, na.rm = na.rm)
-        hcc <- hclustfun(distfun(if (symm)
-            x
-        else t(x)))
-        ddc <- as.dendrogram(hcc)
-        ddc <- reorder(ddc, Colv)
-        colInd <- order.dendrogram(ddc)
-        if (nc != length(colInd))
-            stop("column dendrogram ordering gave index of wrong length")
-    }
-    else {
-        colInd <- 1:nc
-    }
+   
+    colInd <- 1:nc
     retval$rowInd <- rowInd
     retval$colInd <- colInd
     retval$call <- match.call()
@@ -353,7 +318,7 @@ heatmap.3 <- function(x,
         image(1:nc, 1:nr, mmat, axes = FALSE, xlab = "", ylab = "",
             col = na.color, add = TRUE)
     }
-    axis(1, 1:nc, labels = labCol, las = 2, line = -0.5, tick = 0,
+    axis(1, 1:nc, labels = labCol, las = 1, line = -0.5, tick = 0,
         cex.axis = cexCol)
     if (!is.null(xlab))
         mtext(xlab, side = 1, line = margins[1] - 1.25)
@@ -462,7 +427,8 @@ heatmap.3 <- function(x,
             par(cex = 0.5)
             mtext(side = 2, "Count", line = 2)
         }
-        else title("Color Key",cex.main=cexColorKey)
+        else title("percentage of
+clone in sample",cex.main=cexColorKey)
     }
     else plot.new()
     retval$colorTable <- data.frame(low = retval$breaks[-length(retval$breaks)],

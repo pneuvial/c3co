@@ -6,8 +6,8 @@
 \usage{
 Wplot(dataBest, rownamesW = NULL,
   col = colorRampPalette(RColorBrewer::brewer.pal(9, "GnBu"))(100),
-  margins = c(5, 7), posLegend = NA, listPheno = NA, colsPheno = NA,
-  colLegend, labelLegend)
+  margins = c(5, 7), posLegend = NA, listPheno, colsPheno, colLegend,
+  labelLegend, ...)
 }
 \arguments{
 \item{dataBest}{A list from output of InCaSCN}

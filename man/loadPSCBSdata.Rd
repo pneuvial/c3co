@@ -4,10 +4,12 @@
 \alias{loadPSCBSdata}
 \title{Function to load PSCBS data and transform them to InCaSCN format}
 \usage{
-loadPSCBSdata(pathSegPSCBS)
+loadPSCBSdata(pathSegPSCBS, pattern = NULL)
 }
 \arguments{
 \item{pathSegPSCBS}{The path to load PSCBS data.}
+
+\item{pattern}{if you have several patients in the pathSegPSCBS directory.}
 }
 \value{
 A data frame under PSCBS format

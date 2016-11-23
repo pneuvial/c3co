@@ -2,10 +2,11 @@
 #'
 #' @export
 #' @param pathSegPSCBS The path to load PSCBS data.
+#' @param pattern if you have several patients in the pathSegPSCBS directory. 
 #' @return A data frame under PSCBS format
-loadPSCBSdata <- function(pathSegPSCBS){
+loadPSCBSdata <- function(pathSegPSCBS, pattern=NULL){
 ### Load PSCBS data
-  dat <- lapply(list.files(pathSegPSCBS), function (ff) {
+  dat <- lapply(list.files(pathSegPSCBS, pattern=pattern), function (ff) {
     df <- readRDS(file.path(pathSegPSCBS, ff))$data
     ## Rename chromosome, x and CT to segment with InCaSCN
     df$chr <- df$chromosome
@@ -37,7 +38,7 @@ loadPSCBSdata <- function(pathSegPSCBS){
 #'
 #' @export
 #' @param dat The path to load PSCBS data.
-#' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
+#' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.
 #' @return A list which contains the breakpoints by chromosome and also the binning of TCN, C1 and C2.
 segmentThroughInCaSCN <- function(dat, stat){
 ### 2 options joint segmentation of TCN profiles or TCN+dh$
@@ -49,7 +50,7 @@ segmentThroughInCaSCN <- function(dat, stat){
       Y <- do.call(c, lapply(chr.grid, function (cc){
         dfCHR <- subset(df, chr==cc)
         xOut <- c(min(dfCHR$pos), resSeg$bkp[[cc]], max(dfCHR$pos))
-        means <- matrixStats::binMeans(y = dfCHR$rho, x = dfCHR$pos, bx = xOut, na.rm = TRUE)
+        means <- matrixStats::binMeans(y = dfCHR$dh, x = dfCHR$pos, bx = xOut, na.rm = TRUE)
       }))
       return(Y)
     }))
@@ -73,10 +74,11 @@ segmentThroughInCaSCN <- function(dat, stat){
 #' @export
 #' @param pathSegPSCBS The path to load PSCBS data.
 #' @param output.dir Directory to save segmentation
-#' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
+#' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.
+#' @param pattern if you have several patients in the pathSegPSCBS directory. 
 #' @return A list which contains the breakpoints by chromosome and also the binning of TCN, C1 and C2.
-PSCBSwrapper <- function (pathSegPSCBS,output.dir, stat){
-  dat <- loadPSCBSdata(pathSegPSCBS)
+PSCBSwrapper <- function (pathSegPSCBS,pattern=NULL, output.dir, stat){
+  dat <- loadPSCBSdata(pathSegPSCBS, pattern)
 ### Joint segmentation of all samples
   resSeg <- segmentThroughInCaSCN(dat, stat)
   saveRDS(resSeg, file.path(output.dir, "segDat.rds"))

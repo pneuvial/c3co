@@ -21,7 +21,7 @@ heatmap.3(x, Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
   symkey = max(x < 0, na.rm = TRUE) || symbreaks, densadj = 0.25,
   main = NULL, xlab = NULL, ylab = NULL, lmat = NULL, lhei = NULL,
   lwid = NULL, ColSideColorsSize = 1, RowSideColorsSize = 1,
-  KeyValueName = "Value", ...)
+  KeyValueName = "", ...)
 }
 \value{
 A Heatmap

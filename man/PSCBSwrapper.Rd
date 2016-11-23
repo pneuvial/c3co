@@ -4,10 +4,12 @@
 \alias{PSCBSwrapper}
 \title{Function to transform PSCBS data, perfom the segmentation and save it into output.dir}
 \usage{
-PSCBSwrapper(pathSegPSCBS, output.dir, stat)
+PSCBSwrapper(pathSegPSCBS, pattern = NULL, output.dir, stat)
 }
 \arguments{
 \item{pathSegPSCBS}{The path to load PSCBS data.}
+
+\item{pattern}{if you have several patients in the pathSegPSCBS directory.}
 
 \item{output.dir}{Directory to save segmentation}
 

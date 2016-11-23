@@ -32,12 +32,12 @@ segmentData <- function(dat, stat="C1C2"){
   Y1 <- Y2 <- NULL
   Y <- NULL
   for(cc in chrs){
-    print(sprintf("chr %s", cc))
+    message(sprintf("chr %s", cc))
     ww <- which(dat[[1]]$chr==cc)
 ### Segmentation step on TCN and DH
-    print("segmentation step")
+    message("segmentation step")
     resSeg <- jointseg::jointSeg(Y=dataToSeg[ww,],K=100, modelSelectionMethod="Birge")
-    print("end segmentation")
+    message("end segmentation")
     bkp <- resSeg$bestBkp
     pos <- dat[[1]]$pos[ww]
     bkpPos <-rowMeans(cbind(pos[bkp], pos[bkp+1]))

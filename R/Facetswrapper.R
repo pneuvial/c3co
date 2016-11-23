@@ -7,7 +7,7 @@ loadFacetsdata <- function(pathFacets){
 ### Load Facets data
   dat <- lapply(list.files(pathFacets), function (ff) {
     df <- facets::readSnpMatrix(file.path(pathFacets, ff))
-    xx=facets::preProcSample(rcmat)
+    xx=facets::preProcSample(df)
     dat=xx$pmat
     ## Rename chromosome, x and CT to segment with InCaSCN
     df <- data.frame(chr=dat$chrom, pos=dat$maploc)
@@ -30,7 +30,7 @@ Facetswrapper <- function (pathFacets,output.dir, stat){
 ### To do may be cut this function into several function
   dat <- loadFacetsdata(pathFacets)
 ### Joint segmentation of all samples
-  resSeg <- segmentThroughInCaSCN(dat, output.dir, stat)
+  resSeg <- segmentThroughInCaSCN(dat, stat)
 ### Perform the InCaSCN method
   saveRDS(resSeg, file.path(output.dir, "segDat.rds"))
   message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
