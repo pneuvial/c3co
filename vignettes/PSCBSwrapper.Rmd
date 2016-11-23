@@ -1,0 +1,37 @@
+---
+title: "How to use InCaSCN with PSCBS data"
+author: "Morgane Pierre-Jean and Pierre Neuvial"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+This document provides a brief tutorial on using the InCaSCN package from PSCBS data.
+
+```{r}
+
+library(InCaSCN)
+```
+
+## Using wrapper
+In this document we use the data from \code{facets} package.
+\code{Facetswrapper} function segments and saves data from \code{facets} format to InCaSCN format.
+```{r}
+pathPSCBS <- system.file("extdata",package="InCaSCN")
+output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
+InCaSCN:::PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="TCN")
+```
+
+## Run InCaSCN ##
+Now, you can run InCaSCN by using this line:
+```{r, eval=TRUE, message=FALSE}
+resInCaSCN <- InCaSCN(NULL, nb.arch=2:4,output.dir=output.dir)
+```
+```{r, fig.width=7, fig.height=5}
+Wplot(resInCaSCN[[1]])
+```
