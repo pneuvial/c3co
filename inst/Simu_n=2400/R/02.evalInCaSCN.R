@@ -495,7 +495,7 @@ for(b in 1:100){
   })
   for(ss in 1:2){
     stat <- stats[ss]    
-    resSegmentation <- InCaSCN:::segmentData(dat, stat=stat)
+    resSegmentation <- segmentData(dat, stat=stat)
     Y <- resSegmentation$Y
     Y1 <- resSegmentation$Y1
     Y2 <- resSegmentation$Y2

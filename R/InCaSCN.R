@@ -73,7 +73,7 @@ InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(l
           }
           for(l2 in lambda2.grid){
             n <- ncol(Y1)
-            res <- InCaSCN:::positive.fused(Y1,Y2, pp, lambda1 = l1, lambda2 = l2,init.random)
+            res <- positive.fused(Y1,Y2, pp, lambda1 = l1, lambda2 = l2,init.random)
             loss <- sum(((Y1+Y2)-(res$Y.hat$Y1+res$Y.hat$Y2))^2)
             kZ <- sum(apply(res$Z, 2, diff)!=0)
             BIC <-  n*ncol(Y1)*log(loss/(n*ncol(Y1)))+kZ*log(n*ncol(Y1))
@@ -91,7 +91,7 @@ InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(l
             Y <- t(sapply(dat, function(cc) cc$tcn))
           }
           n <- ncol(Y)
-          res <- InCaSCN:::positive.fused(Y, Y2=NULL, nb.arch=pp, lambda1 = l1,init.random)
+          res <- positive.fused(Y, Y2=NULL, nb.arch=pp, lambda1 = l1,init.random)
           loss <- sum((Y-(res$Y.hat$Y1))^2)
           kZ <- sum(apply(res$Z, 2, diff)!=0)
           BIC <-  n*ncol(Y)*log(loss/(n*ncol(Y)))+kZ*log(n*ncol(Y))

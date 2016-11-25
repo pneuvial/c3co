@@ -1,9 +1,8 @@
 library(Canopy)
 library(InCaSCN)
 library(RColorBrewer)
-source("../GSE40546-OV03-17/R/heatmap.3.R")
 
-cat("load data set toy from Canopy")
+message("load data set toy from Canopy")
 projectname = 'toy'
 data(toy2)
 
@@ -11,9 +10,9 @@ Y1 <- t(toy2$Wm)
 Y2 <- t(toy2$WM)
 lambda <- 1e-5
 
-cat("Run InCaSCN\n")
+message("Run InCaSCN\n")
 K = 2:8
-rC1C2 <- lapply(K, function (kk) InCaSCN:::positive.fused(Y1,Y2, kk,lambda1 = lambda, lambda2 = lambda, init.random=FALSE))
+rC1C2 <- lapply(K, function (kk) positive.fused(Y1,Y2, kk,lambda1 = lambda, lambda2 = lambda, init.random=FALSE))
 
 n <- nrow(Y1)
 loss <- sapply(rC1C2, function (rr) sum(((Y1+Y2)-(rr$Y.hat$Y1+rr$Y.hat$Y2))^2))
@@ -37,7 +36,7 @@ pdf(sprintf("%s/%s.pdf", figPath, filename), width=13, height=8)
 heatmap.3(W, Rowv=FALSE,dendrogram="col", col=col,scale="none", cexCol=1.5, cexRow=1.5,margins = c(5,10), cellnote=W, notecol="black", key = FALSE)
 dev.off()
 
-rC1C2k4 <- lapply(1:50,function(ss) InCaSCN:::positive.fused(Y1,Y2, 4,lambda1 = lambda, lambda2 = lambda, init.random=TRUE))
+rC1C2k4 <- lapply(1:50,function(ss) positive.fused(Y1,Y2, 4,lambda1 = lambda, lambda2 = lambda, init.random=TRUE))
 loss <- sapply(rC1C2k4, function (rr) sum(((Y1+Y2)-(rr$Y.hat$Y1+rr$Y.hat$Y2))^2))
 
 bestK4 <- rC1C2k4[[which.min(loss)]]
@@ -54,7 +53,7 @@ dev.off()
 
 
 
-warning("Canopy can take a little bit time")
+message("Canopy can take a little bit time")
 
 R = toy2$R; X = toy2$X; WM = toy2$WM; Wm = toy2$Wm
 epsilonM = toy2$epsilonM; epsilonm = toy2$epsilonm; Y = toy2$Y

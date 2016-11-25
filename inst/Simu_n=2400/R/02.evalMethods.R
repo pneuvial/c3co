@@ -314,7 +314,7 @@ for(b in 1:100){
   dat <- readRDS(sprintf("%s/dat_B=%s.rds",pathSim,b))
   for(ss in 1:2){
     stat <- stats[ss]    
-    resSegmentation <- InCaSCN:::segmentData(dat, stat=stat)
+    resSegmentation <- segmentData(dat, stat=stat)
     Y <- resSegmentation$Y
     Y1 <- resSegmentation$Y1
     Y2 <- resSegmentation$Y2

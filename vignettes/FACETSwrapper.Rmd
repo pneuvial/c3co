@@ -25,7 +25,7 @@ In this document we use the data from \code{facets} package.
 ```{r}
 pathFacets <- system.file("extdata",package="facets")
 output.dir <- R.utils::Arguments$getWritablePath("output")
-InCaSCN:::Facetswrapper(pathFacets,output.dir=output.dir, stat="TCN")
+Facetswrapper(pathFacets,output.dir=output.dir, stat="TCN")
 ```
 
 ## Run InCaSCN ##

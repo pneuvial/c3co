@@ -43,7 +43,7 @@ loadPSCBSdata <- function(pathSegPSCBS, pattern=NULL){
 segmentThroughInCaSCN <- function(dat, stat){
 ### 2 options joint segmentation of TCN profiles or TCN+dh$
   if(stat=="TCN"){
-    resSeg <- InCaSCN:::segmentData(dat, stat=stat)
+    resSeg <- InCaSCN::segmentData(dat, stat=stat)
 ### Compute the DoH by segments
     seg.rho <- do.call(cbind, lapply(dat, function (df){
       chr.grid <- unique(df$chr)
@@ -62,7 +62,7 @@ segmentThroughInCaSCN <- function(dat, stat){
     resSeg$Y2 <- seg.Y2
   }else if(stat=="C1C2"){
     ## This solution seems to be better (more breakpoints)
-    resSeg <- InCaSCN:::segmentData(dat, stat=stat)
+    resSeg <- InCaSCN::segmentData(dat, stat=stat)
   }else{
     stop("stat must be TCN or C1C2")
   }

@@ -8,15 +8,19 @@ getWeightMatrix(prop.max, prob.min, nb.arch, nb.samp, sparse.coeff = 0.5,
   contam.coeff = 0.6, contam.max = 30)
 }
 \arguments{
-\item{prop.max}{An integer which is the maximim proportion for a present archetype}
+\item{prop.max}{An integer that is the maximim proportion for a present archetype}
 
-\item{prob.min}{An integer which is the minimum proportion  for a present archetype}
+\item{prob.min}{An integer that is the minimum proportion  for a present archetype}
 
-\item{nb.arch}{An interger which is the number of archetypes (number of columns)}
+\item{nb.arch}{An interger that is the number of archetypes (number of columns)}
 
-\item{nb.samp}{An interger which is the number of samples (number of rows)}
+\item{nb.samp}{An interger that is the number of samples (number of rows)}
 
-\item{sparse.coeff}{A numeric between 0 and 1 which control the sparsity by rows}
+\item{sparse.coeff}{A numeric between 0 and 1 that control the sparsity by rows}
+
+\item{contam.coeff}{A numeric between 0 and 1 that control the contamination level}
+
+\item{contam.max}{An interger between 0 and 100 that controls the maximal level of contamination by normal cells}
 }
 \value{
 A matrix of weights (the sum of rows is equal to 1)

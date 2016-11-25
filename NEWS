@@ -1,5 +1,9 @@
 Package: InCaSCN
 =================
+Version: 0.1.7 [2016-11-25]
+o Move PSCBS data into another package named "incas.extdata"
+o bugs fixed
+
 Version: 0.1.6 [2016-11-18]
 o Add plot functions, PSCBS wrapper
 o Add new example on real data set 

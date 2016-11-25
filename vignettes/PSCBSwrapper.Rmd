@@ -25,7 +25,7 @@ In this document we use the data from \code{facets} package.
 pathPSCBS <- system.file("extdata",package="incas.extdata")
 stopifnot(pathPSCBS!="")
 output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
-InCaSCN:::PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="TCN")
+PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="TCN")
 ```
 
 ## Run InCaSCN ##
