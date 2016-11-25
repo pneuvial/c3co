@@ -22,9 +22,10 @@ Imports:
 Suggests: knitr,
     testthat
 VignetteBuilder: knitr
-Remotes: 
+Remotes:
     mpierrejean/acnr,
     mpierrejean/jointseg,
+    pneuvial/incas-cn-data/incas.extdata
     mskcc/pctGCdata,
     mskcc/facets
 RoxygenNote: 5.0.1

@@ -22,7 +22,8 @@ library(InCaSCN)
 In this document we use the data from \code{facets} package.
 \code{Facetswrapper} function segments and saves data from \code{facets} format to InCaSCN format.
 ```{r}
-pathPSCBS <- system.file("extdata",package="InCaSCN")
+pathPSCBS <- system.file("extdata",package="incas.extdata")
+stopifnot(pathPSCBS!="")
 output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
 InCaSCN:::PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="TCN")
 ```
