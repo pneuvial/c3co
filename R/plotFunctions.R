@@ -28,9 +28,10 @@ pvePlot <- function(resInCaSCN,bestNbLatent=NULL, ylim=c(0,1)){
 #' @param colsPheno Matrix that containts colors for each type of variable in phenotype
 #' @param colLegend colors for clinical data
 #' @param labelLegend labels for clinical data
-#' @param ... other paramater to personalize heatmap (see \code{heatmap.3.R})
+#' @param cexCol size of labels of columns by (default 1.5) 
+#' @param ... other paramaters to personalize heatmap (see \code{heatmap.3.R})
 #' @return Heatmap of W
-Wplot <- function(dataBest, rownamesW=NULL, col= colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100),margins=c(5,7),posLegend=NA, listPheno, colsPheno, colLegend, labelLegend,...){
+Wplot <- function(dataBest, rownamesW=NULL, col= colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100),margins=c(5,7),posLegend=NA, listPheno, colsPheno, colLegend, labelLegend,cexCol=1.5,...){
   W <- dataBest$res$W
   rownames(W) <- rownamesW
   colnames(W) <- sprintf("Subclone %s", letters[1:ncol(W)])
@@ -41,12 +42,12 @@ Wplot <- function(dataBest, rownamesW=NULL, col= colorRampPalette(RColorBrewer::
     }
   }
   if(!missing(colsPheno)){
-    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=1.5, cexRow=1.5,margins = c(5,10),...)
+    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = c(5,10),...)
     if(!is.na(posLegend)){
       legend(posLegend,legend=labelLegend, fill=colLegend,border=FALSE, bty="n", y.intersp = 1, cex=1)
     }
   }else{
-    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row", col=col,scale="none", key=TRUE, cexCol=1.5, cexRow=1.5,margins = margins,...)
+    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row", col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = margins,...)
   }  
 }
 

@@ -7,7 +7,7 @@
 Wplot(dataBest, rownamesW = NULL,
   col = colorRampPalette(RColorBrewer::brewer.pal(9, "GnBu"))(100),
   margins = c(5, 7), posLegend = NA, listPheno, colsPheno, colLegend,
-  labelLegend, ...)
+  labelLegend, cexCol = 1.5, ...)
 }
 \arguments{
 \item{dataBest}{A list from output of InCaSCN}
@@ -27,6 +27,8 @@ Wplot(dataBest, rownamesW = NULL,
 \item{colLegend}{colors for clinical data}
 
 \item{labelLegend}{labels for clinical data}
+
+\item{cexCol}{size of labels of columns by (default 1.5)}
 
 \item{...}{other paramater to personalize heatmap (see \code{heatmap.3.R})}
 }

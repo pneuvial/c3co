@@ -5,7 +5,7 @@
 \title{Positive fused lasso function}
 \usage{
 positive.fused(Y1, Y2, nb.arch, lambda1, lambda2, init.random = FALSE,
-  eps = 0.01, max.iter = 50, verbose = F)
+  eps = 0.01, max.iter = 50, verbose = F, new.getZ = FALSE)
 }
 \arguments{
 \item{Y1}{A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)}
@@ -25,6 +25,8 @@ positive.fused(Y1, Y2, nb.arch, lambda1, lambda2, init.random = FALSE,
 \item{max.iter}{maximum number of iterations of the algorithm}
 
 \item{verbose}{if you want to print some information during running}
+
+\item{new.getZ}{TRUE if you want to parallelize inferrence of Minor and Major copy numbers}
 }
 \value{
 The list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
@@ -52,7 +54,8 @@ Y2 <-  t(sapply(simu, function(cc) cc$c2))
 Y1seg <- t(apply(Y1, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
 Y2seg <- t(apply(Y2, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
 lambda <- 1e-5
-rC1C2 <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda)
+system.time(rC1C2 <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda))
+system.time(rC1C2new <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda, new.getZ=TRUE))
 rTCN <- positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
 }
 

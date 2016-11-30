@@ -7,7 +7,7 @@
 InCaSCN(dat, lambda1.grid = NULL, lambda2.grid = NULL,
   nb.arch.grid = 2:(length(dat) - 1), stat = "C1C2",
   output.dir = "resultsInCaSCN", segment = TRUE, forceSeg = FALSE,
-  forceInferrence = FALSE, init.random = FALSE)
+  forceInferrence = FALSE, init.random = FALSE, new.getZ = TRUE)
 }
 \arguments{
 \item{dat}{A list of data frame for each patient containing the total copy number \code{tcn}, the mirrored B allele fraction \code{dh}.}
@@ -29,6 +29,8 @@ InCaSCN(dat, lambda1.grid = NULL, lambda2.grid = NULL,
 \item{forceInferrence}{\code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileFeat=featureData,p=p.rds} already exists in \code{output.dir}}
 
 \item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering}
+
+\item{new.getZ}{TRUE if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)}
 }
 \value{
 A list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
@@ -48,7 +50,7 @@ M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.ma
 dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
 l1 <- seq(from=1e-6, to=1e-5, length=3)
 l2 <- seq(from=1e-6, to=1e-5, length=3)
-casResC1C2 <- InCaSCN(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+system.time(casResC1C2 <- InCaSCN(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6))
 casRes <- InCaSCN(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 }
 

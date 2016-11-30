@@ -1,5 +1,8 @@
 Package: InCaSCN
 =================
+Version: 0.1.8 [2016-11-30]
+o Parallelism for Z1 and Z2 inferrence
+
 Version: 0.1.7 [2016-11-25]
 o Move PSCBS data into another package named "incas.extdata"
 o bugs fixed

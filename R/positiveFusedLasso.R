@@ -9,6 +9,7 @@
 #' @param init.random if you want to use random initialization set paramater to TRUE
 #' @param eps criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps) 
 #' @param max.iter maximum number of iterations of the algorithm
+#' @param new.getZ TRUE if you want to parallelize inferrence of Minor and Major copy numbers
 #' @param verbose if you want to print some information during running
 #' @return The list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
 #' @examples
@@ -31,10 +32,11 @@
 #' Y1seg <- t(apply(Y1, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
 #' Y2seg <- t(apply(Y2, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
 #' lambda <- 1e-5
-#' rC1C2 <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda)
+#' system.time(rC1C2 <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda))
+#' system.time(rC1C2new <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda, new.getZ=TRUE))
 #' rTCN <- positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
 positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
-                           eps = 1e-2, max.iter = 50, verbose=F) {
+                           eps = 1e-2, max.iter = 50, verbose=F, new.getZ=FALSE) {
 
   ## problem dimensions
   n <- nrow(Y1) # number of individuals
@@ -81,7 +83,13 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
     W <- get.W(rbind(Z$Z1,Z$Z2), cbind(Y1,Y2))
     ## __________________________________________________
     ## STEP 2: optimize over Z (fixed W)
-    Z <- get.Z(W, Y1, Y2, lambda1, lambda2)
+    if(!new.getZ){
+      Z <- get.Z(W, Y1, Y2, lambda1, lambda2)
+    }else{
+    ## test
+    Z <- parallel::mclapply(list(list(Y=Y1,lambda=lambda1),list(Y=Y2,lambda=lambda2)), get.Z.new, W=W)
+    names(Z)= c("Z1", "Z2")
+    }
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
     if (iter>1) {delta <- sqrt(sum((W-W.old)^2))}

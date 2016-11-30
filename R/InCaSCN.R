@@ -10,6 +10,7 @@
 #' @param forceSeg \code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileSeg="segData.rds"} already exists in \code{output.dir}
 #' @param forceInferrence \code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileFeat=featureData,p=p.rds} already exists in \code{output.dir}
 #' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering
+#' @param new.getZ TRUE if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)
 #' @return A list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -23,10 +24,14 @@
 #' dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
 #' l1 <- seq(from=1e-6, to=1e-5, length=3)
 #' l2 <- seq(from=1e-6, to=1e-5, length=3)
-#' casResC1C2 <- InCaSCN(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+#' system.time(casResC1C2 <- InCaSCN(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6))
 #' casRes <- InCaSCN(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+
 #' @export
-InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2",output.dir="resultsInCaSCN", segment=TRUE,forceSeg=FALSE,forceInferrence=FALSE, init.random=FALSE){
+InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2",output.dir="resultsInCaSCN", segment=TRUE,forceSeg=FALSE,forceInferrence=FALSE, init.random=FALSE, new.getZ=TRUE){
+  if(stat=="TCN"){
+    new.getZ<-FALSE
+  }
   if(is.null(lambda1.grid)){
     lambda1.grid <- seq(from=1e-6, to=1e-5, length=10)
   }
@@ -73,7 +78,7 @@ InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(l
           }
           for(l2 in lambda2.grid){
             n <- ncol(Y1)
-            res <- positive.fused(Y1,Y2, pp, lambda1 = l1, lambda2 = l2,init.random)
+            res <- positive.fused(Y1,Y2, pp, lambda1 = l1, lambda2 = l2,init.random, new.getZ)
             loss <- sum(((Y1+Y2)-(res$Y.hat$Y1+res$Y.hat$Y2))^2)
             kZ <- sum(apply(res$Z, 2, diff)!=0)
             BIC <-  n*ncol(Y1)*log(loss/(n*ncol(Y1)))+kZ*log(n*ncol(Y1))
