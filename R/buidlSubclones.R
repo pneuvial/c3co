@@ -36,7 +36,8 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
   idxAA <- sort(sample(x=(1:len)[-idxAB], size=len/3) )
   idxBB <- sort((1:len)[-c(idxAB,idxAA)])
 
-  dataAnnot <- data.frame(dataAnnotTP,dataAnnotN[,1:2])
+  keepCols <- c("c", "b", "genotype", "region")
+  dataAnnot <- data.frame(dataAnnotTP[,keepCols],dataAnnotN[, c("c","b")])
   colnames(dataAnnot) <- c("ct", "baft", "genotype", "region", "cn", "bafn")
 
   subClone <- lapply(1:nbClones, function(ii){

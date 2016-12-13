@@ -90,6 +90,13 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
     Z <- parallel::mclapply(list(list(Y=Y1,lambda=lambda1),list(Y=Y2,lambda=lambda2)), get.Z.new, W=W)
     names(Z)= c("Z1", "Z2")
     }
+    idx <- ncol(Z$Z2)
+    test <- sapply(idx, function(ii){
+      jj <- which(Z$Z1[,ii]>Z$Z2[,ii])
+      if(length(jj)>0){
+        warning("Some components in minor latent profiles are larger than matched components in major latent profiles")
+      }
+    })
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
     if (iter>1) {delta <- sqrt(sum((W-W.old)^2))}

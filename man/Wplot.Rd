@@ -30,7 +30,7 @@ Wplot(dataBest, rownamesW = NULL,
 
 \item{cexCol}{size of labels of columns by (default 1.5)}
 
-\item{...}{other paramater to personalize heatmap (see \code{heatmap.3.R})}
+\item{...}{other paramaters to personalize heatmap (see \code{heatmap.3.R})}
 }
 \value{
 Heatmap of W

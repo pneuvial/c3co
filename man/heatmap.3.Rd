@@ -23,6 +23,115 @@ heatmap.3(x, Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
   lwid = NULL, ColSideColorsSize = 1, RowSideColorsSize = 1,
   KeyValueName = "", ...)
 }
+\arguments{
+\item{x, }{matrix}
+
+\item{Rowv}{= TRUE,}
+
+\item{Colv}{= if (symm) "Rowv" else TRUE,}
+
+\item{distfun}{= dist,}
+
+\item{hclustfun}{= hclust,}
+
+\item{dendrogram}{= c("both","row", "column", "none"),}
+
+\item{symm}{= FALSE,}
+
+\item{scale}{= c("none","row", "column"),}
+
+\item{na.rm}{= TRUE,}
+
+\item{revC}{= identical(Colv,"Rowv"),}
+
+\item{add.expr, }{expression that will be evaluated after the call to image. Can be used to add components to the plot.}
+
+\item{breaks, }{numeric, either a numeric vector indicating the splitting points for binning x into colors, or a integer number of break points to be used, in which case the break points will be spaced equally between range(x). DEFAULT: 16 when not specified.}
+
+\item{symbreaks}{= max(x < 0, na.rm = TRUE) || scale != "none",}
+
+\item{col}{= "heat.colors",}
+
+\item{colsep, }{color for columns of separation.}
+
+\item{rowsep, }{color for lines of separation.}
+
+\item{sepcolor}{= "white",}
+
+\item{sepwidth}{= c(0.05, 0.05),}
+
+\item{cellnote, }{optional) matrix of character strings which will be placed within each color cell, e.g. cell labels or p-value symbols.}
+
+\item{notecex}{= 1,}
+
+\item{notecol}{= "cyan",}
+
+\item{na.color}{= par("bg"),}
+
+\item{trace}{= c("none", "column","row", "both"),}
+
+\item{tracecol}{= "cyan",}
+
+\item{hline}{= median(breaks),}
+
+\item{vline}{= median(breaks),}
+
+\item{linecol}{= tracecol,}
+
+\item{margins}{= c(5,5),}
+
+\item{ColSideColors, }{(optional) character vector of length ncol(x) containing the color names for a horizontal side bar that may be used to annotate the columns of x.}
+
+\item{RowSideColors, }{(optional) character vector of length nrow(x) containing the color names for a horizontal side bar that may be used to annotate the rows of x.}
+
+\item{side.height.fraction}{= 0.3, the width-to-height ratio of the heatmap.}
+
+\item{cexRow}{= 0.2 + 1/log10(nr),}
+
+\item{cexCol}{= 0.2 + 1/log10(nc),}
+
+\item{cexMain}{= 1.5, size of main}
+
+\item{cexKey}{= 1, size of name of key}
+
+\item{cexColorKey}{= 1, ## size of key}
+
+\item{labRow}{= NULL,}
+
+\item{labCol}{= NULL,}
+
+\item{key}{= TRUE,}
+
+\item{keysize}{= 1.5,}
+
+\item{density.info}{= c("none", "histogram", "density"),}
+
+\item{denscol}{= tracecol,}
+
+\item{symkey}{= max(x < 0, na.rm = TRUE) || symbreaks,}
+
+\item{densadj}{= 0.25,}
+
+\item{main}{= NULL,}
+
+\item{xlab}{= NULL,}
+
+\item{ylab}{= NULL,}
+
+\item{lmat}{= NULL,}
+
+\item{lhei}{= NULL,}
+
+\item{lwid}{= NULL,}
+
+\item{ColSideColorsSize}{= 1,}
+
+\item{RowSideColorsSize}{= 1,}
+
+\item{KeyValueName}{= "", name of key}
+
+\item{...}{additionnal parameters of \code{image}}
+}
 \value{
 A Heatmap
 }

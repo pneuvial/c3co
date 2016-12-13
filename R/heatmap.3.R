@@ -14,6 +14,60 @@ trim.heatmap <- function(data,trim){
 }
 
 #' Heatmap function
+#' @param x, matrix
+#' @param Rowv = TRUE, 
+#' @param Colv = if (symm) "Rowv" else TRUE,
+#' @param distfun = dist,
+#' @param hclustfun = hclust,
+#' @param dendrogram = c("both","row", "column", "none"),
+#' @param symm = FALSE,
+#' @param scale = c("none","row", "column"),
+#' @param na.rm = TRUE,
+#' @param revC = identical(Colv,"Rowv"),
+#' @param add.expr, expression that will be evaluated after the call to image. Can be used to add components to the plot.
+#' @param breaks, numeric, either a numeric vector indicating the splitting points for binning x into colors, or a integer number of break points to be used, in which case the break points will be spaced equally between range(x). DEFAULT: 16 when not specified.
+#' @param symbreaks = max(x < 0, na.rm = TRUE) || scale != "none",
+#' @param col = "heat.colors",
+#' @param colsep, color for columns of separation.
+#' @param rowsep, color for lines of separation.
+#' @param sepcolor = "white",
+#' @param sepwidth = c(0.05, 0.05),
+#' @param cellnote, optional) matrix of character strings which will be placed within each color cell, e.g. cell labels or p-value symbols.
+#' @param notecex = 1,
+#' @param notecol = "cyan",
+#' @param na.color = par("bg"),
+#' @param trace = c("none", "column","row", "both"),
+#' @param tracecol = "cyan",
+#' @param hline = median(breaks),
+#' @param vline = median(breaks),
+#' @param linecol = tracecol,
+#' @param margins = c(5,5),
+#' @param ColSideColors, (optional) character vector of length ncol(x) containing the color names for a horizontal side bar that may be used to annotate the columns of x.
+#' @param RowSideColors, (optional) character vector of length nrow(x) containing the color names for a horizontal side bar that may be used to annotate the rows of x.
+#' @param side.height.fraction = 0.3, the width-to-height ratio of the heatmap.
+#' @param cexRow = 0.2 + 1/log10(nr),
+#' @param cexCol = 0.2 + 1/log10(nc),
+#' @param cexMain = 1.5, size of main
+#' @param cexKey = 1, size of name of key
+#' @param cexColorKey = 1, ## size of key
+#' @param labRow = NULL,
+#' @param labCol = NULL,
+#' @param key = TRUE,
+#' @param keysize = 1.5,
+#' @param density.info = c("none", "histogram", "density"),
+#' @param denscol = tracecol,
+#' @param symkey = max(x < 0, na.rm = TRUE) || symbreaks,
+#' @param densadj = 0.25,
+#' @param main = NULL,
+#' @param xlab = NULL,
+#' @param ylab = NULL,
+#' @param lmat = NULL,
+#' @param lhei = NULL,
+#' @param lwid = NULL,
+#' @param ColSideColorsSize = 1,
+#' @param RowSideColorsSize = 1,
+#' @param KeyValueName = "", name of key
+#' @param ... additionnal parameters of \code{image}
 #' @export
 #' @return A Heatmap
 heatmap.3 <- function(x,
