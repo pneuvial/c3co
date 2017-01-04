@@ -66,7 +66,9 @@ createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
   
   
   df.CHR <- do.call(rbind, lapply(chromosomes, function(cc){
-    bb <- c(minMaxPos[cc,"minPos"], dataBest$bkp[[cc]],minMaxPos[cc,"maxPos"]) 
+    bb <- c(minMaxPos[cc,"minPos"], dataBest$bkp[[cc]],minMaxPos[cc,"maxPos"])
+    bb <- as.numeric(bb)
+    print(bb)
     if(var=="TCN"){
       zz <- rbind(dataBest$res$Z[start[cc],],dataBest$res$Z[start[cc]:(start[cc+1]-1),],dataBest$res$Z[start[cc+1]-1,])
       
@@ -75,11 +77,11 @@ createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
       
     }else if(var=="Major"){
       zz <- rbind(dataBest$res$Z2[start[cc],],dataBest$res$Z2[start[cc]:(start[cc+1]-1),],dataBest$res$Z2[start[cc+1]-1,])
-  arch <- factor(rep(1:ncol(zz), each=length(bb)))
     }else{
       stop("var must be TCN, Minor or Major")
     }
-    arch <- factor(rep(1:ncol(zz), each=length(bb))) 
+    
+    arch <- factor(rep(letters[1:ncol(zz)], each=length(bb))) 
     zz <- c(zz)
     data.frame(position=bb,CN=zz, arch=arch, chr=factor(sprintf("chromosome %s",cc))) 
   }))
@@ -93,6 +95,6 @@ createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
 #' @param ylab Label of y-axis
 #' @return plot of Latent profiles
 Zplot <- function(df, ylab) {
-  gg <- ggplot2::ggplot(df)+ggplot2::geom_step(aes(position, CN, group=arch, col=arch,lty=arch), direction="hv", lwd=1)+ggplot2::facet_wrap(~chr, ncol=2, scale="free")+ggplot2::theme_bw()+xlab("Genome position (Mb)")+ ggplot2::labs(colour = "Latent Profile",lty="Latent Profile")+ggplot2::scale_x_continuous(breaks=seq(from=0,to =150, by=20))+ggplot2::scale_y_continuous(name=ylab)
+  gg <- ggplot2::ggplot(df)+ggplot2::geom_step(aes(position, CN, group=arch, col=arch,lty=arch), direction="hv", lwd=1)+ggplot2::facet_wrap(~chr, ncol=2, scale="free")+ggplot2::theme_bw()+xlab("Genome position (Mb)")+ ggplot2::labs(colour = "Subclone",lty="Subclone")+ggplot2::scale_x_continuous(breaks=seq(from=0,to =150, by=20))+ggplot2::scale_y_continuous(name=ylab)
   gg
 }
