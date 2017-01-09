@@ -25,11 +25,11 @@
 #' dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
 #' l1 <- seq(from=1e-6, to=1e-5, length=3)
 #' l2 <- seq(from=1e-6, to=1e-5, length=3)
-#' system.time(casResC1C2 <- InCaSCN(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6))
-#' casRes <- InCaSCN(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+#' system.time(casResC1C2 <- c3co(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6))
+#' casRes <- c3co(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 
 #' @export
-InCaSCN <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2",output.dir="resultsInCaSCN", segment=TRUE,forceSeg=FALSE,forceInferrence=FALSE, init.random=FALSE, new.getZ=TRUE){
+c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2",output.dir="results_c3co", segment=TRUE,forceSeg=FALSE,forceInferrence=FALSE, init.random=FALSE, new.getZ=TRUE){
   if(stat=="TCN"){
     new.getZ<-FALSE
   }

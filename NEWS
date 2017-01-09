@@ -1,6 +1,7 @@
-Package: InCaSCN
+Package: c3co
 =================
 Version: 0.1.9 [2017-01-09]
+o Rename from InCaSCN to c3co
 o clean up (remove NOTE for plot functions)
 
 Version: 0.1.8 [2016-11-30]

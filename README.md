@@ -1,9 +1,9 @@
-# incas-cn
-Infering cancer subclones using copy number data
+# c3co
+Cancer cell clonality using copy number data
 
 # Installation
 
 Not avalaible for the moment with devtools!
 
 # Documentation
-See [vignette](https://github.com/pneuvial/incas-cn/blob/master/vignettes/vignette.Rmd)
+See [vignette](https://github.com/pneuvial/c3co/blob/master/vignettes/vignette.Rmd)

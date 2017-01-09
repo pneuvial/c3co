@@ -1,4 +1,4 @@
 library(testthat)
-library(InCaSCN)
+library(c3co)
 library(jointseg)
-test_check("InCaSCN")
+test_check("c3co")

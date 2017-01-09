@@ -4,10 +4,10 @@
 \alias{pvePlot}
 \title{Function to plot PVE}
 \usage{
-pvePlot(resInCaSCN, bestNbLatent = NULL, ylim = c(0, 1))
+pvePlot(resC3co, bestNbLatent = NULL, ylim = c(0, 1))
 }
 \arguments{
-\item{resInCaSCN}{output from InCaSCN.}
+\item{resC3co}{output from c3co.}
 
 \item{bestNbLatent}{best number of latent profiles.}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/PSCBSwrapper.R
 \name{loadPSCBSdata}
 \alias{loadPSCBSdata}
-\title{Function to load PSCBS data and transform them to InCaSCN format}
+\title{Function to load PSCBS data and transform them to c3co format}
 \usage{
 loadPSCBSdata(pathSegPSCBS, pattern = NULL)
 }
@@ -15,6 +15,6 @@ loadPSCBSdata(pathSegPSCBS, pattern = NULL)
 A data frame under PSCBS format
 }
 \description{
-Function to load PSCBS data and transform them to InCaSCN format
+Function to load PSCBS data and transform them to c3co format
 }
 

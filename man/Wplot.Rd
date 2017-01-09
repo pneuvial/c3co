@@ -9,7 +9,7 @@ Wplot(dataBest, rownamesW = NULL, col = NULL, margins = c(5, 7),
   cexCol = 1.5, ...)
 }
 \arguments{
-\item{dataBest}{A list from output of InCaSCN}
+\item{dataBest}{A list from output of resC3co}
 
 \item{rownamesW}{A vector that contains identification of patients}
 

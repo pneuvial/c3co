@@ -24,7 +24,7 @@ loadDataBest <- function(mm, stat, framework, b){
       pBest <- min(c(which(diff(listRes$PVE)<1e-3),length(listRes$PVE) ))
       dataBest <- listRes$res[[pBest]]
     }
-    if(mm=="InCaSCN"){
+    if(mm=="c3co"){
       listRes <- list()
       listRes$PVE <- unlist(sapply(res, function (rr) rr$PVE))
       listRes$nb.arch <- unlist(sapply(res, function (rr) rr$param$nb.arch))

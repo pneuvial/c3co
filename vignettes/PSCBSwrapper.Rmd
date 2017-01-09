@@ -1,5 +1,5 @@
 ---
-title: "How to use InCaSCN with PSCBS data"
+title: "How to use c3co with PSCBS data"
 author: "Morgane Pierre-Jean and Pierre Neuvial"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -11,28 +11,28 @@ vignette: >
 
 ## Introduction
 
-This document provides a brief tutorial on using the InCaSCN package from PSCBS data.
+This document provides a brief tutorial on using the c3co package from PSCBS data.
 
 ```{r}
 
-library(InCaSCN)
+library(c3co)
 ```
 
 ## Using wrapper
 In this document we use the data from \code{facets} package.
-\code{Facetswrapper} function segments and saves data from \code{facets} format to InCaSCN format.
+\code{Facetswrapper} function segments and saves data from \code{facets} format to c3co format.
 ```{r}
-pathPSCBS <- system.file("extdata",package="incas.extdata")
+pathPSCBS <- system.file("extdata",package="c3co.data")
 stopifnot(pathPSCBS!="")
 output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
 PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="TCN")
 ```
 
-## Run InCaSCN ##
-Now, you can run InCaSCN by using this line:
+## Run c3co ##
+Now, you can run c3co by using this line:
 ```{r, eval=TRUE, message=FALSE}
-resInCaSCN <- InCaSCN(NULL, nb.arch=2:4,output.dir=output.dir)
+resc3co <- c3co(NULL, nb.arch=2:4,output.dir=output.dir)
 ```
 ```{r, fig.width=7, fig.height=5}
-Wplot(resInCaSCN[[1]])
+Wplot(resc3co[[1]])
 ```

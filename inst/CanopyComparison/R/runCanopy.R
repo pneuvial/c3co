@@ -1,5 +1,5 @@
 library(Canopy)
-library(InCaSCN)
+library(c3co)
 library(RColorBrewer)
 
 message("load data set toy from Canopy")
@@ -10,7 +10,7 @@ Y1 <- t(toy2$Wm)
 Y2 <- t(toy2$WM)
 lambda <- 1e-5
 
-message("Run InCaSCN\n")
+message("Run c3co\n")
 K = 2:8
 rC1C2 <- lapply(K, function (kk) positive.fused(Y1,Y2, kk,lambda1 = lambda, lambda2 = lambda, init.random=FALSE))
 
@@ -23,15 +23,15 @@ kbest <- 4
 
 bestRes <- rC1C2[[which(K==kbest)]]
 savePath <- Arguments$getWritablePath("data-Canopy")
-saveRDS(bestRes, file=file.path(savePath, "resInCaSCN.rds"))
-bestRes <- readRDS(file.path(savePath, "resInCaSCN.rds"))
+saveRDS(bestRes, file=file.path(savePath, "res_c3co.rds"))
+bestRes <- readRDS(file.path(savePath, "res_c3co.rds"))
 
 W <- round(bestRes$W,2)[10:1,]
 res.clust = hclust(dist(W),method="ward.D")
 col = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 
 figPath <- Arguments$getWritablePath("Figures-Canopy")
-filename <- "heatmap,toy,incascn"
+filename <- "heatmap,toy,c3co"
 pdf(sprintf("%s/%s.pdf", figPath, filename), width=13, height=8)
 heatmap.3(W, Rowv=FALSE,dendrogram="col", col=col,scale="none", cexCol=1.5, cexRow=1.5,margins = c(5,10), cellnote=W, notecol="black", key = FALSE)
 dev.off()
@@ -46,7 +46,7 @@ res.clust = hclust(dist(WK4),method="ward.D")
 col = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 
 figPath <- Arguments$getWritablePath("Figures-Canopy")
-filename <- "heatmap,toy,incascn-v2"
+filename <- "heatmap,toy,c3co-v2"
 pdf(sprintf("%s/%s.pdf", figPath, filename), width=13, height=8)
 heatmap.3(WK4, Rowv=FALSE,dendrogram="col", col=col,scale="none", cexCol=1.5, cexRow=1.5,margins = c(5,10), cellnote=WK4, notecol="black", key = FALSE)
 dev.off()
@@ -88,7 +88,7 @@ output.tree = canopy.output(post, config.i, C=NULL)
 filename <- "heatmap,toy,canopy"
 pdf.name = sprintf("%s/%s.pdf", figPath, filename)
 canopy.plottree(output.tree, pdf.name =pdf.name, pdf = TRUE)
-## To do compare InCaSCN to Canopy
+## To do compare c3co to Canopy
 
 tree <- output.tree
 saveRDS(tree, file=file.path(savePath, "resCanopy.rds"))

@@ -1,6 +1,6 @@
-Package: InCaSCN
+Package: c3co
 Type: Package
-Title: InCaS-cn : Inferring Cancer Subclones using copy-number
+Title: c3co : Cancer Cell Clonality using Copy-number
 Version: 0.1.8
 Author: Morgane Pierre-Jean, Julien Chiquet, Pierre Neuvial
 Maintainer: Morgane Pierre-Jean <morgane.pierrejean@genopole.cnrs.fr>
@@ -29,7 +29,7 @@ VignetteBuilder: knitr
 Remotes:
     mpierrejean/acnr,
     mpierrejean/jointseg,
-    pneuvial/incas-cn-data/incas.extdata,
+    pneuvial/c3co-cn-data,
     mskcc/pctGCdata,
     mskcc/facets
 RoxygenNote: 5.0.1

@@ -1,12 +1,12 @@
 deconv <- function(b, stat) {
 ### Weights
-  pathArch <- Arguments$getWritablePath(sprintf("archetypeData%s_%s_InCaSCN", stat, framework))
-  pathIncasCN <- Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
-  filename <- sprintf("archData_B=%s_%s.rds", b, "InCaSCN")
-  filepath <- file.path(pathIncasCN,filename)
-  if(!file.exists(filepath)|| forceInCaSCN){
+  pathArch <- Arguments$getWritablePath(sprintf("archetypeData%s_%s_c3co", stat, framework))
+  pathc3co <- Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
+  filename <- sprintf("archData_B=%s_%s.rds", b, "c3co")
+  filepath <- file.path(pathc3co,filename)
+  if(!file.exists(filepath)|| forcec3co){
     dat <- readRDS(sprintf("%s/dat_B=%s.rds",pathSim,b))
-    casRes <- InCaSCN(dat, nb.arch.grid=p.list, stat=stat,output.dir= pathIncasCN)
+    casRes <- c3co(dat, nb.arch.grid=p.list, stat=stat,output.dir= pathc3co)
     saveRDS(casRes, filepath)
   }
 }

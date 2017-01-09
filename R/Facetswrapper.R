@@ -1,4 +1,4 @@
-#' Function to load Facets data and transform them to InCaSCN format
+#' Function to load Facets data and transform them to c3co format
 #'
 #' @export
 #' @param pathFacets The path to load Facets data csv.gz format.
@@ -9,7 +9,7 @@ loadFacetsdata <- function(pathFacets){
     df <- facets::readSnpMatrix(file.path(pathFacets, ff))
     xx=facets::preProcSample(df)
     dat=xx$pmat
-    ## Rename chromosome, x and CT to segment with InCaSCN
+    ## Rename chromosome, x and CT to segment with c3co
     df <- data.frame(chr=dat$chrom, pos=dat$maploc)
     df$tcn <- 2*dat$rCountT/dat$rCountN
     df$dh <- 2*abs(dat$vafT-1/2)
@@ -30,8 +30,8 @@ Facetswrapper <- function (pathFacets,output.dir, stat){
 ### To do may be cut this function into several function
   dat <- loadFacetsdata(pathFacets)
 ### Joint segmentation of all samples
-  resSeg <- segmentThroughInCaSCN(dat, stat)
-### Perform the InCaSCN method
+  resSeg <- segmentThroughC3co(dat, stat)
+### Perform the c3co method
   saveRDS(resSeg, file.path(output.dir, "segDat.rds"))
   message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
 }

@@ -1,13 +1,13 @@
 #' Function to plot PVE
 #'
 #' @export
-#' @param resInCaSCN output from InCaSCN.
+#' @param resC3co output from c3co.
 #' @param bestNbLatent best number of latent profiles.
 #' @param ylim a vector that define min and max of y-axis
 #' @return PVE curve
-pvePlot <- function(resInCaSCN,bestNbLatent=NULL, ylim=c(0,1)){
-  PVEs <- sapply(resInCaSCN, function (rr) rr$PVE)
-  nb.arch <- sapply(resInCaSCN, function (rr) rr$param$nb.arch)
+pvePlot <- function(resC3co,bestNbLatent=NULL, ylim=c(0,1)){
+  PVEs <- sapply(resC3co, function (rr) rr$PVE)
+  nb.arch <- sapply(resC3co, function (rr) rr$param$nb.arch)
   df.PVE <- data.frame(PVE=PVEs, nb.arch=nb.arch)
   gg <- ggplot2::ggplot(df.PVE,ggplot2::aes(x=nb.arch, y=PVE))+ ggplot2::geom_line()+ggplot2::geom_point()+ggplot2::theme_bw()+ggplot2::ylim(ylim)+ggplot2::xlab("Number of latent profiles")
   if(!is.null(bestNbLatent)){
@@ -19,7 +19,7 @@ pvePlot <- function(resInCaSCN,bestNbLatent=NULL, ylim=c(0,1)){
 #' Function to plot W
 #'
 #' @export
-#' @param dataBest A list from output of InCaSCN
+#' @param dataBest A list from output of resC3co
 #' @param rownamesW A vector that contains identification of patients
 #' @param col A vector that contains colors for the heatmap
 #' @param margins A vector margins 
@@ -58,7 +58,7 @@ Wplot <- function(dataBest, rownamesW=NULL, col= NULL,margins=c(5,7),posLegend=N
 #' @param minMaxPos Matrix that contains min and max position for each chromosome
 #' @param chromosomes A vector that contains the focused chromosomes
 #' @param var TCN, Minor or Major 
-#' @param dataBest A list from output of InCaSCN
+#' @param dataBest A list from output of c3co
 #' @return A data frame to plot Latent profiles with ggplot
 createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
   lengthCHR <- sapply(dataBest$bkp, length)

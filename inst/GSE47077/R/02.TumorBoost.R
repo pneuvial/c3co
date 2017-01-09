@@ -65,7 +65,7 @@ data2 <- extractMatrix(ds2)
 geno <- extractMatrix(gsN)
 
 ##########################################################################
-# Build data for InCaSCN
+# Build data for c3co
 ##########################################################################
 dat <- lapply(2:14, function(ii) {
   print(dimnames(data)[[3]][ii])

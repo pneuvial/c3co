@@ -10,10 +10,10 @@ dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
 l1 <- seq(from=1e-6, to=1e-5, length=3)
 l2 <- seq(from=1e-6, to=1e-5, length=3)
 
-test_that("InCaSCN terminates on C1,C2", {
-    casResC1C2 <- InCaSCN(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+test_that("c3co terminates on C1,C2", {
+    casResC1C2 <- c3co(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 })
 
-test_that("InCaSCN terminates on TCN", {
-    casRes <- InCaSCN(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+test_that("c3co terminates on TCN", {
+    casRes <- c3co(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 })

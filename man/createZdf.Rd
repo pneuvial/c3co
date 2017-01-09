@@ -9,7 +9,7 @@ createZdf(minMaxPos, dataBest, chromosomes, var = "TCN")
 \arguments{
 \item{minMaxPos}{Matrix that contains min and max position for each chromosome}
 
-\item{dataBest}{A list from output of InCaSCN}
+\item{dataBest}{A list from output of c3co}
 
 \item{chromosomes}{A vector that contains the focused chromosomes}
 

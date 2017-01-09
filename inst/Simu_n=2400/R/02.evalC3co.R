@@ -1,8 +1,8 @@
-library(InCaSCN)
+library(c3co)
 framework <- "realistic"
 forceM <- FALSE
 stats <- c("TCN","C1C2", "TCN")
-meth <- c("FLLAT","InCaSCN", "InCaSCN")
+meth <- c("FLLAT","c3co", "c3co")
 
 dataAnnotTP <- loadCnRegionData(dataSet="GSE13372", tumorFraction=1)
 dataAnnotN <- loadCnRegionData(dataSet="GSE13372", tumorFraction=0)
@@ -73,7 +73,7 @@ for(b in 1:100){
           res <- readRDS(file)$res
         })
         }
-      if(meth[ss]=="InCaSCN"){
+      if(meth[ss]=="c3co"){
         listRes <- list()
         listRes$PVE <- unlist(sapply(res, function (rr) rr$PVE))
         listRes$nb.arch <- unlist(sapply(res, function (rr) rr$param$nb.arch))
@@ -122,7 +122,7 @@ tol <- sort(tol, decreasing=TRUE)
 ### Archetypes ROC curves Full resolution
 #######################################################################
 rocArrayArchFull <- array(dim=c(100, length(stats), 2,length(tol)),dimnames=list(b=1:100, method=sprintf("%s-%s",meth,stats), ROC=c("tp", "fp")))
-rocDataPath <- Arguments$getWritablePath("rocDataInCaSCN")
+rocDataPath <- Arguments$getWritablePath("rocDatac3co")
 fileROC <- "rocArray,full,arch.rds"
 forceROC=T
 
@@ -160,7 +160,7 @@ if(!file.exists(file.path(rocDataPath, fileROC))||forceROC){
             res <- readRDS(file)$res
           })
         }
-        if(mm=="InCaSCN"){
+        if(mm=="c3co"){
           listRes <- list()
           listRes$PVE <- unlist(sapply(res, function (rr) rr$PVE))
           listRes$nb.arch <- unlist(sapply(res, function (rr) rr$param$nb.arch))
@@ -263,7 +263,7 @@ gplotROCarchFull <- ggplot(dataROCArchFull)+ geom_line(aes(x=FPR,y=TPR, group=me
 
 gplotROCarchFull+ylim(c(0,1))+geom_point(aes(x=FPR,y=TPR, group=method,colour = method))
                     
-pathFig <- Arguments$getWritablePath("Figures/ROC_InCaSCN")
+pathFig <- Arguments$getWritablePath("Figures/ROC_c3co")
 ggsave(gplotROCarchFull, filename=file.path(pathFig, "ROC,archetypes,FullRes.pdf"), width=7, height=5)
 
 library(tis)
@@ -298,7 +298,7 @@ tol <- seq(from=0, to=1, length=20)
 tol <- sort(tol, decreasing=TRUE)
 
 
-rocDataPath <- Arguments$getWritablePath("rocDataInCaSCN")
+rocDataPath <- Arguments$getWritablePath("rocDatac3co")
 fileROC <- "rocArray,full,profiles.rds"
 forceROC=F
 if(!file.exists(file.path(rocDataPath, fileROC))||forceROC){
@@ -345,7 +345,7 @@ if(!file.exists(file.path(rocDataPath, fileROC))||forceROC){
             res <- readRDS(file)$res
           })
         }
-        if(mm=="InCaSCN"){
+        if(mm=="c3co"){
           listRes <- list()
           listRes$PVE <- unlist(sapply(res, function (rr) rr$PVE))
           listRes$nb.arch <- unlist(sapply(res, function (rr) rr$param$nb.arch))
@@ -386,7 +386,7 @@ if(!file.exists(file.path(rocDataPath, fileROC))||forceROC){
           }))
           
         }else{
-          if(mm=="InCaSCN"){
+          if(mm=="c3co"){
             YTCNhat <- dataBest$Y.hat$Y1
             bkp <- res[[pBest]]$bkp
             start <- c(1,ceiling(bkp[[1]]))
@@ -429,7 +429,7 @@ if(!file.exists(file.path(rocDataPath, fileROC))||forceROC){
   }
   saveRDS(rocArrayProfFull, file.path(rocDataPath, fileROC))
 }else{
-  rocDataPath <- Arguments$getWritablePath("rocDataInCaSCN")
+  rocDataPath <- Arguments$getWritablePath("rocDatac3co")
   fileROC <- "rocArray,full,profile.rds"
   rocArrayProfFull <- readRDS(file.path(rocDataPath, fileROC))
 }
@@ -602,7 +602,7 @@ for(b in 1:100){
         listRes$PVE <- res$PVE$PVEs
         
       }
-      if(mm=="InCaSCN"){
+      if(mm=="c3co"){
         listRes <- list()
         listRes$PVE <- unlist(sapply(res, function (rr) rr$PVE))
         

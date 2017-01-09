@@ -1,4 +1,4 @@
-library(InCaSCN)
+library(c3co)
 library(FLLat)
 library(parallel)
 ## Number of archetypes
@@ -97,7 +97,7 @@ if(!file.exists(filename)){
 
 ### Simulate Samples
 n <- 30
-forceInCaSCN <- FALSE
+forcec3co <- FALSE
 
 pathWeight <- Arguments$getWritablePath(sprintf("weightData"))
 B <- 1:100

@@ -1,21 +1,21 @@
 ##########################################################################
-# Run InCaSCN
+# Run c3co
 ##########################################################################
 ## We provide the results of the algorithm and the segmentation so if the user only wants to reproduce figure, run only this file
 
-library(InCaSCN)
+library(c3co)
 library(RColorBrewer)
 
 patient <- "RK29"
 path <- "data"
 #dat <- readRDS(sprintf("%s/dat-%s.rds", path ,patient))
-output.dir <- Arguments$getWritablePath(sprintf("resultsInCaSCN-%s",patient))
-resInC <- list.files(output.dir, pattern="featureData")
-resInCaSCN <- lapply(file.path(output.dir, resInC), readRDS)
+output.dir <- Arguments$getWritablePath(sprintf("results_c3co-%s",patient))
+res <- list.files(output.dir, pattern="featureData")
+resC3co <- lapply(file.path(output.dir, res), readRDS)
 
 ### Plot PVE
-pvePlot(resInCaSCN, ylim=c(0.70,1))
-dataBest <- resInCaSCN[[6]]
+pvePlot(resC3co, ylim=c(0.70,1))
+dataBest <- resC3co[[6]]
 
 ### Plot W matrix
 pathFig <- Arguments$getWritablePath("fig-GSE47077-RK29")
@@ -25,7 +25,7 @@ Wplot(dataBest, rownamesW= gsub(".*-","", names(dat)))
 dev.off()
 
 ### Plot Latent profiles
-minMaxPos <- readRDS(file.path(path, "minMaxposByCHR.rds")
+minMaxPos <- readRDS(file.path(path, "minMaxposByCHR.rds"))
 
 lengthCHR <- sapply(dataBest$bkp, length)
 chrs <- sapply(1:22, function(cc) rep(cc,times=lengthCHR[cc]))
