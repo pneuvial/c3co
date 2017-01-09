@@ -29,7 +29,7 @@ VignetteBuilder: knitr
 Remotes:
     mpierrejean/acnr,
     mpierrejean/jointseg,
-    pneuvial/c3co-cn-data,
+    pneuvial/c3co.data,
     mskcc/pctGCdata,
     mskcc/facets
 RoxygenNote: 5.0.1
