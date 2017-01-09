@@ -1,5 +1,8 @@
 Package: InCaSCN
 =================
+Version: 0.1.9 [2017-01-09]
+o clean up (remove NOTE for plot functions)
+
 Version: 0.1.8 [2016-11-30]
 o Parallelism for Z1 and Z2 inferrence
 

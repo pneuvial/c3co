@@ -4,10 +4,9 @@
 \alias{Wplot}
 \title{Function to plot W}
 \usage{
-Wplot(dataBest, rownamesW = NULL,
-  col = colorRampPalette(RColorBrewer::brewer.pal(9, "GnBu"))(100),
-  margins = c(5, 7), posLegend = NA, listPheno, colsPheno, colLegend,
-  labelLegend, cexCol = 1.5, ...)
+Wplot(dataBest, rownamesW = NULL, col = NULL, margins = c(5, 7),
+  posLegend = NA, listPheno, colsPheno, colLegend, labelLegend,
+  cexCol = 1.5, ...)
 }
 \arguments{
 \item{dataBest}{A list from output of InCaSCN}

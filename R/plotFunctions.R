@@ -9,7 +9,7 @@ pvePlot <- function(resInCaSCN,bestNbLatent=NULL, ylim=c(0,1)){
   PVEs <- sapply(resInCaSCN, function (rr) rr$PVE)
   nb.arch <- sapply(resInCaSCN, function (rr) rr$param$nb.arch)
   df.PVE <- data.frame(PVE=PVEs, nb.arch=nb.arch)
-  gg <- ggplot2::ggplot(df.PVE,aes(x=nb.arch, y=PVE))+ geom_line()+geom_point()+theme_bw()+ylim(ylim)+xlab("Number of latent profiles")
+  gg <- ggplot2::ggplot(df.PVE,ggplot2::aes(x=nb.arch, y=PVE))+ ggplot2::geom_line()+ggplot2::geom_point()+ggplot2::theme_bw()+ggplot2::ylim(ylim)+ggplot2::xlab("Number of latent profiles")
   if(!is.null(bestNbLatent)){
    gg <- gg+ggplot2::geom_vline(xintercept=bestNbLatent, lty=2)
   }
@@ -31,23 +31,24 @@ pvePlot <- function(resInCaSCN,bestNbLatent=NULL, ylim=c(0,1)){
 #' @param cexCol size of labels of columns by (default 1.5) 
 #' @param ... other paramaters to personalize heatmap (see \code{heatmap.3.R})
 #' @return Heatmap of W
-Wplot <- function(dataBest, rownamesW=NULL, col= colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100),margins=c(5,7),posLegend=NA, listPheno, colsPheno, colLegend, labelLegend,cexCol=1.5,...){
+Wplot <- function(dataBest, rownamesW=NULL, col= NULL,margins=c(5,7),posLegend=NA, listPheno, colsPheno, colLegend, labelLegend,cexCol=1.5,...){
+  if(is.null(col)){col=grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)}
   W <- dataBest$res$W
   rownames(W) <- rownamesW
   colnames(W) <- sprintf("Subclone %s", letters[1:ncol(W)])
-  res.clust = hclust(dist(W),method="ward.D")
+  res.clust = stats::hclust(stats::dist(W),method="ward.D")
   if(!missing(listPheno)){
     if(ncol(listPheno)!=ncol(colsPheno)){
       stop("listPheno and colsPheno must have the same number of columns")
     }
   }
   if(!missing(colsPheno)){
-    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = c(5,10),...)
+    heatmap.3(W, Rowv=stats::as.dendrogram(res.clust), dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = c(5,10),...)
     if(!is.na(posLegend)){
-      legend(posLegend,legend=labelLegend, fill=colLegend,border=FALSE, bty="n", y.intersp = 1, cex=1)
+      graphics::legend(posLegend,legend=labelLegend, fill=colLegend,border=FALSE, bty="n", y.intersp = 1, cex=1)
     }
   }else{
-    heatmap.3(W, Rowv=as.dendrogram(res.clust), dendrogram="row", col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = margins,...)
+    heatmap.3(W, Rowv=stats::as.dendrogram(res.clust), dendrogram="row", col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = margins,...)
   }  
 }
 
@@ -95,6 +96,6 @@ createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
 #' @param ylab Label of y-axis
 #' @return plot of Latent profiles
 Zplot <- function(df, ylab) {
-  gg <- ggplot2::ggplot(df)+ggplot2::geom_step(aes(position, CN, group=arch, col=arch,lty=arch), direction="hv", lwd=1)+ggplot2::facet_wrap(~chr, ncol=2, scale="free")+ggplot2::theme_bw()+xlab("Genome position (Mb)")+ ggplot2::labs(colour = "Subclone",lty="Subclone")+ggplot2::scale_x_continuous(breaks=seq(from=0,to =150, by=20))+ggplot2::scale_y_continuous(name=ylab)
+  gg <- ggplot2::ggplot(df)+ggplot2::geom_step(ggplot2::aes(position, CN, group=arch, col=arch,lty=arch), direction="hv", lwd=1)+ggplot2::facet_wrap(~chr, ncol=2, scale="free")+ggplot2::theme_bw()+ggplot2::xlab("Genome position (Mb)")+ ggplot2::labs(colour = "Subclone",lty="Subclone")+ggplot2::scale_x_continuous(breaks=seq(from=0,to =150, by=20))+ggplot2::scale_y_continuous(name=ylab)
   gg
 }

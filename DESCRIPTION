@@ -20,6 +20,9 @@ Imports:
     RColorBrewer,
     parallel,
     facets,
+    grDevices,
+    graphics,
+    stats
 Suggests: knitr,
     testthat
 VignetteBuilder: knitr

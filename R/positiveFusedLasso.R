@@ -18,7 +18,8 @@
 #' len <- 500*10
 #' nbClones <- 3
 #' bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
-#' regions <-list(c("(0,3)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+#' regions <-list(c("(0,3)", "(0,2)","(1,2)"), 
+#' c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 #' M = matrix(c(40,30, 0,0,70, 15,10, 0, 35,15,0,0 ,0,0,0), byrow=TRUE, ncol=3)
 #' simu <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
@@ -33,7 +34,8 @@
 #' Y2seg <- t(apply(Y2, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
 #' lambda <- 1e-5
 #' system.time(rC1C2 <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda))
-#' system.time(rC1C2new <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda, new.getZ=TRUE))
+#' system.time(rC1C2new <- positive.fused(Y1seg,Y2seg, 4,
+#' lambda1 = lambda, lambda2 = lambda, new.getZ=TRUE))
 #' rTCN <- positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
 positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
                            eps = 1e-2, max.iter = 50, verbose=F, new.getZ=FALSE) {
@@ -52,7 +54,7 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
   }
   if(!init.random){
     ## initializing Z by clustering on Y
-    cluster <- cutree(hclust(dist(Y),method="ward.D"), nb.arch)
+    cluster <- stats::cutree(stats::hclust(stats::dist(Y),method="ward.D"), nb.arch)
     ## averaging the Y over the clusters to initialize the archetypes
     Z1.init <- sapply(split(as.data.frame(Y1), cluster), colMeans)
     if(!is.null(Y2)){
