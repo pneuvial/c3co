@@ -9,7 +9,7 @@ pvePlot <- function(resC3co,bestNbLatent=NULL, ylim=c(0,1)){
   PVEs <- sapply(resC3co, function (rr) rr$PVE)
   nb.arch <- sapply(resC3co, function (rr) rr$param$nb.arch)
   df.PVE <- data.frame(PVE=PVEs, nb.arch=nb.arch)
-  gg <- ggplot2::ggplot(df.PVE,ggplot2::aes(x=nb.arch, y=PVE))+ ggplot2::geom_line()+ggplot2::geom_point()+ggplot2::theme_bw()+ggplot2::ylim(ylim)+ggplot2::xlab("Number of latent profiles")
+  gg <- ggplot2::ggplot(df.PVE,ggplot2::aes_(x=~nb.arch, y=~PVE))+ ggplot2::geom_line()+ggplot2::geom_point()+ggplot2::theme_bw()+ggplot2::ylim(ylim)+ggplot2::xlab("Number of latent profiles")
   if(!is.null(bestNbLatent)){
    gg <- gg+ggplot2::geom_vline(xintercept=bestNbLatent, lty=2)
   }
@@ -96,6 +96,7 @@ createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
 #' @param ylab Label of y-axis
 #' @return plot of Latent profiles
 Zplot <- function(df, ylab) {
-  gg <- ggplot2::ggplot(df)+ggplot2::geom_step(ggplot2::aes(position, CN, group=arch, col=arch,lty=arch), direction="hv", lwd=1)+ggplot2::facet_wrap(~chr, ncol=2, scale="free")+ggplot2::theme_bw()+ggplot2::xlab("Genome position (Mb)")+ ggplot2::labs(colour = "Subclone",lty="Subclone")+ggplot2::scale_x_continuous(breaks=seq(from=0,to =150, by=20))+ggplot2::scale_y_continuous(name=ylab)
+  
+  gg <- ggplot2::ggplot(df)+ggplot2::geom_step(ggplot2::aes_(~position, ~CN, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)+ggplot2::facet_wrap(~chr, ncol=2, scale="free")+ggplot2::theme_bw()+ggplot2::xlab("Genome position (Mb)")+ ggplot2::labs(colour = "Subclone",lty="Subclone")+ggplot2::scale_x_continuous(breaks=seq(from=0,to =150, by=20))+ggplot2::scale_y_continuous(name=ylab)
   gg
 }

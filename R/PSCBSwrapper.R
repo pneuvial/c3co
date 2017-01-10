@@ -27,6 +27,7 @@ loadPSCBSdata <- function(pathSegPSCBS, pattern=NULL){
   dat <- lapply(dat, function (ff) {
     df <- do.call(rbind, lapply(chr, function (cc){
       d <- subset(ff, chr==cc)
+      pos <- NULL; rm(pos);
       d <- subset(d, pos%in%posFull[[cc]])
     }))
     return(df)
@@ -48,6 +49,7 @@ segmentThroughC3co <- function(dat, stat){
     seg.rho <- do.call(cbind, lapply(dat, function (df){
       chr.grid <- unique(df$chr)
       Y <- do.call(c, lapply(chr.grid, function (cc){
+        chr <- NULL; rm(chr);
         dfCHR <- subset(df, chr==cc)
         xOut <- c(min(dfCHR$pos), resSeg$bkp[[cc]], max(dfCHR$pos))
         means <- matrixStats::binMeans(y = dfCHR$dh, x = dfCHR$pos, bx = xOut, na.rm = TRUE)

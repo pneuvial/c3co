@@ -27,7 +27,6 @@
 #' l2 <- seq(from=1e-6, to=1e-5, length=3)
 #' system.time(casResC1C2 <- c3co(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6))
 #' casRes <- c3co(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
-
 #' @export
 c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2",output.dir="results_c3co", segment=TRUE,forceSeg=FALSE,forceInferrence=FALSE, init.random=FALSE, new.getZ=TRUE){
   if(stat=="TCN"){
@@ -115,7 +114,7 @@ c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(leng
     reslist[[it]] <- res.l
     it <- it+1
     pp <- nb.arch.grid[it]
-    cond <- (sum(apply(res.l$res$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0&sum(apply(res.l$res$W, 2,function(ww) (sum(ww^2)<1e-3)))==0&pp<max(nb.arch.grid))
+    cond <- (sum(apply(res.l$res$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0&sum(apply(res.l$res$W, 2,function(ww) (sum(ww^2)<1e-3)))==0& !is.na(pp))
   }
   return(reslist)
 }

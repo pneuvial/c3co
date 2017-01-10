@@ -29,6 +29,7 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
   if(is.factor(dataAnnotTP$region)){
     dataAnnotTP$region <- as.character(dataAnnotTP$region)
   }
+  genotype <- NULL; rm(genotype);
   if(is.factor(dataAnnotTP$genotype)){
     dataAnnotTP$genotype <- as.character(dataAnnotTP$genotype)
   }

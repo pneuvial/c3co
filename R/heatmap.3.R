@@ -364,6 +364,7 @@ heatmap.3 <- function(x,
         retval$rowDendrogram <- ddr
     if (exists("ddc"))
         retval$colDendrogram <- ddc
+    ddc <- NULL; rm(ddc);
     retval$breaks <- breaks
     retval$col <- col
     if (!invalid(na.color) & any(is.na(x))) { # load library(gplots)
