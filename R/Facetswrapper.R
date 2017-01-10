@@ -30,7 +30,7 @@ Facetswrapper <- function (pathFacets,output.dir, stat){
 ### To do may be cut this function into several function
   dat <- loadFacetsdata(pathFacets)
 ### Joint segmentation of all samples
-  resSeg <- segmentThroughC3co(dat, stat)
+  resSeg <-  c3co::segmentData(dat, stat=stat)
 ### Perform the c3co method
   saveRDS(resSeg, file.path(output.dir, "segDat.rds"))
   message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
