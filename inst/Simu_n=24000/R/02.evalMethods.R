@@ -250,7 +250,7 @@ sdPVE <- na.omit(apply(PVEArray, 2,colSds, na.rm=TRUE))
 dataPVE <- cbind(melt(meanPVE), melt(sdPVE))[,-c(4,5)]
 colnames(dataPVE) <- c("Features", "method", "PVE", "sds")
 dataPVE$Features <- dataPVE$Features+1
-dataPVE$method <- factor(dataPVE$method, , levels=c("FLLAT-TCN","c3co-TCN","c3co-C1C2"))
+dataPVE$method <- factor(dataPVE$method, levels=c("FLLAT-TCN","c3co-TCN","c3co-C1C2"))
 pPVE <-  ggplot(dataPVE)+geom_line(aes(x=Features,y=PVE,colour=method, lty=method))
 
 pPVE <- pPVE+geom_ribbon(aes(ymin=PVE-sds, ymax=PVE+sds,x=Features,fill=method ),alpha=0.3)+ scale_x_continuous(limits=c(2, 15), breaks=seq(from=2, to =15, by=1))+theme_bw()+scale_y_continuous(limits=c(0.15,1))
