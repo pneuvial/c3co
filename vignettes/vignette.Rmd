@@ -16,7 +16,7 @@ similarities shared among samples while maintaining the ability to identify any 
 
 ## Model 
 
-The figure below illustrates the model used in the InCaS-CN package. Two heterogeneous tumor samples (green and yellow circles) are composed of a collection of normal cells (gray discs) and two cancer subclones (red triangles and blue squares). One of the cancer subclones is present in both tumor samples. 
+The figure below illustrates the model used in the `c3co` package. Two heterogeneous tumor samples (green and yellow circles) are composed of a collection of normal cells (gray discs) and two cancer subclones (red triangles and blue squares). One of the cancer subclones is present in both tumor samples. 
 
 ![](img/features.png)
 ![](img/features2.png)
