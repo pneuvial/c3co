@@ -8,7 +8,7 @@ devtools::install_github("pneuvial/c3co")
 
 ## Model 
 
-This package, which implements a constraint dictionary learning problem to recover subclones across several patients with SNP data. The c3co model is designed to identify regions of copy number variation (CNV) in multi-sample SNPs data. In particular, it takes advantage of similarities shared among samples while maintaining the ability to identify any potential heterogeneity by using parental copy number signals. The model is decribed in the figure below. Two heterogeneous tumor samples (green and yellow circles) are composed of a collection of normal cells (gray discs) and two cancer subclones (red triangles and blue squares). One of the cancer subclones is present in both tumor samples. 
+This package implements a constraint dictionary learning algotrithm to recover subclones across several DNA copy number profiles. The c3co model is decribed in the figure below. Two heterogeneous tumor samples (green and yellow circles) are composed of a collection of normal cells (gray discs) and two cancer subclones (red triangles and blue squares). One of the cancer subclones is present in both tumor samples. 
 
 ![](vignettes/img/features.png)
 ![](vignettes/img/features2.png)
