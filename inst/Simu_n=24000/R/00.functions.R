@@ -1,8 +1,9 @@
+library(R.utils)
 loadDataBest <- function(mm, stat, framework, b){
   print(sprintf("meth=%s, stat=%s", mm, stat))
-  pathArch <- Arguments$getWritablePath(sprintf("archetypeData%s_%s_%s", stat, framework, meth[ss]))
+  pathArch <- Arguments$getWritablePath(sprintf("archetypeData%s_%s_%s", stat, framework, mm))
   pathMeth <- Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
-  filename <- sprintf("archData_B=%s_%s.rds", b, meth[ss])
+  filename <- sprintf("archData_B=%s_%s.rds", b, mm)
   print(filename)
   file <- file.path(pathMeth,filename)
   if(file.exists(file)){
