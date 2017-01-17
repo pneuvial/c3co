@@ -4,12 +4,14 @@
 \alias{Zplot}
 \title{Function to plot Latent profiles}
 \usage{
-Zplot(df, ylab)
+Zplot(df, ylab, ylim = c(0, 4))
 }
 \arguments{
 \item{df}{data.frame object output from \code{createZdf}}
 
 \item{ylab}{Label of y-axis}
+
+\item{ylim}{define limits for y-axis}
 }
 \value{
 plot of Latent profiles

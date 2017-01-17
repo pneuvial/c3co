@@ -62,7 +62,7 @@ Wplot <- function(dataBest, rownamesW=NULL, col= NULL,margins=c(5,7),posLegend=N
 #' @return A data frame to plot Latent profiles with ggplot
 createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
   lengthCHR <- sapply(dataBest$bkp, length)
-  chrs <- sapply(1:22, function(cc) rep(cc,times=lengthCHR[cc]))
+  chrs <- sapply(1:25, function(cc) rep(cc,times=lengthCHR[cc]))
   start <- c(1,cumsum(lengthCHR)+1)
   
   
@@ -94,9 +94,10 @@ createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
 #' @export
 #' @param df data.frame object output from \code{createZdf}
 #' @param ylab Label of y-axis
+#' @param ylim define limits for y-axis
 #' @return plot of Latent profiles
-Zplot <- function(df, ylab) {
+Zplot <- function(df, ylab, ylim=c(0,4)) {
   
-  gg <- ggplot2::ggplot(df)+ggplot2::geom_step(ggplot2::aes_(~position, ~CN, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)+ggplot2::facet_wrap(~chr, ncol=2, scale="free")+ggplot2::theme_bw()+ggplot2::xlab("Genome position (Mb)")+ ggplot2::labs(colour = "Subclone",lty="Subclone")+ggplot2::scale_x_continuous(breaks=seq(from=0,to =150, by=20))+ggplot2::scale_y_continuous(name=ylab)
+  gg <- ggplot2::ggplot(df)+ggplot2::geom_step(ggplot2::aes_(~position, ~CN, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)+ggplot2::facet_wrap(~chr, ncol=2)+ggplot2::theme_bw()+ggplot2::xlab("Genome position (Mb)")+ ggplot2::labs(colour = "Subclone",lty="Subclone")+ggplot2::scale_x_continuous(breaks=seq(from=0,to =max(df$position), by=20))+ggplot2::scale_y_continuous(name=ylab, limits = ylim)
   gg
 }

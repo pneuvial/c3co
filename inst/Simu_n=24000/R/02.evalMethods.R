@@ -1,18 +1,19 @@
 library(c3co)
 library(reshape)
 library(tis)
+library(ggplot2)
 library(matrixStats)
 source("R/00.functions.R")
 framework <- "realistic"
 forceM <- FALSE
 stats <- c("TCN","C1C2", "TCN")
 meth <- c("FLLAT","c3co", "c3co")
-pathFig <- Arguments$getWritablePath("Figures")
+pathFig <- R.utils::Arguments$getWritablePath("Figures")
 
-dataAnnotTP <- loadCnRegionData(dataSet="GSE13372", tumorFraction=1)
-dataAnnotN <- loadCnRegionData(dataSet="GSE13372", tumorFraction=0)
+dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFraction=1)
+dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFraction=0)
 
-pathSubClones <- Arguments$getWritablePath(sprintf("simArchData"))
+pathSubClones <- R.utils::Arguments$getWritablePath(sprintf("simArchData"))
 subClones <- readRDS(file.path(pathSubClones, list.files(pathSubClones)))
 len <- nrow(subClones[[1]])
 bkpsByClones <- lapply(subClones, function(sss){
@@ -28,7 +29,7 @@ regionsByClones <- lapply(1:length(subClones), function(iii){
   sss$region[c(bkpsByClones[[iii]], len)]
 })    
 regionsByClones[[length(subClones)+1]] <- "(1,1)"
-pathWeight <- Arguments$getWritablePath(sprintf("weightData"))
+pathWeight <- R.utils::Arguments$getWritablePath(sprintf("weightData"))
 n <- 30
 
 C1N <- dataAnnotN$c*(1-2*abs(dataAnnotN$b-1/2))/2
@@ -36,6 +37,17 @@ c1Mean <- by(C1N, dataAnnotN$genotype, mean)[2]
 C2N <- dataAnnotN$c*(1+2*abs(dataAnnotN$b-1/2))/2
 c2Mean <- by(C2N, dataAnnotN$genotype, mean)[2]
 cMean <- mean(dataAnnotN$c)
+###########################################
+### Plot latent Profiles
+###########################################
+
+## Sample only 5000 observations to reduce the size of the figure
+i <- sort(sample(1:len, size=5000))
+df.Sub <- do.call(rbind, lapply(subClones, function (ss) ss[i,]))
+df.Sub$Feat <- as.factor(rep(1:5, each=length(i)))
+dfToPlot <- data.frame(val=c(df.Sub$ct, df.Sub$baft),var=factor(rep(c("c","b"), each=nrow(df.Sub)), levels=c("c","b")), Feat=rep(df.Sub$Feat, times=2), pos=rep(df.Sub$pos, times=2))
+p <- ggplot(dfToPlot, aes(pos, val)) + geom_point(cex=0.4, alpha=0.2, pch=19)+ facet_grid(var ~ Feat, scale="free")+theme_bw()+ylab("")+scale_x_continuous(name="Genome position (Mb)",breaks = c(0, 10000, 20000))
+p
 
 ###########################################
 ### Evaluation on weights
@@ -75,8 +87,8 @@ ggsave(gWeights,filename=sprintf("%s/weightLoss_n=24000.pdf",pathFig, framework)
 ### RandIndex
 library(mclust)
 randIndexArray <- array(dim=c(100, length(stats)),dimnames=list(b=1:100, method=sprintf("%s-%s",meth,stats)))
-pathWeight <- Arguments$getWritablePath(sprintf("weightData"))
-pathSim <- Arguments$getWritablePath(sprintf("simData"))
+pathWeight <- R.utils::Arguments$getWritablePath(sprintf("weightData"))
+pathSim <- R.utils::Arguments$getWritablePath(sprintf("simData"))
 for(b in 1:100){
   print(b)
   filename <- sprintf("weight,n=%s,b=%s.rds", n,b)
@@ -111,7 +123,7 @@ tol <- c(seq(from=0.0, to=1, length=20))
 tol <- sort(tol, decreasing=TRUE)
 rocArrayArchFull <- array(dim=c(100, length(stats), 2,length(tol)),dimnames=list(b=1:100, method=sprintf("%s-%s",meth,stats), ROC=c("tp", "fp")))
 AUCs_arch <- array(dim=c(100, length(stats)),dimnames=list(b=1:100, method=sprintf("%s-%s",meth,stats)))
-rocDataPath <- Arguments$getWritablePath("rocDatac3co")
+rocDataPath <- R.utils::Arguments$getWritablePath("rocDatac3co")
 fileROC <- "rocArray,full,arch.rds"
 forceROC <- FALSE
 
@@ -189,7 +201,7 @@ gplotROCarchFull <- ggplot(dataROCArchFull)+ geom_line(aes(x=FPR,y=TPR, group=me
 
 gplotROCarchFull+ylim(c(0,1))+geom_point(aes(x=FPR,y=TPR, group=method,colour = method))
                     
-pathFig <- Arguments$getWritablePath("Figures/ROC_c3co")
+pathFig <- R.utils::Arguments$getWritablePath("Figures/ROC_c3co")
 ggsave(gplotROCarchFull, filename=file.path(pathFig, "ROC,archetypes,FullRes_n=24000.pdf"), width=7, height=5)
 
 AUCs_arch<- apply(rocArrayArchFull, 2, function(roc){
@@ -214,8 +226,8 @@ for(b in 1:100){
     stat=stats[ss]
     mm=meth[ss]
     print(sprintf("meth=%s, stat=%s", mm, stat))
-    pathArch <- Arguments$getWritablePath(sprintf("archetypeData%s_%s_%s", stat, framework, meth[ss]))
-    pathMeth <- Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
+    pathArch <- R.utils::Arguments$getWritablePath(sprintf("archetypeData%s_%s_%s", stat, framework, meth[ss]))
+    pathMeth <- R.utils::Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
     filename <- sprintf("archData_B=%s_%s.rds", b, meth[ss])
     file <- file.path(pathMeth,filename)
     if(file.exists(file)){
@@ -224,7 +236,7 @@ for(b in 1:100){
       
       if(mm=="FLLAT"){
         p.list <- 2:15
-        pathfllat <- Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
+        pathfllat <- R.utils::Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
         listRes <- list()
         listRes$nb.arch <- p.list
         pp=2
