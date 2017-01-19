@@ -7,7 +7,13 @@
 segmentData(dat, stat = "C1C2")
 }
 \arguments{
-\item{dat}{A list of data frame for each patient containing the total copy number \code{tcn}, the mirrored B allele fraction \code{dh} and \code{chr} and \code{pos}.}
+\item{dat}{A list of data frame for each patient. Data frame containing 
+\describe{
+ \item{tcn}{Total copy number}
+ \item{dh}{Mirrored B allele fraction}
+ \item{pos}{Position on the genome}
+ \item{chr}{Chromosome}
+ }}
 
 \item{stat}{"TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.}
 }

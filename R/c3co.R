@@ -1,12 +1,13 @@
 #' Cancer subclone Inference function
 #'
-#' @param dat A list of data frame for each patient. Data frame containing #
+#' @param dat A list of data frame for each patient. Data frame containing 
 #' \describe{
 #'   \item{tcn}{Total copy number}
 #'   \item{dh}{Mirrored B allele fraction}
 #'   \item{pos}{Position on the genome}
 #'   \item{chr}{Chromosome}
-#' @param lambda1.grid, lambda2.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the minor and major copy number dimension
+#'   }
+#' @param lambda1.grid,lambda2.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the minor and major copy number dimension
 #' @param nb.arch.grid A vector of integers which is the number of archetypes in the model
 #' @param stat TCN or C1C2
 #' @param segment By defaut \code{TRUE} (segment data before inferring features)

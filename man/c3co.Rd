@@ -10,7 +10,15 @@ c3co(dat, lambda1.grid = NULL, lambda2.grid = NULL,
   forceInferrence = FALSE, init.random = FALSE, new.getZ = TRUE)
 }
 \arguments{
-\item{lambda1.grid, }{lambda2.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the minor and major copy number dimension}
+\item{dat}{A list of data frame for each patient. Data frame containing 
+\describe{
+  \item{tcn}{Total copy number}
+  \item{dh}{Mirrored B allele fraction}
+  \item{pos}{Position on the genome}
+  \item{chr}{Chromosome}
+  }}
+
+\item{lambda1.grid, lambda2.grid}{A grid of real numbers which is the penalty coefficients for the fused lasso on the minor and major copy number dimension}
 
 \item{nb.arch.grid}{A vector of integers which is the number of archetypes in the model}
 
