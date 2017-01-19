@@ -1,7 +1,7 @@
 #' Segmentation function
 #'
 #' @export
-#' @param dat A list of data frame for each patient containing the total copy number \code{tcn}, the mirrored B allele fraction \code{dh} and \code{chr}.
+#' @param dat A list of data frame for each patient containing the total copy number \code{tcn}, the mirrored B allele fraction \code{dh} and \code{chr} and \code{pos}.
 #' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
 #' @return Binned Minor and Major copy number with list of breakpoints
 #' @examples
@@ -18,7 +18,17 @@
 #' res <- segmentData(dat)
 #' res2 <- segmentData(dat, stat="TCN")
 segmentData <- function(dat, stat="C1C2"){
-
+  
+  a <- lapply(dat, function (dd) {
+    coln <- colnames(dd)
+    ecn <- c("tcn", "dh", "pos", "chr") ## expected
+    mm <- match(ecn, coln)
+    if (any(is.na(mm))) {
+      str <- sprintf("('%s')", paste(ecn, collapse="','"))
+      stop("Argument 'data' should contain columns named ", str)
+    }
+  })
+  
   YTCNtoSeg <- t(sapply(dat, function(cc) cc$tcn))
   YDHtoSeg <- t(sapply(dat, function(cc) cc$dh))
 

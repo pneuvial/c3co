@@ -10,11 +10,7 @@ c3co(dat, lambda1.grid = NULL, lambda2.grid = NULL,
   forceInferrence = FALSE, init.random = FALSE, new.getZ = TRUE)
 }
 \arguments{
-\item{dat}{A list of data frame for each patient containing the total copy number \code{tcn}, the mirrored B allele fraction \code{dh}.}
-
-\item{lambda1.grid}{A grid of real numbers which is the penalty coefficients for the fused lasso on the minor copy number dimension}
-
-\item{lambda2.grid}{A grid of real numbers which is the penalty coefficients for the fused lasso on the major copy number dimension}
+\item{lambda1.grid, }{lambda2.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the minor and major copy number dimension}
 
 \item{nb.arch.grid}{A vector of integers which is the number of archetypes in the model}
 
@@ -30,7 +26,7 @@ c3co(dat, lambda1.grid = NULL, lambda2.grid = NULL,
 
 \item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering}
 
-\item{new.getZ}{TRUE if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)}
+\item{new.getZ}{\code{TRUE} if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)}
 }
 \value{
 A list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.

@@ -36,3 +36,25 @@ resc3co <- c3co(NULL, nb.arch=2:4,output.dir=output.dir)
 ```{r, fig.width=7, fig.height=5}
 Wplot(resc3co[[2]])
 ```
+```{r, fig.width=7, fig.height=5}
+dataBest <- resc3co[[2]]
+dat <- loadPSCBSdata(pathPSCBS)
+minMaxPos <- do.call(rbind, lapply(1:2, function(chromosome){
+  print(chromosome)
+  df <- dat[[1]]
+  df$chr <- as.numeric(df$chr)
+  idx <- which(df$chr==chromosome)
+  df.sub <- df[idx,]
+  print(str(df.sub))
+  pos <- df.sub$pos
+  return(list(chr=chromosome, minPos=min(pos), maxPos=max(pos)))
+}))
+
+df.CHR <- createZdf(minMaxPos, dataBest, chromosomes=c(1, 2), var="TCN")
+df.CHRC1 <- createZdf(minMaxPos, dataBest, chromosomes=c(1, 2), var="Minor")
+df.CHRC2 <- createZdf(minMaxPos, dataBest, chromosomes=c(1, 2), var="Major")
+Zplot(df.CHR, ylab="TCN")
+Zplot(df.CHRC1, ylab="C1", ylim=c(0,2))
+Zplot(df.CHRC2, ylab="C2", ylim=c(0,4))
+```
+

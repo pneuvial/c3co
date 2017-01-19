@@ -62,14 +62,12 @@ Wplot <- function(dataBest, rownamesW=NULL, col= NULL,margins=c(5,7),posLegend=N
 #' @return A data frame to plot Latent profiles with ggplot
 createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
   lengthCHR <- sapply(dataBest$bkp, length)
-  chrs <- sapply(1:25, function(cc) rep(cc,times=lengthCHR[cc]))
+  chrs <- sapply(1:length(dataBest$bkp), function(cc) rep(cc,times=lengthCHR[cc]))
   start <- c(1,cumsum(lengthCHR)+1)
-  
-  
+
   df.CHR <- do.call(rbind, lapply(chromosomes, function(cc){
     bb <- c(minMaxPos[cc,"minPos"], dataBest$bkp[[cc]],minMaxPos[cc,"maxPos"])
     bb <- as.numeric(bb)
-    print(bb)
     if(var=="TCN"){
       zz <- rbind(dataBest$res$Z[start[cc],],dataBest$res$Z[start[cc]:(start[cc+1]-1),],dataBest$res$Z[start[cc+1]-1,])
       
@@ -97,7 +95,12 @@ createZdf <- function(minMaxPos, dataBest, chromosomes, var="TCN"){
 #' @param ylim define limits for y-axis
 #' @return plot of Latent profiles
 Zplot <- function(df, ylab, ylim=c(0,4)) {
-  
-  gg <- ggplot2::ggplot(df)+ggplot2::geom_step(ggplot2::aes_(~position, ~CN, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)+ggplot2::facet_wrap(~chr, ncol=2)+ggplot2::theme_bw()+ggplot2::xlab("Genome position (Mb)")+ ggplot2::labs(colour = "Subclone",lty="Subclone")+ggplot2::scale_x_continuous(breaks=seq(from=0,to =max(df$position), by=20))+ggplot2::scale_y_continuous(name=ylab, limits = ylim)
+  gg <- ggplot2::ggplot(df)
+  gg <- gg+ggplot2::geom_step(ggplot2::aes_(~position, ~CN, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)
+  gg <- gg+ggplot2::facet_wrap(~chr, ncol=2)
+  gg <- gg+ggplot2::theme_bw()
+  gg <- gg+ ggplot2::labs(colour = "Subclone",lty="Subclone")
+  gg <- gg+ggplot2::scale_x_continuous(breaks=seq(from=0,to =max(df$position), length=5), name="Genome position (Mb)")
+  gg <- gg+ggplot2::scale_y_continuous(name=ylab, limits = ylim)
   gg
 }

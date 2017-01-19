@@ -87,26 +87,24 @@ Then the c3co method can be appluied to the mixture data set. Let us choose the 
 
 ```{r c3co, warning=FALSE}
 lambda1.grid <- lambda2.grid <- c(0.005,0.001)
-casRes <- c3co(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6)
-casResTCN <- c3co(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6, stat="TCN")
+casRes <- c3co(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6, output.dir="result_c3co_C1C2")
+casResTCN <- c3co(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6, stat="TCN", output.dir="result_c3co_TCN")
 ```
 
 For each $p$ ```c3co``` keep only the combination $(\lambda_1, \lambda_2)$ which minimize the BIC. The next step is to choose the best $p$ (number of subclones). In this example, it seems that the best is $\hat{p}=4$ (which is the true number of subclones).
 
 ```{r}
-result.pve <- sapply(casRes, function(cc) cc$PVE)
-dataPVE <- data.frame(nb.subclones=sapply(casRes, function(cc) cc$param$nb.arch), pve=result.pve)
-ggplot(dataPVE)+geom_line(aes(nb.subclones, pve))+geom_point(aes(nb.subclones, pve))+xlab("Number of subclones")+ylab("PVE")+ylim(c(0.8,1))+theme_bw()
+pvePlot(casRes, ylim=c(0.8,1))
 ```
 ```{r}
-result.pveTCN <- sapply(casResTCN, function(cc) cc$PVE)
-dataPVETCN <- data.frame(nb.subclones=sapply(casResTCN, function(cc) cc$param$nb.arch), pve=result.pveTCN)
-ggplot(dataPVETCN)+geom_line(aes(nb.subclones, pve))+geom_point(aes(nb.subclones, pve))+xlab("Number of subclones")+ylab("PVE")+ylim(c(0.8,1))+theme_bw()
+pvePlot(casRes, ylim=c(0.8,1))
 ```
 
 We can compare the true and the estimated matrices of the weights. Even if the computation is not perfect, we can easily recover a classification close to the truth with the inferred weight matrix. 
 
 ```{r heatmap_C1C2, fig.width=7, fig.height=5}
+result.pveTCN <- sapply(casResTCN, function(cc) cc$PVE)
+result.pve <- sapply(casRes, function(cc) cc$PVE)
 idxBestC1C2 <- min(which(diff(result.pve)<1e-1))+1
 idxBestTCN <- min(which(diff(result.pveTCN)<1e-1))+1
 str(casRes[[idxBestC1C2]])
@@ -132,10 +130,13 @@ if(length(casRes[[idxBestC1C2]]$idxNA)>0){
   bkp <- c(1,casRes[[idxBestC1C2]]$bkp[[1]])
 }
 ```
-```{r,Z1Z2hat, fig.width=5, fig.height=5}
-z1 <- rbind(casRes[[idxBestC1C2]]$res$Z1,casRes[[idxBestC1C2]]$res$Z1[length(bkp),])
-z2 <- rbind(casRes[[idxBestC1C2]]$res$Z2,casRes[[idxBestC1C2]]$res$Z2[length(bkp),])
-dfZ <- data.frame(Cn=c(as.numeric(z1),as.numeric(z2)),stat=factor(rep(c("Minor", "Major"), each = prod(dim(z1))), levels=c("Minor", "Major")), bkps=rep(c(bkp,len), 2), latent=as.factor(rep(rep(1:ncol(z1), each=nrow(z1)), times=2)))
-gC <- ggplot(dfZ, aes(y=Cn, x=bkps))+geom_step(aes(col=latent), direction="hv")+ facet_wrap(~stat, ncol=1, scale="free")+theme_bw()+xlab("Genome Position")+scale_colour_discrete("Latent\nProfile")+ylab("Copy number")
-gC
+```{r,Z1Z2hat, fig.width=7.5, fig.height=5}
+dataBest <- casRes[[idxBestC1C2]]
+minMaxPos <- data.frame(chr=1, minPos=1, maxPos=len)
+df.CHR <- createZdf(minMaxPos, dataBest, chromosomes=1, var="TCN")
+df.CHRC1 <- createZdf(minMaxPos, dataBest, chromosomes=1, var="Minor")
+df.CHRC2 <- createZdf(minMaxPos, dataBest, chromosomes=1, var="Major")
+Zplot(df.CHR, ylab="TCN")
+Zplot(df.CHRC1, ylab="C1", ylim=c(0,2))
+Zplot(df.CHRC2, ylab="C2", ylim=c(0,4))
 ```

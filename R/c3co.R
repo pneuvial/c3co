@@ -1,8 +1,12 @@
 #' Cancer subclone Inference function
 #'
-#' @param dat A list of data frame for each patient containing the total copy number \code{tcn}, the mirrored B allele fraction \code{dh}.
-#' @param lambda1.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the minor copy number dimension
-#' @param lambda2.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the major copy number dimension
+#' @param dat A list of data frame for each patient. Data frame containing #
+#' \describe{
+#'   \item{tcn}{Total copy number}
+#'   \item{dh}{Mirrored B allele fraction}
+#'   \item{pos}{Position on the genome}
+#'   \item{chr}{Chromosome}
+#' @param lambda1.grid, lambda2.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the minor and major copy number dimension
 #' @param nb.arch.grid A vector of integers which is the number of archetypes in the model
 #' @param stat TCN or C1C2
 #' @param segment By defaut \code{TRUE} (segment data before inferring features)
@@ -10,7 +14,7 @@
 #' @param forceSeg \code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileSeg="segData.rds"} already exists in \code{output.dir}
 #' @param forceInferrence \code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileFeat=featureData,p=p.rds} already exists in \code{output.dir}
 #' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering
-#' @param new.getZ TRUE if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)
+#' @param new.getZ \code{TRUE} if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)
 #' @return A list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -29,6 +33,17 @@
 #' casRes <- c3co(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 #' @export
 c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2",output.dir="results_c3co", segment=TRUE,forceSeg=FALSE,forceInferrence=FALSE, init.random=FALSE, new.getZ=TRUE){
+  
+  a <- lapply(dat, function (dd) {
+    coln <- colnames(dd)
+    ecn <- c("tcn", "dh", "pos", "chr") ## expected
+    mm <- match(ecn, coln)
+    if (any(is.na(mm))) {
+      str <- sprintf("('%s')", paste(ecn, collapse="','"))
+      stop("Argument 'data' should contain columns named ", str)
+    }
+  })
+
   if(stat=="TCN"){
     new.getZ<-FALSE
   }
