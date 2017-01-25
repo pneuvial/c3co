@@ -1,25 +1,26 @@
-deconv <- function(b, stat) {
+deconv <- function(b, stat, nb.arch.grid) {
 ### Weights
   pathArch <- Arguments$getWritablePath(sprintf("archetypeData%s_%s_c3co", stat, framework))
-  pathc3co <- Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
+  pathc3co <- Arguments$getWritablePath(sprintf("%s/features_B=%s/", pathArch, b))
   filename <- sprintf("archData_B=%s_%s.rds", b, "c3co")
   filepath <- file.path(pathc3co,filename)
-  if(!file.exists(filepath)|| forcec3co){
-    casRes <- c3co(dat, nb.arch.grid=p.list, stat=stat,output.dir= pathc3co)
+  if (!file.exists(filepath)|| forcec3co){
+    dat <- readRDS(sprintf("%s/dat_B=%s.rds", pathSim, bb))
+    casRes <- c3co(dat, nb.arch.grid=nb.arch.grid, stat=stat, output.dir=pathc3co)
     saveRDS(casRes, filepath)
   }
 }
-c <- mclapply(B, deconv, stat="C1C2", mc.cores = 20)
-c <- mclapply(B, deconv, stat="TCN", mc.cores = 20)
-library(FLLat)
+dummy <- mclapply(B, deconv, stat="C1C2", nb.arch.grid=p.list, mc.cores = mc.cores)
+dummy <- mclapply(B, deconv, stat="TCN", nb.arch.grid=p.list, mc.cores = mc.cores)
+
 pathArch <- Arguments$getWritablePath(sprintf("archetypeData%s_%s_FLLAT", "TCN", framework))
 deconvFLLAT <- function(b) {
 ### Weights
-  pathSim <- Arguments$getWritablePath(sprintf("simData"))
-  dat <- readRDS(sprintf("%s/dat_B=%s.rds",pathSim,b))
+  pathSim <- Arguments$getWritablePath("simData")
+  dat <- readRDS(sprintf("%s/dat_B=%s.rds", pathSim, b))
   YTCNtoSeg <- t(sapply(dat, function(cc) cc$tcn))
   Y <- log2(YTCNtoSeg)-1
-  pathfllat <- Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
+  pathfllat <- Arguments$getWritablePath(sprintf("%s/features_B=%s/", pathArch, b))
   filename <- sprintf("archData_B=%s_%s.rds", b, "FLLAT")
   filepath <- file.path(pathfllat,filename)
   if(!file.exists(filepath)|| force){
@@ -37,6 +38,6 @@ deconvFLLAT <- function(b) {
     print("file already exists")
   }
 }
-c <- mclapply(B, deconvFLLAT, mc.cores = 20)
+dummy <- mclapply(B, deconvFLLAT, mc.cores = mc.cores)
 
 

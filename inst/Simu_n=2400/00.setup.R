@@ -1,11 +1,15 @@
 library(c3co)
 library(FLLat)
 library(parallel)
+library(R.utils)
+library(acnr)
 ## Number of archetypes
 p.list <- 2:15
 framework <- "realistic"
 stat <- "C1C2"
 forceM <- forceSim <- FALSE
+
+mc.cores <- 20L
 
 
 ####################################################################
@@ -100,10 +104,10 @@ n <- 30
 forcec3co <- FALSE
 
 pathWeight <- Arguments$getWritablePath(sprintf("weightData"))
-B <- 1:100
-fir(bb in B){
-  filename <- sprintf("weight,n=%s,b=%s.rds", n,b)
-  runWeights <- (forceM||!file.exists(file.path(pathWeight, filename)))
+B <- 1:10
+for (bb in B){
+  filename <- sprintf("weight,n=%s,b=%s.rds", n, bb)
+  runWeights <- (forceM || !file.exists(file.path(pathWeight, filename)))
   if(runWeights){
     M <- getWeightMatrix(70,20, nbClones, n)
     saveRDS(M,file=file.path(pathWeight, filename))
@@ -111,13 +115,13 @@ fir(bb in B){
     M <- readRDS(file.path(pathWeight, filename)) 
   }
   pathSim <- Arguments$getWritablePath(sprintf("simData"))
-  fileSim <- sprintf("%s/dat_B=%s.rds",pathSim,b)
-  runSim <- (forceSim||!file.exists(fileSim))
-  if(runSim){    
+  fileSim <- sprintf("%s/dat_B=%s.rds", pathSim, bb)
+  runSim <- (forceSim || !file.exists(fileSim))
+  if (runSim){    
 ### simulations of samples
     dat <- apply(M, 1, mixSubclones, subClones=subClones, fracN=NULL)
     saveRDS(dat, fileSim)
-  }else{
-    dat <- readRDS(sprintf("%s/dat_B=%s.rds",pathSim,b))
+  } else {
+    dat <- readRDS(sprintf("%s/dat_B=%s.rds", pathSim, bb))
   }
 }
