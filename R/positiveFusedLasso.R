@@ -37,6 +37,7 @@
 #' system.time(rC1C2new <- positive.fused(Y1seg,Y2seg, 4,
 #' lambda1 = lambda, lambda2 = lambda, new.getZ=TRUE))
 #' rTCN <- positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
+#' showPosFused(rTCN)
 positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
                            eps = 1e-2, max.iter = 50, verbose=F, new.getZ=FALSE) {
 
@@ -122,6 +123,10 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
     min.loss <- loss
   }
   if(verbose) cat("\nDONE!\n")
-
-  return(res)
+  
+  objRes <- methods::new("posFused", S = list(Z = res$Z, Z1 = res$Z1, Z2 = res$Z2), W = res$W, E = list(Y1 = res$Y.hat$Y1, Y2 = res$Y.hat$Y2))
+  return(objRes)
+  
 }
+
+

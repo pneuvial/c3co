@@ -1,5 +1,9 @@
 Package: c3co
 =================
+Version: 0.1.10 [2017-01-25]
+o Create classes S4
+o Clean up and comments Simulation scripts
+
 Version: 0.1.9 [2017-01-09]
 o Rename from InCaSCN to c3co
 o clean up (remove NOTE for plot functions)
@@ -29,7 +33,7 @@ o add parameter segment if user doesn't want to segment data befor inferrence
 o minor correction : lamda2 -> lambda2
 
 Version: 0.1.2 [2016-06-07]
-o Change Z initialization in 'positiveFusedLasso' ('hclust' instead 'PCA+HCPC')
+o Change Z initialization in 'positiveFusedLasso' ('hclust' instead of 'PCA+HCPC')
 o Save intermediate files
 
 Version: 0.1.1 [2016-04-25]

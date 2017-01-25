@@ -95,12 +95,12 @@ c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(leng
           for(l2 in lambda2.grid){
             n <- ncol(Y1)
             res <- positive.fused(Y1,Y2, pp, lambda1 = l1, lambda2 = l2,init.random, new.getZ)
-            loss <- sum(((Y1+Y2)-(res$Y.hat$Y1+res$Y.hat$Y2))^2)
-            kZ <- sum(apply(res$Z, 2, diff)!=0)
+            loss <- sum(((Y1+Y2)-(res@E$Y1+res@E$Y2))^2)
+            kZ <- sum(apply(res@S$Z, 2, diff)!=0)
             BIC <-  n*ncol(Y1)*log(loss/(n*ncol(Y1)))+kZ*log(n*ncol(Y1))
             PVE <- 1-loss/(sum(((Y1+Y2)-rowMeans(Y1+Y2))^2))
             if(BIC<BICp){
-              res.l <- list(BIC=BIC, PVE=PVE, res=res, param=list(nb.arch=pp, lambda1=l1, lambda2=l2), bkp=bkpList)
+              res.l <- methods::new("c3coClass", BIC=BIC, PVE=PVE, res=res, param=list(nb.arch=pp, lambda1=l1, lambda2=l2), bkp=bkpList)
               BICp <- BIC
             }
           }
@@ -113,12 +113,12 @@ c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(leng
           }
           n <- ncol(Y)
           res <- positive.fused(Y, Y2=NULL, nb.arch=pp, lambda1 = l1,init.random)
-          loss <- sum((Y-(res$Y.hat$Y1))^2)
-          kZ <- sum(apply(res$Z, 2, diff)!=0)
+          loss <- sum((Y-(res@E$Y1))^2)
+          kZ <- sum(apply(res@S$Z, 2, diff)!=0)
           BIC <-  n*ncol(Y)*log(loss/(n*ncol(Y)))+kZ*log(n*ncol(Y))
           PVE <- 1-loss/(sum((Y-rowMeans(Y))^2))
           if(BIC<BICp){
-            res.l <- list(BIC=BIC, PVE=PVE, res=res, param=list(nb.arch=pp, lambda1=l1), bkp=bkpList)
+            res.l <- methods::new("c3coClass", BIC=BIC, PVE=PVE, res=res, param=list(nb.arch=pp, lambda1=l1), bkp=bkpList)
             BICp <- BIC
           }
         }
@@ -130,7 +130,13 @@ c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(leng
     reslist[[it]] <- res.l
     it <- it+1
     pp <- nb.arch.grid[it]
-    cond <- (sum(apply(res.l$res$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0&sum(apply(res.l$res$W, 2,function(ww) (sum(ww^2)<1e-3)))==0& !is.na(pp))
+    c1 <- sum(apply(res.l@res@S$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0
+    c2 <- sum(apply(res.l@res@W, 2,function(ww) (sum(ww^2)<1e-3)))==0
+    c3 <-  !is.na(pp)
+    cond <- (c1& c2& c3)
   }
   return(reslist)
 }
+
+
+

@@ -1,25 +1,33 @@
+### Package to load 
 library(c3co)
 library(FLLat)
 library(parallel)
-## Number of archetypes
+library(R.utils)
+library(acnr)
+## Number of subclones
 p.list <- 2:15
+## Type of simulations
 framework <- "realistic"
+## Force simulation and weights
 forceM <- forceSim <- FALSE
-
+## Number of simulated data sets
+Bmax <- 100
 
 ####################################################################
-  ## parameters of subclones and samples
+## parameters of subclones and samples
 ####################################################################
-
+message("Path to save subclones : simArchData")
 pathSimArch <- Arguments$getWritablePath("simArchData")
 filename <- file.path(pathSimArch, "subClones.rds")
+nbClones <- 5
 
 if(!file.exists(filename)){
+  message("subClones.rds doesn't exist in simArchData directory")
+  message("create subclones and save them")
   set.seed(10)
 ### Parameters
   len <- 800*3*10
   ## 3 is to obtain around 8000 point for heterozygous
-  nbClones <- 5
   nBkp <- 20
 ### Breakpoints in subclones
   interval <- 1:(len - 1)
@@ -91,22 +99,27 @@ if(!file.exists(filename)){
                               nbClones, bkpsByClones,regionsByClones)
   saveRDS(subClones, filename)
 }else{
+  message("subClones.rds already exists in simArchData directory")
   subClones <- readRDS(filename)
+  message("subClones.rds has been loaded")
 }
 
 ### Simulate Samples
+message("Simulations of subclones")
 n <- 30
 forcec3co <- TRUE
 
 pathWeight <- Arguments$getWritablePath(sprintf("weightData"))
-B <- 1:100
+B <- 1:Bmax
 for(bb in B){
   filename <- sprintf("weight,n=%s,b=%s.rds", n,bb)
   runWeights <- (forceM||!file.exists(file.path(pathWeight, filename)))
   if(runWeights){
+    message(sprintf("Create and save weight matrix for sample %s", bb))
     M <- getWeightMatrix(70,20, nbClones, n)
     saveRDS(M,file=file.path(pathWeight, filename))
   }else{
+    message(sprintf("Load weight matrix for sample %s", bb))
     M <- readRDS(file.path(pathWeight, filename)) 
   }
   pathSim <- Arguments$getWritablePath(sprintf("simData"))
@@ -114,9 +127,11 @@ for(bb in B){
   runSim <- (forceSim||!file.exists(fileSim))
   if(runSim){    
 ### simulations of samples
+    message(sprintf("Create and save DNA copy number profile for sample %s", bb))
     dat <- apply(M, 1, mixSubclones, subClones=subClones, fracN=NULL)
     saveRDS(dat, fileSim)
   }else{
+    message(sprintf("Load DNA copy number profile for sample %s", bb))
     dat <- readRDS(sprintf("%s/dat_B=%s.rds",pathSim,bb))
   }
 }

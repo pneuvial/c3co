@@ -34,7 +34,7 @@ Now, you can run c3co by using this line:
 resc3co <- c3co(NULL, nb.arch=2:4,output.dir=output.dir)
 ```
 ```{r, fig.width=7, fig.height=5}
-Wplot(resc3co[[2]])
+Wplot(resc3co[[2]]@res)
 ```
 ```{r, fig.width=7, fig.height=5}
 dataBest <- resc3co[[2]]
@@ -50,9 +50,9 @@ minMaxPos <- do.call(rbind, lapply(1:2, function(chromosome){
   return(list(chr=chromosome, minPos=min(pos), maxPos=max(pos)))
 }))
 
-df.CHR <- createZdf(minMaxPos, dataBest, chromosomes=c(1, 2), var="TCN")
-df.CHRC1 <- createZdf(minMaxPos, dataBest, chromosomes=c(1, 2), var="Minor")
-df.CHRC2 <- createZdf(minMaxPos, dataBest, chromosomes=c(1, 2), var="Major")
+df.CHR <- createZdf(dataBest, minMaxPos, chromosomes=c(1,2), var="TCN")
+df.CHRC1 <- createZdf(dataBest, minMaxPos, chromosomes=c(1, 2), var="Minor")
+df.CHRC2 <- createZdf(dataBest, minMaxPos, chromosomes=c(1, 2), var="Major")
 Zplot(df.CHR, ylab="TCN")
 Zplot(df.CHRC1, ylab="C1", ylim=c(0,2))
 Zplot(df.CHRC2, ylab="C2", ylim=c(0,4))

@@ -1,3 +1,6 @@
+############################################################
+## Some functions to load data and compute ROC and AUCs 
+############################################################
 library(R.utils)
 loadDataBest <- function(mm, stat, framework, b){
   print(sprintf("meth=%s, stat=%s", mm, stat))
@@ -6,37 +9,14 @@ loadDataBest <- function(mm, stat, framework, b){
   filename <- sprintf("archData_B=%s_%s.rds", b, mm)
   print(filename)
   file <- file.path(pathMeth,filename)
+  dataBest <- NULL
   if(file.exists(file)){
     res <- readRDS(file)
-    if(mm=="FLLAT"){
-      p.list <- 2:15
-      pathfllat <- Arguments$getWritablePath(sprintf("%s/features_B=%s/",pathArch,b))
-      listRes <- list()
-      listRes$nb.arch <- p.list
-      pp=2
-      file <- sprintf("%s/featureData,p=%s.rds",pathfllat,pp)
-      res <- readRDS(file)
-      listRes$PVE <- res$PVE$PVEs
-      pBest <- min(which(diff(listRes$PVE)<1e-3))
-      listRes$res <- lapply(p.list, function(pp){
-        file <- sprintf("%s/featureData,p=%s.rds",pathfllat,pp)
-        res <- readRDS(file)$res
-      })
-      pBest <- min(c(which(diff(listRes$PVE)<1e-3),length(listRes$PVE) ))
-      dataBest <- listRes$res[[pBest]]
-    }
-    if(mm=="c3co"){
-      listRes <- list()
-      listRes$PVE <- unlist(sapply(res, function (rr) rr$PVE))
-      listRes$nb.arch <- unlist(sapply(res, function (rr) rr$param$nb.arch))
-      listRes$res <- lapply(res, function (rr) rr$res)
-      pBest <- min(c(which(diff(listRes$PVE)<1e-3),length(listRes$PVE) ))
-      dataBest <- listRes$res[[pBest]]
-      dataBest$bkp <- res[[pBest]]$bkp[[1]]
-    }
-    
-  }
+      pves <- unlist(sapply(res, function (rr) rr@PVE))
+      pBest <- min(c(which(diff(pves)<1e-3),length(pves) ))
+      dataBest <- res[[pBest]]
   return(dataBest)
+  }
 }
 expand <- function(mat, start, end){
   matEx <- t(apply(mat, 2, function(cc){

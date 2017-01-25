@@ -1,5 +1,6 @@
 library(Canopy)
 library(c3co)
+library(R.utils)
 library(RColorBrewer)
 
 message("load data set toy from Canopy")
@@ -15,10 +16,10 @@ K = 2:8
 rC1C2 <- lapply(K, function (kk) positive.fused(Y1,Y2, kk,lambda1 = lambda, lambda2 = lambda, init.random=FALSE))
 
 n <- nrow(Y1)
-loss <- sapply(rC1C2, function (rr) sum(((Y1+Y2)-(rr$Y.hat$Y1+rr$Y.hat$Y2))^2))
-kZ <- sapply(rC1C2, function (rr) sum(apply(rr$Z, 2, diff)!=0))
+loss <- sapply(rC1C2, function (rr) sum(((Y1+Y2)-(rr@E$Y1+rr@E$Y2))^2))
+kZ <- sapply(rC1C2, function (rr) sum(apply(rr@S$Z, 2, diff)!=0))
 PVE <- 1-loss/(sum(((Y1+Y2)-rowMeans(Y1+Y2))^2))
-plot(K,PVE, type="l", ylim=c(0,1))
+plot(K,PVE, type="l", ylim=c(0.9,1))
 kbest <- 4
 
 bestRes <- rC1C2[[which(K==kbest)]]
@@ -26,29 +27,29 @@ savePath <- Arguments$getWritablePath("data-Canopy")
 saveRDS(bestRes, file=file.path(savePath, "res_c3co.rds"))
 bestRes <- readRDS(file.path(savePath, "res_c3co.rds"))
 
-W <- round(bestRes$W,2)[10:1,]
+W <- round(bestRes@W,2)[1:10,]
 res.clust = hclust(dist(W),method="ward.D")
 col = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 
 figPath <- Arguments$getWritablePath("Figures-Canopy")
 filename <- "heatmap,toy,c3co"
 pdf(sprintf("%s/%s.pdf", figPath, filename), width=13, height=8)
-heatmap.3(W, Rowv=FALSE,dendrogram="col", col=col,scale="none", cexCol=1.5, cexRow=1.5,margins = c(5,10), cellnote=W, notecol="black", key = FALSE)
+Wplot(bestRes, rownamesW=rownames(W), cellnote=W, notecol="black")
 dev.off()
 
 rC1C2k4 <- lapply(1:50,function(ss) positive.fused(Y1,Y2, 4,lambda1 = lambda, lambda2 = lambda, init.random=TRUE))
-loss <- sapply(rC1C2k4, function (rr) sum(((Y1+Y2)-(rr$Y.hat$Y1+rr$Y.hat$Y2))^2))
+loss <- sapply(rC1C2k4, function (rr) sum(((Y1+Y2)-(rr@E$Y1+rr@E$Y2))^2))
 
 bestK4 <- rC1C2k4[[which.min(loss)]]
 
-WK4 <- round(bestK4$W,2)[10:1,]
+WK4 <- round(bestK4@W,2)[1:10,]
 res.clust = hclust(dist(WK4),method="ward.D")
 col = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
 
 figPath <- Arguments$getWritablePath("Figures-Canopy")
 filename <- "heatmap,toy,c3co-v2"
 pdf(sprintf("%s/%s.pdf", figPath, filename), width=13, height=8)
-heatmap.3(WK4, Rowv=FALSE,dendrogram="col", col=col,scale="none", cexCol=1.5, cexRow=1.5,margins = c(5,10), cellnote=WK4, notecol="black", key = FALSE)
+Wplot(bestK4, rownamesW=rownames(WK4), cellnote=WK4, notecol="black")
 dev.off()
 
 

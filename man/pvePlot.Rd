@@ -4,10 +4,10 @@
 \alias{pvePlot}
 \title{Function to plot PVE}
 \usage{
-pvePlot(resC3co, bestNbLatent = NULL, ylim = c(0, 1))
+pvePlot(res, bestNbLatent = NULL, ylim = c(0, 1))
 }
 \arguments{
-\item{resC3co}{output from c3co.}
+\item{res}{result from [\code{c3co}]}
 
 \item{bestNbLatent}{best number of latent profiles.}
 

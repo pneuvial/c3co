@@ -210,14 +210,16 @@ heatmap.3 <- function(x,
     else {
         rowInd <- nr:1
     }
-   
+    
+    
+    ddc <- Colv
     colInd <- 1:nc
     retval$rowInd <- rowInd
     retval$colInd <- colInd
     retval$call <- match.call()
-    x <- x[rowInd, colInd]
+    x <- x[rowInd, ]
     x.unscaled <- x
-    cellnote <- cellnote[rowInd, colInd]
+    cellnote <- cellnote[rowInd, ]
     if (is.null(labRow))
         labRow <- if (is.null(rownames(x)))
             (1:nr)[rowInd]
@@ -364,7 +366,6 @@ heatmap.3 <- function(x,
         retval$rowDendrogram <- ddr
     if (exists("ddc"))
         retval$colDendrogram <- ddc
-    ddc <- NULL; rm(ddc);
     retval$breaks <- breaks
     retval$col <- col
     if (!invalid(na.color) & any(is.na(x))) { # load library(gplots)
@@ -426,7 +427,7 @@ heatmap.3 <- function(x,
     else graphics::plot.new()
     graphics::par(mar = c(0, 0, if (!is.null(main)) 5 else 0, margins[2]))
     if (dendrogram %in% c("both", "column")) {
-      graphics::plot(ddc, axes = FALSE, xaxs = "i", leaflab = "none")
+      graphics::plot(ddc, axes = FALSE, xaxs = "i")
     }
     else graphics::plot.new()
     if (!is.null(main))
