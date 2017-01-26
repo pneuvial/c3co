@@ -4,6 +4,9 @@ subClones <- simulateSubclones(len, nbClones, nBkp)
 ## simulate copy number profiles from subclones and weight matrices
 weightMats <- list()
 dats <- list()
+resC1C2 <- listenv::listenv()
+resTCN <- listenv::listenv()
+resFLLAT <- listenv::listenv()
 for (ss in 1:nbSimu) {
     ## weight matrix
     M <- getWeightMatrix(70, 20, nbClones, n)
@@ -14,11 +17,9 @@ for (ss in 1:nbSimu) {
     dats[[ss]] <- dat
     
     ## c3co
-    resC1C2 <- c3co(dat, nb.arch.grid=p.list, stat="C1C2")
-    resTCN <- c3co(dat, nb.arch.grid=p.list, stat="TCN")
+    resC1C2[[ss]] %<-% c3co(dat, nb.arch.grid=p.list, stat="C1C2")
+    resTCN[[ss]] %<-% c3co(dat, nb.arch.grid=p.list, stat="TCN")
     
     ## FLlat
-    resF <- fllat(dat, nb.arch.grid=p.list)
+    resFLLAT[[ss]] %<-% fllat(dat, nb.arch.grid=p.list)
 }
-
-
