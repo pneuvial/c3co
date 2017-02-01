@@ -15,11 +15,17 @@ for (ss in 1:nbSimu) {
     ## simulated profiles
     dat <- apply(M, 1, mixSubclones, subClones=subClones, fracN=NULL)
     dats[[ss]] <- dat
-    
     ## c3co
     resC1C2[[ss]] %<-% c3co(dat, nb.arch.grid=p.list, stat="C1C2")
     resTCN[[ss]] %<-% c3co(dat, nb.arch.grid=p.list, stat="TCN")
-    
     ## FLlat
     resFLLAT[[ss]] %<-% fllat(dat, nb.arch.grid=p.list)
 }
+
+saveRDS(subClones, file.path(pathSubClones, sprintf("subclones.rds")))
+saveRDS(weightMats, file.path(pathWeights, sprintf("weightsMat.rds")))
+saveRDS(dats, file.path(pathDat, sprintf("simu.rds")))
+saveRDS(as.list(resC1C2), file.path(pathRes, sprintf("results_C3CO_C1C2.rds")))
+saveRDS(as.list(resTCN), file.path(pathRes, sprintf("results_C3CO_TCN.rds")))
+saveRDS(as.list(resFLLAT), file.path(pathRes, sprintf("results_FLLAT_TCN.rds")))
+

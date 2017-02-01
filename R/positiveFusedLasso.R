@@ -11,14 +11,14 @@
 #' @param max.iter maximum number of iterations of the algorithm
 #' @param new.getZ TRUE if you want to parallelize inferrence of Minor and Major copy numbers
 #' @param verbose if you want to print some information during running
-#' @return The list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
+#' @return An object of class [\code{\linkS4class{posFused}}]
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 3
 #' bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
-#' regions <-list(c("(0,3)", "(0,2)","(1,2)"), 
+#' regions <-list(c("(0,3)", "(0,1)","(1,2)"), 
 #' c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 #' M = matrix(c(40,30, 0,0,70, 15,10, 0, 35,15,0,0 ,0,0,0), byrow=TRUE, ncol=3)
@@ -32,11 +32,11 @@
 #' Y2 <-  t(sapply(simu, function(cc) cc$c2))
 #' Y1seg <- t(apply(Y1, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
 #' Y2seg <- t(apply(Y2, 1, matrixStats::binMeans, x=1:ncol(Y1),bx= c(1,bkp,ncol(Y1)), na.rm=TRUE))
-#' lambda <- 1e-5
+#' lambda <- 0.001
 #' system.time(rC1C2 <- positive.fused(Y1seg,Y2seg, 4,lambda1 = lambda, lambda2 = lambda))
 #' system.time(rC1C2new <- positive.fused(Y1seg,Y2seg, 4,
 #' lambda1 = lambda, lambda2 = lambda, new.getZ=TRUE))
-#' rTCN <- positive.fused(Y1seg+Y2seg,NULL, 4,lambda1 = lambda, lambda2 = lambda)
+#' rTCN <- positive.fused(Y1seg+Y2seg,NULL, 2,lambda1 = lambda, lambda2 = lambda)
 #' showPosFused(rTCN)
 positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
                            eps = 1e-2, max.iter = 50, verbose=F, new.getZ=FALSE) {
@@ -44,7 +44,6 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
   ## problem dimensions
   n <- nrow(Y1) # number of individuals
   L <- ncol(Y1) # number of loci
-
   ## _______________________________________________________
   ## STEP 0: INITIALIZATION
   ## Under recommandations of NMF and Archetypal analysis random initialization to find the global minimum.
@@ -94,7 +93,7 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
     names(Z)= c("Z1", "Z2")
     }
     idx <- ncol(Z$Z2)
-    test <- sapply(idx, function(ii){
+    checkC2supC1 <- sapply(idx, function(ii){
       jj <- which(Z$Z1[,ii]>Z$Z2[,ii])
       if(length(jj)>0){
         warning("Some components in minor latent profiles are larger than matched components in major latent profiles")
@@ -102,17 +101,21 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
     })
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
-    if (iter>1) {delta <- sqrt(sum((W-W.old)^2))}
+    if (iter>1) {
+      delta <- sqrt(sum((W-W.old)^2))}
 
-    cond <- (iter > max.iter | delta < eps)
+      cond <- (iter > max.iter | delta < eps)
 
-    if(verbose) cat("\ndelta =",round(delta, 4))
-    W.old <- W
-  }
+      if(verbose) cat("\ndelta =",round(delta, 4))
+        W.old <- W
+    }
   if(!is.null(Y2)){
     loss <- (sum((Y1-W %*% t(Z$Z1))^2)+sum((Y2-W %*% t(Z$Z2))^2))/(n*L)
+    loss <- (sum((Y1+Y2-W %*% t(Z$Z1+Z$Z2))^2))/(n*L)
+    PVE <- 1-(sum((Y1+Y2-W %*% t(Z$Z1+Z$Z2))^2))/(sum(((Y1+Y2)-rowMeans(Y1+Y2))^2))
   }else{
     loss <- (sum((Y1-W %*% t(Z$Z1))^2))/(n*L)
+    PVE <- 1-(sum((Y1-W %*% t(Z$Z1))^2))/(sum((Y1-rowMeans(Y1))^2))
   }
   if(loss<min.loss){
     if(!is.null(Y2)){
@@ -123,8 +126,10 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
     min.loss <- loss
   }
   if(verbose) cat("\nDONE!\n")
+  kZ <- sum(apply(res$Z, 2, diff)!=0)
+  BIC <-  n*L*log(loss)+kZ*log(n*L)
   
-  objRes <- methods::new("posFused", S = list(Z = res$Z, Z1 = res$Z1, Z2 = res$Z2), W = res$W, E = list(Y1 = res$Y.hat$Y1, Y2 = res$Y.hat$Y2))
+  objRes <- methods::new("posFused", S = list(Z = res$Z, Z1 = res$Z1, Z2 = res$Z2), W = res$W, E = list(Y1 = res$Y.hat$Y1, Y2 = res$Y.hat$Y2), BIC=BIC, PVE=PVE, param=list(nb.arch=nb.arch, lambda1=lambda1, lambda2=lambda2))
   return(objRes)
   
 }

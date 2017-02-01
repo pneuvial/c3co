@@ -36,9 +36,9 @@ regionsByClones[[length(subClones) + 1]] <- "(1,1)"
 pathWeight <- R.utils::Arguments$getWritablePath(sprintf("weightData"))
 n <- 30
 message("Compute mean of TCN, minor and major copy numbers in initial data")
-C1N <- dataAnnotN$c*(1 - 2*abs(dataAnnotN$b-1/2))/2
+C1N <- dataAnnotN$c*(1 - 2*abs(dataAnnotN$b - 1/2))/2
 c1Mean <- by(C1N, dataAnnotN$genotype, mean)[2]
-C2N <- dataAnnotN$c*(1 + 2*abs(dataAnnotN$b-1/2))/2
+C2N <- dataAnnotN$c*(1 + 2*abs(dataAnnotN$b - 1/2))/2
 c2Mean <- by(C2N, dataAnnotN$genotype, mean)[2]
 cMean <- mean(dataAnnotN$c)
 ###########################################
@@ -47,9 +47,9 @@ cMean <- mean(dataAnnotN$c)
 message("Sample only 5000 observations to reduce the size of the figure")
 i <- sort(sample(1:len, size = 5000))
 df.Sub <- do.call(rbind, lapply(subClones, function(ss) ss[i,]))
-df.Sub$Feat <- as.factor(rep(1:5, each = length(i)))
-dfToPlot <- data.frame(val = c(df.Sub$ct, df.Sub$baft), var = factor(rep(c("c","b"), each = nrow(df.Sub)), levels = c("c","b")), Feat = rep(df.Sub$Feat, times = 2), pos=rep(df.Sub$pos, times = 2))
-p <- ggplot(dfToPlot, aes(pos, val)) + geom_point(cex = 0.4, alpha=0.2, pch=19)+ facet_grid(var ~ Feat, scale="free")+theme_bw() + ylab("") + scale_x_continuous(name="Genome position (Mb)",breaks = c(0, 10000, 20000))
+df.Sub$feat <- as.factor(rep(1:5, each = length(i)))
+dfToPlot <- data.frame(val = c(df.Sub$ct, df.Sub$baft), var = factor(rep(c("c","b"), each = nrow(df.Sub)), levels = c("c","b")), Feat = rep(df.Sub$Feat, times = 2), pos = rep(df.Sub$pos, times = 2))
+p <- ggplot(dfToPlot, aes(pos, val)) + geom_point(cex = 0.4, alpha = 0.2, pch = 19) + facet_grid(var ~ feat, scale = "free") + theme_bw() + ylab("") + scale_x_continuous(name = "Genome position (Mb)",breaks = c(0, 10000, 20000))
 p
 
 ###########################################
@@ -57,63 +57,63 @@ p
 ###########################################
 ## Loss
 message("Compute loss between true and estimated weights")
-weightsArray <- array(dim=c(100, length(stats)),dimnames=list(b=1:100, method=sprintf("%s-%s",meth,stats)))
-for(b in B){
+weightsArray <- array(dim = c(Bmax, length(stats)),dimnames = list(b = B, method = sprintf("%s-%s",meth,stats)))
+for (b in B) {
   print(b)
   filename <- sprintf("weight,n=%s,b=%s.rds", n,b)
   M <- readRDS(file.path(pathWeight, filename))
-  WT <- cbind(M, 100-rowSums(M))/100
-  for(ss in 1:length(stats)){
-    stat=stats[ss]
+  WT <- cbind(M, 100 - rowSums(M))/100
+  for (ss in 1:length(stats)) {
+    stat = stats[ss]
     mm <- meth[ss]
     dataBest <- loadDataBest(mm, stat, framework, b)
-    if(!is.null(dataBest)){
+    if (!is.null(dataBest)) {
       W <- dataBest@res@W    
       eps <- 0.1
       corrBestW <- apply(WT,2,function(ww){
         apply(W,2,function(wwh){
-          sum(abs(ww-wwh)<eps,na.rm=T)/length(wwh)
+          sum(abs(ww - wwh) < eps,na.rm = TRUE)/length(wwh)
         }) 
       })
     ind <- apply(corrBestW, 2, which.max)
     West <- round(W[,ind],2)     
-    resLossWeights <- sum((WT-West)^2)/(ncol(West)*ncol(West))
+    resLossWeights <- sum((WT - West)^2)/(ncol(West)*ncol(West))
     }else{
-      resLossWeights<- NA
+      resLossWeights <- NA
     }
     weightsArray[b,ss] <- resLossWeights
   }
 }
 
 dataArrayWeights <- data.frame(melt(weightsArray))
-dataArrayWeights$method <- factor(dataArrayWeights$method, levels=c("FLLAT-TCN","c3co-TCN","c3co-C1C2"))
-gWeights <- ggplot(dataArrayWeights)+geom_boxplot(aes(x=method, y=value,fill=method))+ylab("Loss")+xlab("")+theme_bw()
+dataArrayWeights$method <- factor(dataArrayWeights$method, levels = c("FLLAT-TCN","c3co-TCN","c3co-C1C2"))
+gWeights <- ggplot(dataArrayWeights) + geom_boxplot(aes(x = method, y = value, fill = method)) + ylab("Loss") + xlab("") + theme_bw()
 gWeights
-ggsave(gWeights,filename=sprintf("%s/weightLoss_n=24000.pdf",pathFig, framework), width=7, height=5)
+ggsave(gWeights,filename = sprintf("%s/weightLoss_n=24000.pdf",pathFig, framework), width = 7, height = 5)
 
 
 
 ### RandIndex
 message("Compute Rand Index to evaluate capacity to recover weights")
 library(mclust)
-randIndexArray <- array(dim=c(Bmax, length(stats)),dimnames=list(b=1:Bmax, method=sprintf("%s-%s",meth,stats)))
+randIndexArray <- array(dim = c(Bmax, length(stats)),dimnames = list(b = 1:Bmax, method = sprintf("%s-%s",meth,stats)))
 pathWeight <- R.utils::Arguments$getWritablePath(sprintf("weightData"))
 pathSim <- R.utils::Arguments$getWritablePath(sprintf("simData"))
-for(b in B){
+for (b in B) {
   print(b)
   filename <- sprintf("weight,n=%s,b=%s.rds", n,b)
   WT <- readRDS(file.path(pathWeight, filename))
   
-  WT <- cbind(WT, 100-rowSums(WT))
-  clustWT <-  cutree(hclust(dist(WT),method="ward.D"), ncol(WT))
-  for(ss in 1:length(stats)){
-    stat=stats[ss]
+  WT <- cbind(WT, 100 - rowSums(WT))
+  clustWT <-  cutree(hclust(dist(WT),method = "ward.D"), ncol(WT))
+  for (ss in 1:length(stats)) {
+    stat = stats[ss]
     mm <- meth[ss]
     randIndex <- NA
     dataBest <- loadDataBest(mm, stat, framework, b)
-    if(!is.null(dataBest)){
+    if (!is.null(dataBest)) {
       W <- dataBest@res@W
-      clustW <- cutree(hclust(dist(WT),method="ward.D"), ncol(W))
+      clustW <- cutree(hclust(dist(WT), method = "ward.D"), ncol(W))
       randIndex <- adjustedRandIndex(clustWT, clustW)
     }
     randIndexArray[b,ss] <- randIndex
@@ -121,10 +121,10 @@ for(b in B){
 }
 names(randIndexArray) <- c("b", "method")
 dataArrayrandIndex <- data.frame(melt(randIndexArray))
-dataArrayrandIndex$method <- factor(dataArrayrandIndex$method, levels=c("FLLAT-TCN", "c3co-TCN", "c3co-C1C2"))
-gRandIndex <- ggplot(dataArrayrandIndex)+geom_boxplot(aes(x=method, y=value,fill=method))+ylab("Rand Index")+xlab("")+theme_bw()
+dataArrayrandIndex$method <- factor(dataArrayrandIndex$method, levels = c("FLLAT-TCN", "c3co-TCN", "c3co-C1C2"))
+gRandIndex <- ggplot(dataArrayrandIndex) + geom_boxplot(aes(x = method, y = value,fill = method)) + ylab("Rand Index") + xlab("") + theme_bw()
 gRandIndex
-ggsave(gRandIndex,filename=sprintf("%s/RandIndex_n=24000.pdf",pathFig, framework), width=7, height=5)
+ggsave(gRandIndex,filename=sprintf("%s/RandIndex_n=24000.pdf",pathFig, framework), width = 7, height = 5)
 
 
 #######################################################################
@@ -132,46 +132,46 @@ ggsave(gRandIndex,filename=sprintf("%s/RandIndex_n=24000.pdf",pathFig, framework
 #######################################################################
 message("Compute ROC and AUC on Subclones")
 
-tol <- c(seq(from=0.0, to=1, length=20))
-tol <- sort(tol, decreasing=TRUE)
-rocArrayArchFull <- array(dim=c(Bmax, length(stats), 2,length(tol)),dimnames=list(b=1:Bmax, method=sprintf("%s-%s",meth,stats), ROC=c("tp", "fp")))
-AUCs_arch <- array(dim=c(Bmax, length(stats)),dimnames=list(b=1:Bmax, method=sprintf("%s-%s",meth,stats)))
+tol <- c(seq(from = 0.0, to = 1, length = 20))
+tol <- sort(tol, decreasing = TRUE)
+rocArrayArchFull <- array(dim = c(Bmax, length(stats), 2,length(tol)),dimnames = list(b = 1:Bmax, method = sprintf("%s-%s",meth,stats), ROC = c("tp", "fp")))
+AUCs_arch <- array(dim = c(Bmax, length(stats)),dimnames = list(b = 1:Bmax, method = sprintf("%s-%s",meth,stats)))
 rocDataPath <- R.utils::Arguments$getWritablePath("rocDatac3co")
 fileROC <- "rocArray,full,arch.rds"
 forceROC <- FALSE
 
-alteredLociInClones <- sapply(1:(length(regionsByClones)-1), function(c){
-  if(c!=length(regionsByClones)){
-    res <- subClones[[c]]$region!="(1,1)"
+alteredLociInClones <- sapply(1:(length(regionsByClones) - 1), function(c){
+  if (c != length(regionsByClones)){
+    res <- subClones[[c]]$region != "(1,1)"
   }else{
     res <- rep(FALSE, len) 
   }
   return(res)
 })
 
-if(!file.exists(file.path(rocDataPath, fileROC))||forceROC){
-  for(b in B){
+if (!file.exists(file.path(rocDataPath, fileROC)) || forceROC) {
+  for (b in B) {
     print(b)
     filename <- sprintf("weight,n=%s,b=%s.rds", n,b)
     M <- readRDS(file.path(pathWeight, filename))
-    WT <- cbind(M, 100-rowSums(M))/100    
-    for(ss in 1:length(stats)){
-      stat=stats[ss]
+    WT <- cbind(M, 100 - rowSums(M))/100    
+    for (ss in 1:length(stats)) {
+      stat <- stats[ss]
       mm <- meth[ss]      
       dataBest <- loadDataBest(mm,stat, framework, b)
-      if(!is.null(dataBest)){
+      if (!is.null(dataBest)) {
         message(sprintf("Compute ROC and AUC for method %s, var %s and data set %s" ,mm, stat, b))
         Z <- dataBest@res@S$Z
         W <- dataBest@res@W
         eps <- 0.1
         corrBestW <- apply(WT,2,function(zz){
           apply(W,2,function(zzh){
-            sum(abs(zz-zzh)<eps,na.rm=T)/length(zzh)
+            sum(abs(zz - zzh) < eps,na.rm = TRUE)/length(zzh)
           }) 
         })
         ind <- apply(corrBestW, 2, which.max)
       
-        if(stat=="C1C2"){
+        if (stat == "C1C2") {
           Z1 <- dataBest@res@S$Z1
           Z2 <- dataBest@res@S$Z2
           bkp <- dataBest@bkp[[1]]
@@ -183,7 +183,7 @@ if(!file.exists(file.path(rocDataPath, fileROC))||forceROC){
 
           SESP <- SESPC1C2(Z1hatFull,Z2hatFull,alteredLociInClones,ind, tol, 1, 1)
         }else{
-          if(mm=="FLLAT"){
+          if(mm == "FLLAT") {
             ZhatFull <- t(2*2^Z)          
           }else{
             bkp <- dataBest@bkp

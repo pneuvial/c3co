@@ -27,10 +27,10 @@ pvePlot(resC3co, ylim=c(0.70,1))
 dataBest <- resC3co[[6]]
 
 ### Plot W matrix
-pathFig <- Arguments$getWritablePath("fig-GSE47077-RK29")
+pathFig <- R.utils::Arguments$getWritablePath("fig-GSE47077-RK29")
 
 pdf(file.path(pathFig,sprintf("heatmap,GSE47077,patient=%s.pdf",patient)), width=13, height=8)
-Wplot(dataBest@res, rownamesW= sprintf("R%s",1:nrow(dataBest@res@W)))
+Wplot(resC3co, idxBest=6, rownamesW= sprintf("R%s",1:nrow(dataBest@res@W)))
 dev.off()
 
 ### Plot Latent profiles
@@ -42,10 +42,9 @@ chrs <- sapply(1:22, function(cc) rep(cc,times=lengthCHR[cc]))
 start <- c(1,cumsum(lengthCHR)+1)
 
 ch <- c(9)
-df.CHR <- createZdf(dataBest, minMaxPos, chromosomes=ch, var="TCN")
-
-df.CHRC1 <- createZdf(dataBest, minMaxPos, chromosomes=ch, var="Minor")
-df.CHRC2 <- createZdf(dataBest, minMaxPos, chromosomes=ch, var="Major")
+df.CHR <- createZdf(resC3co, minMaxPos, chromosomes=ch, var="TCN", idxBest=6)
+df.CHRC1 <- createZdf(resC3co, minMaxPos, chromosomes=ch, var="Minor", idxBest=6)
+df.CHRC2 <- createZdf(resC3co, minMaxPos, chromosomes=ch, var="Major", idxBest=6)
 
 df.CHR$position <- df.CHR$position/1e6
 df.CHRC2$position <- df.CHRC2$position/1e6
@@ -62,10 +61,10 @@ ggsave(gArchC2, filename=sprintf("%s/archetypes,GSE47077,patient=%s,C2,chr=%s.pd
 
 
 ch <- c(14)
-df.CHR <- createZdf( dataBest,minMaxPos, chromosomes=ch, var="TCN")
+df.CHR <- createZdf( resC3co,minMaxPos, chromosomes=ch, var="TCN", idxBest=6)
 
-df.CHRC1 <- createZdf( dataBest, minMaxPos, chromosomes=ch, var="Minor")
-df.CHRC2 <- createZdf( dataBest, minMaxPos, chromosomes=ch, var="Major")
+df.CHRC1 <- createZdf( resC3co, minMaxPos, chromosomes=ch, var="Minor", idxBest=6)
+df.CHRC2 <- createZdf( resC3co, minMaxPos, chromosomes=ch, var="Major", idxBest=6)
 
 df.CHR$position <- df.CHR$position/1e6
 df.CHRC2$position <- df.CHRC2$position/1e6

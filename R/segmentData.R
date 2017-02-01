@@ -25,7 +25,7 @@
 #' res2 <- segmentData(dat, stat="TCN")
 segmentData <- function(dat, stat="C1C2"){
   
-  a <- lapply(dat, function (dd) {
+  checkColNames <- lapply(dat, function(dd) {
     coln <- colnames(dd)
     ecn <- c("tcn", "dh", "pos", "chr") ## expected
     mm <- match(ecn, coln)

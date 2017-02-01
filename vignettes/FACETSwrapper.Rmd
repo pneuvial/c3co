@@ -32,5 +32,5 @@ Facetswrapper(pathFacets,output.dir=output.dir, stat="TCN")
 Now, you can run c3co by using this line:
 ```{r, eval=FALSE}
 ## Not run here (not enough samples)
-resc3co <- c3co(NULL,output.dir=output.dir)
+resc3co <- c3co(NULL,pathSeg=output.dir)
 ```

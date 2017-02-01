@@ -10,13 +10,12 @@
 #' @param lambda1.grid,lambda2.grid A grid of real numbers which is the penalty coefficients for the fused lasso on the minor and major copy number dimension
 #' @param nb.arch.grid A vector of integers which is the number of archetypes in the model
 #' @param stat TCN or C1C2
-#' @param segment By defaut \code{TRUE} (segment data before inferring features)
-#' @param output.dir directory to save segmentation and feature data
-#' @param forceSeg \code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileSeg="segData.rds"} already exists in \code{output.dir}
-#' @param forceInferrence \code{TRUE} of \code{FALSE} by default \code{FALSE} if \code{fileFeat=featureData,p=p.rds} already exists in \code{output.dir}
+#' @param saveResults By default \code{FALSE}, set parameter to TRUE if you want to save results in directory \code{output.dir}
+#' @param output.dir Name of directory to save segmentation and feature data if \code{saveResults} is set to \code{TRUE}
+#' @param pathSeg By default \code{NULL} if it is not \code{NULL} assuming that \code{fileSeg="segData.rds"} already exists in \code{pathSeg} and load segmentation.
 #' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering
 #' @param new.getZ \code{TRUE} if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)
-#' @return A list of archetypes (\code{Z} the total copy number matrix,\code{Z1} the minor copy number matrix and \code{Z2} the major copy number matrix), matrix weight \code{W} and the reconstructed minor and major copy numbers.
+#' @return An object of class [\code{\linkS4class{c3coFit}}]
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
@@ -30,108 +29,107 @@
 #' dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
 #' l1 <- seq(from=1e-6, to=1e-5, length=3)
 #' l2 <- seq(from=1e-6, to=1e-5, length=3)
-#' system.time(casResC1C2 <- c3co(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6))
+#' casResC1C2 <- c3co(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 #' casRes <- c3co(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 #' @export
-c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2",output.dir="results_c3co", segment=TRUE,forceSeg=FALSE,forceInferrence=FALSE, init.random=FALSE, new.getZ=TRUE){
-  
-  a <- lapply(dat, function (dd) {
-    coln <- colnames(dd)
-    ecn <- c("tcn", "dh", "pos", "chr") ## expected
-    mm <- match(ecn, coln)
-    if (any(is.na(mm))) {
-      str <- sprintf("('%s')", paste(ecn, collapse="','"))
-      stop("Argument 'data' should contain columns named ", str)
-    }
-  })
-
+c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2", saveResults = FALSE, pathSeg=NULL, output.dir="results_c3co", init.random=FALSE, new.getZ=TRUE){
+  ## Sanity check
+  if(!is.null(dat)){
+     if(!is.list(dat)){
+        stop("Argument 'dat' should be a list ")
+      }
+    checkCols <- lapply(dat, function (dd) {
+      coln <- colnames(dd)
+      ecn <- c("tcn", "dh", "pos", "chr") ## expected
+      mm <- match(ecn, coln)
+      if (any(is.na(mm))) {
+        str <- sprintf("('%s')", paste(ecn, collapse="','"))
+        stop("Argument 'dat' should contain columns named", str)
+      }
+    })
+    expectedL <- nrow(dat[[1]]) 
+    checklength <- lapply(dat, function (dd) {
+      nrowDD <- nrow(dd)
+      if (nrowDD != expectedL) {
+        stop("Each data.frame in 'dat' should have the same size")
+      }
+    })
+  }
   if(stat=="TCN"){
     new.getZ<-FALSE
   }
   if(is.null(lambda1.grid)){
-    lambda1.grid <- seq(from=1e-6, to=1e-5, length=10)
+    lambda1.grid <- seq(from=1e-6, to=1e-4, length=10)
   }
   if(is.null(lambda2.grid)){
-    lambda2.grid <- seq(from=1e-6, to=1e-5, length=10)
+    lambda2.grid <- seq(from=1e-6, to=1e-4, length=10)
   }
-  output.dir <- R.utils::Arguments$getWritablePath(output.dir)
-  if(segment){
-    fileSeg <- file.path(output.dir,"segDat.rds")
-    if(!file.exists(fileSeg)|| forceSeg){
-      resSegmentation <- segmentData(dat, stat=stat)
-      saveRDS(resSegmentation, file=fileSeg)
+  if(saveResults){
+    if(dir.exists(output.dir)){
+      stop(sprintf("%s already exists. Remove it or change name directory to save the results"))
     }else{
-      resSegmentation <- readRDS(file=fileSeg)
+      output.dir <- R.utils::Arguments$getWritablePath(output.dir)
     }
-    bkpList <- resSegmentation$bkp
-  }else{
-    cat("No segmentation: algorithm could take time\n")
   }
-                                        # pca.res <- PCA(resSegmentation$Y, graph=FALSE)
-                                        #  pp <- min(min(which(diff(pca.res$eig[[3]])<1e-3)), round(n/2))
-
-  reslist <- list()
+  if(!is.null(pathSeg)){
+    resSegmentation <- readRDS(file.path(pathSeg, "segDat.rds"))
+  }else{
+   resSegmentation <- segmentData(dat, stat=stat)
+  }
+  bkpList <- resSegmentation$bkp
+  
+  reslist <- methods::new("c3coFit")
+  reslist@bkp <- bkpList
+  reslist@segDat <- list(Y1=resSegmentation$Y1,Y2=resSegmentation$Y2,Y=resSegmentation$Y )
+  
   BICp <- 1e8
-  ##print(sprintf("nb.arch=%s",pp))
   cond <- TRUE
   it <- 1
   pp <- nb.arch.grid[it]
   while(cond){
-    print(pp)
+    print(sprintf("number of Features = %s",pp))
     BICp <- 1e8
     fileFeat <- file.path(output.dir, sprintf("featureData,p=%s.rds", pp))
-    if(!file.exists(fileFeat)||forceInferrence){
+    if(file.exists(fileFeat)){
+      message(sprintf("%s already exists", fileFeat))
+      res.l <- readRDS(fileFeat)
+    }else {
       for(l1 in lambda1.grid){
         if(stat=="C1C2"){
-          if(segment){
-            Y1 <- t(resSegmentation$Y1)
-            Y2 <- t(resSegmentation$Y2)
-          }else{
-            YTCNtoSeg <- t(sapply(dat, function(cc) cc$tcn))
-            YDHtoSeg <- t(sapply(dat, function(cc) cc$dh))
-            Y1 <- YTCNtoSeg*(1-YDHtoSeg)/2
-            Y2 <- YTCNtoSeg*(1+YDHtoSeg)/2
-          }
+          Y1 <- t(resSegmentation$Y1)
+          Y2 <- t(resSegmentation$Y2)
           for(l2 in lambda2.grid){
-            n <- ncol(Y1)
             res <- positive.fused(Y1,Y2, pp, lambda1 = l1, lambda2 = l2,init.random, new.getZ)
-            loss <- sum(((Y1+Y2)-(res@E$Y1+res@E$Y2))^2)
-            kZ <- sum(apply(res@S$Z, 2, diff)!=0)
-            BIC <-  n*ncol(Y1)*log(loss/(n*ncol(Y1)))+kZ*log(n*ncol(Y1))
-            PVE <- 1-loss/(sum(((Y1+Y2)-rowMeans(Y1+Y2))^2))
-            if(BIC<BICp){
-              res.l <- methods::new("c3coClass", BIC=BIC, PVE=PVE, res=res, param=list(nb.arch=pp, lambda1=l1, lambda2=l2), bkp=bkpList)
-              BICp <- BIC
+            if(res@BIC<BICp){
+              res.l <- res
+              BICp <- res@BIC
             }
           }
+        }else if(stat=="TCN"){
+          Y <- t(resSegmentation$Y)
+          res <- positive.fused(Y, Y2 = NULL, nb.arch=pp, lambda1 = l1,init.random)
+          if(res@BIC<BICp){
+            res.l <- res
+            BICp <- res@BIC
+          }
         }else{
-          if(segment){
-            Y <- t(resSegmentation$Y)
-
-          }else{
-            Y <- t(sapply(dat, function(cc) cc$tcn))
-          }
-          n <- ncol(Y)
-          res <- positive.fused(Y, Y2=NULL, nb.arch=pp, lambda1 = l1,init.random)
-          loss <- sum((Y-(res@E$Y1))^2)
-          kZ <- sum(apply(res@S$Z, 2, diff)!=0)
-          BIC <-  n*ncol(Y)*log(loss/(n*ncol(Y)))+kZ*log(n*ncol(Y))
-          PVE <- 1-loss/(sum((Y-rowMeans(Y))^2))
-          if(BIC<BICp){
-            res.l <- methods::new("c3coClass", BIC=BIC, PVE=PVE, res=res, param=list(nb.arch=pp, lambda1=l1), bkp=bkpList)
-            BICp <- BIC
-          }
+          stop("'stat' needs to be 'TCN' or 'C1C2'")
         }
       }
-      saveRDS(res.l, fileFeat)
-    }else{
-      res.l <- readRDS(fileFeat)
+      if(saveResults){
+        fileFeat <- file.path(output.dir, sprintf("featureData,p=%s.rds", pp))
+        message(sprintf("Results have been save to %s", fileFeat))
+        saveRDS(res.l, fileFeat)
+      }
     }
-    reslist[[it]] <- res.l
+    reslist@fit[[it]] <- res.l
     it <- it+1
     pp <- nb.arch.grid[it]
-    c1 <- sum(apply(res.l@res@S$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0
-    c2 <- sum(apply(res.l@res@W, 2,function(ww) (sum(ww^2)<1e-3)))==0
+    ## Z doesn't change anymore
+    c1 <- sum(apply(res.l@S$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0
+    ## W doesn't change anymore
+    c2 <- sum(apply(res.l@W, 2,function(ww) (sum(ww^2)<1e-3)))==0
+    ## pp reach max of grid
     c3 <-  !is.na(pp)
     cond <- (c1& c2& c3)
   }

@@ -1,7 +1,7 @@
 #' Function to plot PVE
 #'
 #' @export
-#' @param res result from [\code{c3co}]   
+#' @param res result from [\code{posFused}]   
 #' @param bestNbLatent best number of latent profiles.
 #' @param ylim a vector that define min and max of y-axis
 #' @return PVE curve

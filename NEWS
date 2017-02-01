@@ -1,5 +1,9 @@
 Package: c3co
 =================
+Version: 0.1.11 [2017-02-01]
+o Modification on classes
+o Clean up and comments Simulation scripts
+
 Version: 0.1.10 [2017-01-25]
 o Create classes S4
 o Clean up and comments Simulation scripts

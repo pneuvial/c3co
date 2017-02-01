@@ -19,8 +19,8 @@ library(c3co)
 ```
 
 ## Using wrapper
-In this document we use the data from \code{facets} package.
-\code{Facetswrapper} function segments and saves data from \code{facets} format to c3co format.
+In this document we use the data from a public data set saved into \code{c3co.data} package.
+\code{PSCBSwrapper} function segments and saves data from \code{PSCBS} format to c3co format.
 ```{r}
 pathPSCBS <- system.file("extdata",package="c3co.data")
 stopifnot(pathPSCBS!="")
@@ -30,14 +30,13 @@ PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="C1C2")
 
 ## Run c3co ##
 Now, you can run c3co by using this line:
-```{r, eval=TRUE, message=FALSE}
-resc3co <- c3co(NULL, nb.arch=2:4,output.dir=output.dir)
+```{r, message=FALSE, eval=TRUE}
+resc3co <- c3co(NULL, nb.arch=2:4,pathSeg=output.dir)
 ```
-```{r, fig.width=7, fig.height=5}
-Wplot(resc3co[[2]]@res)
+```{r, fig.width=7, fig.height=5, eval=TRUE}
+Wplot(resc3co, idxBest = 2)
 ```
-```{r, fig.width=7, fig.height=5}
-dataBest <- resc3co[[2]]
+```{r, fig.width=7, fig.height=5, eval=TRUE}
 dat <- loadPSCBSdata(pathPSCBS)
 minMaxPos <- do.call(rbind, lapply(1:2, function(chromosome){
   print(chromosome)
@@ -49,10 +48,14 @@ minMaxPos <- do.call(rbind, lapply(1:2, function(chromosome){
   pos <- df.sub$pos
   return(list(chr=chromosome, minPos=min(pos), maxPos=max(pos)))
 }))
+```
+```{r, fig.width=7, fig.height=5, eval=TRUE}
+df.CHR <- createZdf(resc3co, minMaxPos, chromosomes=c(1,2), var="TCN", idxBest=2)
+df.CHRC1 <- createZdf(resc3co, minMaxPos, chromosomes=c(1, 2), var="Minor", idxBest=2)
+df.CHRC2 <- createZdf(resc3co, minMaxPos, chromosomes=c(1, 2), var="Major", idxBest=2)
+```
 
-df.CHR <- createZdf(dataBest, minMaxPos, chromosomes=c(1,2), var="TCN")
-df.CHRC1 <- createZdf(dataBest, minMaxPos, chromosomes=c(1, 2), var="Minor")
-df.CHRC2 <- createZdf(dataBest, minMaxPos, chromosomes=c(1, 2), var="Major")
+```{r, fig.width=7, fig.height=5, eval=TRUE}
 Zplot(df.CHR, ylab="TCN")
 Zplot(df.CHRC1, ylab="C1", ylim=c(0,2))
 Zplot(df.CHRC2, ylab="C2", ylim=c(0,4))
