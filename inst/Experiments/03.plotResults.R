@@ -55,6 +55,17 @@ message("Compute ROC and AUC on Subclones")
 tol <- c(seq(from = 0.0, to = 1, length = 20))
 tol <- sort(tol, decreasing = TRUE)
 
+
+bkpsByClones <- lapply(subClones, function(sss){
+  L <- nrow(sss)
+  start <- 1:(L - 1)
+  end <- 2:L
+  which(sss$region[end] != sss$region[start])
+})
+
+bkpsByClones[[length(subClones) + 1]] <- len
+
+
 regionsByClones <- lapply(1:length(subClones), function(iii){
   sss <- subClones[[iii]]
   sss$region[c(bkpsByClones[[iii]], len)]
