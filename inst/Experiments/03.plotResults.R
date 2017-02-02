@@ -72,7 +72,7 @@ regionsByClones <- lapply(1:length(subClones), function(iii){
 })   
 regionsByClones[[length(subClones) + 1]] <- "(1,1)"
 
-AUCs_arch <- computeAUC(nbSimu, meth, stats, tol, subClones, weighstMat, regionsByClones) 
+AUCs_arch <- computeAUC(nbSimu, meth, stats, tol, subClones, weightsMat, regionsByClones) 
 df.auc.arch <- melt(AUCs_arch)
 df.auc.arch$AUC <- df.auc.arch$value
 df.auc.arch$method <- factor(df.auc.arch$method, levels=c("FLLAT-TCN","C3CO-TCN","C3CO-C1C2"))

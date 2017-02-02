@@ -300,6 +300,10 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
         if (stat == "C1C2") {
           Z1 <- dataBest@S$Z1
           Z2 <- dataBest@S$Z2
+          pathRes <- "results"
+          filename <- sprintf("results_%s_%s.rds", mm, stat)
+          print(filename)
+          file <- file.path(pathRes,filename)
           bkp <- readRDS(file)[[b]]@bkp[[1]]
           start <- c(1,ceiling(bkp))
           end <- c(floor(bkp), len)
@@ -312,6 +316,10 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
           if(mm == "FLLAT") {
             ZhatFull <- t(2*2^Z)          
           }else{
+            pathRes <- "results"
+            filename <- sprintf("results_%s_%s.rds", mm, stat)
+            print(filename)
+            file <- file.path(pathRes,filename)
             bkp <- readRDS(file)[[b]]@bkp[[1]]
             start <- c(1,ceiling(bkp))
             end <- c(floor(bkp), len)            
