@@ -5,6 +5,7 @@ library(ggplot2)
 library(matrixStats)
 library(mclust)
 
+source("00.functions.R")
 source("01.setup.R")
 stats <- c("TCN","C1C2", "TCN")
 meth <- c("FLLAT","C3CO", "C3CO")
