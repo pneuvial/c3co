@@ -91,7 +91,7 @@ loadDataBest <- function(mm, stat, b, nbClones=5){
     res <- readRDS(file)[[b]]
     fit <- res@fit
     pves <- unlist(sapply(fit, function(rr) rr@PVE))
-    pBest <- min(c(which(diff(pves) < 1e-1),length(pves) ))
+    pBest <- min(c(which(diff(pves) < 1e-3),length(pves) ))
     dataBest <- fit[[pBest]]
     return(dataBest)
   }
