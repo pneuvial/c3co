@@ -71,7 +71,7 @@ createSubclones <- function(nbClones, len, nBkp) {
   dataAnnotTP <- acnr::loadCnRegionData(dataSet = "GSE13372", tumorFrac = 1)
   dataAnnotN <- acnr::loadCnRegionData(dataSet = "GSE13372", tumorFrac = 0)
   message("Build subclones")
-  subClones <- buildSubclones(len,dataAnnotTP, dataAnnotN,
+  subClones <- buildSubclones(len, dataAnnotTP, dataAnnotN,
                               nbClones, bkpsByClones,regionsByClones)
   return(subClones)
   

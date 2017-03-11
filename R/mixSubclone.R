@@ -9,13 +9,13 @@
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 2
-#' bkps <- list(c(100,250)*10, c(150,400)*10)
+#' bkps <- list(c(100, 250)*10, c(150, 400)*10)
 #' regions <-list(c("(0,3)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 #' mixture <- mixSubclones(datSubClone, c(20,30))
 #' @export
 mixSubclones <- function(subClones, weights, fracN=NULL){
-  if(sum(weights)>100){stop("Fraction Tumor upper than 100, please check weight vector")}
+  if(sum(weights)>100){stop("Tumor fraction (sum of 'weights') should be less than 100")}
   if(is.null(fracN)){
     fracN <- 100-sum(weights)
   }
@@ -59,5 +59,7 @@ mixSubclones <- function(subClones, weights, fracN=NULL){
   dh <- (c2-c1)/(c2+c1)
   dh[idxHom] <- NA
 
-  return(data.frame(c1=c1,c2=c2, tcn=tcn, dh=dh,genotype=subClones[[1]]$genotype, chr=rep(1, length(c1)), pos=1:length(c1)))
+  df <- data.frame(c1=c1,c2=c2, tcn=tcn, dh=dh,
+                   genotype=subClones[[1]]$genotype, chr=rep(1, length(c1)), pos=1:length(c1))
+  return(df)
 }
