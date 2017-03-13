@@ -3,18 +3,35 @@
 ##########################################################################
 ## Load GSE47077 data set
 
-library(GEOquery)
-library(R.utils)
-filePaths = getGEOSuppFiles("GSE47077")
-listF <- list.files("GSE47077")
+library("GEOquery")
+library("R.utils")
+
+dataSet <- "GSE47077";
+chipType <- "GenomeWideSNP_6";
+rpath <- "rawData"
+
+## WARNING: The next command will attempt to download a 2 Gb file!
+baseDir <- file.path("geoData", dataSet)
+filePaths <- getGEOSuppFiles(dataSet, baseDir=baseDir)
+
+fl <- file.path(baseDir, "filelist.txt")
+library(dplyr)
+dat <- read.table(fl, header=TRUE, as.is=TRUE)
+tar <- sprintf("%s_RAW.tar", dataSet)
+fnames <- dat[[tar]]
+
 ## untar "GSE47077_raw.tar" only for patient RK29
-untar(file.path("GSE47077", "GSE47077_raw.tar"), files=grep(".*RK29-*", listF$Name, value=TRUE), exdir=pathToSaveCEL)
+gzfiles <- grep(".*RK29-*", fnames, value=TRUE)
+gzfiles
 
 ## gunzip the .CEL.gz files and save them to "rawData/GSE47077/GenomeWideSNP_6/"
-pathToSaveCEL <- Arguments$getWritablePath("rawData/GSE47077/GenomeWideSNP_6/")
-lapply(file.path(pathToSaveCEL, list.files(pathToSaveCEL)), gunzip)
+path <- Arguments$getWritablePath(file.path(rpath, dataSet, chipType))
+untar(file.path("GSE47077", "GSE47077_raw.tar"), files=gzfiles, exdir=path)
 
-## See aroma project to get more information about this part
+lapply(file.path(path, list.files(path)), gunzip)  ## is this necessary?
+
+## Pre-processing using the Aroma project, see http://www.aroma-project.org and 
+## http://www.aroma-project.org/blocks/doCRMAv2/
 
 library("aroma.affymetrix")
 verbose <- Arguments$getVerbose(-8, timestamp=TRUE)
@@ -23,16 +40,12 @@ verbose <- Arguments$getVerbose(-8, timestamp=TRUE)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dataSet <- "GSE47077";
-chipType <- "GenomeWideSNP_6";
 
 cdf <- AffymetrixCdfFile$byChipType("GenomeWideSNP_6", tags="Full")
 print(cdf)
 
-## See aroma documentation for details
 csR <- AffymetrixCelSet$byName(dataSet, chipType=chipType, cdf=cdf)
 print(csR);
-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # AS-CRMAv2
