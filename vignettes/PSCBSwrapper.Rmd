@@ -3,6 +3,10 @@ title: "How to use c3co with PSCBS data"
 author: "Morgane Pierre-Jean and Pierre Neuvial"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: c3co.bib
+nocite: | 
+  @olshen11parent-specific
+
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Vignette Title}
@@ -59,4 +63,14 @@ Zplot(df.CHR, ylab="TCN")
 Zplot(df.CHRC1, ylab="C1", ylim=c(0,2))
 Zplot(df.CHRC2, ylab="C2", ylim=c(0,4))
 ```
+
+## Session Information
+
+```{r}
+sessionInfo()
+```
+
+
+## References
+
 

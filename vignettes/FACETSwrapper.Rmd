@@ -3,6 +3,9 @@ title: "How to use c3co with Facets data"
 author: "Morgane Pierre-Jean and Pierre Neuvial"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: c3co.bib
+nocite: | 
+  @shen16facets
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Vignette Title}
@@ -11,17 +14,17 @@ vignette: >
 
 ## Introduction
 
-This document provides a brief tutorial on using the c3co package from Facets data.
+This document provides a brief tutorial on using the c3co package from `facets` data.
 
 ```{r}
-
-library(c3co)
-library(facets)
+library("c3co")
+library("facets")
 ```
 
 ## Using wrapper
-In this document we use the data from \code{facets} package.
-\code{Facetswrapper} function segments and saves data from \code{facets} format to c3co format.
+In this document we use the data from the `facets` package.
+The `c3co::Facetswrapper` function segments and saves data from `facets` format to c3co format.
+
 ```{r}
 pathFacets <- system.file("extdata",package="facets")
 output.dir <- R.utils::Arguments$getWritablePath("output")
@@ -29,8 +32,20 @@ Facetswrapper(pathFacets,output.dir=output.dir, stat="TCN")
 ```
 
 ## Run c3co ##
+
 Now, you can run c3co by using this line:
 ```{r, eval=FALSE}
 ## Not run here (not enough samples)
-resc3co <- c3co(NULL,pathSeg=output.dir)
+resc3co <- c3co(NULL, pathSeg=output.dir)
 ```
+
+## Session Information
+
+```{r}
+sessionInfo()
+```
+
+
+## References
+
+
