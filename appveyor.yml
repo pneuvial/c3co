@@ -39,7 +39,7 @@ build_script:
   - echo Current directory=%CD%
   - travis-tool.sh install_r R.utils knitr PSCBS aroma.light
   - travis-tool.sh install_bioc BiocStyle aroma.light
-  - travis-tool.sh install_github acnr jointseg
+  - travis-tool.sh install_github mpierrejean/acnr mpierrejean/jointseg
 
 test_script:
   - travis-tool.sh run_tests
