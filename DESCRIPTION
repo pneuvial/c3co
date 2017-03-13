@@ -28,7 +28,8 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    PSCBS
 VignetteBuilder: knitr
 Remotes:
     mpierrejean/acnr,

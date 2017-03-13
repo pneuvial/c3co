@@ -15,15 +15,14 @@ This document provides a brief tutorial on using the c3co package from PSCBS dat
 
 ```{r}
 
-library(c3co)
+library("c3co"")
 ```
 
 ## Using wrapper
 In this document we use the data from a public data set saved into \code{c3co.data} package.
 \code{PSCBSwrapper} function segments and saves data from \code{PSCBS} format to c3co format.
 ```{r}
-pathPSCBS <- system.file("extdata",package="c3co.data")
-stopifnot(pathPSCBS!="")
+pathPSCBS <- system.file("extdata", package="c3co.data", mustWork=TRUE)
 output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
 PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="C1C2")
 ```
