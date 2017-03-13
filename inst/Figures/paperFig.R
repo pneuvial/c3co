@@ -20,7 +20,7 @@ subClones <- buildSubclones(len,dataAnnotTP, dataAnnotN,2, bkpsByClones,regionsB
 ### Simulate Samples
 n <- 2
 M <- matrix(c(60,20,60,0), ncol=2, byrow=TRUE)
-dat <- apply(M, 1, mixSubclones, subClones=subClones, fracN=NULL)
+dat <- mixSubclones(subClones=subClones, M)
 
 df.tcn <- data.frame(tcn=c(dat[[1]]$tcn,dat[[2]]$tcn), pos=dat[[1]]$pos, sample=factor(rep(1:2, each=len)))
 

@@ -75,7 +75,7 @@ Once subclones are created, we can generate a matrix $W$ in order to build mixtu
 
 ```{r, warning=FALSE, cache=FALSE}
 W = getWeightMatrix(70,30, nb.arch = 3, nb.samp = 20)
-dat <- apply(W, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
+dat <- mixSubclones(subClones=datSubClone, W)
 str(dat[[1]])
 ```
 
@@ -83,7 +83,7 @@ Note that dat is a list of data frame with the following necessary columns : ```
 
 ### Run c3co model
 
-Then the c3co method can be appluied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
+Then the c3co method can be applied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
 
 ```{r c3co, warning=FALSE}
 lambda1.grid <- lambda2.grid <- c(0.1,0.001)

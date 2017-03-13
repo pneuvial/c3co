@@ -13,7 +13,7 @@ for (ss in 1:nbSimu) {
     weightMats[[ss]] <- M
     
     ## simulated profiles
-    dat <- apply(M, 1, mixSubclones, subClones=subClones, fracN=NULL)
+    dat <- mixSubclones(subClones=subClones, M)
     dats[[ss]] <- dat
     ## c3co
     resC1C2[[ss]] %<-% c3co(dat, nb.arch.grid=p.list, stat="C1C2")

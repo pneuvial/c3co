@@ -6,7 +6,7 @@ bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
 regions <-list(c("(0,3)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
-dat <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
+dat <- mixSubclones(subClones=datSubClone, M)
 l1 <- seq(from=1e-6, to=1e-5, length=3)
 l2 <- seq(from=1e-6, to=1e-5, length=3)
 

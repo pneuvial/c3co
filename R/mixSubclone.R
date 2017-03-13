@@ -1,8 +1,7 @@
 #' Create a mixture of subclones
 #'
 #' @param subClones The subclones used to create the mixture ideally from the function \code{buildSubClones}.
-#' @param weights A vector of weights in percentage
-#' @param fracN Fraction of normal cell
+#' @param W A matrix of weights in percentage [0,100] (without fraction of normal cells)
 #' @return The mixture
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -14,16 +13,8 @@
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 #' mixture <- mixSubclones(datSubClone, c(20,30))
 #' @export
-mixSubclones <- function(subClones, weights, fracN=NULL){
-  if(sum(weights)>100){stop("Fraction Tumor upper than 100, please check weight vector")}
-  if(is.null(fracN)){
-    fracN <- 100-sum(weights)
-  }
-  if(sum(weights,fracN)!=100){stop("Fraction Tumor+Normal is not equal to 100")}
-
-  weights <- weights/100
-  fracN <- fracN/100
-
+mixSubclones <- function(subClones, W){
+  
   ## compute parental copy numbers
   c1t <- sapply(subClones, function(ss){
     dh <- 2*abs(ss$baft-1/2)
@@ -42,7 +33,14 @@ mixSubclones <- function(subClones, weights, fracN=NULL){
     dh <- 2*abs(ss$bafn-1/2)
     c <- ss$cn*(1+dh)/2
   })
-
+  if(is.vector(W)){W <- matrix(W, nrow = 1)}
+  df.res <- apply(W, 1, function(weights){
+    
+  if(sum(weights)>100){stop("Fraction Tumor upper than 100, please check weight vector")}
+  fracN <- 100-sum(weights)
+  weights <- weights/100
+  fracN <- fracN/100
+  
   c1 <- rowSums(cbind(sapply(seq(along=subClones), function(ii){
     weights[ii]*c1t[,ii]
   }),fracN*rowMeans(c1n)))
@@ -51,13 +49,24 @@ mixSubclones <- function(subClones, weights, fracN=NULL){
   }),fracN*rowMeans(c2n)))
   tcn <- c1+c2
 
+  ## Sanity check
   idxHom <- which(subClones[[1]]$genotype!="0.5")
+  sc <- sapply(1:(length(subClones)-1), FUN = function (i){
+    # Test if genotype of i is equal to genotype of j
+    genoI <- subClones[[i]]$genotype
+    for(j in (i+1):length(subClones)){
+      genoJ <- subClones[[j]]$genotype  
+      try(if(sum(genoI==genoJ)!=length(genoI)) stop(sprintf("genotypes are not the same for sublones %s and %s", i, j )))
+    }
+  })
+  
   c1[idxHom] <- NA
   c1[idxHom] <- NA
   c2[idxHom] <- NA
   c2[idxHom] <- NA
   dh <- (c2-c1)/(c2+c1)
   dh[idxHom] <- NA
-
-  return(data.frame(c1=c1,c2=c2, tcn=tcn, dh=dh,genotype=subClones[[1]]$genotype, chr=rep(1, length(c1)), pos=1:length(c1)))
+  data.frame(c1=c1,c2=c2, tcn=tcn, dh=dh,genotype=subClones[[1]]$genotype, chr=rep(1, length(c1)), pos=1:length(c1))
+})
+  return(df.res)
 }

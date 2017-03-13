@@ -11,7 +11,8 @@ stats <- c("TCN","C1C2", "TCN")
 meth <- c("FLLAT","C3CO", "C3CO")
 pathFig <- R.utils::Arguments$getWritablePath("Figures")
 subClones <- readRDS(file.path(pathSubClones, sprintf("subclones.rds")))
-
+nbClones <- length(subClones)
+nbSimu <- length(readRDS(file.path(pathDat, sprintf("simu.rds"))))
 
 ###########################################
 ### Plot latent Profiles

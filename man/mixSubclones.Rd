@@ -4,14 +4,12 @@
 \alias{mixSubclones}
 \title{Create a mixture of subclones}
 \usage{
-mixSubclones(subClones, weights, fracN = NULL)
+mixSubclones(subClones, W)
 }
 \arguments{
 \item{subClones}{The subclones used to create the mixture ideally from the function \code{buildSubClones}.}
 
-\item{weights}{A vector of weights in percentage}
-
-\item{fracN}{Fraction of normal cell}
+\item{W}{A matrix of weights in percentage [0,100] (without fraction of normal cells)}
 }
 \value{
 The mixture

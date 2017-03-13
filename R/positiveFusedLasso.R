@@ -22,7 +22,7 @@
 #' c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 #' M = matrix(c(40,30, 0,0,70, 15,10, 0, 35,15,0,0 ,0,0,0), byrow=TRUE, ncol=3)
-#' simu <- apply(M, 1, mixSubclones, subClones=datSubClone, fracN=NULL)
+#' simu <- mixSubclones(subClones=datSubClone,M)
 #' YTCNtoSeg <- t(sapply(simu, function(cc) cc$tcn))
 #' YDHtoSeg <- t(sapply(simu, function(cc) cc$dh))
 #' sim <- t(rbind(YTCNtoSeg,YDHtoSeg))
