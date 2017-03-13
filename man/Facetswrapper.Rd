@@ -19,3 +19,13 @@ A list which contains the breakpoints by chromosome and also the binning of TCN,
 \description{
 Function to transform Facets data, perfom the segmentation and save it into output.dir
 }
+\examples{
+if (requireNamespace("facets", quietly=TRUE) & requireNamespace("pctGCdata", quietly=TRUE)) {
+pathFacets <- system.file("extdata",package="facets")
+output.dir <- R.utils::Arguments$getWritablePath("output")
+Facetswrapper(pathFacets,output.dir=output.dir, stat="TCN")
+\dontrun{
+resc3co <- c3co(NULL, pathSeg=output.dir)
+}
+}
+}
