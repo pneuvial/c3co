@@ -27,6 +27,7 @@ Imports:
     utils
 Suggests:
     knitr,
+    rmarkdown,
     testthat
 VignetteBuilder: knitr
 Remotes:

@@ -32,8 +32,6 @@ matrix:
     - os: osx
       r: release
 
-r_github_packages: hadley/devtools#1263
-
 bioc_packages:
   - BiocInstaller
   - BiocStyle
