@@ -1,0 +1,159 @@
+---
+title: "c3co"
+author: "Morgane Pierre-Jean, Julien Chiquet, Henrik Bengtsson and Pierre Neuvial"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: PhDBib.bib
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+The `c3co` package implements a constraint dictionary learning problem to recover cancer subclones from several DNA copy number profiles described in @pierrejean:c3co. The c3co model may be seen as an extension of the FLLat method of @nowak2011fused, and of the e-FLLat method of @masecchia2013dictionary, with the following original features:
+
+* **interpretable weights**: we model each profile as a *convex combination* of latent profiles, making the corresponding weights directly interpretable as proportions of latent features;
+* **parent-specific copy numbers**: we leverage the allelic signals available from SNP array or sequencing data in order to explicitly integrate parent-specific copy numbers (Olshen *et al*, 2011) in the model. 
+* **segment-level**: we model tumor clonality at the level of copy number segments (not individual loci), which is the level of information at which such events occur.
+
+Notes: 
+
+* Although the c3co model is designed to deal with allelic signals, we emphasize that it is also applicable to data where only total copy number estimates are available, such as array-CGH data or low-pass sequencing data.
+
+* The FLLat method is implemented in the R package `FLLat`. The e-FLLat method is implemented in Python and is available from its authors.
+
+## Model 
+
+The figure below illustrates the model used in the `c3co` package. Two heterogeneous tumor samples (green and yellow circles) are composed of a collection of normal cells (gray discs) and two cancer subclones (red triangles and blue squares). One of the cancer subclones is present in both tumor samples. 
+
+![](img/features.png)
+![](img/features2.png)
+
+The corresponding (noiseless) copy number profiles are displayed in the figure below. They are given by a linear combination of the latent profiles. This Figure is adapted from @nowak2011fused.
+
+![](img/model.png)
+![](img/model2.png)
+
+
+## Using the package
+```{r, message=FALSE,warning=FALSE}
+stopifnot(packageVersion("acnr") >= '0.2.6')
+library("c3co")
+library("ggplot2")
+set.seed(10)
+```
+
+### Creating a synthetic data set
+
+We start by defining the characteristics of the subclone profiles: profile length, number of subclones, breakpoint positions, and copy number states:
+
+```{r}
+len <- 500*10
+nbClones <- 3
+bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
+regions <-list(c("(0,1)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+```
+
+Then, we load an annotated data set from the `acnr` package.  The `buildSubclones` function can then be used to generate the subclone profiles with the above characteristics, by resampling from the annotated data set.
+
+```{r}
+dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE13372_HCC1143", tumorFraction=1)
+dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE13372_HCC1143", tumorFraction=0)
+datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
+```
+ 
+Note that the same can be done using another data set from the `acnr` package, see
+
+```{r}
+acnr::listDataSets()
+```
+
+ 
+```{r, eval=FALSE}
+dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976_CRL2324", tumorFraction=1)
+dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976_CRL2324", tumorFraction=0)
+datSubClone2 <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
+```
+
+```{r, echo=FALSE}
+cols <- c("#00000033", "#FD6C9E33", "#00000033")
+cex <- 0.3
+pch <- 19 
+clim <- c(0, 4)
+blim <- c(-0.1, 1.1)
+plot(datSubClone[[1]]$ct, col=cols[factor(datSubClone[[1]]$genotype)], cex=cex, pch=pch, ylab="TCN", ylim=clim, main="PSCN profile of one simulated subclone")
+plot(datSubClone[[1]]$baft, col=cols[factor(datSubClone[[1]]$genotype)], cex=cex, pch=pch, ylab="BAF", ylim=blim)
+```
+
+Once the subclones are created, we can generate a weight matrix $W$ in order to build mixtures.
+
+```{r, warning=FALSE, cache=FALSE}
+W = getWeightMatrix(70,30, nb.arch = 3, nb.samp = 20)
+dat <- mixSubclones(subClones=datSubClone, W)
+str(dat[[1]])
+```
+
+Note that `dat` is a list of data frames with the following required columns : `c1,c2,tcn,dh,genotype`
+
+### Inference of the c3co model parameters
+
+Then the c3co method can be applied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
+
+```{r c3co, warning=FALSE}
+lambda1.grid <- lambda2.grid <- c(0.1, 0.001)
+casRes <- c3co(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6)
+casResTCN <- c3co(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6, stat="TCN")
+```
+
+For each $p$,  `c3co` only retains the combination $(\lambda_1, \lambda_2)$ which minimizes the Bayesian Information Criterion (BIC) of the model. The next step is to choose the best $p$ (number of subclones). Following @nowak2011fused, we compare the models for different values of $p$ through their percentage of variance explained (PVE), and select the last $p$ before the final plateau of the PVE. In this example, it seems that the best is $\hat{p}=4$ (which is the true number of subclones).
+
+```{r}
+pvePlot(casRes@fit, ylim=c(0.80,1))
+
+```
+```{r}
+pvePlot(casResTCN@fit, ylim=c(0.80,1))
+```
+
+We can compare the true and the estimated weight matrices. We can easily recover a classification close to the truth with the inferred weight matrix. 
+
+```{r heatmap_C1C2, fig.width=7, fig.height=5}
+result.pveTCN <- sapply(casResTCN@fit, function(cc) cc@PVE)
+result.pve <- sapply(casRes@fit, function(cc) cc@PVE)
+idxBestC1C2 <- min(which(diff(result.pve)<1e-1))+1
+idxBestTCN <- min(which(diff(result.pveTCN)<1e-1))+1
+res.clustTRUE = hclust(dist(cbind(W, 100-rowSums(W))),method="ward.D")
+col = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
+Wplot(casRes, idxBest = idxBestC1C2)
+```
+```{r heatmap_TCN, fig.width=7, fig.height=5}
+Wplot(casResTCN, idxBest = idxBestTCN)
+```
+```{r heatmap_TRUE, fig.width=7, fig.height=5}
+heatmap.3(cbind(W, 100-rowSums(W)), dendrogram="row", main="TRUE",Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
+```
+
+
+If we look at the subclones in the dimension of parental copy numbers, we can recover the simulated alterations.
+
+```{r,Z1Z2hat, fig.width=7.5, fig.height=5}
+minMaxPos <- data.frame(chr=1, minPos=1, maxPos=len)
+df.CHR <- createZdf(casRes, minMaxPos, chromosomes=1, var="TCN", idxBest = idxBestC1C2)
+df.CHRC1 <- createZdf(casRes, minMaxPos, chromosomes=1, var="Minor", idxBest = idxBestC1C2)
+df.CHRC2 <- createZdf(casRes, minMaxPos, chromosomes=1, var="Major", idxBest = idxBestC1C2)
+Zplot(df.CHR, ylab="TCN")
+Zplot(df.CHRC1, ylab="C1", ylim=c(0,2))
+Zplot(df.CHRC2, ylab="C2", ylim=c(0,4))
+```
+
+## Session information
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+
