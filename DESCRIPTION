@@ -30,7 +30,8 @@ Suggests:
     testthat,
     PSCBS,
     c3co.data,
-    facets
+    facets,
+    pctGCdata
 VignetteBuilder: knitr
 Remotes:
     mpierrejean/acnr,
