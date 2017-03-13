@@ -27,4 +27,3 @@ regions <-list(c("(0,3)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"))
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 mixture <- mixSubclones(datSubClone, c(20,30))
 }
-

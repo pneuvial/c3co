@@ -22,4 +22,3 @@ Print the message that is contained in slots bkp, segDat and res.
 \item{showC3coFit(this)}{this is an object from class  [\code{\linkS4class{c3coFit}}].}
 }
 }
-

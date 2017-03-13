@@ -61,4 +61,3 @@ lambda1 = lambda, lambda2 = lambda, new.getZ=TRUE))
 rTCN <- positive.fused(Y1seg+Y2seg,NULL, 2,lambda1 = lambda, lambda2 = lambda)
 showPosFused(rTCN)
 }
-

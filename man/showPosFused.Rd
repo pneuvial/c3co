@@ -22,4 +22,3 @@ Print the message that is contained in slots S, W and E.
 \item{showPosFused(this)}{this is an object from class  [\code{\linkS4class{posFused}}].}
 }
 }
-

@@ -56,4 +56,3 @@ l2 <- seq(from=1e-6, to=1e-5, length=3)
 casResC1C2 <- c3co(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 casRes <- c3co(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
 }
-
