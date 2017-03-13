@@ -22,4 +22,4 @@ The `c3co` method aims at infering the latent (blue, red and gray) copy-number p
 
 ## Documentation
 
-See the package [vignette](vignettes/vignette.Rmd)
+See the package [vignette](vignettes/c3co.Rmd)
