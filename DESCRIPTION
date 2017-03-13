@@ -29,4 +29,10 @@ Suggests:
     knitr,
     testthat
 VignetteBuilder: knitr
+Remotes:
+    mpierrejean/acnr,
+    mpierrejean/jointseg,
+    pneuvial/c3co.data,
+    mskcc/pctGCdata,
+    mskcc/facets
 RoxygenNote: 6.0.1
