@@ -1,7 +1,7 @@
 Package: c3co
 Type: Package
 Title: c3co : Cancer Cell Clonality using Copy-number
-Version: 0.1.11
+Version: 0.1.12
 Author: Morgane Pierre-Jean, Julien Chiquet, Pierre Neuvial
 Maintainer: Morgane Pierre-Jean <morgane.pierrejean@genopole.cnrs.fr>
 Description: Inference of cancer subclones in tumor using the copy
@@ -9,29 +9,24 @@ Description: Inference of cancer subclones in tumor using the copy
 License: LGPL (>= 2.1)
 LazyData: TRUE
 Imports:
-    jointseg,
     acnr (>= 0.3.2),
-    limSolve,
+    facets,
+    ggplot2,
     glmnet,
+    graphics,
+    grDevices,
+    jointseg,
+    limSolve,
+    methods,
     Matrix,
     matrixStats,
-    R.utils,
-    ggplot2,
-    RColorBrewer,
     parallel,
-    facets,
-    grDevices,
-    graphics,
-    methods,
-    utils,
-    stats
-Suggests: knitr,
+    R.utils,
+    RColorBrewer,
+    stats,
+    utils
+Suggests:
+    knitr,
     testthat
 VignetteBuilder: knitr
-Remotes:
-    mpierrejean/acnr,
-    mpierrejean/jointseg,
-    pneuvial/c3co.data,
-    mskcc/pctGCdata,
-    mskcc/facets
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
