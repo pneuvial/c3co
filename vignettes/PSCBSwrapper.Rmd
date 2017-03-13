@@ -15,7 +15,7 @@ This document provides a brief tutorial on using the c3co package from PSCBS dat
 
 ```{r}
 
-library("c3co"")
+library("c3co")
 ```
 
 ## Using wrapper
