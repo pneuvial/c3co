@@ -3,6 +3,10 @@ title: "How to use c3co with PSCBS data"
 author: "Morgane Pierre-Jean and Pierre Neuvial"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: c3co.bib
+nocite: | 
+  @olshen11parent-specific
+
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Vignette Title}
@@ -15,15 +19,14 @@ This document provides a brief tutorial on using the c3co package from PSCBS dat
 
 ```{r}
 
-library(c3co)
+library("c3co")
 ```
 
 ## Using wrapper
 In this document we use the data from a public data set saved into \code{c3co.data} package.
 \code{PSCBSwrapper} function segments and saves data from \code{PSCBS} format to c3co format.
 ```{r}
-pathPSCBS <- system.file("extdata",package="c3co.data")
-stopifnot(pathPSCBS!="")
+pathPSCBS <- system.file("extdata", package="c3co.data", mustWork=TRUE)
 output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
 PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="C1C2")
 ```
@@ -60,4 +63,14 @@ Zplot(df.CHR, ylab="TCN")
 Zplot(df.CHRC1, ylab="C1", ylim=c(0,2))
 Zplot(df.CHRC2, ylab="C2", ylim=c(0,4))
 ```
+
+## Session Information
+
+```{r}
+sessionInfo()
+```
+
+
+## References
+
 

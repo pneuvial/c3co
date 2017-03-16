@@ -21,4 +21,3 @@ A list which contains the breakpoints by chromosome and also the binning of TCN,
 \description{
 Function to transform PSCBS data, perfom the segmentation and save it into output.dir
 }
-

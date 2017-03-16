@@ -21,4 +21,3 @@
  @slot param A list of parameters (number of subclones, penalty coefficients)
  @exportClass posFused
 }
-

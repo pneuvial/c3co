@@ -15,4 +15,3 @@ A data frame under PSCBS format
 \description{
 Function to load Facets data and transform them to c3co format
 }
-

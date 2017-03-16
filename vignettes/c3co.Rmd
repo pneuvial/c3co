@@ -3,7 +3,7 @@ title: "c3co"
 author: "Morgane Pierre-Jean, Julien Chiquet, Henrik Bengtsson and Pierre Neuvial"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-bibliography: PhDBib.bib
+bibliography: c3co.bib
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Vignette Title}
@@ -12,7 +12,7 @@ vignette: >
 
 ## Introduction
 
-The `c3co` package implements a constraint dictionary learning problem to recover cancer subclones from several DNA copy number profiles described in @pierrejean:c3co. The c3co model may be seen as an extension of the FLLat method of @nowak2011fused, and of the e-FLLat method of @masecchia2013dictionary, with the following original features:
+The `c3co` package implements a constraint dictionary learning problem to recover cancer subclones from several DNA copy number profiles described in @pierre-jean:c3co. The c3co model may be seen as an extension of the FLLat method of @nowak2011fused, and of the e-FLLat method of @masecchia2013dictionary, with the following original features:
 
 * **interpretable weights**: we model each profile as a *convex combination* of latent profiles, making the corresponding weights directly interpretable as proportions of latent features;
 * **parent-specific copy numbers**: we leverage the allelic signals available from SNP array or sequencing data in order to explicitly integrate parent-specific copy numbers (Olshen *et al*, 2011) in the model. 
