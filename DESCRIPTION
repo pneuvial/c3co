@@ -1,6 +1,6 @@
 Package: c3co
 Type: Package
-Title: c3co : Cancer Cell Clonality using Copy-number
+Title: Cancer Cell Clonality using Copy-number
 Version: 0.1.13
 Author: Morgane Pierre-Jean, Julien Chiquet, Pierre Neuvial
 Maintainer: Morgane Pierre-Jean <morgane.pierrejean@genopole.cnrs.fr>
