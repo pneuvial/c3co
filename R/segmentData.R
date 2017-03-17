@@ -44,13 +44,11 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
         }
     })
 
-    ## purrr::map_df seems to require a *named* list
-    if (is.null(names(dat))) {
-        names(dat) <- seq_along(dat)
-    }
-    tcn <- purrr::map_df(dat, function(x) x$tcn)
+    tcn <- lapply(dat, FUN = function(x) x$tcn)
+    tcn <- Reduce(cbind, tcn)
     if (stat=="C1C2") {
-        dh <- purrr::map_df(dat, function(x) x$dh)
+        dh <- lapply(dat, FUN = function(x) x$dh)
+        dh <- Reduce(cbind, dh)
         dataToSeg <- cbind(tcn, dh)
     } else if (stat=="TCN") {
         dataToSeg <- tcn
