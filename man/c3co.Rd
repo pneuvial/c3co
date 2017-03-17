@@ -33,6 +33,8 @@ c3co(dat, lambda1.grid = NULL, lambda2.grid = NULL,
 \item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering}
 
 \item{new.getZ}{\code{TRUE} if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)}
+
+\item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }
 \value{
 An object of class [\code{\linkS4class{c3coFit}}]

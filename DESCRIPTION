@@ -20,7 +20,7 @@ Imports:
     Matrix,
     matrixStats,
     parallel,
-    purr,
+    purrr,
     R.utils,
     RColorBrewer,
     stats,

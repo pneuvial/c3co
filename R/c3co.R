@@ -15,6 +15,7 @@
 #' @param pathSeg By default \code{NULL} if it is not \code{NULL} assuming that \code{fileSeg="segData.rds"} already exists in \code{pathSeg} and load segmentation.
 #' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering
 #' @param new.getZ \code{TRUE} if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)
+#' @param verbose A logical value indicating whether to print extra information. Defaults to FALSE
 #' @return An object of class [\code{\linkS4class{c3coFit}}]
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -74,7 +75,7 @@ c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(leng
   if(!is.null(pathSeg)){
     resSegmentation <- readRDS(file.path(pathSeg, "segDat.rds"))
   }else{
-   resSegmentation <- segmentData(dat, stat=stat)
+   resSegmentation <- segmentData(dat, stat=stat, verbose=verbose)
   }
   bkpList <- resSegmentation$bkp
   
@@ -82,7 +83,6 @@ c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(leng
   reslist@bkp <- bkpList
   reslist@segDat <- list(Y1=resSegmentation$Y1,Y2=resSegmentation$Y2,Y=resSegmentation$Y )
   
-  BICp <- 1e8
   cond <- TRUE
   it <- 1
   pp <- nb.arch.grid[it]
@@ -91,7 +91,7 @@ c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(leng
     BICp <- 1e8
     fileFeat <- file.path(output.dir, sprintf("featureData,p=%s.rds", pp))
     if(file.exists(fileFeat)){
-      message(sprintf("%s already exists", fileFeat))
+      message(sprintf("%s already exists: skipping", fileFeat))
       res.l <- readRDS(fileFeat)
     }else {
       for(l1 in lambda1.grid){
@@ -118,8 +118,10 @@ c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(leng
       }
       if(saveResults){
         fileFeat <- file.path(output.dir, sprintf("featureData,p=%s.rds", pp))
-        message(sprintf("Results have been save to %s", fileFeat))
         saveRDS(res.l, fileFeat)
+        if (verbose) {
+            message(sprintf("Results have been saved to file: %s", fileFeat))
+        }
       }
     }
     reslist@fit[[it]] <- res.l

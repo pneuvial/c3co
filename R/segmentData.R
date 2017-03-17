@@ -1,7 +1,9 @@
-#' Segmentation function
+#' Joint segmentation
+#'
+#' Joint segmentation by Recursive Binary Segmentation followed by Dynamic Programming
 #'
 #' @export
-#' @param dat A list of data frame for each patient. Data frame containing 
+#' @param dat A list of data frame containing
 #'  \describe{
 #'   \item{tcn}{Total copy number}
 #'   \item{dh}{Mirrored B allele fraction}
@@ -9,7 +11,13 @@
 #'   \item{chr}{Chromosome}
 #'   }
 #' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
+#' @param verbose A logical value indicating whether to print extra information. Defaults to FALSE
 #' @return Binned Minor and Major copy number with list of breakpoints
+#' #' 
+#' @references Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple
+#'   Change Points in the Mean for Large Sample.
+#'   http://hal.archives-ouvertes.fr/hal-00327146/
+
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
@@ -23,7 +31,7 @@
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' res <- segmentData(dat)
 #' res2 <- segmentData(dat, stat="TCN")
-segmentData <- function(dat, stat=c("C1C2", "TCN")){
+segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE, ...){
     stat <- match.arg(stat)
     
     checkColNames <- lapply(dat, function(dd) {
@@ -49,13 +57,15 @@ segmentData <- function(dat, stat=c("C1C2", "TCN")){
     bkpPosByCHR <- list()
     Y1 <- Y2 <- NULL
     Y <- NULL
-    for(cc in chrs){
-        message(sprintf("chr %s", cc))
+    for (cc in chrs) {
+        if (verbose) {
+            message(sprintf("chr %s", cc))
+        }
         ww <- which(dat[[1]]$chr==cc)
-### Segmentation step on TCN and DH
-        message("segmentation step")
-        resSeg <- jointseg::jointSeg(Y=dataToSeg[ww,], K=100, modelSelectionMethod="Birge")
-        message("end segmentation")
+        if (verbose) {
+            message("Joint segmentation")
+        }
+        resSeg <- jointseg::jointSeg(Y=dataToSeg[ww,], method="RBS", K=100, modelSelectionMethod="Birge")
         bkp <- resSeg$bestBkp
         pos <- dat[[1]]$pos[ww]
         bkpPos <-rowMeans(cbind(pos[bkp], pos[bkp+1]))
