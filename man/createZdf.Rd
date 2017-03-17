@@ -31,4 +31,3 @@ Create a data frame to plot Subclones
 \item{createZdf(this)}{this is an object from class  [\code{\linkS4class{c3coFit}}].}
 }
 }
-

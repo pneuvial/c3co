@@ -17,4 +17,3 @@ A data frame under PSCBS format
 \description{
 Function to load PSCBS data and transform them to c3co format
 }
-

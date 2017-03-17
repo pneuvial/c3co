@@ -37,4 +37,3 @@ dat <- mixSubclones(subClones=datSubClone, M)
 res <- segmentData(dat)
 res2 <- segmentData(dat, stat="TCN")
 }
-

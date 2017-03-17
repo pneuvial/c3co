@@ -1,5 +1,13 @@
 Package: c3co
 =================
+Version: 0.1.13 [2017-03-13]
+o Removed 'facets' vignette and moved 'facets' to 'Suggests'
+
+Version: 0.1.12 [2017-03-13]
+o Updated vignette c3co.Rmd
+o Added Travis CI and appveyor support
+o Repo made public
+
 Version: 0.1.11 [2017-02-01]
 o Modification on classes
 o Clean up and comments Simulation scripts
