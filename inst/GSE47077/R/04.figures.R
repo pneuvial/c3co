@@ -3,25 +3,25 @@
 ##########################################################################
 ## We provide the results of the algorithm and the segmentation so if the user only wants to reproduce figure, run only this file
 
-library(c3co)
-library(RColorBrewer)
+library("c3co")
+library("RColorBrewer")
 
 patient <- "RK29"
-path <- "data"
-#dat <- readRDS(sprintf("%s/dat-%s.rds", path ,patient))
-output.dir <- R.utils::Arguments$getWritablePath(sprintf("results_c3co-%s",patient))
-res <- list.files(output.dir, pattern="featureData")
-lapply(file.path(output.dir, res), function(ff){
-  print(ff)
-  dat <- readRDS(ff)
-  respf <- dat$res
-  resPosFused <- new("posFused", S=list(Z=respf$Z, Z1=respf$Z1, Z2=respf$Z2), W=respf$W, E=list(Y1 = respf$Y.hat$Y1, Y2 = respf$Y.hat$Y2))
-  res <- new("c3coClass", BIC=dat$BIC, PVE=dat$PVE, res=resPosFused, param=dat$param, bkp=dat$bkp)
-  saveRDS(res, ff)
-})
+path <- sprintf("results_c3co-%s",patient)
+output.dir <- R.utils::Arguments$getReadablePath(path)
+
+# res <- list.files(output.dir, pattern="featureData")
+# lapply(file.path(output.dir, res), function(ff){
+#   print(ff)
+#   dat <- readRDS(ff)
+#   respf <- dat$res
+#   resPosFused <- new("posFused", S=list(Z=respf$Z, Z1=respf$Z1, Z2=respf$Z2), W=respf$W, E=list(Y1 = respf$Y.hat$Y1, Y2 = respf$Y.hat$Y2))
+#   res <- new("c3coClass", BIC=dat$BIC, PVE=dat$PVE, res=resPosFused, param=dat$param, bkp=dat$bkp)
+#   saveRDS(res, ff)
+# })
 
 resC3co <- lapply(file.path(output.dir, res), readRDS)
-
+str(resC3co)
 ### Plot PVE
 pvePlot(resC3co, ylim=c(0.70,1))
 dataBest <- resC3co[[6]]
