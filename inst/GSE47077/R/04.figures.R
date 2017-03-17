@@ -7,42 +7,53 @@ library("c3co")
 library("RColorBrewer")
 
 patient <- "RK29"
-path <- sprintf("results_c3co-%s",patient)
-output.dir <- R.utils::Arguments$getReadablePath(path)
 
-# res <- list.files(output.dir, pattern="featureData")
-# lapply(file.path(output.dir, res), function(ff){
-#   print(ff)
-#   dat <- readRDS(ff)
-#   respf <- dat$res
-#   resPosFused <- new("posFused", S=list(Z=respf$Z, Z1=respf$Z1, Z2=respf$Z2), W=respf$W, E=list(Y1 = respf$Y.hat$Y1, Y2 = respf$Y.hat$Y2))
-#   res <- new("c3coClass", BIC=dat$BIC, PVE=dat$PVE, res=resPosFused, param=dat$param, bkp=dat$bkp)
-#   saveRDS(res, ff)
-# })
+##########################################################################################
+######### Transform the old format to new S4 format ##################
+##########################################################################################
 
-resC3co <- lapply(file.path(output.dir, res), readRDS)
-str(resC3co)
+output.dir <- R.utils::Arguments$getWritablePath(sprintf("results_c3co-%s",patient))
+res <- list.files(output.dir, pattern="featureData")
+### Create a list with posFused object
+fit <- lapply(file.path(output.dir, res), function(ff){
+  print(ff)
+  dat <- readRDS(ff)
+  resPosFused <- new("posFused", S=list(Z=dat@res@S$Z, Z1=dat@res@S$Z1, Z2=dat@res@S$Z2), W=dat@res@W, E=list(Y1 = dat@res@E$Y1, Y2 = dat@res@E$Y2), BIC=dat@BIC,PVE=dat@PVE,param=dat@param)
+  return(resPosFused)
+})
+sd <- readRDS(file.path(output.dir, "segDat.rds"))
+segDat <- list(Y1=sd$Y1,Y2=sd$Y2,Y=sd$Y )
+### Create c3coFit 
+resC3co <- new("c3coFit",bkp=sd$bkp, segDat=segDat, fit=fit)
+
+##########################################################################################
+##########################################################################################
+
+### For the user after 03.runC3co.R only use this 
+
 ### Plot PVE
-pvePlot(resC3co, ylim=c(0.70,1))
-dataBest <- resC3co[[6]]
+pvePlot(resC3co@fit, ylim=c(0.70,1))
+dataBest <- resC3co@fit[[6]]
 
 ### Plot W matrix
 pathFig <- R.utils::Arguments$getWritablePath("fig-GSE47077-RK29")
 
 pdf(file.path(pathFig,sprintf("heatmap,GSE47077,patient=%s.pdf",patient)), width=13, height=8)
-Wplot(resC3co, idxBest=6, rownamesW= sprintf("R%s",1:nrow(dataBest@res@W)))
+Wplot(resC3co, idxBest=6, rownamesW= sprintf("R%s",1:nrow(dataBest@W)))
 dev.off()
 
 ### Plot Latent profiles
+path<- (sprintf("data",patient))
 minMaxPos <- readRDS(file.path(path, "minMaxposByCHR.rds"))
 
-lengthCHR <- sapply(dataBest@bkp, length)
+lengthCHR <- sapply(resC3co@bkp, length)
 chrs <- sapply(1:22, function(cc) rep(cc,times=lengthCHR[cc]))
 
 start <- c(1,cumsum(lengthCHR)+1)
 
 ch <- c(9)
 df.CHR <- createZdf(resC3co, minMaxPos, chromosomes=ch, var="TCN", idxBest=6)
+
 df.CHRC1 <- createZdf(resC3co, minMaxPos, chromosomes=ch, var="Minor", idxBest=6)
 df.CHRC2 <- createZdf(resC3co, minMaxPos, chromosomes=ch, var="Major", idxBest=6)
 
