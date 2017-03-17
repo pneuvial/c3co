@@ -31,7 +31,7 @@
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' res <- segmentData(dat)
 #' res2 <- segmentData(dat, stat="TCN")
-segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE, ...){
+segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
     stat <- match.arg(stat)
     
     checkColNames <- lapply(dat, function(dd) {
@@ -79,9 +79,9 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE, ...){
         xOut <- sort(unique(xOut))
 
         tcn <- as.matrix(tcn)
-        dh <- as.matrix(dh)
 
         if (stat=="C1C2") {
+            dh <- as.matrix(dh)
             datC1 <- tcn*(1-dh)/2
             datC2 <- tcn*(1+dh)/2
 
