@@ -4,7 +4,7 @@
 \alias{segmentData}
 \title{Joint segmentation}
 \usage{
-segmentData(dat, stat = c("C1C2", "TCN"), verbose = FALSE, ...)
+segmentData(dat, stat = c("C1C2", "TCN"), verbose = FALSE)
 }
 \arguments{
 \item{dat}{A list of \code{data.frame} containing

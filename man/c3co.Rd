@@ -7,7 +7,7 @@
 c3co(dat, lambda1.grid = NULL, lambda2.grid = NULL,
   nb.arch.grid = 2:(length(dat) - 1), stat = "C1C2", saveResults = FALSE,
   pathSeg = NULL, output.dir = "results_c3co", init.random = FALSE,
-  new.getZ = TRUE)
+  new.getZ = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{dat}{A list of data frame for each patient. Data frame containing 

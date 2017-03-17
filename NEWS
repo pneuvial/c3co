@@ -1,5 +1,10 @@
 Package: c3co
 =================
+Version: 0.1.14 [2017-03-17]
+o Some code cleanups
+o The genotypes of the subclones produced by 'buildSubclones' now have the same distribution as the input data (before, it was 1/3,1/3,1/3 regardless of the input data)
+o Added tests of consistency of the output of 'buildSubclones'
+
 Version: 0.1.13 [2017-03-13]
 o Removed 'facets' vignette and moved 'facets' to 'Suggests'
 
