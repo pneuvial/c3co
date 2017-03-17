@@ -3,7 +3,7 @@
 #' Joint segmentation by Recursive Binary Segmentation followed by Dynamic Programming
 #'
 #' @export
-#' @param dat A list of data frame containing
+#' @param dat A list of \code{data.frame} containing
 #'  \describe{
 #'   \item{tcn}{Total copy number}
 #'   \item{dh}{Mirrored B allele fraction}

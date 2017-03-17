@@ -2,7 +2,7 @@
 # Run c3co
 ##########################################################################
 ## Run 00.preprocessing.R, 01.CallGenotypes.R, 03.TumorBoost.R before running this file
-library(c3co)
+library("c3co")
 patient <- "RK29"
 path <- "data"
 dat <- readRDS(sprintf("%s/dat-%s.rds", path ,patient))
