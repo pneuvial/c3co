@@ -1,10 +1,6 @@
-#' @title The method showPosFused
-#' @description Print the message that is contained in slots S, W and E.
-#' \itemize{
-#' \item{showPosFused(this)}{this is an object from class  [\code{\linkS4class{posFused}}].}
-#' }
-#' @param this an object from the following class: [\code{\linkS4class{posFused}}] 
-#' @return nothing
+#' Display the content of an object of class posFused
+#' 
+#' @slot this an object from the following class: [\code{\linkS4class{posFused}}] 
 #' @rdname showPosFused
 #' @exportMethod showPosFused
 setGeneric(
@@ -32,29 +28,26 @@ setMethod(
     cat(utils::str(this@param),"\n")
   }
 )
-#' @title The method Wplot.
-#' \itemize{
-#' \item{Wplot(this)}{this is an object from class  [\code{\linkS4class{c3coFit}}].}
-#' }
-#' @description  Plot the weight matrix
-#' @param this an object from the following class: [\code{\linkS4class{c3coFit}}]
-#' @param idxBest a integer that is the best fitting of the data 
+#' Plot the weight matrix
+#' 
+#' @param this An object of class \code{\linkS4class{c3coFit}}
+#' @param idxBest A integer that is the best fitting of the data 
 #' @param rownamesW A vector that contains identification of patients
 #' @param col A vector that contains colors for the heatmap
 #' @param margins A vector margins 
-#' @param posLegend position of the legend as for \code{plot}
-#' @param listPheno A Matrix that contains details on phenotype for each patient. Could be location or time point of tumors for example
+#' @param posLegend position of the legend to be passed to \code{plot}
+#' @param listPheno A matrix that contains details on phenotype for each patient. Could be location or time point of tumors for example
 #' @param colsPheno Matrix that containts colors for each type of variable in phenotype
 #' @param colLegend colors for clinical data
 #' @param labelLegend labels for clinical data
 #' @param cexCol size of labels of columns by (default 1.5) 
-#' @param ... other paramaters to personalize heatmap (see \code{heatmap.3.R})
-#' @return Heatmap of W
+#' @param ... other paramaters to personalize heatmap (see \code{heatmap.3})
+#' @return a heatmap of W
 #' @rdname Wplot
 #' @exportMethod Wplot
 setGeneric(
   name = "Wplot",
-  def = function(this,idxBest, rownamesW=NULL, col= NULL, margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...) {
+  def = function(this, idxBest, rownamesW=NULL, col= NULL, margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...) {
     standardGeneric("Wplot")
   }
 )
@@ -86,12 +79,9 @@ setMethod(
   })
 
 
-#' @title The method showC3coFit
-#' @description Print the message that is contained in slots bkp, segDat and res.
-#' \itemize{
-#' \item{showC3coFit(this)}{this is an object from class  [\code{\linkS4class{c3coFit}}].}
-#' }
-#' @param this an object from the following class: [\code{\linkS4class{c3coFit}}] 
+#' Display the content of an object of class c3coFit
+#' 
+#' @param this An object of class \code{\linkS4class{c3coFit}}
 #' @return nothing
 #' @rdname showC3coFit
 #' @exportMethod showC3coFit
@@ -115,14 +105,10 @@ setMethod(
   }
 )
 
-#' @title The method createZdf
-#' @description Create a data frame to plot Subclones
-#' \itemize{
-#' \item{createZdf(this)}{this is an object from class  [\code{\linkS4class{c3coFit}}].}
-#' }
-#' @title The method createZdf
-#' @param this an object from the following class: [\code{\linkS4class{c3coFit}}] 
-#' @param minMaxPos Matrix that contains min and max position for each chromosome
+#' Create a data frame to plot Subclones 
+#' 
+#' @param this An object of class \code{\linkS4class{c3coFit}}
+#' @param minMaxPos Matrix containing min and max position for each chromosome
 #' @param chromosomes A vector that contains the focused chromosomes
 #' @param var TCN, Minor or Major 
 #' @param idxBest a integer that is the best fitting of the data 
@@ -166,7 +152,3 @@ setMethod(
     }))
     return(df.CHR)
   })
-
-
-
-

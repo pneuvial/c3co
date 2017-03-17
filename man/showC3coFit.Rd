@@ -4,21 +4,18 @@
 \name{showC3coFit}
 \alias{showC3coFit}
 \alias{showC3coFit,c3coFit-method}
-\title{The method showC3coFit}
+\title{Display the content of an object of class c3coFit}
 \usage{
 showC3coFit(this)
 
 \S4method{showC3coFit}{c3coFit}(this)
 }
 \arguments{
-\item{this}{an object from the following class: [\code{\linkS4class{c3coFit}}]}
+\item{this}{An object of class \code{\linkS4class{c3coFit}}}
 }
 \value{
 nothing
 }
 \description{
-Print the message that is contained in slots bkp, segDat and res.
-\itemize{
-\item{showC3coFit(this)}{this is an object from class  [\code{\linkS4class{c3coFit}}].}
-}
+Display the content of an object of class c3coFit
 }

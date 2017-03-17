@@ -4,21 +4,18 @@
 \name{showPosFused}
 \alias{showPosFused}
 \alias{showPosFused,posFused-method}
-\title{The method showPosFused}
+\title{Display the content of an object of class posFused}
 \usage{
 showPosFused(this)
 
 \S4method{showPosFused}{posFused}(this)
 }
-\arguments{
-\item{this}{an object from the following class: [\code{\linkS4class{posFused}}]}
-}
-\value{
-nothing
-}
 \description{
-Print the message that is contained in slots S, W and E.
-\itemize{
-\item{showPosFused(this)}{this is an object from class  [\code{\linkS4class{posFused}}].}
+Display the content of an object of class posFused
 }
-}
+\section{Slots}{
+
+\describe{
+\item{\code{this}}{an object from the following class: [\code{\linkS4class{posFused}}]}
+}}
+

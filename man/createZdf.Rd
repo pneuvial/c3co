@@ -4,7 +4,7 @@
 \name{createZdf}
 \alias{createZdf}
 \alias{createZdf,c3coFit-method}
-\title{The method createZdf}
+\title{Create a data frame to plot Subclones}
 \usage{
 createZdf(this, minMaxPos, chromosomes, var = "TCN", idxBest)
 
@@ -12,9 +12,9 @@ createZdf(this, minMaxPos, chromosomes, var = "TCN", idxBest)
   idxBest)
 }
 \arguments{
-\item{this}{an object from the following class: [\code{\linkS4class{c3coFit}}]}
+\item{this}{An object of class \code{\linkS4class{c3coFit}}}
 
-\item{minMaxPos}{Matrix that contains min and max position for each chromosome}
+\item{minMaxPos}{Matrix containing min and max position for each chromosome}
 
 \item{chromosomes}{A vector that contains the focused chromosomes}
 
@@ -27,7 +27,4 @@ A data frame to plot Latent profiles with ggplot
 }
 \description{
 Create a data frame to plot Subclones
-\itemize{
-\item{createZdf(this)}{this is an object from class  [\code{\linkS4class{c3coFit}}].}
-}
 }

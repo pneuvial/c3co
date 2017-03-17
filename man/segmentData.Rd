@@ -7,7 +7,7 @@
 segmentData(dat, stat = c("C1C2", "TCN"), verbose = FALSE, ...)
 }
 \arguments{
-\item{dat}{A list of data frame containing
+\item{dat}{A list of \code{data.frame} containing
 \describe{
  \item{tcn}{Total copy number}
  \item{dh}{Mirrored B allele fraction}
