@@ -38,6 +38,8 @@
 #' lambda1 = lambda, lambda2 = lambda, new.getZ=TRUE))
 #' rTCN <- positive.fused(Y1seg+Y2seg,NULL, 2,lambda1 = lambda, lambda2 = lambda)
 #' showPosFused(rTCN)
+#'
+#' @importFrom parallel mclapply
 positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
                            eps = 1e-2, max.iter = 50, verbose=F, new.getZ=FALSE) {
 
@@ -89,7 +91,7 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
       Z <- get.Z(W, Y1, Y2, lambda1, lambda2)
     }else{
     ## test
-    Z <- parallel::mclapply(list(list(Y=Y1,lambda=lambda1),list(Y=Y2,lambda=lambda2)), get.Z.new, W=W)
+    Z <- mclapply(list(list(Y=Y1,lambda=lambda1),list(Y=Y2,lambda=lambda2)), get.Z.new, W=W)
     names(Z)= c("Z1", "Z2")
     }
     idx <- ncol(Z$Z2)
