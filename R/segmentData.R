@@ -51,7 +51,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
         dh <- Reduce(cbind, dh)
         dataToSeg <- cbind(tcn, dh)
     } else if (stat=="TCN") {
-        dataToSeg <- tcn
+        dataToSeg <- cbind(tcn) 
     } 
 
     len <- nrow(dataToSeg)
