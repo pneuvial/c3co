@@ -102,9 +102,11 @@ Note that `dat` is a list of data frames with the following required columns : `
 Then the c3co method can be applied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
 
 ```{r c3co, warning=FALSE}
-lambda1.grid <- lambda2.grid <- c(0.1, 0.001)
-casRes <- c3co(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6)
-casResTCN <- c3co(dat,lambda1.grid, lambda2.grid, nb.arch.grid = 2:6, stat="TCN")
+lambda.grid <-  c(0.1, 0.001)
+nb.arch <- 2:6
+parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid, nb.arch=nb.arch) 
+casRes <- c3co(dat,parameters.grid)
+casResTCN <- c3co(dat,parameters.grid, stat="TCN")
 ```
 
 For each $p$,  `c3co` only retains the combination $(\lambda_1, \lambda_2)$ which minimizes the Bayesian Information Criterion (BIC) of the model. The next step is to choose the best $p$ (number of subclones). Following @nowak2011fused, we compare the models for different values of $p$ through their percentage of variance explained (PVE), and select the last $p$ before the final plateau of the PVE. In this example, it seems that the best is $\hat{p}=4$ (which is the true number of subclones).

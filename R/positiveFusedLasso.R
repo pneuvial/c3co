@@ -40,7 +40,7 @@
 #' showPosFused(rTCN)
 positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
                            eps = 1e-2, max.iter = 50, verbose=F, new.getZ=FALSE) {
-
+  
   ## problem dimensions
   n <- nrow(Y1) # number of individuals
   L <- ncol(Y1) # number of loci
@@ -88,27 +88,21 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
     if(!new.getZ){
       Z <- get.Z(W, Y1, Y2, lambda1, lambda2)
     }else{
-    ## test
-    Z <- parallel::mclapply(list(list(Y=Y1,lambda=lambda1),list(Y=Y2,lambda=lambda2)), get.Z.new, W=W)
-    names(Z)= c("Z1", "Z2")
+      ## test
+      Z <- parallel::mclapply(list(list(Y=Y1,lambda=lambda1),list(Y=Y2,lambda=lambda2)), get.Z.new, W=W)
+      names(Z)= c("Z1", "Z2")
     }
-    idx <- ncol(Z$Z2)
-    checkC2supC1 <- sapply(idx, function(ii){
-      jj <- which(Z$Z1[,ii]>Z$Z2[,ii])
-      if(length(jj)>0){
-        warning("Some components in minor latent profiles are larger than matched components in major latent profiles")
-      }
-    })
+    
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
     if (iter>1) {
       delta <- sqrt(sum((W-W.old)^2))}
-
-      cond <- (iter > max.iter | delta < eps)
-
-      if(verbose) cat("\ndelta =",round(delta, 4))
-        W.old <- W
-    }
+    
+    cond <- (iter > max.iter | delta < eps)
+    
+    if(verbose) cat("\ndelta =",round(delta, 4))
+    W.old <- W
+  }
   if(!is.null(Y2)){
     loss <- (sum((Y1-W %*% t(Z$Z1))^2)+sum((Y2-W %*% t(Z$Z2))^2))/(n*L)
     loss <- (sum((Y1+Y2-W %*% t(Z$Z1+Z$Z2))^2))/(n*L)
@@ -128,6 +122,14 @@ positive.fused <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
   if(verbose) cat("\nDONE!\n")
   kZ <- sum(apply(res$Z, 2, diff)!=0)
   BIC <-  n*L*log(loss)+kZ*log(n*L)
+  
+  idx <- ncol(res$Z2)
+  checkC2supC1 <- sapply(idx, function(ii){
+    jj <- which(res$Z1[,ii]>res$Z2[,ii])
+    if(length(jj)>0){
+      warning(sprintf("For model with %s features, some components in minor latent profiles are larger than matched components in major latent profiles", nb.arch))
+    }
+  })
   
   objRes <- methods::new("posFused", S = list(Z = res$Z, Z1 = res$Z1, Z2 = res$Z2), W = res$W, E = list(Y1 = res$Y.hat$Y1, Y2 = res$Y.hat$Y2), BIC=BIC, PVE=PVE, param=list(nb.arch=nb.arch, lambda1=lambda1, lambda2=lambda2))
   return(objRes)
