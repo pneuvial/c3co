@@ -53,12 +53,10 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
     } else if (stat=="TCN") {
         dataToSeg <- cbind(tcn) 
     } 
-
-    len <- nrow(dataToSeg)
     chrs <- unique(dat[[1]]$chr)
     bkpPosByCHR <- list()
     Y1 <- Y2 <- NULL
-    Y <- NULL
+    Y <- DH <- NULL
     for (cc in chrs) {
         if (verbose) {
             message(sprintf("chr %s", cc))
@@ -71,8 +69,6 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
         bkp <- resSeg$bestBkp
         pos <- dat[[1]]$pos[ww]
         bkpPos <-rowMeans(cbind(pos[bkp], pos[bkp+1]))
-        start <- c(min(pos), sort(c(pos[bkp+1])))
-        end <- c(sort(pos[bkp]), max(pos))
         xOut <- c(min(pos), bkpPos, max(pos))
         xOut <- sort(unique(xOut))
 
@@ -80,52 +76,50 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
 
         if (stat=="C1C2") {
             dh <- as.matrix(dh)
-            datC1 <- tcn*(1-dh)/2
-            datC2 <- tcn*(1+dh)/2
-
-            binDatC1 <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(datC1))
-            for (bb in 1:ncol(datC1)) {
-                means <- matrixStats::binMeans(y=datC1[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
-                binDatC1[, bb] <- means
-            }
-            binDatC2 <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(datC2))
-            for (bb in 1:ncol(datC2)) {
-                means <- matrixStats::binMeans(y=datC2[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
-                binDatC2[, bb] <- means
-            }
-
-            idxNAC1 <- which(rowSums(is.na(binDatC1))>0)
-            idxNAC2 <- which(rowSums(is.na(binDatC2))>0)
-            idxNA <- unique(c(idxNAC1, idxNAC2))
-            if (length(idxNA)) {
-                binDatC1withoutNA <- binDatC1[-idxNA,]
-                binDatC2withoutNA <- binDatC2[-idxNA,]
-                bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
-            } else {
-                binDatC1withoutNA <- binDatC1
-                binDatC2withoutNA <- binDatC2
-                bkpPosByCHR[[cc]] <- bkpPos
-            }
-            ## Define Y1 and Y2
-            Y1 <- rbind(Y1, binDatC1withoutNA)
-            Y2 <- rbind(Y2, binDatC2withoutNA)
-            Y <- Y1+Y2
-        } else {
-            binDatC <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
+            binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
             for (bb in 1:ncol(tcn)) {
                 means <- matrixStats::binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
-                binDatC[, bb] <- means
+                binDatTCN[, bb] <- means
             }
-            idxNA <- which(rowSums(is.na(binDatC))>0)
+            binDatDH <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(dh))
+            for (bb in 1:ncol(dh)) {
+                means <- matrixStats::binMeans(y=dh[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
+                binDatDH[, bb] <- means
+            }
+
+            idxNAC1 <- which(rowSums(is.na(binDatTCN))>0)
+            idxNAC2 <- which(rowSums(is.na(binDatDH))>0)
+            idxNA <- unique(c(idxNAC1, idxNAC2))
             if (length(idxNA)) {
-                binDatCwithoutNA <- binDatC[-idxNA,]
+                binDatTCNwithoutNA <- binDatTCN[-idxNA,]
+                binDatDHwithoutNA <- binDatDH[-idxNA,]
+                bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
+            } else {
+                binDatTCNwithoutNA <- binDatTCN
+                binDatDHwithoutNA <- binDatDH
+                bkpPosByCHR[[cc]] <- bkpPos
+            }
+            ## Define Y1 and Y2
+            Y <- rbind(Y, binDatTCNwithoutNA)
+            DH <- rbind(DH, binDatDHwithoutNA)
+            Y1 <- Y*(1-DH)/2
+            Y2 <- Y*(1+DH)/2
+        } else {
+          binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
+            for (bb in 1:ncol(tcn)) {
+                means <- matrixStats::binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
+                binDatTCN[, bb] <- means
+            }
+            idxNA <- which(rowSums(is.na(binDatTCN))>0)
+            if (length(idxNA)) {
+                binDatTCNwithoutNA <- binDatTCN[-idxNA,]
                 bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
             } else {
                 bkpPosByCHR[[cc]] <- bkpPos
-                binDatCwithoutNA <- binDatC
+                binDatTCNwithoutNA <- binDatTCN
             }
             ## Define Y1 and Y2
-            Y <- rbind(Y, binDatC)
+            Y <- rbind(Y, binDatTCNwithoutNA)
             Y1 <- NA
             Y2 <- NA
         }
