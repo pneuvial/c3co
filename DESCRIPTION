@@ -4,8 +4,8 @@ Title: Cancer Cell Clonality using Copy-number
 Version: 0.1.14
 Author: Morgane Pierre-Jean, Julien Chiquet, Pierre Neuvial
 Maintainer: Morgane Pierre-Jean <morgane.pierrejean@genopole.cnrs.fr>
-Description: Inference of cancer subclones in tumor using the copy
-    number of several patients or several temporal and/or spatial from the same patient.
+Description: Inference of cancer subclones in tumor using the copy number of
+    several patients or several temporal and/or spatial from the same patient.
 License: LGPL (>= 2.1)
 LazyData: TRUE
 Imports:
@@ -33,10 +33,9 @@ Suggests:
     facets,
     pctGCdata
 VignetteBuilder: knitr
-Remotes:
-    mpierrejean/acnr,
+Remotes: mpierrejean/acnr,
     mpierrejean/jointseg,
     pneuvial/c3co-data,
     mskcc/facets,
     mskcc/pctGCdata
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1
