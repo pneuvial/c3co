@@ -19,3 +19,4 @@ plot of Latent profiles
 \description{
 Function to plot Latent profiles
 }
+

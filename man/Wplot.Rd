@@ -45,3 +45,4 @@ a heatmap of W
 \description{
 Plot the weight matrix
 }
+

@@ -1,6 +1,6 @@
 #' Display the content of an object of class posFused
-#' 
-#' @slot this an object from the following class: [\code{\linkS4class{posFused}}] 
+#'
+#' @param this an object from the following class: [\code{\linkS4class{posFused}}] 
 #' @rdname showPosFused
 #' @exportMethod showPosFused
 setGeneric(

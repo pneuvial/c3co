@@ -31,3 +31,4 @@ Generate weight matrix
 \examples{
 M <- getWeightMatrix(70,20, 7, 30)
 }
+

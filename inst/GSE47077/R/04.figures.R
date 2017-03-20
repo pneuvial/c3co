@@ -34,7 +34,8 @@ Wplot(resC3co, idxBest=6, rownamesW= sprintf("R%s",1:nrow(dataBest@res@W)))
 dev.off()
 
 ### Plot Latent profiles
-minMaxPos <- readRDS(file.path(path, "minMaxposByCHR.rds"))
+pathCHR <-  system.file("inst", "GSE47077", "data","minMaxposByCHR.rds", package = "c3co")
+minMaxPos <- readRDS(pathCHR)
 
 lengthCHR <- sapply(dataBest@bkp, length)
 chrs <- sapply(1:22, function(cc) rep(cc,times=lengthCHR[cc]))

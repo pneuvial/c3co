@@ -15,3 +15,4 @@
  @slot fit A List of [\code{\linkS4class{posFused}}] objects
  @exportClass c3coClass
 }
+
