@@ -3,7 +3,7 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/pneuvial/c3co/master.svg)](https://codecov.io/github/pneuvial/c3co?branch=master)
 
 
-# c3co: Infering cancer cell clonality from copy number data
+# c3co: Inferring cancer cell clonality from copy number data
 
 ## Installation
 
