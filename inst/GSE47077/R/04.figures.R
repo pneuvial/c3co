@@ -8,37 +8,14 @@ library("RColorBrewer")
 
 patient <- "RK29"
 
-##########################################################################################
-######### Transform the old format to new S4 format ##################
-##########################################################################################
-
-output.dir <- R.utils::Arguments$getWritablePath(sprintf("results_c3co-%s",patient))
-res <- list.files(output.dir, pattern="featureData")
-### Create a list with posFused object
-fit <- lapply(file.path(output.dir, res), function(ff){
-  print(ff)
-  dat <- readRDS(ff)
-  resPosFused <- new("posFused", S=list(Z=dat@res@S$Z, Z1=dat@res@S$Z1, Z2=dat@res@S$Z2), W=dat@res@W, E=list(Y1 = dat@res@E$Y1, Y2 = dat@res@E$Y2), BIC=dat@BIC,PVE=dat@PVE,param=dat@param)
-  return(resPosFused)
-})
-sd <- readRDS(file.path(output.dir, "segDat.rds"))
-segDat <- list(Y1=sd$Y1,Y2=sd$Y2,Y=sd$Y )
-### Create c3coFit 
-resC3co <- new("c3coFit",bkp=sd$bkp, segDat=segDat, fit=fit)
-
-##########################################################################################
-##########################################################################################
-
-### For the user after 03.runC3co.R only use this 
-
 ### Plot PVE
 pvePlot(resC3co@fit, ylim=c(0.70,1))
 dataBest <- resC3co@fit[[6]]
 
 ### Plot W matrix
-pathFig <- R.utils::Arguments$getWritablePath("fig-GSE47077-RK29")
+figPath <- R.utils::Arguments$getWritablePath("fig-GSE47077-RK29")
 
-pdf(file.path(pathFig,sprintf("heatmap,GSE47077,patient=%s.pdf",patient)), width=13, height=8)
+pdf(file.path(figPath,sprintf("heatmap,GSE47077,patient=%s.pdf",patient)), width=13, height=8)
 Wplot(resC3co, idxBest=6, rownamesW= sprintf("R%s",1:nrow(dataBest@W)))
 dev.off()
 
@@ -65,9 +42,9 @@ gArchTCN <- Zplot(df.CHR, ylab="TCN", ylim=c(1,3))
 gArchC2 <- Zplot(df.CHRC2, ylab="Major", ylim=c(1,3))
 gArchC1 <- Zplot(df.CHRC1, ylab="Minor", ylim=c(0,2))
 
-ggsave(gArchTCN, filename=sprintf("%s/archetypes,GSE47077,patient=%s,chr=%s.pdf", pathFig, patient,ch), width=7, height=3.5)
-ggsave(gArchC1, filename=sprintf("%s/archetypes,GSE47077,patient=%s,C1,chr=%s.pdf", pathFig, patient,ch), width=7, height=3.5)                    
-ggsave(gArchC2, filename=sprintf("%s/archetypes,GSE47077,patient=%s,C2,chr=%s.pdf", pathFig, patient,ch), width=7, height=3.5)
+ggsave(gArchTCN, filename=sprintf("%s/archetypes,GSE47077,patient=%s,chr=%s.pdf", figPath, patient,ch), width=7, height=3.5)
+ggsave(gArchC1, filename=sprintf("%s/archetypes,GSE47077,patient=%s,C1,chr=%s.pdf", figPath, patient,ch), width=7, height=3.5)                    
+ggsave(gArchC2, filename=sprintf("%s/archetypes,GSE47077,patient=%s,C2,chr=%s.pdf", figPath, patient,ch), width=7, height=3.5)
 
 
 
@@ -84,7 +61,7 @@ df.CHRC1$position <- df.CHRC1$position/1e6
 gArchTCN <- Zplot(df.CHR, ylab="TCN")
 gArchC2 <- Zplot(df.CHRC2, ylab="Major")
 gArchC1 <- Zplot(df.CHRC1, ylab="Minor")
-ggsave(gArchTCN, filename=sprintf("%s/archetypes,GSE47077,patient=%s,chr=%s.pdf", pathFig, patient,ch), width=7, height=3.5)
-ggsave(gArchC1, filename=sprintf("%s/archetypes,GSE47077,patient=%s,C1,chr=%s.pdf", pathFig, patient,ch), width=7, height=3.5)                    
-ggsave(gArchC2, filename=sprintf("%s/archetypes,GSE47077,patient=%s,C2,chr=%s.pdf", pathFig, patient,ch), width=7, height=3.5)
+ggsave(gArchTCN, filename=sprintf("%s/archetypes,GSE47077,patient=%s,chr=%s.pdf", figPath, patient,ch), width=7, height=3.5)
+ggsave(gArchC1, filename=sprintf("%s/archetypes,GSE47077,patient=%s,C1,chr=%s.pdf", figPath, patient,ch), width=7, height=3.5)                    
+ggsave(gArchC2, filename=sprintf("%s/archetypes,GSE47077,patient=%s,C2,chr=%s.pdf", figPath, patient,ch), width=7, height=3.5)
 
