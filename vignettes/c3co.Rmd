@@ -102,7 +102,7 @@ Note that `dat` is a list of data frames with the following required columns : `
 Then the c3co method can be applied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
 
 ```{r c3co, warning=FALSE}
-lambda.grid <-  c(0.1, 0.001)
+lambda.grid <-  seq(from=1e-6, to=1e-5, length=5)
 nb.arch <- 2:6
 parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid, nb.arch=nb.arch) 
 casRes <- c3co(dat,parameters.grid)
@@ -124,14 +124,14 @@ We can compare the true and the estimated weight matrices. We can easily recover
 ```{r heatmap_C1C2, fig.width=7, fig.height=5}
 result.pveTCN <- sapply(casResTCN@fit, function(cc) cc@PVE)
 result.pve <- sapply(casRes@fit, function(cc) cc@PVE)
-idxBestC1C2 <- min(which(diff(result.pve)<1e-1))+1
-idxBestTCN <- min(which(diff(result.pveTCN)<1e-1))+1
+idxBestC1C2 <- min(which(diff(abs(result.pve))<1e-3))+1
+idxBestTCN <- min(which(diff(abs(result.pveTCN))<1e-2))+1
 res.clustTRUE = hclust(dist(cbind(W, 100-rowSums(W))),method="ward.D")
 col = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
-Wplot(casRes, idxBest = idxBestC1C2)
+Wplot(casRes, idxBest = 2)
 ```
 ```{r heatmap_TCN, fig.width=7, fig.height=5}
-Wplot(casResTCN, idxBest = idxBestTCN)
+Wplot(casResTCN, idxBest = 2)
 ```
 ```{r heatmap_TRUE, fig.width=7, fig.height=5}
 heatmap.3(cbind(W, 100-rowSums(W)), dendrogram="row", main="TRUE",Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
@@ -146,8 +146,8 @@ df.CHR <- createZdf(casRes, minMaxPos, chromosomes=1, var="TCN", idxBest = idxBe
 df.CHRC1 <- createZdf(casRes, minMaxPos, chromosomes=1, var="Minor", idxBest = idxBestC1C2)
 df.CHRC2 <- createZdf(casRes, minMaxPos, chromosomes=1, var="Major", idxBest = idxBestC1C2)
 Zplot(df.CHR, ylab="TCN")
-Zplot(df.CHRC1, ylab="C1", ylim=c(0,2))
-Zplot(df.CHRC2, ylab="C2", ylim=c(0,4))
+Zplot(df.CHRC1, ylab="C1", ylim=c(0,1))
+Zplot(df.CHRC2, ylab="C2", ylim=c(1,3))
 ```
 
 ## Session information
