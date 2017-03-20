@@ -31,7 +31,7 @@
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' res <- segmentData(dat)
 #' res2 <- segmentData(dat, stat="TCN")
-segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE, ...){
+segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
     stat <- match.arg(stat)
     
     checkColNames <- lapply(dat, function(dd) {
@@ -44,12 +44,14 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE, ...){
         }
     })
 
-    tcn <- purrr::map_df(dat, function(x) x$tcn)
+    tcn <- lapply(dat, FUN = function(x) x$tcn)
+    tcn <- Reduce(cbind, tcn)
     if (stat=="C1C2") {
-        dh <- purrr::map_df(dat, function(x) x$dh)
+        dh <- lapply(dat, FUN = function(x) x$dh)
+        dh <- Reduce(cbind, dh)
         dataToSeg <- cbind(tcn, dh)
     } else if (stat=="TCN") {
-        dataToSeg <- tcn
+        dataToSeg <- cbind(tcn) 
     } 
 
     len <- nrow(dataToSeg)
@@ -75,9 +77,9 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE, ...){
         xOut <- sort(unique(xOut))
 
         tcn <- as.matrix(tcn)
-        dh <- as.matrix(dh)
 
         if (stat=="C1C2") {
+            dh <- as.matrix(dh)
             datC1 <- tcn*(1-dh)/2
             datC2 <- tcn*(1+dh)/2
 

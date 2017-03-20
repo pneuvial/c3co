@@ -30,7 +30,11 @@
 #' casResC1C2 <- c3co(dat, parameters.grid)
 #' casRes <- c3co(dat, stat="TCN", parameters.grid)
 #' @export
+<<<<<<< HEAD
 c3co <- function(dat, parameters.grid=NULL, stat="C1C2", pathSeg=NULL, init.random=FALSE, new.getZ=TRUE){
+=======
+c3co <- function(dat, lambda1.grid=NULL, lambda2.grid=NULL, nb.arch.grid=2:(length(dat)-1), stat="C1C2", saveResults = FALSE, pathSeg=NULL, output.dir="results_c3co", init.random=FALSE, new.getZ=TRUE, verbose=FALSE){
+>>>>>>> 874ad8d8ca835a6809c58e4716b83726edae23d5
   ## Sanity check
   if(!is.null(dat)){
     if(!is.list(dat)){
