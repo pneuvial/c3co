@@ -18,7 +18,6 @@ vignette: >
 This document provides a brief tutorial on using the c3co package from PSCBS data.
 
 ```{r}
-
 library("c3co")
 ```
 
@@ -36,7 +35,7 @@ Now, you can run c3co by using this line:
 ```{r, message=FALSE, eval=TRUE}
 lambda.grid <-  c(0.1, 0.001)
 parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid ,nb.arch=2:4)
-resc3co <- c3co(NULL, parameters.grid ,pathSeg=file.path(output.dir, "segDat.rds"))
+resc3co <- c3co(NULL, parameters.grid, pathSeg=file.path(output.dir, "segDat.rds"))
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
 Wplot(resc3co, idxBest = 2)
@@ -55,15 +54,12 @@ minMaxPos <- do.call(rbind, lapply(1:2, function(chromosome){
 }))
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
-df.CHR <- createZdf(resc3co, minMaxPos, chromosomes=c(1,2), var="TCN", idxBest=2)
-df.CHRC1 <- createZdf(resc3co, minMaxPos, chromosomes=c(1, 2), var="Minor", idxBest=2)
-df.CHRC2 <- createZdf(resc3co, minMaxPos, chromosomes=c(1, 2), var="Major", idxBest=2)
+df <- createZdf(resc3co, minMaxPos, chromosomes=c(1,2), idxBest=2)
+df$position <- df$position/1e6 ## scale to Mb
 ```
 
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
-Zplot(df.CHR, ylab="TCN")
-Zplot(df.CHRC1, ylab="C1", ylim=c(0,2))
-Zplot(df.CHRC2, ylab="C2", ylim=c(0,4))
+Zplot(df)
 ```
 
 ## Session Information

@@ -8,8 +8,8 @@
 \usage{
 createZdf(this, minMaxPos, chromosomes, var = "TCN", idxBest)
 
-\S4method{createZdf}{c3coFit}(this, minMaxPos, chromosomes, var = "TCN",
-  idxBest)
+\S4method{createZdf}{c3coFit}(this, minMaxPos, chromosomes, var = c("TCN",
+  "Minor", "Major"), idxBest)
 }
 \arguments{
 \item{this}{An object of class \code{\linkS4class{c3coFit}}}

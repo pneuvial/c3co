@@ -5,7 +5,7 @@
 #' @param bestNbLatent best number of latent profiles.
 #' @param ylim a vector that define min and max of y-axis
 #' @return PVE curve
-pvePlot <- function(res,bestNbLatent=NULL, ylim=c(0,1)){
+pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0,1)){
   PVEs <- sapply(res, function (rr) rr@PVE)
   nb.arch <- sapply(res, function (rr) rr@param$nb.arch)
   df.PVE <- data.frame(PVE=PVEs, nb.arch=nb.arch)
@@ -22,16 +22,13 @@ pvePlot <- function(res,bestNbLatent=NULL, ylim=c(0,1)){
 #'
 #' @export
 #' @param df data.frame object output from \code{createZdf}
-#' @param ylab Label of y-axis
-#' @param ylim define limits for y-axis
 #' @return plot of Latent profiles
-Zplot <- function(df, ylab, ylim=c(0,4)) {
+Zplot <- function(df, ylab) {
   gg <- ggplot2::ggplot(df)
-  gg <- gg+ggplot2::geom_step(ggplot2::aes_(~position, ~CN, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)
-  gg <- gg+ggplot2::facet_wrap(~chr, ncol=2)
+  gg <- gg+ggplot2::geom_step(ggplot2::aes_(~position, ~CopyNumber, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)
+  gg <- gg+ggplot2::facet_grid(stat~chr, scales="free", labeller=labeller(.cols=label_both))
   gg <- gg+ggplot2::theme_bw()
-  gg <- gg+ ggplot2::labs(colour = "Subclone",lty="Subclone")
-  gg <- gg+ggplot2::scale_x_continuous(breaks=seq(from=0,to =max(df$position), length=5), name="Genome position (Mb)")
-  gg <- gg+ggplot2::scale_y_continuous(name=ylab, limits = ylim)
+  gg <- gg+ggplot2::labs(colour = "Subclone", lty="Subclone")
+  gg <- gg+ggplot2::scale_x_continuous(name="Genome position")
   gg
 }
