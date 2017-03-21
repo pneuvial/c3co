@@ -4,10 +4,8 @@
 \alias{c3co}
 \title{Cancer subclone Inference function}
 \usage{
-c3co(dat, lambda1.grid = NULL, lambda2.grid = NULL,
-  nb.arch.grid = 2:(length(dat) - 1), stat = "C1C2", saveResults = FALSE,
-  pathSeg = NULL, output.dir = "results_c3co", init.random = FALSE,
-  new.getZ = TRUE)
+c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
+  init.random = FALSE, new.getZ = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{dat}{A list of data frame for each patient. Data frame containing 
@@ -18,21 +16,17 @@ c3co(dat, lambda1.grid = NULL, lambda2.grid = NULL,
   \item{chr}{Chromosome}
   }}
 
-\item{lambda1.grid, lambda2.grid}{A grid of real numbers which is the penalty coefficients for the fused lasso on the minor and major copy number dimension}
-
-\item{nb.arch.grid}{A vector of integers which is the number of archetypes in the model}
+\item{parameters.grid}{A list composed of two vectors named \code{lambda1} and \code{lambda2} of real numbers which are the penalty coefficients for the fused lasso on the minor and major copy number dimension and a vector named \code{nb.arch} of integers which is the number of archetypes in the model}
 
 \item{stat}{TCN or C1C2}
 
-\item{saveResults}{By default \code{FALSE}, set parameter to TRUE if you want to save results in directory \code{output.dir}}
-
-\item{pathSeg}{By default \code{NULL} if it is not \code{NULL} assuming that \code{fileSeg="segData.rds"} already exists in \code{pathSeg} and load segmentation.}
-
-\item{output.dir}{Name of directory to save segmentation and feature data if \code{saveResults} is set to \code{TRUE}}
+\item{pathSeg}{Path to the file that contain segmentation, by default \code{NULL}.}
 
 \item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering}
 
 \item{new.getZ}{\code{TRUE} if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)}
+
+\item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }
 \value{
 An object of class [\code{\linkS4class{c3coFit}}]
@@ -53,6 +47,7 @@ M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.ma
 dat <- mixSubclones(subClones=datSubClone, M)
 l1 <- seq(from=1e-6, to=1e-5, length=3)
 l2 <- seq(from=1e-6, to=1e-5, length=3)
-casResC1C2 <- c3co(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
-casRes <- c3co(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
+casResC1C2 <- c3co(dat, parameters.grid)
+casRes <- c3co(dat, stat="TCN", parameters.grid)
 }

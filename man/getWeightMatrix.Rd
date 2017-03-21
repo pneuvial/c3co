@@ -29,5 +29,5 @@ A matrix of weights (the sum of rows is equal to 1)
 Generate weight matrix
 }
 \examples{
-M <- getWeightMatrix(70,20, 7, 30)
+M <- getWeightMatrix(70, 20, 7, 30)
 }

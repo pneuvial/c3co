@@ -9,11 +9,11 @@ M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.ma
 dat <- mixSubclones(subClones=datSubClone, M)
 l1 <- seq(from=1e-6, to=1e-5, length=3)
 l2 <- seq(from=1e-6, to=1e-5, length=3)
-
+parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
 test_that("c3co terminates on C1,C2", {
-    casResC1C2 <- c3co(dat, lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+  casResC1C2 <- c3co(dat, parameters.grid)
 })
 
 test_that("c3co terminates on TCN", {
-    casRes <- c3co(dat, stat="TCN", lambda1.grid=l1, lambda2.grid=l2, nb.arch.grid=2:6)
+  casRes <- c3co(dat, parameters.grid, stat="TCN")
 })

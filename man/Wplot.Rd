@@ -4,10 +4,7 @@
 \name{Wplot}
 \alias{Wplot}
 \alias{Wplot,c3coFit-method}
-\title{The method Wplot.
-\itemize{
-\item{Wplot(this)}{this is an object from class  [\code{\linkS4class{c3coFit}}].}
-}}
+\title{Plot the weight matrix}
 \usage{
 Wplot(this, idxBest, rownamesW = NULL, col = NULL, margins = c(5, 7),
   posLegend = NA, listPheno, colsPheno, colLegend, labelLegend,
@@ -18,9 +15,9 @@ Wplot(this, idxBest, rownamesW = NULL, col = NULL, margins = c(5, 7),
   labelLegend, cexCol = 1.5, ...)
 }
 \arguments{
-\item{this}{an object from the following class: [\code{\linkS4class{c3coFit}}]}
+\item{this}{An object of class \code{\linkS4class{c3coFit}}}
 
-\item{idxBest}{a integer that is the best fitting of the data}
+\item{idxBest}{A integer that is the best fitting of the data}
 
 \item{rownamesW}{A vector that contains identification of patients}
 
@@ -28,9 +25,9 @@ Wplot(this, idxBest, rownamesW = NULL, col = NULL, margins = c(5, 7),
 
 \item{margins}{A vector margins}
 
-\item{posLegend}{position of the legend as for \code{plot}}
+\item{posLegend}{position of the legend to be passed to \code{plot}}
 
-\item{listPheno}{A Matrix that contains details on phenotype for each patient. Could be location or time point of tumors for example}
+\item{listPheno}{A matrix that contains details on phenotype for each patient. Could be location or time point of tumors for example}
 
 \item{colsPheno}{Matrix that containts colors for each type of variable in phenotype}
 
@@ -40,10 +37,10 @@ Wplot(this, idxBest, rownamesW = NULL, col = NULL, margins = c(5, 7),
 
 \item{cexCol}{size of labels of columns by (default 1.5)}
 
-\item{...}{other paramaters to personalize heatmap (see \code{heatmap.3.R})}
+\item{...}{other paramaters to personalize heatmap (see \code{heatmap.3})}
 }
 \value{
-Heatmap of W
+a heatmap of W
 }
 \description{
 Plot the weight matrix

@@ -25,7 +25,7 @@ library("c3co")
 ## Using wrapper
 In this document we use the data from a public data set saved into \code{c3co.data} package.
 \code{PSCBSwrapper} function segments and saves data from \code{PSCBS} format to c3co format.
-```{r}
+```{r, eval=TRUE}
 pathPSCBS <- system.file("extdata", package="c3co.data", mustWork=TRUE)
 output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
 PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="C1C2")
@@ -34,7 +34,9 @@ PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="C1C2")
 ## Run c3co ##
 Now, you can run c3co by using this line:
 ```{r, message=FALSE, eval=TRUE}
-resc3co <- c3co(NULL, nb.arch=2:4,pathSeg=output.dir)
+lambda.grid <-  c(0.1, 0.001)
+parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid ,nb.arch=2:4)
+resc3co <- c3co(NULL, parameters.grid ,pathSeg=file.path(output.dir, "segDat.rds"))
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
 Wplot(resc3co, idxBest = 2)

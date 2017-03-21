@@ -16,8 +16,8 @@ for (ss in 1:nbSimu) {
     dat <- mixSubclones(subClones=subClones, M)
     dats[[ss]] <- dat
     ## c3co
-    resC1C2[[ss]] %<-% c3co(dat, nb.arch.grid=p.list, stat="C1C2")
-    resTCN[[ss]] %<-% c3co(dat, nb.arch.grid=p.list, stat="TCN")
+    resC1C2[[ss]] %<-% c3co(dat, parameters.grid=parameters.grid, stat="C1C2")
+    resTCN[[ss]] %<-% c3co(dat, parameters.grid=parameters.grid, stat="TCN")
     ## FLlat
     resFLLAT[[ss]] %<-% fllat(dat, nb.arch.grid=p.list)
 }

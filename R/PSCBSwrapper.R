@@ -30,7 +30,7 @@ loadPSCBSdata <- function(pathSegPSCBS, pattern=NULL){
       pos <- NULL; rm(pos);
       d <- subset(d, pos%in%posFull[[cc]])
     }))
-    return(df)
+    return(as.data.frame(df))
   })
   return(dat)
 }

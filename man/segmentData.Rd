@@ -2,12 +2,12 @@
 % Please edit documentation in R/segmentData.R
 \name{segmentData}
 \alias{segmentData}
-\title{Segmentation function}
+\title{Joint segmentation}
 \usage{
-segmentData(dat, stat = "C1C2")
+segmentData(dat, stat = c("C1C2", "TCN"), verbose = FALSE)
 }
 \arguments{
-\item{dat}{A list of data frame for each patient. Data frame containing 
+\item{dat}{A list of \code{data.frame} containing
 \describe{
  \item{tcn}{Total copy number}
  \item{dh}{Mirrored B allele fraction}
@@ -16,12 +16,15 @@ segmentData(dat, stat = "C1C2")
  }}
 
 \item{stat}{"TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.}
+
+\item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }
 \value{
 Binned Minor and Major copy number with list of breakpoints
+#'
 }
 \description{
-Segmentation function
+Joint segmentation by Recursive Binary Segmentation followed by Dynamic Programming
 }
 \examples{
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -36,4 +39,9 @@ M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.ma
 dat <- mixSubclones(subClones=datSubClone, M)
 res <- segmentData(dat)
 res2 <- segmentData(dat, stat="TCN")
+}
+\references{
+Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple
+  Change Points in the Mean for Large Sample.
+  http://hal.archives-ouvertes.fr/hal-00327146/
 }
