@@ -1,5 +1,3 @@
-library("c3co")
-
 context("Construction of weight matrices")
 
 for (ii in 1:20) {

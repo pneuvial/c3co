@@ -4,8 +4,8 @@
 \alias{c3co}
 \title{Cancer subclone Inference function}
 \usage{
-c3co(dat, parameters.grid = NULL, stat = "C1C2", pathSeg = NULL,
-  init.random = FALSE, new.getZ = TRUE)
+c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
+  init.random = FALSE, new.getZ = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{dat}{A list of data frame for each patient. Data frame containing 
@@ -25,6 +25,8 @@ c3co(dat, parameters.grid = NULL, stat = "C1C2", pathSeg = NULL,
 \item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering}
 
 \item{new.getZ}{\code{TRUE} if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)}
+
+\item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }
 \value{
 An object of class [\code{\linkS4class{c3coFit}}]
@@ -49,4 +51,3 @@ parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
 casResC1C2 <- c3co(dat, parameters.grid)
 casRes <- c3co(dat, stat="TCN", parameters.grid)
 }
-

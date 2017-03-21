@@ -16,4 +16,3 @@ showPosFused(this)
 \description{
 Display the content of an object of class posFused
 }
-

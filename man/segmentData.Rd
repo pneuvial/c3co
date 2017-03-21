@@ -45,4 +45,3 @@ Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple
   Change Points in the Mean for Large Sample.
   http://hal.archives-ouvertes.fr/hal-00327146/
 }
-

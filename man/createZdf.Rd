@@ -28,4 +28,3 @@ A data frame to plot Latent profiles with ggplot
 \description{
 Create a data frame to plot Subclones
 }
-

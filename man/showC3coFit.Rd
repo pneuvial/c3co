@@ -19,4 +19,3 @@ nothing
 \description{
 Display the content of an object of class c3coFit
 }
-
