@@ -26,6 +26,7 @@ environment:
 
 # Download script file from GitHub
 init:
+  - choco install curl
   ps: |
         $ErrorActionPreference = "Stop"
         Invoke-WebRequest http://raw.github.com/HenrikBengtsson/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
@@ -37,7 +38,6 @@ install:
 
 build_script:
   - echo Current directory=%CD%
-  - choco install curl
   - travis-tool.sh install_r R.utils knitr PSCBS aroma.light ggplot2 glmnet limSolve RColorBrewer
   - travis-tool.sh install_bioc BiocStyle aroma.light
   - travis-tool.sh install_github mpierrejean/acnr mpierrejean/jointseg pneuvial/c3co-data
