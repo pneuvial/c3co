@@ -4,7 +4,7 @@
 \alias{Zplot}
 \title{Function to plot Latent profiles}
 \usage{
-Zplot(df, ylab)
+Zplot(df)
 }
 \arguments{
 \item{df}{data.frame object output from \code{createZdf}}

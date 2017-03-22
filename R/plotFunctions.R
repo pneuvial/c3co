@@ -23,12 +23,13 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0,1)){
 #' @export
 #' @param df data.frame object output from \code{createZdf}
 #' @return plot of Latent profiles
-Zplot <- function(df, ylab) {
-  gg <- ggplot2::ggplot(df)
-  gg <- gg+ggplot2::geom_step(ggplot2::aes_(~position, ~CopyNumber, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)
-  gg <- gg+ggplot2::facet_grid(stat~chr, scales="free", labeller=labeller(.cols=label_both))
-  gg <- gg+ggplot2::theme_bw()
-  gg <- gg+ggplot2::labs(colour = "Subclone", lty="Subclone")
-  gg <- gg+ggplot2::scale_x_continuous(name="Genome position")
+#' @importFrom ggplot2 ggplot geom_step aes_ facet_grid labeller label_both theme_bw scale_x_continuous labs
+Zplot <- function(df) {
+  gg <- ggplot(df)
+  gg <- gg + geom_step(aes_(~position, ~CopyNumber, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)
+  gg <- gg + facet_grid(stat~chr, scales="free", labeller=labeller(.cols=label_both))
+  gg <- gg + theme_bw()
+  gg <- gg + labs(colour = "Subclone", lty="Subclone")
+  gg <- gg + scale_x_continuous(name="Genome position")
   gg
 }
