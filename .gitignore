@@ -1,0 +1,9 @@
+.Rhistory
+.RData
+*~
+**/*~
+*.o
+*.dll
+*.Rout
+*.Rproj*
+*.swp
