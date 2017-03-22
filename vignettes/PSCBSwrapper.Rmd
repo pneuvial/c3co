@@ -34,7 +34,7 @@ PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="C1C2")
 Now, you can run c3co by using this line:
 ```{r, message=FALSE, eval=TRUE}
 lambda.grid <-  c(0.1, 0.001)
-parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid ,nb.arch=2:4)
+parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid, nb.arch=2:4)
 resc3co <- c3co(NULL, parameters.grid, pathSeg=file.path(output.dir, "segDat.rds"))
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
