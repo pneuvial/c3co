@@ -1,0 +1,35 @@
+#----------------------------
+# Git and SVN related
+#----------------------------
+^.svn
+^.git
+^.make
+INSTALL[.]md
+OVERVIEW[.]md
+README[.]md
+CONDUCT[.]md
+
+#----------------------------
+# devtools
+#----------------------------
+^revdep
+
+#----------------------------
+# Travis-CI et al.
+#----------------------------
+^[.]travis[.]yml$
+^travis-tool[.]sh$
+^pkg-build[.]sh$
+^appveyor[.]yml$
+
+
+#----------------------------
+# R related
+#----------------------------
+Rplots.pdf$
+^cran-comments[.].*$
+^vignettes/.*[.](pdf|PDF)$
+^vignettes/.*[.](r|R)$
+^vignettes/[.]install_extras$
+^Makefile$
+^.*[.]tar[.]gz$
