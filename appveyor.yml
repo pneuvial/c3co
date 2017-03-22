@@ -26,7 +26,6 @@ environment:
 
 # Download script file from GitHub
 init:
-  - choco install curl
   ps: |
         $ErrorActionPreference = "Stop"
         Invoke-WebRequest http://raw.github.com/HenrikBengtsson/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
