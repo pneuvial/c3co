@@ -1,63 +1,165 @@
 Package: c3co
-=================
+=============
+
 Version: 0.1.15 [2017-03-21]
-o Some code cleanups
-o 'createZdf' now handles multiple chromosomes and statistics
-o 'plotZ' now handles multiple chromosomes and statistics
+
+NEW FEATURES:
+
+ o 'createZdf' now handles multiple chromosomes and statistics
+ 
+ o 'plotZ' now handles multiple chromosomes and statistics
+
+CODE REFACTORING:
+
+ o Some code cleanups
+
 
 Version: 0.1.14 [2017-03-17]
-o Some code cleanups
-o The genotypes of the subclones produced by 'buildSubclones' now have the same distribution as the input data (before, it was 1/3,1/3,1/3 regardless of the input data)
-o Added tests of consistency of the output of 'buildSubclones'
-o Back to using 'base::Reduce' instead of 'purrr::map_df'
+
+NEW FEATURES:
+
+ o The genotypes of the subclones produced by 'buildSubclones' now have the
+   same distribution as the input data (before, it was 1/3,1/3,1/3 regardless
+   of the input data)
+
+SOFTWARE QUALITY:
+
+ o Added tests of consistency of the output of 'buildSubclones'
+ 
+CODE REFACTORING:
+
+ o Back to using 'base::Reduce' instead of 'purrr::map_df'
+
+ o Some code cleanups
+
+
 
 Version: 0.1.13 [2017-03-13]
-o Removed 'facets' vignette and moved 'facets' to 'Suggests'
+
+CODE REFACTORING:
+
+ o Removed 'facets' vignette and moved 'facets' to 'Suggests'
+
 
 Version: 0.1.12 [2017-03-13]
-o Updated vignette c3co.Rmd
-o Added Travis CI and appveyor support
-o Repo made public
+
+SIGNIFICANT CHANGES:
+ 
+ o Repo made public
+
+NEW FEATURES:
+
+ o Updated vignette c3co.Rmd
+
+SOFTWARE QUALITY:
+ 
+ o Added Travis CI and appveyor support
+
 
 Version: 0.1.11 [2017-02-01]
-o Modification on classes
-o Clean up and comments Simulation scripts
+
+CODE REFACTORING:
+
+ o Modification on classes
+ 
+ o Clean up and comments Simulation scripts
+
 
 Version: 0.1.10 [2017-01-25]
-o Create classes S4
-o Clean up and comments Simulation scripts
+
+CODE REFACTORING:
+
+ o Create classes S4
+ 
+ o Clean up and comments Simulation scripts
+
 
 Version: 0.1.9 [2017-01-09]
-o Rename from InCaSCN to c3co
-o clean up (remove NOTE for plot functions)
+
+SIGNIFICANT CHANGES:
+
+ o Rename from InCaSCN to c3co
+ 
+NEW FEATURES:
+ 
+ o Clean up (remove NOTE for plot functions)
+
 
 Version: 0.1.8 [2016-11-30]
-o Parallelism for Z1 and Z2 inferrence
+
+PERFORMANCE:
+
+ o Parallelism for Z1 and Z2 inferrence
+
 
 Version: 0.1.7 [2016-11-25]
-o Move PSCBS data into another package named "incas.extdata"
-o bugs fixed
+
+CODE REFACTORING:
+
+ o Move PSCBS data into another package named "incas.extdata"
+
+BUG FIXES:
+
+ o B fixed
+
 
 Version: 0.1.6 [2016-11-18]
-o Add plot functions, PSCBS wrapper
-o Add new example on real data set 
-o Remove Depends
+
+NEW FEATURES:
+
+ o Add plot functions, PSCBS wrapper
+ 
+ o Add new example on real data set
+ 
+CODE REFACTORING:
+
+ o Remove Depends
+
 
 Version: 0.1.5 [2016-11-16]
-o Updated vignette
-o Added a minimal test script (from main function example)
+
+NEW FEATURES:
+
+ o Updated vignette
+ 
+SOFTWARE QUALITY:
+
+ o Added a minimal test script (from main function example)
+
 
 Version: 0.1.4 [2016-08-16]
-o Bug fixed to initialize algorithm with random rows of Y
-o Bug correction if dat is not provided but only the segment data 
+
+BUG FIXES:
+
+ o Bug fixed to initialize algorithm with random rows of Y
+ 
+ o Bug correction if dat is not provided but only the segment data 
+
 
 Version: 0.1.3 [2016-06-07]
-o add parameter segment if user doesn't want to segment data befor inferrence
-o minor correction : lamda2 -> lambda2
+
+NEW FEATURES:
+
+ o Add parameter segment if user doesn't want to segment data befor inferrence
+ 
+BUG FIXES:
+
+ o Minor correction : lamda2 -> lambda2
+
 
 Version: 0.1.2 [2016-06-07]
-o Change Z initialization in 'positiveFusedLasso' ('hclust' instead of 'PCA+HCPC')
-o Save intermediate files
+
+SIGNIFICANT CHANGES:
+
+ o Change Z initialization in 'positiveFusedLasso' ('hclust' instead of
+   'PCA+HCPC')
+ 
+CODE REFACTORING:
+
+ o Save intermediate files
+
 
 Version: 0.1.1 [2016-04-25]
-o Created.
+
+ o Created
+ 
