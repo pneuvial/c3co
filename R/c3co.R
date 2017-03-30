@@ -1,6 +1,6 @@
-#' Cancer subclone Inference function
+#' Cancer subclone inference
 #'
-#' @param dat A list of data frame for each patient. Data frame containing 
+#' @param dat A list of data frames for each patient, each of them of the form
 #' \describe{
 #'   \item{tcn}{Total copy number}
 #'   \item{dh}{Mirrored B allele fraction}
@@ -79,7 +79,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
             print("Reading segmentation results from file: ")
             print(pathSeg)
         }
-        resSegmentation <- readRDS(file.path(pathSeg))
+        resSegmentation <- readRDS(pathSeg)
     } else{
         resSegmentation <- segmentData(dat, stat=stat, verbose=verbose)
     }

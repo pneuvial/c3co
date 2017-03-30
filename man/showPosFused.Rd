@@ -11,7 +11,7 @@ showPosFused(this)
 \S4method{showPosFused}{posFused}(this)
 }
 \arguments{
-\item{this}{an object from the following class: [\code{\linkS4class{posFused}}]}
+\item{this}{an object of class: [\code{\linkS4class{posFused}}]}
 }
 \description{
 Display the content of an object of class posFused

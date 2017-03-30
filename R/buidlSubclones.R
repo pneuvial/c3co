@@ -57,7 +57,7 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
     datAA <- subset(dataAnnot,genotype==0)
     datAB <- subset(dataAnnot,genotype==0.5)
     datBB <- subset(dataAnnot,genotype==1)
-
+    
     subClone <- lapply(1:nbClones, function(ii){
         bkp <- bkps[[ii]]
         reg <- regions[[ii]]
