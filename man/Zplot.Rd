@@ -2,20 +2,16 @@
 % Please edit documentation in R/plotFunctions.R
 \name{Zplot}
 \alias{Zplot}
-\title{Function to plot Latent profiles}
+\title{Plot latent profiles along chromosomes}
 \usage{
-Zplot(df, ylab, ylim = c(0, 4))
+Zplot(df)
 }
 \arguments{
 \item{df}{data.frame object output from \code{createZdf}}
-
-\item{ylab}{Label of y-axis}
-
-\item{ylim}{define limits for y-axis}
 }
 \value{
-plot of Latent profiles
+plot latent profiles along chromosomes
 }
 \description{
-Function to plot Latent profiles
+Plot latent profiles along chromosomes
 }

@@ -142,12 +142,8 @@ If we look at the subclones in the dimension of parental copy numbers, we can re
 
 ```{r,Z1Z2hat, fig.width=7.5, fig.height=5}
 minMaxPos <- data.frame(chr=1, minPos=1, maxPos=len)
-df.CHR <- createZdf(casRes, minMaxPos, chromosomes=1, var="TCN", idxBest = idxBestC1C2)
-df.CHRC1 <- createZdf(casRes, minMaxPos, chromosomes=1, var="Minor", idxBest = idxBestC1C2)
-df.CHRC2 <- createZdf(casRes, minMaxPos, chromosomes=1, var="Major", idxBest = idxBestC1C2)
-Zplot(df.CHR, ylab="TCN")
-Zplot(df.CHRC1, ylab="C1", ylim=c(0,1))
-Zplot(df.CHRC2, ylab="C2", ylim=c(1,3))
+df <- createZdf(casRes, minMaxPos, chromosomes=1, idxBest = idxBestC1C2)
+Zplot(df)
 ```
 
 ## Session information

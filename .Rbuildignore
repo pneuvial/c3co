@@ -1,0 +1,61 @@
+#----------------------------
+# Git and SVN related
+#----------------------------
+^.svn
+^.git
+^.make
+INSTALL[.]md
+OVERVIEW[.]md
+README[.]md
+CONDUCT[.]md
+
+#----------------------------
+# devtools
+#----------------------------
+^revdep
+
+#----------------------------
+# Travis-CI et al.
+#----------------------------
+^[.]travis[.]yml$
+^travis-tool[.]sh$
+^pkg-build[.]sh$
+^appveyor[.]yml$
+
+
+#----------------------------
+# R related
+#----------------------------
+Rplots.pdf$
+^cran-comments[.].*$
+^vignettes/.*[.](pdf|PDF)$
+^vignettes/.*[.](r|R)$
+^vignettes/[.]install_extras$
+^Makefile$
+^.*[.]tar[.]gz$
+
+^c3co\.Rproj$
+^\.Rproj\.user$     # used for temporary files.
+^README\.Rmd$       # An Rmarkdown file used to generate README.md
+^cran-comments\.md$ # Comments for CRAN submission
+^NEWS\.md$          # A news file written in Markdown
+^\.travis\.yml$
+^appveyor\.yml$
+appveyor.yml
+
+#----------------------------
+# sym links to data|img dirs
+#----------------------------
+^annotationData$
+^cnRegionData$
+^probeData$
+^plmData$
+^rawData$
+^totalAndFracBData$
+^geoData$
+^wholeGenomeData$
+^png$
+^data-raw$
+^data
+^output
+

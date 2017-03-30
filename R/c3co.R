@@ -88,7 +88,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
     reslist <- methods::new("c3coFit")
     reslist@bkp <- bkpList
     reslist@segDat <- list(Y1=resSegmentation$Y1,Y2=resSegmentation$Y2,Y=resSegmentation$Y )
-
+    
     Y1 <- t(resSegmentation$Y1)
     Y2 <- t(resSegmentation$Y2)
     Y <- t(resSegmentation$Y)
@@ -132,6 +132,5 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
     }
     return(reslist)
 }
-
 
 
