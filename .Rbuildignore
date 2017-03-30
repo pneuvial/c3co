@@ -33,3 +33,29 @@ Rplots.pdf$
 ^vignettes/[.]install_extras$
 ^Makefile$
 ^.*[.]tar[.]gz$
+
+^c3co\.Rproj$
+^\.Rproj\.user$     # used for temporary files.
+^README\.Rmd$       # An Rmarkdown file used to generate README.md
+^cran-comments\.md$ # Comments for CRAN submission
+^NEWS\.md$          # A news file written in Markdown
+^\.travis\.yml$
+^appveyor\.yml$
+appveyor.yml
+
+#----------------------------
+# sym links to data|img dirs
+#----------------------------
+^annotationData$
+^cnRegionData$
+^probeData$
+^plmData$
+^rawData$
+^totalAndFracBData$
+^geoData$
+^wholeGenomeData$
+^png$
+^data-raw$
+^data
+^output
+

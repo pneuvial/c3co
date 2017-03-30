@@ -7,3 +7,20 @@
 *.Rout
 *.Rproj*
 *.swp
+
+## symbolic links to data directories
+annotationData
+cnRegionData
+probeData
+plmData
+rawData
+totalAndFracBData
+wholeGenomeData
+png
+data
+output
+geoData
+
+
+## OS X
+.DS_Store

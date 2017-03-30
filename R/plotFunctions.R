@@ -18,11 +18,11 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0,1)){
 
 
 
-#' Function to plot Latent profiles
+#' Plot latent profiles along chromosomes
 #'
 #' @export
 #' @param df data.frame object output from \code{createZdf}
-#' @return plot of Latent profiles
+#' @return plot latent profiles along chromosomes
 #' @importFrom ggplot2 ggplot geom_step aes_ facet_grid labeller label_both theme_bw scale_x_continuous labs
 Zplot <- function(df) {
   gg <- ggplot(df)

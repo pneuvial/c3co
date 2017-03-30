@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotFunctions.R
 \name{Zplot}
 \alias{Zplot}
-\title{Function to plot Latent profiles}
+\title{Plot latent profiles along chromosomes}
 \usage{
 Zplot(df)
 }
@@ -10,8 +10,8 @@ Zplot(df)
 \item{df}{data.frame object output from \code{createZdf}}
 }
 \value{
-plot of Latent profiles
+plot latent profiles along chromosomes
 }
 \description{
-Function to plot Latent profiles
+Plot latent profiles along chromosomes
 }
