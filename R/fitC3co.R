@@ -45,9 +45,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, new.ge
 
     n <- nrow(Y1)
     nseg <- ncol(Y1)
-    dimension <- 1
     if (!is.null(Y2)) {
-        dimension <- 2
         stopifnot(nrow(Y2)==n)
         stopifnot(ncol(Y2)==nseg)
     }
@@ -96,10 +94,13 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, new.ge
         BICp <- +Inf
         best <- NULL
 
+        if (verbose) {
+            message("Parameter configuration: (", paste(colnames(configs), collapse="; "), ")")
+        }
         for (cc in 1:nrow(configs)) {
             cfg <- configs[cc, ]
             if (verbose) {
-                message("Parameter configuration: (", paste(cfg, collapse="; "), ")")
+                message(paste(cfg, collapse="; "))
             }
             l1 <- configs[, "lambda1"]
             l2 <- configs[, "lambda2"] ## possibly NULL (if Y2 is NULL)

@@ -42,35 +42,12 @@ positiveFusedLasso <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FA
     L <- ncol(Y1) # number of loci/segments
     ## _______________________________________________________
     ## STEP 0: INITIALIZATION
-    if (is.null(Y2)){
-        Y <- Y1
-    } else {
-        Y <- Y1 + Y2
-    }
-    if (!init.random){
-        ## initializing Z by clustering on Y
-        hc <- stats::hclust(stats::dist(Y),method="ward.D")
-        cluster <- stats::cutree(hc, nb.arch)
-        ## averaging the Y over the clusters to initialize the archetypes
-        Z1.init <- sapply(split(as.data.frame(Y1), cluster), colMeans)
-        if (!is.null(Y2)){
-            Z2.init <- sapply(split(as.data.frame(Y2), cluster), colMeans)
-        } else {
-            Z2.init <- NULL
-        }
-    } else {
-        ii <- sample(1:n,nb.arch, replace=FALSE)
-        Z1.init <- t(Y1[ii, ])
-        Z2.init <- NULL
-        if (!is.null(Y2)){
-            Z2.init <- t(Y2[ii, ])
-        }
-    }
-    Z <- list(Z1=Z1.init, Z2=Z2.init)
-    ## main loop for alternate optimization
+    Z <- initializeZ(Y1, Y2, nb.arch=nb.arch)
     iter <- 0
     cond <- FALSE
     delta <- Inf
+    ## __________________________________________________
+    ## main loop for alternate optimization
     Ymat <- cbind(Y1, Y2)
     while (!cond) {
         iter <- iter + 1
