@@ -3,7 +3,7 @@
 ##########################################################################
 ## Run 00.preprocessing.R, 01.CallGenotypes.R, 03.TumorBoost.R before running this file
 library("c3co")
-path <- Arguments$getWritablePath("c3co-data")
+path <- R.utils::Arguments$getReadablePath("c3co-data")
 filename <- sprintf("dat-%s.rds", patientID)
 pathname <- file.path(path, filename)
 datList <- readRDS(pathname)
