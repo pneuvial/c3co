@@ -42,6 +42,7 @@
 #' @export
 fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, new.getZ=TRUE, verbose=FALSE){
     ## Sanity checks
+
     n <- nrow(Y1)
     nseg <- ncol(Y1)
     dimension <- 1
@@ -95,9 +96,13 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, new.ge
         BICp <- +Inf
         best <- NULL
 
-        for (cc in nrow(configs)) {
-            l1 <- configs[cc, "lambda1"]
-            l2 <- configs[cc, "lambda2"] ## possibly NULL (if Y2 is NULL)
+        for (cc in 1:nrow(configs)) {
+            cfg <- configs[cc, ]
+            if (verbose) {
+                message("Parameter configuration: (", paste(cfg, collapse="; "), ")")
+            }
+            l1 <- configs[, "lambda1"]
+            l2 <- configs[, "lambda2"] ## possibly NULL (if Y2 is NULL)
             res <- positiveFusedLasso(Y1, Y2, pp, lambda1=l1, lambda2=l2, init.random, new.getZ)
             if (res@BIC<BICp) { ## BIC has improved: update best model
                 res.l <- res
