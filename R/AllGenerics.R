@@ -1,6 +1,6 @@
 #' Display the content of an object of class posFused
 #'
-#' @param this an object from the following class: [\code{\linkS4class{posFused}}] 
+#' @param this an object of class: [\code{\linkS4class{posFused}}] 
 #' @rdname showPosFused
 #' @exportMethod showPosFused
 setGeneric(
@@ -31,7 +31,7 @@ setMethod(
 #' Plot the weight matrix
 #' 
 #' @param this An object of class \code{\linkS4class{c3coFit}}
-#' @param idxBest A integer that is the best fitting of the data 
+#' @param idxBest A integer, the number of latent features
 #' @param rownamesW A vector that contains identification of patients
 #' @param col A vector that contains colors for the heatmap
 #' @param margins A vector margins 
@@ -132,7 +132,7 @@ setMethod(
         lengthCHR <- sapply(bkp, length)
         start <- c(1, cumsum(lengthCHR)+1)
         fitZ <- this@fit[[idxBest]]@S
-
+        
         dfList <- list()
         configs <- expand.grid(var=var, chr=chromosomes)
         print(configs)

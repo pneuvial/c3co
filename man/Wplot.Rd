@@ -17,7 +17,7 @@ Wplot(this, idxBest, rownamesW = NULL, col = NULL, margins = c(5, 7),
 \arguments{
 \item{this}{An object of class \code{\linkS4class{c3coFit}}}
 
-\item{idxBest}{A integer that is the best fitting of the data}
+\item{idxBest}{A integer, the number of latent features}
 
 \item{rownamesW}{A vector that contains identification of patients}
 

@@ -2,13 +2,13 @@
 % Please edit documentation in R/c3co.R
 \name{c3co}
 \alias{c3co}
-\title{Cancer subclone Inference function}
+\title{Cancer subclone inference}
 \usage{
 c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
   init.random = FALSE, new.getZ = TRUE, verbose = FALSE)
 }
 \arguments{
-\item{dat}{A list of data frame for each patient. Data frame containing 
+\item{dat}{A list of data frames for each patient, each of them of the form
 \describe{
   \item{tcn}{Total copy number}
   \item{dh}{Mirrored B allele fraction}
@@ -32,7 +32,7 @@ c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
 An object of class [\code{\linkS4class{c3coFit}}]
 }
 \description{
-Cancer subclone Inference function
+Cancer subclone inference
 }
 \examples{
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -48,6 +48,6 @@ dat <- mixSubclones(subClones=datSubClone, M)
 l1 <- seq(from=1e-6, to=1e-5, length=3)
 l2 <- seq(from=1e-6, to=1e-5, length=3)
 parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
-casResC1C2 <- c3co(dat, parameters.grid)
-casRes <- c3co(dat, stat="TCN", parameters.grid)
+res <- c3co(dat, parameters.grid)
+resC <- c3co(dat, stat="TCN", parameters.grid)
 }

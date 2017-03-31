@@ -1,0 +1,119 @@
+#' c3co estimation from segment-level copy number data
+#'
+#' Estimate c3co model parameters from segment-level copy number data
+#'
+#'
+#' @param Y1 A numeric n x S matrix, segment-level minor copy numbers. n is the
+#' number of samples and S the number of segments
+#' @param Y2 An optional numeric n x S matrix, segment-level major copy
+#' numbers. If \code{NULL}, the model is estimated on Y1 only
+#' @param parameters.grid A list composed of two vectors named \code{lambda1}
+#' and \code{lambda2} of real numbers which are the penalty coefficients for
+#' the fused lasso on the minor and major copy number dimension and a vector
+#' named \code{nb.arch} of integers which is the number of archetypes in the
+#' model
+#' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}.
+#' Initialization done by clustering
+#' @param new.getZ \code{TRUE} if you want to parallelize inferrence of Minor
+#' and Major copy numbers (TRUE by default)
+#' @param verbose A logical value indicating whether to print extra
+#' information. Defaults to FALSE
+#' @return An object of class [\code{\linkS4class{c3coFit}}]
+#' @examples
+#'
+#' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
+#' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
+#' len <- 500*10
+#' nbClones <- 3
+#' bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
+#' regions <-list(c("(0,3)", "(0,2)","(1,2)"),
+#' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
+#' M <- getWeightMatrix(100, 0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
+#' dat <- mixSubclones(subClones=datSubClone, M)
+#' seg <- segmentData(dat)
+#'
+#' l1 <- seq(from=1e-6, to=1e-5, length=3)
+#' l2 <- seq(from=1e-6, to=1e-5, length=3)
+#' parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
+#' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
+#' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
+#'
+#' @export
+fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, new.getZ=TRUE, verbose=FALSE){
+    ## Sanity checks
+    n <- nrow(Y1)
+    nseg <- ncol(Y1)
+    dimension <- 1
+    if (!is.null(Y2)) {
+        dimension <- 2
+        stopifnot(nrow(Y2)==n)
+        stopifnot(ncol(Y2)==nseg)
+    }
+    lambda1 <- parameters.grid$lambda1
+    if (is.null(lambda1)) {
+        lambda1 <- seq(from=1e-6, to=1e-4, length=10)
+        if (verbose) {
+            message("Regularization parameter lambda[1] not provided. Using default value: ", )
+            message(utils::str(lambda1))
+        }
+    }
+
+    lambda2 <- parameters.grid$lambda2
+    configs <- expand.grid(lambda1=lambda1)  ## for when Y2 is NULL
+    if (!is.null(Y2)) {
+        if (is.null(lambda2)) {
+            lambda2 <- seq(from=1e-6, to=1e-4, length=10)
+            if (verbose) {
+                message("Regularization parameter lambda[2] not provided. Using default value: ", )
+                message(str(lambda2))
+            }
+        }
+        configs <- expand.grid(lambda1=lambda1, lambda2=lambda2)
+    }
+
+    ## candidate number of subclones
+    nb.arch <- parameters.grid$nb.arch
+    if (is.null(nb.arch)) {
+        nb.arch  <- seq(from=2, to=nseg-1, by=1)
+        if (verbose) {
+            message("Parameter 'nb.arch' not provided. Using default value: ", )
+            message(str(nb.arch))
+        }
+    }
+    rm(parameters.grid)
+
+    it <- 1
+    pp <- nb.arch[it]
+    cond <- TRUE
+    fitList <- list()
+    while (cond) {
+        if (verbose) {
+            message("Number of latent features: ", pp)
+        }
+        ## Initialization
+        BICp <- +Inf
+        best <- NULL
+
+        for (cc in nrow(configs)) {
+            l1 <- configs[cc, "lambda1"]
+            l2 <- configs[cc, "lambda2"] ## possibly NULL (if Y2 is NULL)
+            res <- positiveFusedLasso(Y1, Y2, pp, lambda1=l1, lambda2=l2, init.random, new.getZ)
+            if (res@BIC<BICp) { ## BIC has improved: update best model
+                res.l <- res
+                BICp <- res@BIC
+            }
+        }
+        fitList[[it]] <- res.l
+        it <- it+1
+        pp <- nb.arch[it]
+        ## Z doesn't change anymore
+        c1 <- sum(apply(res.l@S$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0
+        ## W doesn't change anymore
+        c2 <- sum(apply(res.l@W, 2,function(ww) (sum(ww^2)<1e-3)))==0
+        ## pp reach max of grid
+        c3 <-  !is.na(pp)
+        cond <- (c1& c2& c3)
+    }
+    return(fitList)
+}

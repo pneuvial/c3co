@@ -10,7 +10,7 @@
 #'   \item{pos}{Position on the genome}
 #'   \item{chr}{Chromosome}
 #'   }
-#' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
+#' @param stat "TCN or "C1C2" parameter to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
 #' @param verbose A logical value indicating whether to print extra information. Defaults to FALSE
 #' @return Binned Minor and Major copy number with list of breakpoints
 #' #' 
@@ -43,7 +43,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
             stop("Argument 'data' should contain columns named ", str)
         }
     })
-
+    
     tcn <- lapply(dat, FUN = function(x) x$tcn)
     tcn <- Reduce(cbind, tcn)
     if (stat=="C1C2") {
@@ -71,9 +71,9 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
         bkpPos <-rowMeans(cbind(pos[bkp], pos[bkp+1]))
         xOut <- c(min(pos), bkpPos, max(pos))
         xOut <- sort(unique(xOut))
-
+        
         tcn <- as.matrix(tcn)
-
+        
         if (stat=="C1C2") {
             dh <- as.matrix(dh)
             binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
@@ -86,7 +86,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
                 means <- matrixStats::binMeans(y=dh[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatDH[, bb] <- means
             }
-
+            
             idxNAC1 <- which(rowSums(is.na(binDatTCN))>0)
             idxNAC2 <- which(rowSums(is.na(binDatDH))>0)
             idxNA <- unique(c(idxNAC1, idxNAC2))
@@ -105,7 +105,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
             Y1 <- Y*(1-DH)/2
             Y2 <- Y*(1+DH)/2
         } else {
-          binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
+            binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
             for (bb in 1:ncol(tcn)) {
                 means <- matrixStats::binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatTCN[, bb] <- means

@@ -1,6 +1,6 @@
-#' Cancer subclone Inference function
+#' Cancer subclone inference
 #'
-#' @param dat A list of data frame for each patient. Data frame containing 
+#' @param dat A list of data frames for each patient, each of them of the form
 #' \describe{
 #'   \item{tcn}{Total copy number}
 #'   \item{dh}{Mirrored B allele fraction}
@@ -28,8 +28,8 @@
 #' l1 <- seq(from=1e-6, to=1e-5, length=3)
 #' l2 <- seq(from=1e-6, to=1e-5, length=3)
 #' parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
-#' casResC1C2 <- c3co(dat, parameters.grid)
-#' casRes <- c3co(dat, stat="TCN", parameters.grid)
+#' res <- c3co(dat, parameters.grid)
+#' resC <- c3co(dat, stat="TCN", parameters.grid)
 #' @export
 c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL, init.random=FALSE, new.getZ=TRUE, verbose=FALSE){
     ## Sanity checks
@@ -79,57 +79,25 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
             print("Reading segmentation results from file: ")
             print(pathSeg)
         }
-        resSegmentation <- readRDS(file.path(pathSeg))
+        seg <- readRDS(pathSeg)
     } else{
-        resSegmentation <- segmentData(dat, stat=stat, verbose=verbose)
+        seg <- segmentData(dat, stat=stat, verbose=verbose)
     }
-    bkpList <- resSegmentation$bkp
+    bkpList <- seg$bkp
     
     reslist <- methods::new("c3coFit")
     reslist@bkp <- bkpList
-    reslist@segDat <- list(Y1=resSegmentation$Y1,Y2=resSegmentation$Y2,Y=resSegmentation$Y )
+    reslist@segDat <- list(Y1=seg$Y1, Y2=seg$Y2, Y=seg$Y)
     
-    Y1 <- t(resSegmentation$Y1)
-    Y2 <- t(resSegmentation$Y2)
-    Y <- t(resSegmentation$Y)
-    
-    BICp <- 1e8
-    cond <- TRUE
-    it <- 1
-    pp <- parameters.grid$nb.arch[it]
-    while (cond) {
-        if (verbose) {
-            print(sprintf("number of Features = %s", pp))
-        }
-        BICp <- 1e8
-        for(l1 in parameters.grid$lambda1){
-            if (stat=="C1C2"){
-                for(l2 in parameters.grid$lambda2){
-                    res <- positive.fused(Y1, Y2, pp, lambda1 = l1, lambda2 = l2, init.random, new.getZ)
-                    if(res@BIC<BICp){
-                        res.l <- res
-                        BICp <- res@BIC
-                    }
-                }
-            } else if(stat=="TCN"){
-                res <- positive.fused(Y, Y2 = NULL, nb.arch=pp, lambda1 = l1, init.random)
-                if(res@BIC<BICp){
-                    res.l <- res
-                    BICp <- res@BIC
-                }
-            }
-        }
-        reslist@fit[[it]] <- res.l
-        it <- it+1
-        pp <- parameters.grid$nb.arch[it]
-        ## Z doesn't change anymore
-        c1 <- sum(apply(res.l@S$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0
-        ## W doesn't change anymore
-        c2 <- sum(apply(res.l@W, 2,function(ww) (sum(ww^2)<1e-3)))==0
-        ## pp reach max of grid
-        c3 <-  !is.na(pp)
-        cond <- (c1& c2& c3)
+    if (stat=="C1C2") {
+        Y1 <- t(seg$Y1)
+        Y2 <- t(seg$Y2)
+    } else if (stat=="TCN") {
+        Y1 <- t(seg$Y)
+        Y2 <- NULL
     }
+    
+    reslist@fit <- fitC3co(Y1, Y2, parameters.grid=parameters.grid, init.random=init.random, new.getZ=new.getZ)
     return(reslist)
 }
 
