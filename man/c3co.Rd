@@ -48,6 +48,6 @@ dat <- mixSubclones(subClones=datSubClone, M)
 l1 <- seq(from=1e-6, to=1e-5, length=3)
 l2 <- seq(from=1e-6, to=1e-5, length=3)
 parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
-casResC1C2 <- c3co(dat, parameters.grid)
-casRes <- c3co(dat, stat="TCN", parameters.grid)
+res <- c3co(dat, parameters.grid)
+resC <- c3co(dat, stat="TCN", parameters.grid)
 }

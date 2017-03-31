@@ -15,7 +15,7 @@ segmentData(dat, stat = c("C1C2", "TCN"), verbose = FALSE)
  \item{chr}{Chromosome}
  }}
 
-\item{stat}{"TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.}
+\item{stat}{"TCN or "C1C2" parameter to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.}
 
 \item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }

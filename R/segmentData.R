@@ -10,7 +10,7 @@
 #'   \item{pos}{Position on the genome}
 #'   \item{chr}{Chromosome}
 #'   }
-#' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
+#' @param stat "TCN or "C1C2" parameter to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
 #' @param verbose A logical value indicating whether to print extra information. Defaults to FALSE
 #' @return Binned Minor and Major copy number with list of breakpoints
 #' #' 
