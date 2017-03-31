@@ -97,7 +97,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
         Y2 <- NULL
     }
     
-    reslist@fit <- fitC3co(Y1, Y2, parameters.grid=parameters.grid, init.random=init.random, new.getZ=new.getZ)
+    reslist@fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid, init.random=init.random, new.getZ=new.getZ, verbose=verbose)
     return(reslist)
 }
 
