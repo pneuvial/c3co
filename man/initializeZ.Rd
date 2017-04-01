@@ -4,7 +4,8 @@
 \alias{initializeZ}
 \title{Initialization of the c3co model parameters}
 \usage{
-initializeZ(Y1, Y2, nb.arch, init.random = FALSE, verbose = FALSE)
+initializeZ(Y1, Y2 = NULL, nb.arch = ncol(Y1), init.random = FALSE,
+  flavor = c("C1+C2", "C1", "C2"), verbose = FALSE)
 }
 \arguments{
 \item{Y1}{A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)}
@@ -40,5 +41,6 @@ M <- rbind(c(40, 30, 0),
 simu <- mixSubclones(subClones=datSubClone, M)
 seg <- segmentData(simu)
 res <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
+resC <- initializeZ(seg$Y1+seg$Y2, nb.arch=4)
 
 }
