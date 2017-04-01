@@ -7,8 +7,8 @@ patient <- "RK29"
 path <- "c3co-data"
 dat <- readRDS(sprintf("%s/dat-%s.rds", path ,patient))
 lambda.grid <- c(2e-6,1e-5,2e-5) ## penalty
-p.list <- 2:9 ## candidate number of subclones
+p.list <- 2:13 ## candidate number of subclones
 parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid, nb.arch = p.list)
-resC3co <- c3co(dat, parameters.grid = parameters.grid)
+resC3co <- c3co(dat, parameters.grid = parameters.grid, pathSeg="segDat.rds", verbose=TRUE)
 
 

@@ -3,13 +3,12 @@
 #' @export
 #' @param Y1 A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)
 #' @param Y2 A matrix containing the segmented major copy number (\code{n} patients in row and \code{L} segments in columns)
-#' @param nb.arch An integer which is the number of archetypes in the model
+#' @param Z1 A \code{L} x \code{p} matrix containing the \code{L} minor copy numbers of the \code{p} initial latent feature estimates
+#' @param Z1 A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates
 #' @param lambda1 A real number, the coefficient for the fused penalty for minor copy numbers 
 #' @param lambda2 A real number, the coefficient for the fused penalty for major copy numbers 
-#' @param init.random if you want to use random initialization set paramater to TRUE
 #' @param eps criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps) 
 #' @param max.iter maximum number of iterations of the algorithm
-#' @param new.getZ TRUE if you want to parallelize inferrence of Minor and Major copy numbers
 #' @param verbose if you want to print some information during running
 #' @return An object of class [\code{\linkS4class{posFused}}]
 #' @examples
@@ -29,56 +28,56 @@
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
 #' lambda <- 0.001
-#' res <- positiveFusedLasso(seg$Y1, seg$Y2, nb.arch=4, lambda1=lambda, lambda2=lambda)
+#' Z <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
+#' res <- positiveFusedLasso(seg$Y1, seg$Y2, Z$Z1, Z$Z2, lambda1=lambda, lambda2=lambda)
 #' showPosFused(res)
-#' resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, nb.arch=2, lambda1=lambda, lambda2=lambda)
-#'
+#' resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL, lambda1=lambda, lambda2=lambda)
+#' showPosFused(resC)
 #' @importFrom parallel mclapply
-positiveFusedLasso <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FALSE,
-                           eps=1e-2, max.iter=50, verbose=FALSE, new.getZ=FALSE) {
-    
-    ## problem dimensions
+positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.iter=50, verbose=FALSE) {
     n <- nrow(Y1) # number of individuals
     L <- ncol(Y1) # number of loci/segments
-    ## _______________________________________________________
-    ## STEP 0: INITIALIZATION
-    Z <- initializeZ(Y1, Y2, nb.arch=nb.arch)
+    stopifnot(eps>0)
+    nb.arch <- ncol(Z1)
+    Z <- Z0 <- list(Z1=Z1, Z2=Z2)
+    ## Z0 <- list(Z=Z1+Z2, Z1=Z1, Z2=Z2)
+    
     iter <- 0
     cond <- FALSE
     delta <- Inf
     ## __________________________________________________
     ## main loop for alternate optimization
     Ymat <- cbind(Y1, Y2)
+    lst <- list(Z1=list(Y=Y1, lambda=lambda1))
+    if (!is.null(Y2)) {
+        lst[["Z2"]] <- list(Y=Y2, lambda=lambda2)
+    }
+    
     while (!cond) {
         iter <- iter + 1
-        if (verbose) message("Iteration: ",iter)
         ## __________________________________________________
-        ## STEP 1: optimize over W (fixed Z1, Z2)
+        ## STEP 1: optimize wrt W (fixed Z1, Z2)
         Zmat <- rbind(Z$Z1, Z$Z2)
         W <- get.W(Zmat, Ymat)
-        ## __________________________________________________
-        ## STEP 2: optimize over Z (fixed W)
-        if (!new.getZ){
-            Z <- get.Z(W, Y1, Y2, lambda1, lambda2)
-        } else {
-            Z <- mclapply(list(list(Y=Y1, lambda=lambda1),
-                               list(Y=Y2, lambda=lambda2)), 
-                          get.Z.new, W=W)
-            names(Z) <- c("Z1", "Z2")
-        }
         
+        ## __________________________________________________
+        ## STEP 2: optimize wrt Z (fixed W)
+        Z <- mclapply(lst, FUN=function(ll) {  ## TODO: use future_lapply!
+            get.Z(ll[["Y"]], ll[["lambda"]], W=W)
+        })
+
         ## __________________________________________________
         ## STEP 3: check for convergence of the weights
         if (iter>1) {
             delta <- sqrt(sum((W-W.old)^2))
         }
-        cond <- (iter > max.iter | delta < eps)
+        cond <- (iter>max.iter | delta<eps)
         
         if (verbose) message("delta:", round(delta, 4))
         W.old <- W
     }
-    if (verbose) message("DONE!")
-    
+    if (verbose) message("Stopped after ", iter, " iterations")
+    if (verbose) message("delta:", round(delta, 4))
     ## reshape output
     Z1 <- Z$Z1
     Z2 <- Z$Z2
@@ -112,6 +111,6 @@ positiveFusedLasso <- function(Y1, Y2, nb.arch, lambda1, lambda2, init.random=FA
     S <- list(Z=Z, Z1=Z1, Z2=Z2)
     E <- list(Y1=Y1hat, Y2=Y2hat)
     param <- list(nb.arch=nb.arch, lambda1=lambda1, lambda2=lambda2)
-    objRes <- methods::new("posFused", S=S, W=W, E=E, BIC=BIC, PVE=PVE, param=param)
+    objRes <- methods::new("posFused", S=S, S0=Z0, W=W, E=E, BIC=BIC, PVE=PVE, param=param)
     return(objRes)
 }

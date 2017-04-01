@@ -28,6 +28,7 @@ setMethod(
         cat(utils::str(this@param),"\n")
     }
 )
+
 #' Plot the weight matrix
 #' 
 #' @param this An object of class \code{\linkS4class{c3coFit}}
@@ -55,7 +56,7 @@ setGeneric(
 setMethod(
     f = "Wplot",
     signature = signature("c3coFit"),
-    def = function(this, idxBest, rownamesW=NULL, col= NULL,margins=c(5,7),posLegend=NA, listPheno, colsPheno, colLegend, labelLegend,cexCol=1.5,...){
+    def = function(this, idxBest, rownamesW=NULL, col= NULL,margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...){
         if(is.null(col)){col=grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)}
         W <- this@fit[[idxBest]]@W
         rownames(W) <- rownamesW

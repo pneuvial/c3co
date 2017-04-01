@@ -11,7 +11,6 @@
 #' @param stat TCN or C1C2
 #' @param pathSeg Path to the file that contain segmentation, by default \code{NULL}.
 #' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering
-#' @param new.getZ \code{TRUE} if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)
 #' @param verbose A logical value indicating whether to print extra information. Defaults to FALSE
 #' @return An object of class [\code{\linkS4class{c3coFit}}]
 #' @examples
@@ -31,7 +30,7 @@
 #' res <- c3co(dat, parameters.grid)
 #' resC <- c3co(dat, stat="TCN", parameters.grid)
 #' @export
-c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL, init.random=FALSE, new.getZ=TRUE, verbose=FALSE){
+c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL, init.random=FALSE, verbose=TRUE){
     ## Sanity checks
     stat <- match.arg(stat)
     if(!is.null(dat)){
@@ -97,7 +96,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
         Y2 <- NULL
     }
     
-    reslist@fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid, init.random=init.random, new.getZ=new.getZ, verbose=verbose)
+    reslist@fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid, init.random=init.random, verbose=verbose)
     return(reslist)
 }
 

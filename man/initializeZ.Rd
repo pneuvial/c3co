@@ -18,7 +18,7 @@ initializeZ(Y1, Y2, nb.arch, init.random = FALSE, verbose = FALSE)
 \item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }
 \value{
-A list with two components: \describe{\item{Z1}{initial value for the minor copy number of the latent features}\item{Z2}{initial value for the major copy number of the latent features}}
+A list with two components: \describe{\item{Z1}{A  \code{L} x \code{p} matrix, the initial value for the \code{L} minor copy numbers of the \code{p} latent features}\item{Z2}{A  \code{L} x \code{p} matrix, the initial value for the \code{L} major copy numbers of the \code{p} latent features}}
 }
 \description{
 Initialization of the c3co model parameters

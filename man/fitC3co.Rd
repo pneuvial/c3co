@@ -30,7 +30,7 @@ and Major copy numbers (TRUE by default)}
 information. Defaults to FALSE}
 }
 \value{
-An object of class [\code{\linkS4class{c3coFit}}]
+A list of \code{k} objects of class [\code{\linkS4class{c3coFit}}], where \code{k} is the number of candidate number of subclones
 }
 \description{
 Estimate c3co model parameters from segment-level copy number data

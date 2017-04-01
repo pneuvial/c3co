@@ -6,7 +6,7 @@
 #' @param nb.arch An integer which is the number of archetypes in the model
 #' @param init.random if you want to use random initialization set parameter to TRUE
 #' @param verbose A logical value indicating whether to print extra information. Defaults to FALSE
-#' @return A list with two components: \describe{\item{Z1}{initial value for the minor copy number of the latent features}\item{Z2}{initial value for the major copy number of the latent features}}
+#' @return A list with two components: \describe{\item{Z1}{A  \code{L} x \code{p} matrix, the initial value for the \code{L} minor copy numbers of the \code{p} latent features}\item{Z2}{A  \code{L} x \code{p} matrix, the initial value for the \code{L} major copy numbers of the \code{p} latent features}}
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
@@ -24,38 +24,47 @@
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
 #' res <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
+#' resC <- initializeZ(seg$Y1+seg$Y2, nb.arch=4)
 #'
-initializeZ <- function(Y1, Y2, nb.arch, init.random=FALSE, verbose=FALSE) {
-    
-    ## problem dimensions
-    n <- nrow(Y1) # number of individuals
+initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor=c("C1+C2", "C1", "C2"), verbose=FALSE) {
+    n <- nrow(Y1) # number of samples
     L <- ncol(Y1) # number of loci/segments
-    ## _______________________________________________________
-    ## STEP 0: INITIALIZATION
+    stopifnot(nb.arch<=L)
+    flavor <- match.arg(flavor)
+    
     if (is.null(Y2)){
         Y <- Y1
     } else {
-        Y <- Y1 + Y2
+        stopifnot(nrow(Y2)==n)  ## sanity check
+        stopifnot(ncol(Y2)==L)  ## sanity check
+        Y <- switch(flavor, 
+                    "C1+C2"= Y1 + Y2,
+                    "C1"= Y1 + Y2,
+                    "C2"= Y1 + Y2)
     }
     if (!init.random){
-        ## initializing Z by clustering on Y
+        ## hierarchical agglomerative clustering on Y
         hc <- stats::hclust(stats::dist(Y),method="ward.D")
         cluster <- stats::cutree(hc, nb.arch)
-        ## averaging the Y over the clusters to initialize the archetypes
+        if (verbose) message("Clustering in ", nb.arch, " groups: ", cluster)
+        
+        ## subclones are initialized as intra-cluster averages
+        Z.init <- sapply(split(as.data.frame(Y), cluster), colMeans)
         Z1.init <- sapply(split(as.data.frame(Y1), cluster), colMeans)
-        if (!is.null(Y2)){
-            Z2.init <- sapply(split(as.data.frame(Y2), cluster), colMeans)
-        } else {
+        Z2.init <- sapply(split(as.data.frame(Y2), cluster), colMeans)
+        if (is.null(Y2)){
+            Z1.init <- Z.init
             Z2.init <- NULL
         }
     } else {
-        ii <- sample(1:n,nb.arch, replace=FALSE)
-        Z1.init <- t(Y1[ii, ])
-        Z2.init <- NULL
-        if (!is.null(Y2)){
-            Z2.init <- t(Y2[ii, ])
+        idxs <- sample(1:n,nb.arch, replace=FALSE)
+        Z.init <- t(Y[idxs, ])
+        Z1.init <- t(Y1[idxs, ])
+        Z2.init <- t(Y2[ii, ])
+        if (is.null(Y2)){
+            Z2.init <- NULL
         }
     }
-    Z <- list(Z1=Z1.init, Z2=Z2.init)
+    Z <- list(Z=Z.init, Z1=Z1.init, Z2=Z2.init)
     return(Z)
 }
