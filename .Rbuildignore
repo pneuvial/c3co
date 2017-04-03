@@ -59,6 +59,7 @@ appveyor.yml
 ^data
 ^output
 ^c3co-data$
-^fig
+^fig$
+^c3co-results$
 
 TODO.md
