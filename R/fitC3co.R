@@ -105,7 +105,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             l1 <- cfg[, "lambda1"]
             l2 <- NULL
             if (!is.null(Y2)) l2 <- cfg[, "lambda2"]
-            res <- positiveFusedLasso(Y1, Y2=Y2, Z1=Z0$Z1, Z2=Z0$Z2, lambda1=l1, lambda2=l2, verbose=verbose)
+            res <- positiveFusedLasso(Y1, Y2=Y2, Z1=Z0$Z1, Z2=Z0$Z2, lambda1=l1, lambda2=l2, verbose=FALSE)
             if (res@BIC<BICp) { ## BIC has improved: update best model
                 res.l <- res
                 BICp <- res@BIC
