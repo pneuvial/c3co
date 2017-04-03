@@ -10,7 +10,7 @@
 #' @param parameters.grid A list composed of two vectors named \code{lambda1} and \code{lambda2} of real numbers which are the penalty coefficients for the fused lasso on the minor and major copy number dimension and a vector named \code{nb.arch} of integers which is the number of archetypes in the model
 #' @param stat TCN or C1C2
 #' @param pathSeg Path to the file that contain segmentation, by default \code{NULL}.
-#' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering
+#' @param \dots Further arguments to be passed to \code{\link{fitC3co}}
 #' @param verbose A logical value indicating whether to print extra information. Defaults to FALSE
 #' @return An object of class [\code{\linkS4class{c3coFit}}]
 #' @examples
@@ -30,7 +30,7 @@
 #' res <- c3co(dat, parameters.grid)
 #' resC <- c3co(dat, stat="TCN", parameters.grid)
 #' @export
-c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL, init.random=FALSE, verbose=TRUE){
+c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL, ..., verbose=FALSE){
     ## Sanity checks
     stat <- match.arg(stat)
     if(!is.null(dat)){
@@ -96,7 +96,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
         Y2 <- NULL
     }
     
-    reslist@fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid, init.random=init.random, verbose=verbose)
+    reslist@fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid, ..., verbose=verbose)
     return(reslist)
 }
 

@@ -12,8 +12,8 @@
 #' the fused lasso on the minor and major copy number dimension and a vector
 #' named \code{nb.arch} of integers which is the number of archetypes in the
 #' model
-#' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}.
-#' Initialization done by clustering
+#' @param warn issue a warning if Z1<=Z2 is not satisfied for a candidate number of subclones? Defaults to TRUE
+#' @param \dots Further arguments to be passed to \code{\link{positiveFusedLasso}}
 #' @param verbose A logical value indicating whether to print extra
 #' information. Defaults to FALSE
 #' @return A list of \code{k} objects of class [\code{\linkS4class{c3coFit}}], where \code{k} is the number of candidate number of subclones
@@ -38,7 +38,7 @@
 #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 #'
 #' @export
-fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, verbose=FALSE){
+fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=FALSE){
     ## Sanity checks
 
     n <- nrow(Y1)
@@ -92,18 +92,19 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, verbos
         BICp <- +Inf
         bestConfig <- NULL
 
-        Z0 <- initializeZ(Y1, Y2=Y2, nb.arch=pp, init.random=init.random)
+        Z0 <- initializeZ(Y1, Y2=Y2, nb.arch=pp, ...)
         
         if (verbose) {
             message("Parameter configuration: (", paste(colnames(configs), collapse="; "), ")")
         }
         for (cc in 1:nrow(configs)) {
-            cfg <- configs[cc, ]
+            cfg <- configs[cc,, drop=FALSE]
             if (verbose) {
                 message(paste(cfg, collapse="; "))
             }
             l1 <- cfg[, "lambda1"]
-            l2 <- cfg[, "lambda2"] ## possibly NULL (if Y2 is NULL)
+            l2 <- NULL
+            if (!is.null(Y2)) l2 <- cfg[, "lambda2"]
             res <- positiveFusedLasso(Y1, Y2=Y2, Z1=Z0$Z1, Z2=Z0$Z2, lambda1=l1, lambda2=l2, verbose=verbose)
             if (res@BIC<BICp) { ## BIC has improved: update best model
                 res.l <- res
@@ -112,6 +113,17 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, verbos
             }
         }
         fitList[[it]] <- res.l
+        ## sanity check: minor CN < major CN in the best parameter configurations (not for all configs by default)
+        if (!is.null(Y2) & warn) {  
+            Z <- slot(res.l, "S")
+            dZ <- Z$Z2 - Z$Z1
+            tol <- 1e-2  ## arbitrary tolerance...
+            if (min(dZ) < - tol) {
+                warning("For model with ", pp, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
+            }
+        }
+        
+        
         it <- it + 1
         pp <- nb.arch[it]
         ## Z doesn't change anymore
