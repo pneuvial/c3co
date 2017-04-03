@@ -90,7 +90,7 @@ plot(datSubClone[[1]]$baft, col=cols[factor(datSubClone[[1]]$genotype)], cex=cex
 Once the subclones are created, we can generate a weight matrix $W$ in order to build mixtures.
 
 ```{r, warning=FALSE, cache=FALSE}
-W = getWeightMatrix(70, 30, nb.arch=3, nb.samp=20)
+W = getWeightMatrix(70, 30, nb.arch=3, nb.samp=10)
 datList <- mixSubclones(subClones=datSubClone, W)
 str(datList[[1]])
 ```
@@ -103,7 +103,7 @@ Then the c3co method can be applied to the mixture data set. Let us choose the s
 
 ```{r c3co, warning=FALSE}
 lambda.grid <-  seq(from=1e-6, to=1e-5, length=3) ## only of length 3 so that the vignette runs fast enough
-nb.arch <- 2:6
+nb.arch <- 2:5
 parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid, nb.arch=nb.arch) 
 res <- c3co(datList, parameters.grid, verbose=FALSE)
 resC <- c3co(datList, parameters.grid, stat="TCN", verbose=TRUE)
