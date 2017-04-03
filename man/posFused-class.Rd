@@ -4,7 +4,8 @@
 \name{posFused-class}
 \alias{posFused-class}
 \title{@title Class for the object returned by \code{positiveFusedLasso} function
- @slot S A list containing Total copy number, minor copy number and major copy number inferred by \code{\link{positiveFusedLasso}}
+ @slot S A list containing the (final) minor, major and total copy number estimates for the latent features, as inferred by \code{\link{positiveFusedLasso}}
+ @slot S0 idem for the initial estimates
  @slot W A matrix containing weights inferred by \code{positiveFusedLasso}
  @slot E A list containing estimates of minor copy number and major copy number inferred by \code{positiveFusedLasso}
  @slot BIC A numeric value, the value of the Bayesian Information Criterion of the model
@@ -13,7 +14,8 @@
  @exportClass posFused}
 \description{
 @title Class for the object returned by \code{positiveFusedLasso} function
- @slot S A list containing Total copy number, minor copy number and major copy number inferred by \code{\link{positiveFusedLasso}}
+ @slot S A list containing the (final) minor, major and total copy number estimates for the latent features, as inferred by \code{\link{positiveFusedLasso}}
+ @slot S0 idem for the initial estimates
  @slot W A matrix containing weights inferred by \code{positiveFusedLasso}
  @slot E A list containing estimates of minor copy number and major copy number inferred by \code{positiveFusedLasso}
  @slot BIC A numeric value, the value of the Bayesian Information Criterion of the model

@@ -5,7 +5,7 @@
 \title{c3co estimation from segment-level copy number data}
 \usage{
 fitC3co(Y1, Y2 = NULL, parameters.grid = NULL, init.random = FALSE,
-  new.getZ = TRUE, verbose = FALSE)
+  verbose = FALSE)
 }
 \arguments{
 \item{Y1}{A numeric n x S matrix, segment-level minor copy numbers. n is the
@@ -23,14 +23,11 @@ model}
 \item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}.
 Initialization done by clustering}
 
-\item{new.getZ}{\code{TRUE} if you want to parallelize inferrence of Minor
-and Major copy numbers (TRUE by default)}
-
 \item{verbose}{A logical value indicating whether to print extra
 information. Defaults to FALSE}
 }
 \value{
-An object of class [\code{\linkS4class{c3coFit}}]
+A list of \code{k} objects of class [\code{\linkS4class{c3coFit}}], where \code{k} is the number of candidate number of subclones
 }
 \description{
 Estimate c3co model parameters from segment-level copy number data

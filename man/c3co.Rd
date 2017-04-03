@@ -5,7 +5,7 @@
 \title{Cancer subclone inference}
 \usage{
 c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
-  init.random = FALSE, new.getZ = TRUE, verbose = FALSE)
+  init.random = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{dat}{A list of data frames for each patient, each of them of the form
@@ -23,8 +23,6 @@ c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
 \item{pathSeg}{Path to the file that contain segmentation, by default \code{NULL}.}
 
 \item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering}
-
-\item{new.getZ}{\code{TRUE} if you want to parallelize inferrence of Minor and Major copy numbers (TRUE by default)}
 
 \item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }

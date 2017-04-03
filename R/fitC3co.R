@@ -14,11 +14,9 @@
 #' model
 #' @param init.random \code{TRUE} or \code{FALSE} by defaut \code{FALSE}.
 #' Initialization done by clustering
-#' @param new.getZ \code{TRUE} if you want to parallelize inferrence of Minor
-#' and Major copy numbers (TRUE by default)
 #' @param verbose A logical value indicating whether to print extra
 #' information. Defaults to FALSE
-#' @return An object of class [\code{\linkS4class{c3coFit}}]
+#' @return A list of \code{k} objects of class [\code{\linkS4class{c3coFit}}], where \code{k} is the number of candidate number of subclones
 #' @examples
 #'
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -40,14 +38,12 @@
 #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 #'
 #' @export
-fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, new.getZ=TRUE, verbose=FALSE){
+fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, verbose=FALSE){
     ## Sanity checks
 
     n <- nrow(Y1)
     nseg <- ncol(Y1)
-    dimension <- 1
     if (!is.null(Y2)) {
-        dimension <- 2
         stopifnot(nrow(Y2)==n)
         stopifnot(ncol(Y2)==nseg)
     }
@@ -94,23 +90,29 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, new.ge
         }
         ## Initialization
         BICp <- +Inf
-        best <- NULL
+        bestConfig <- NULL
 
+        Z0 <- initializeZ(Y1, Y2=Y2, nb.arch=pp, init.random=init.random)
+        
+        if (verbose) {
+            message("Parameter configuration: (", paste(colnames(configs), collapse="; "), ")")
+        }
         for (cc in 1:nrow(configs)) {
             cfg <- configs[cc, ]
             if (verbose) {
-                message("Parameter configuration: (", paste(cfg, collapse="; "), ")")
+                message(paste(cfg, collapse="; "))
             }
-            l1 <- configs[, "lambda1"]
-            l2 <- configs[, "lambda2"] ## possibly NULL (if Y2 is NULL)
-            res <- positiveFusedLasso(Y1, Y2, pp, lambda1=l1, lambda2=l2, init.random, new.getZ)
+            l1 <- cfg[, "lambda1"]
+            l2 <- cfg[, "lambda2"] ## possibly NULL (if Y2 is NULL)
+            res <- positiveFusedLasso(Y1, Y2=Y2, Z1=Z0$Z1, Z2=Z0$Z2, lambda1=l1, lambda2=l2, verbose=verbose)
             if (res@BIC<BICp) { ## BIC has improved: update best model
                 res.l <- res
                 BICp <- res@BIC
+                bestConfig <- cfg
             }
         }
         fitList[[it]] <- res.l
-        it <- it+1
+        it <- it + 1
         pp <- nb.arch[it]
         ## Z doesn't change anymore
         c1 <- sum(apply(res.l@S$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0
@@ -118,7 +120,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, init.random=FALSE, new.ge
         c2 <- sum(apply(res.l@W, 2,function(ww) (sum(ww^2)<1e-3)))==0
         ## pp reach max of grid
         c3 <-  !is.na(pp)
-        cond <- (c1& c2& c3)
+        cond <- (c1 & c2 & c3)
     }
+    attr(fitList, "Z0") <- Z0
     return(fitList)
 }

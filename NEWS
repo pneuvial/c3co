@@ -1,13 +1,20 @@
 Package: c3co
 =============
 
+
 Version: 0.2.0 [2017-03-31]
 
 CODE REFACTORING:
 
- o Some code cleanups o Added function 'fitC3co' that performs the
-   actual fitting from segment-level data. This function is called by
-   the main function 'c3co'
+ o More code cleanups 
+ o Added minimal sanity checks for some function arguments
+ o Added function 'initializeZ' so that the initialization is 
+   performed only once per candidate number of subclones in 'c3co'
+ o In class 'posFused', ddded slot 'S0' to store initial estimates of Z
+ o Moved function 'get.Z.new' into 'get.Z'
+ o Added function 'fitC3co' that performs the actual fitting 
+   from segment-level data. This function is called by the 
+   main function 'c3co'
 
 Version: 0.1.15 [2017-03-21]
 
