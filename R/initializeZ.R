@@ -5,6 +5,7 @@
 #' @param Y2 A matrix containing the segmented major copy number (\code{n} patients in row and \code{L} segments in columns)
 #' @param nb.arch An integer which is the number of archetypes in the model
 #' @param init.random if you want to use random initialization set parameter to TRUE
+#' @param flavor Statistic used to perform 'hclust' initialization. Should be either "C1+C2", "C1", or "C2"
 #' @param verbose A logical value indicating whether to print extra information. Defaults to FALSE
 #' @return A list with two components: \describe{\item{Z1}{A  \code{L} x \code{p} matrix, the initial value for the \code{L} minor copy numbers of the \code{p} latent features}\item{Z2}{A  \code{L} x \code{p} matrix, the initial value for the \code{L} major copy numbers of the \code{p} latent features}}
 #' @examples
@@ -39,12 +40,14 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor
         stopifnot(ncol(Y2)==L)  ## sanity check
         Y <- switch(flavor, 
                     "C1+C2"= Y1 + Y2,
-                    "C1"= Y1 + Y2,
-                    "C2"= Y1 + Y2)
+                    "C1"= Y1,
+                    "C2"= Y2)
     }
     if (!init.random){
         ## hierarchical agglomerative clustering on Y
-        hc <- stats::hclust(stats::dist(Y),method="ward.D")
+        dd <- stats::dist(Y)
+#        dd <- as.dist(1 - 1/2*(cor(t(Y1)) + cor(t(Y2))))
+        hc <- stats::hclust(dd, method="ward.D")
         cluster <- stats::cutree(hc, nb.arch)
         if (verbose) message("Clustering in ", nb.arch, " groups: ", cluster)
         

@@ -9,6 +9,7 @@
 #' @param lambda2 A real number, the coefficient for the fused penalty for major copy numbers 
 #' @param eps criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps) 
 #' @param max.iter maximum number of iterations of the algorithm
+#' @param warn issue a warning if Z1<=Z2 is not always satisfied? Defaults to FALSE
 #' @param verbose if you want to print some information during running
 #' @return An object of class [\code{\linkS4class{posFused}}]
 #' @examples
@@ -34,7 +35,7 @@
 #' resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL, lambda1=lambda, lambda2=lambda)
 #' showPosFused(resC)
 #' @importFrom parallel mclapply
-positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.iter=50, verbose=FALSE) {
+positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.iter=50, warn=FALSE, verbose=FALSE) {
     n <- nrow(Y1) # number of individuals
     L <- ncol(Y1) # number of loci/segments
     stopifnot(eps>0)
@@ -101,7 +102,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
     BIC <-  n*L*log(loss) + kZ*log(n*L)
     PVE <- 1-resVar/predVar
     
-    if (!is.null(Y2)) {  ## sanity check: minor CN < major CN
+    if (!is.null(Y2) & warn) {  ## sanity check: minor CN < major CN
         dZ <- Z2-Z1
         tol <- 1e-2  ## arbitrary tolerance...
         if (min(dZ) < - tol) {
