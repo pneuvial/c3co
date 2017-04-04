@@ -14,6 +14,8 @@ positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
 
 \item{Z1}{A \code{L} x \code{p} matrix containing the \code{L} minor copy numbers of the \code{p} initial latent feature estimates}
 
+\item{Z2}{A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates}
+
 \item{lambda1}{A real number, the coefficient for the fused penalty for minor copy numbers}
 
 \item{lambda2}{A real number, the coefficient for the fused penalty for major copy numbers}
@@ -25,8 +27,6 @@ positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
 \item{warn}{issue a warning if Z1<=Z2 is not always satisfied? Defaults to FALSE}
 
 \item{verbose}{if you want to print some information during running}
-
-\item{Z1}{A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates}
 }
 \value{
 An object of class [\code{\linkS4class{posFused}}]

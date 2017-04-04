@@ -4,7 +4,7 @@
 #' @param Y1 A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)
 #' @param Y2 A matrix containing the segmented major copy number (\code{n} patients in row and \code{L} segments in columns)
 #' @param Z1 A \code{L} x \code{p} matrix containing the \code{L} minor copy numbers of the \code{p} initial latent feature estimates
-#' @param Z1 A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates
+#' @param Z2 A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates
 #' @param lambda1 A real number, the coefficient for the fused penalty for minor copy numbers 
 #' @param lambda2 A real number, the coefficient for the fused penalty for major copy numbers 
 #' @param eps criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps) 
