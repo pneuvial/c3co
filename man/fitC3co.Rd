@@ -4,7 +4,7 @@
 \alias{fitC3co}
 \title{c3co estimation from segment-level copy number data}
 \usage{
-fitC3co(Y1, Y2 = NULL, parameters.grid = NULL, init.random = FALSE,
+fitC3co(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, ...,
   verbose = FALSE)
 }
 \arguments{
@@ -20,8 +20,9 @@ the fused lasso on the minor and major copy number dimension and a vector
 named \code{nb.arch} of integers which is the number of archetypes in the
 model}
 
-\item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}.
-Initialization done by clustering}
+\item{warn}{issue a warning if Z1<=Z2 is not satisfied for a candidate number of subclones? Defaults to TRUE}
+
+\item{\dots}{Further arguments to be passed to \code{\link{positiveFusedLasso}}}
 
 \item{verbose}{A logical value indicating whether to print extra
 information. Defaults to FALSE}

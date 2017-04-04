@@ -5,7 +5,7 @@
 \title{Positive fused lasso function}
 \usage{
 positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
-  max.iter = 50, verbose = FALSE)
+  max.iter = 50, warn = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{Y1}{A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)}
@@ -21,6 +21,8 @@ positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
 \item{eps}{criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps)}
 
 \item{max.iter}{maximum number of iterations of the algorithm}
+
+\item{warn}{issue a warning if Z1<=Z2 is not always satisfied? Defaults to FALSE}
 
 \item{verbose}{if you want to print some information during running}
 

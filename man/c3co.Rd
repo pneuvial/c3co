@@ -5,7 +5,7 @@
 \title{Cancer subclone inference}
 \usage{
 c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
-  init.random = FALSE, verbose = TRUE)
+  ..., verbose = FALSE)
 }
 \arguments{
 \item{dat}{A list of data frames for each patient, each of them of the form
@@ -22,7 +22,7 @@ c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
 
 \item{pathSeg}{Path to the file that contain segmentation, by default \code{NULL}.}
 
-\item{init.random}{\code{TRUE} or \code{FALSE} by defaut \code{FALSE}. Initialization done by clustering}
+\item{\dots}{Further arguments to be passed to \code{\link{fitC3co}}}
 
 \item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }
