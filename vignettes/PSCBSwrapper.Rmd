@@ -27,7 +27,7 @@ In this document we use the data from a public data set saved into \code{c3co.da
 ```{r, eval=TRUE}
 pathPSCBS <- system.file("extdata", package="c3co.data", mustWork=TRUE)
 output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
-PSCBSwrapper(pathPSCBS,output.dir=output.dir, stat="C1C2")
+PSCBSwrapper(pathPSCBS, output.dir=output.dir, stat="C1C2")
 ```
 
 ## Run c3co ##
@@ -53,6 +53,7 @@ minMaxPos <- do.call(rbind, lapply(1:2, function(chromosome){
   return(list(chr=chromosome, minPos=min(pos), maxPos=max(pos)))
 }))
 ```
+
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
 df <- createZdf(resc3co, minMaxPos, chromosomes=c(1,2), idxBest=2)
 df$position <- df$position/1e6 ## scale to Mb

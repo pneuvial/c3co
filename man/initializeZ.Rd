@@ -16,6 +16,8 @@ initializeZ(Y1, Y2 = NULL, nb.arch = ncol(Y1), init.random = FALSE,
 
 \item{init.random}{if you want to use random initialization set parameter to TRUE}
 
+\item{flavor}{Statistic used to perform 'hclust' initialization. Should be either "C1+C2", "C1", or "C2"}
+
 \item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }
 \value{

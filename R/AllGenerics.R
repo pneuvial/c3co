@@ -13,7 +13,7 @@ setGeneric(
 setMethod(
     f = "showPosFused",
     signature = signature("posFused"),
-    def = function(this) {
+    definition = function(this) {
         cat("Subclones\n")
         cat(utils::str(this@S),"\n")
         cat("Weights\n")
@@ -56,7 +56,7 @@ setGeneric(
 setMethod(
     f = "Wplot",
     signature = signature("c3coFit"),
-    def = function(this, idxBest, rownamesW=NULL, col= NULL,margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...){
+    definition = function(this, idxBest, rownamesW=NULL, col= NULL,margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...){
         if(is.null(col)){col=grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)}
         W <- this@fit[[idxBest]]@W
         rownames(W) <- rownamesW
@@ -96,7 +96,7 @@ setGeneric(
 setMethod(
     f = "showC3coFit",
     signature = signature("c3coFit"),
-    def = function(this) {
+    definition = function(this) {
         cat("bkp\n")
         cat(utils::str(this@bkp),"\n")
         cat("segmented Data\n")

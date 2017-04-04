@@ -4,7 +4,7 @@
 #' @param Y1 A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)
 #' @param Y2 A matrix containing the segmented major copy number (\code{n} patients in row and \code{L} segments in columns)
 #' @param Z1 A \code{L} x \code{p} matrix containing the \code{L} minor copy numbers of the \code{p} initial latent feature estimates
-#' @param Z1 A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates
+#' @param Z2 A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates
 #' @param lambda1 A real number, the coefficient for the fused penalty for minor copy numbers 
 #' @param lambda2 A real number, the coefficient for the fused penalty for major copy numbers 
 #' @param eps criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps) 
@@ -53,7 +53,16 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
     if (!is.null(Y2)) {
         lst[["Z2"]] <- list(Y=Y2, lambda=lambda2)
     }
-    
+
+    ## Preload namespaces needed by get.Z() so that they will not have to
+    ## be reloaded in each mclapply() fork.
+    requireNamespace("Matrix")
+    requireNamespace("glmnet")
+
+    ## In the first iteration, call lapply() so that S4 method dispatch
+    ## will be cached and then available to all of the following forks.
+    mclapply <- base::lapply
+
     while (!cond) {
         iter <- iter + 1
         ## __________________________________________________
@@ -66,7 +75,10 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
         Z <- mclapply(lst, FUN=function(ll) {  ## TODO: use future_lapply!
             get.Z(ll[["Y"]], ll[["lambda"]], W=W)
         })
-
+        
+        ## After the first iteration, use parallel::mclapply() 
+##        rm(list = "mclapply")
+       
         ## __________________________________________________
         ## STEP 3: check for convergence of the weights
         if (iter>1) {

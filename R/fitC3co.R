@@ -37,6 +37,7 @@
 #' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
 #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 #'
+#' @importFrom methods slot
 #' @export
 fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=FALSE){
     ## Sanity checks
@@ -52,7 +53,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         lambda1 <- seq(from=1e-6, to=1e-4, length=10)
         if (verbose) {
             message("Regularization parameter lambda[1] not provided. Using default value: ", )
-            message(utils::str(lambda1))
+            mstr(lambda1)
         }
     }
 
@@ -63,7 +64,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             lambda2 <- seq(from=1e-6, to=1e-4, length=10)
             if (verbose) {
                 message("Regularization parameter lambda[2] not provided. Using default value: ", )
-                message(str(lambda2))
+                mstr(lambda2)
             }
         }
         configs <- expand.grid(lambda1=lambda1, lambda2=lambda2)
@@ -75,7 +76,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         nb.arch  <- seq(from=2, to=nseg-1, by=1)
         if (verbose) {
             message("Parameter 'nb.arch' not provided. Using default value: ", )
-            message(str(nb.arch))
+            mstr(nb.arch)
         }
     }
     rm(parameters.grid)
@@ -105,7 +106,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             l1 <- cfg[, "lambda1"]
             l2 <- NULL
             if (!is.null(Y2)) l2 <- cfg[, "lambda2"]
-            res <- positiveFusedLasso(Y1, Y2=Y2, Z1=Z0$Z1, Z2=Z0$Z2, lambda1=l1, lambda2=l2, verbose=verbose)
+            res <- positiveFusedLasso(Y1, Y2=Y2, Z1=Z0$Z1, Z2=Z0$Z2, lambda1=l1, lambda2=l2, verbose=FALSE)
             if (res@BIC<BICp) { ## BIC has improved: update best model
                 res.l <- res
                 BICp <- res@BIC

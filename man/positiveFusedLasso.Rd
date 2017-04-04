@@ -5,7 +5,7 @@
 \title{Positive fused lasso function}
 \usage{
 positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
-  max.iter = 50, verbose = FALSE)
+  max.iter = 50, warn = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{Y1}{A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)}
@@ -13,6 +13,8 @@ positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
 \item{Y2}{A matrix containing the segmented major copy number (\code{n} patients in row and \code{L} segments in columns)}
 
 \item{Z1}{A \code{L} x \code{p} matrix containing the \code{L} minor copy numbers of the \code{p} initial latent feature estimates}
+
+\item{Z2}{A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates}
 
 \item{lambda1}{A real number, the coefficient for the fused penalty for minor copy numbers}
 
@@ -22,9 +24,9 @@ positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
 
 \item{max.iter}{maximum number of iterations of the algorithm}
 
-\item{verbose}{if you want to print some information during running}
+\item{warn}{issue a warning if Z1<=Z2 is not always satisfied? Defaults to FALSE}
 
-\item{Z1}{A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates}
+\item{verbose}{if you want to print some information during running}
 }
 \value{
 An object of class [\code{\linkS4class{posFused}}]
