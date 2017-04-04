@@ -53,6 +53,11 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
     if (!is.null(Y2)) {
         lst[["Z2"]] <- list(Y=Y2, lambda=lambda2)
     }
+
+    ## Preload namespaces needed by get.Z() so that they will not have to
+    ## be reloaded in each mclapply() fork.
+    requireNamespace("Matrix")
+    requireNamespace("glmnet")
     
     while (!cond) {
         iter <- iter + 1
@@ -66,7 +71,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
         Z <- mclapply(lst, FUN=function(ll) {  ## TODO: use future_lapply!
             get.Z(ll[["Y"]], ll[["lambda"]], W=W)
         })
-
+       
         ## __________________________________________________
         ## STEP 3: check for convergence of the weights
         if (iter>1) {

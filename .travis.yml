@@ -14,7 +14,7 @@ warnings_are_errors: false
 latex: false
 r_build_args: --no-build-vignettes --no-manual --no-resave-data
 r_check_args: --no-build-vignettes --no-manual --as-cran
-env: MC_CORES=1  ## Disable parallel processing
+## env: MC_CORES=1  ## Disable parallel processing
 
 matrix:
   include:
