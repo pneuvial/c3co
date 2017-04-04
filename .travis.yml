@@ -37,8 +37,14 @@ matrix:
 bioc_packages:
   - BiocInstaller
   - BiocStyle
+  
 repos:
   Rforge: http://R-Forge.R-project.org
+
+before_install:
+  - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
+  - export _R_CHECK_TIMINGS_=0  ## Report on timing for all tests
+  
 notifications:
   email:
     on_success: change
