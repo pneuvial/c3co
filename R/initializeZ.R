@@ -63,7 +63,7 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor
         idxs <- sample(1:n,nb.arch, replace=FALSE)
         Z.init <- t(Y[idxs, ])
         Z1.init <- t(Y1[idxs, ])
-        Z2.init <- t(Y2[ii, ])
+        Z2.init <- t(Y2[idxs, ])
         if (is.null(Y2)){
             Z2.init <- NULL
         }
