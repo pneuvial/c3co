@@ -58,7 +58,11 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
     ## be reloaded in each mclapply() fork.
     requireNamespace("Matrix")
     requireNamespace("glmnet")
-    
+
+    ## In the first iteration, call lapply() so that S4 method dispatch
+    ## will be cached and then available to all of the following forks.
+    mclapply <- base::lapply
+
     while (!cond) {
         iter <- iter + 1
         ## __________________________________________________
@@ -71,6 +75,9 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
         Z <- mclapply(lst, FUN=function(ll) {  ## TODO: use future_lapply!
             get.Z(ll[["Y"]], ll[["lambda"]], W=W)
         })
+        
+        ## After the first iteration, use parallel::mclapply() 
+        rm(list = "mclapply")
        
         ## __________________________________________________
         ## STEP 3: check for convergence of the weights
