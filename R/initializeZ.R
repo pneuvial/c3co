@@ -30,7 +30,7 @@
 initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor=c("C1+C2", "C1", "C2"), verbose=FALSE) {
     n <- nrow(Y1) # number of samples
     L <- ncol(Y1) # number of loci/segments
-    stopifnot(nb.arch<=L)
+    stopifnot(nb.arch<=n)
     flavor <- match.arg(flavor)
     
     if (is.null(Y2)){
