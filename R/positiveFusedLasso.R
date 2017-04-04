@@ -77,7 +77,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
         })
         
         ## After the first iteration, use parallel::mclapply() 
-        rm(list = "mclapply")
+##        rm(list = "mclapply")
        
         ## __________________________________________________
         ## STEP 3: check for convergence of the weights
