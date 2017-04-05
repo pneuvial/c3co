@@ -34,7 +34,7 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor
     stopifnot(nb.arch<=n)
     flavor <- match.arg(flavor)
     
-    if (is.null(Y2)){
+    if (is.null(Y2)) {
         Y <- Y1
     } else {
         stopifnot(nrow(Y2)==n)  ## sanity check
@@ -44,7 +44,7 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor
                     "C1"= Y1,
                     "C2"= Y2)
     }
-    if (!init.random){
+    if (!init.random) {
         ## hierarchical agglomerative clustering on Y
         dd <- dist(Y)
 #        dd <- as.dist(1 - 1/2*(cor(t(Y1)) + cor(t(Y2))))
@@ -56,7 +56,7 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor
         Z.init <- sapply(split(as.data.frame(Y), f=cluster), FUN=colMeans)
         Z1.init <- sapply(split(as.data.frame(Y1), f=cluster), FUN=colMeans)
         Z2.init <- sapply(split(as.data.frame(Y2), f=cluster), FUN=colMeans)
-        if (is.null(Y2)){
+        if (is.null(Y2)) {
             Z1.init <- Z.init
             Z2.init <- NULL
         }
@@ -65,7 +65,7 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor
         Z.init <- t(Y[idxs, , drop=FALSE])
         Z1.init <- t(Y1[idxs, , drop=FALSE])
         Z2.init <- t(Y2[idxs, , drop=FALSE])
-        if (is.null(Y2)){
+        if (is.null(Y2)) {
             Z2.init <- NULL
         }
     }

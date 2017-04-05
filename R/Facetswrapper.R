@@ -3,7 +3,7 @@
 #' @export
 #' @param pathFacets The path to load Facets data csv.gz format.
 #' @return A data frame under PSCBS format
-loadFacetsdata <- function(pathFacets){
+loadFacetsdata <- function(pathFacets) {
     ### Load Facets data
     dat <- lapply(list.files(pathFacets), FUN=function(ff) {
         df <- facets::readSnpMatrix(file.path(pathFacets, ff))
@@ -35,7 +35,7 @@ loadFacetsdata <- function(pathFacets){
 #' resc3co <- c3co(NULL, pathSeg=output.dir)
 #' }
 #' }
-Facetswrapper <- function (pathFacets, output.dir, stat){
+Facetswrapper <- function(pathFacets, output.dir, stat) {
     if (!requireNamespace("facets", quietly=TRUE)) {
         stop("Package 'facets' needed. Please install it from github/mskcc",             call. = FALSE)
     }

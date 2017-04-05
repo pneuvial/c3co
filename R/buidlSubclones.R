@@ -27,18 +27,18 @@
 #'
 #' @importFrom jointseg getCopyNumberDataByResampling
 #' @export
-buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), regions=list()){
-    if (nbClones != length(regions)){ 
+buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), regions=list()) {
+    if (nbClones != length(regions)) { 
         stop("Argument 'nbClones' should match 'length(regions)'")
     }
-    if(nbClones!=length(bkps)){ 
+    if (nbClones!=length(bkps)) { 
         stop("Argument 'nbClones' should match 'length(bkp)'")
     }
-    if (is.factor(dataAnnotTP$region)){
+    if (is.factor(dataAnnotTP$region)) {
         dataAnnotTP$region <- as.character(dataAnnotTP$region)
     }
-    genotype <- NULL; rm(genotype);
-    if (is.factor(dataAnnotTP$genotype)){
+    genotype <- NULL; rm(genotype)
+    if (is.factor(dataAnnotTP$genotype)) {
         dataAnnotTP$genotype <- as.character(dataAnnotTP$genotype)
     }
     
@@ -60,7 +60,7 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
     datAB <- subset(dataAnnot,genotype==0.5)
     datBB <- subset(dataAnnot,genotype==1)
     
-    subClone <- lapply(1:nbClones, FUN=function(ii){
+    subClone <- lapply(1:nbClones, FUN=function(ii) {
         bkp <- bkps[[ii]]
         reg <- regions[[ii]]
         

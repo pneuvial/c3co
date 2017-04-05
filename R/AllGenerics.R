@@ -61,24 +61,24 @@ setGeneric(
 setMethod(
     f = "Wplot",
     signature = signature("c3coFit"),
-    definition = function(this, idxBest, rownamesW=NULL, col= NULL,margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...){
-        if(is.null(col)){col=colorRampPalette(brewer.pal(9, 'GnBu'))(100)}
+    definition = function(this, idxBest, rownamesW=NULL, col= NULL,margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...) {
+        if (is.null(col)) { col <- colorRampPalette(brewer.pal(9, 'GnBu'))(100) }
         W <- this@fit[[idxBest]]@W
         rownames(W) <- rownamesW
         colnames(W) <- sprintf("Subclone %s", letters[1:ncol(W)])
-        if(!missing(listPheno)){
-            if(ncol(listPheno)!=ncol(colsPheno)){
+        if (!missing(listPheno)) {
+            if (ncol(listPheno)!=ncol(colsPheno)) {
                 stop("listPheno and colsPheno must have the same number of columns")
             }
         }
-        if(!missing(colsPheno)){
+        if (!missing(colsPheno)) {
             heatmap.3(W, Rowv=TRUE,dendrogram="row", col=col,scale="none", cexCol=cexCol, cexRow=1.5,margins = margins, key = TRUE,  RowSideColors=t(colsPheno),...)
             
             #heatmap.3(W, Rowv=TRUE, dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = c(5,10),...)
-            if(!is.na(posLegend)){
+            if (!is.na(posLegend)) {
                 legend(posLegend,legend=labelLegend, fill=colLegend,border=FALSE, bty="n", y.intersp = 1, cex=1)
             }
-        }else{
+        } else {
             heatmap.3(W, Rowv=TRUE,dendrogram="row", col=col,scale="none", cexCol=cexCol, cexRow=1.5,margins = margins, key = TRUE,...)
             #heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = margins,...)
         }  
@@ -133,7 +133,7 @@ setGeneric(
 setMethod(
     f = "createZdf",
     signature = signature("c3coFit"),
-    definition = function(this, minMaxPos, chromosomes, var=c("TCN", "Minor", "Major"), idxBest){
+    definition = function(this, minMaxPos, chromosomes, var=c("TCN", "Minor", "Major"), idxBest) {
         var <- match.arg(var, several.ok=TRUE)
         labs <- list("TCN"="Z", "Minor"="Z1", "Major"="Z2")
         bkp <- this@bkp

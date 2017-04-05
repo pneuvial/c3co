@@ -32,11 +32,11 @@
 #'
 #' @importFrom methods new
 #' @export
-c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL, ..., verbose=FALSE){
+c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL, ..., verbose=FALSE) {
     ## Sanity checks
     stat <- match.arg(stat)
-    if(!is.null(dat)){
-        if(!is.list(dat)){
+    if (!is.null(dat)) {
+        if (!is.list(dat)) {
             stop("Argument 'dat' should be a list ")
         }
         checkCols <- lapply(dat, FUN=function(dd) {
@@ -59,7 +59,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
     if (stat=="TCN") {
         new.getZ <- FALSE
     }
-    if (is.null(parameters.grid)){
+    if (is.null(parameters.grid)) {
         lambda1 <- seq(from=1e-6, to=1e-4, length.out=10)
         lambda2 <- seq(from=1e-6, to=1e-4, length.out=10)
         nb.arch  <- 2:(length(dat)-1)
@@ -81,7 +81,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
             print(pathSeg)
         }
         seg <- readRDS(pathSeg)
-    } else{
+    } else {
         seg <- segmentData(dat, stat=stat, verbose=verbose)
     }
     bkpList <- seg$bkp

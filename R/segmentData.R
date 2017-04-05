@@ -34,7 +34,7 @@
 #'
 #' @importFrom matrixStats binMeans
 #' @importFrom jointseg jointSeg
-segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
+segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
     stat <- match.arg(stat)
     
     checkColNames <- lapply(dat, FUN=function(dd) {

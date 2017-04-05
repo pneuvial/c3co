@@ -64,7 +64,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
         
         ## __________________________________________________
         ## STEP 2: optimize wrt Z (fixed W)
-        Z <- lapply(lst, FUN=function(ll) {  ## TODO: use future_lapply!
+        Z <- lapply(lst, FUN=function(ll) {
             get.Z(ll[["Y"]], ll[["lambda"]], W=W)
         })
        
@@ -83,7 +83,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
     ## reshape output
     Z1 <- Z$Z1
     Z2 <- Z$Z2
-    if (!is.null(Y2)){
+    if (!is.null(Y2)) {
         Y <- Y1 + Y2
         Z <- Z1 + Z2
         Y1hat <- W %*% t(Z1)

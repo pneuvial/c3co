@@ -1,7 +1,7 @@
 ## Source: Benjamin Sadacca, Institut Curie
 ## ## trim.heatmap
 #' @importFrom stats quantile
-trim.heatmap <- function(data,trim){
+trim.heatmap <- function(data,trim) {
     ## data <- data - mean(data, na.rm = TRUE)
     data = t(scale(t(data)))
     q <- quantile(data, probs = c((1 - trim), trim), na.rm = TRUE)
@@ -124,9 +124,9 @@ heatmap.3 <- function(x,
                       lwid = NULL,
                       ColSideColorsSize = 1,
                       RowSideColorsSize = 1,
-                      KeyValueName="",...){
+                      KeyValueName="",...) {
     
-    invalid <- function (x) {
+    invalid <- function(x) {
         if (missing(x) || is.null(x) || length(x) == 0)
             return(TRUE)
         if (is.list(x))
@@ -306,7 +306,7 @@ heatmap.3 <- function(x,
     layout(lmat, widths = lwid, heights = lhei, respect = FALSE)
     
     if (!missing(RowSideColors)) {
-        if (!is.matrix(RowSideColors)){
+        if (!is.matrix(RowSideColors)) {
             par(mar = c(margins[1], 0, 0, 0.5))
             image(x=rbind(1:nr), col = RowSideColors[rowInd], axes = FALSE)
         } else {
@@ -330,7 +330,7 @@ heatmap.3 <- function(x,
     
     if (!missing(ColSideColors)) {
         
-        if (!is.matrix(ColSideColors)){
+        if (!is.matrix(ColSideColors)) {
             par(mar = c(0.5, 0, 0, margins[2]))
             image(x=cbind(1:nc), col = ColSideColors[colInd], axes = FALSE)
         } else {

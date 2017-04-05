@@ -39,7 +39,7 @@
 #'
 #' @importFrom methods slot
 #' @export
-fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=FALSE){
+fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=FALSE) {
     ## Sanity checks
 
     n <- nrow(Y1)
