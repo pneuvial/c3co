@@ -59,5 +59,5 @@ PSCBSwrapper <- function(pathSegPSCBS, pattern=NULL, output.dir, stat) {
     ### Joint segmentation of all samples
     resSeg <- segmentData(dat, stat=stat)
     saveRDS(resSeg, file=file.path(output.dir, "segDat.rds"))
-    msprintf("segment data has been saved to %s in segDat.rds file", output.dir)
+    mprintf("segment data has been saved to %s in segDat.rds file", output.dir)
 }
