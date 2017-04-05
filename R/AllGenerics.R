@@ -1,6 +1,7 @@
 #' Display the content of an object of class posFused
 #'
-#' @param this an object of class: [\code{\linkS4class{posFused}}] 
+#' @param this an object of class: [\code{\linkS4class{posFused}}]
+#' 
 #' @rdname showPosFused
 #' @exportMethod showPosFused
 setGeneric(
@@ -17,40 +18,55 @@ setMethod(
     signature = signature("posFused"),
     definition = function(this) {
         cat("Subclones\n")
-        cat(str(this@S),"\n")
+        cat(str(this@S), "\n")
         cat("Weights\n")
         cat(str(this@W), "\n")
         cat("Estimates\n")
-        cat(str(this@E),"\n")
+        cat(str(this@E), "\n")
         cat("BIC\n")
-        cat(this@BIC,"\n")
+        cat(this@BIC, "\n")
         cat("PVE\n")
         cat(this@PVE,"\n")
         cat("param\n")
-        cat(str(this@param),"\n")
+        cat(str(this@param), "\n")
     }
 )
 
 #' Plot the weight matrix
 #' 
 #' @param this An object of class \code{\linkS4class{c3coFit}}
+#' 
 #' @param idxBest A integer, the number of latent features
+#' 
 #' @param rownamesW A vector that contains identification of patients
+#' 
 #' @param col A vector that contains colors for the heatmap
-#' @param margins A vector margins 
+#' 
+#' @param margins A vector margins
+#' 
 #' @param posLegend position of the legend to be passed to \code{plot}
-#' @param listPheno A matrix that contains details on phenotype for each patient. Could be location or time point of tumors for example
-#' @param colsPheno Matrix that containts colors for each type of variable in phenotype
+#' 
+#' @param listPheno A matrix that contains details on phenotype for each
+#'        patient. Could be location or time point of tumors for example
+#' 
+#' @param colsPheno Matrix that containts colors for each type of variable
+#'        in phenotype
+#' 
 #' @param colLegend colors for clinical data
+#' 
 #' @param labelLegend labels for clinical data
-#' @param cexCol size of labels of columns by (default 1.5) 
+#' 
+#' @param cexCol size of labels of columns by (default 1.5)
+#' 
 #' @param ... other paramaters to personalize heatmap (see \code{heatmap.3})
+#' 
 #' @return a heatmap of W
+#' 
 #' @rdname Wplot
 #' @exportMethod Wplot
 setGeneric(
     name = "Wplot",
-    def = function(this, idxBest, rownamesW=NULL, col= NULL, margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...) {
+    def = function(this, idxBest, rownamesW =NULL, col=NULL, margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...) {
         standardGeneric("Wplot")
     }
 )
@@ -79,8 +95,8 @@ setMethod(
                 legend(posLegend,legend=labelLegend, fill=colLegend,border=FALSE, bty="n", y.intersp = 1, cex=1)
             }
         } else {
-            heatmap.3(W, Rowv=TRUE,dendrogram="row", col=col,scale="none", cexCol=cexCol, cexRow=1.5,margins = margins, key = TRUE,...)
-            #heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = margins,...)
+            heatmap.3(W, Rowv=TRUE,dendrogram="row", col=col,scale="none", cexCol=cexCol, cexRow=1.5,margins = margins, key = TRUE, ...)
+            #heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = margins, ...)
         }  
     })
 

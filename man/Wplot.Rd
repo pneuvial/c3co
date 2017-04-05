@@ -27,9 +27,11 @@ Wplot(this, idxBest, rownamesW = NULL, col = NULL, margins = c(5, 7),
 
 \item{posLegend}{position of the legend to be passed to \code{plot}}
 
-\item{listPheno}{A matrix that contains details on phenotype for each patient. Could be location or time point of tumors for example}
+\item{listPheno}{A matrix that contains details on phenotype for each
+patient. Could be location or time point of tumors for example}
 
-\item{colsPheno}{Matrix that containts colors for each type of variable in phenotype}
+\item{colsPheno}{Matrix that containts colors for each type of variable
+in phenotype}
 
 \item{colLegend}{colors for clinical data}
 
