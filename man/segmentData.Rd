@@ -15,7 +15,7 @@ segmentData(dat, stat = c("C1C2", "TCN"), verbose = FALSE)
  \item{chr}{Chromosome}
  }}
 
-\item{stat}{"TCN or "C1C2" parameter to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.}
+\item{stat}{"TCN or "C1C2" parameter to segment the data. If \code{stat == TCN}, the segmentation will be done on TCN only.}
 
 \item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
 }
@@ -31,11 +31,11 @@ dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
-bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
-regions <-list(c("(0,3)", "(0,2)","(1,2)"), 
-c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
+regions <-list(c("(0,3)", "(0,2)", "(1,2)"), 
+c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
-M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
+M <- getWeightMatrix(100, 0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
 dat <- mixSubclones(subClones=datSubClone, M)
 res <- segmentData(dat)
 res2 <- segmentData(dat, stat="TCN")

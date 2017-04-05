@@ -56,7 +56,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
             }
         })
     }
-    if (stat=="TCN") {
+    if (stat == "TCN") {
         new.getZ <- FALSE
     }
     if (is.null(parameters.grid)) {
@@ -90,10 +90,10 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
     reslist@bkp <- bkpList
     reslist@segDat <- list(Y1=seg$Y1, Y2=seg$Y2, Y=seg$Y)
     
-    if (stat=="C1C2") {
+    if (stat == "C1C2") {
         Y1 <- t(seg$Y1)
         Y2 <- t(seg$Y2)
-    } else if (stat=="TCN") {
+    } else if (stat == "TCN") {
         Y1 <- t(seg$Y)
         Y2 <- NULL
     }

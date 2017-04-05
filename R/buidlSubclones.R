@@ -31,7 +31,7 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
     if (nbClones != length(regions)) { 
         stop("Argument 'nbClones' should match 'length(regions)'")
     }
-    if (nbClones!=length(bkps)) { 
+    if (nbClones != length(bkps)) { 
         stop("Argument 'nbClones' should match 'length(bkp)'")
     }
     if (is.factor(dataAnnotTP$region)) {
@@ -46,9 +46,9 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
     pct <- tbl/sum(tbl)
     genos <- sample(c(0, 0.5, 1), size=len, prob=pct, replace=TRUE)
     
-    idxAA <- which(genos==0)
-    idxAB <- which(genos==0.5)
-    idxBB <- which(genos==1)
+    idxAA <- which(genos == 0)
+    idxAB <- which(genos == 0.5)
+    idxBB <- which(genos == 1)
     pos <- c(idxAB, idxAA, idxBB)
     
     keepCols <- c("c", "b", "genotype", "region")
@@ -56,23 +56,23 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
                             dataAnnotN[, c("c", "b")])
     colnames(dataAnnot) <- c("ct", "baft", "genotype", "region", "cn", "bafn")
     
-    datAA <- subset(dataAnnot, genotype==0)
-    datAB <- subset(dataAnnot, genotype==0.5)
-    datBB <- subset(dataAnnot, genotype==1)
+    datAA <- subset(dataAnnot, genotype == 0)
+    datAB <- subset(dataAnnot, genotype == 0.5)
+    datBB <- subset(dataAnnot, genotype == 1)
     
     subClone <- lapply(1:nbClones, FUN=function(ii) {
         bkp <- bkps[[ii]]
         reg <- regions[[ii]]
         
-        bkpsAB <- sapply(bkp, FUN=function(bb) max(which(idxAB<=bb)))
+        bkpsAB <- sapply(bkp, FUN=function(bb) max(which(idxAB <= bb)))
         sim <- getCopyNumberDataByResampling(length=length(idxAB), regData=datAB, bkp=bkpsAB, regions=reg)
         ssAB <- sim$profile
         
-        bkpsAA <- sapply(bkp, FUN=function(bb) max(which(idxAA<=bb)))
+        bkpsAA <- sapply(bkp, FUN=function(bb) max(which(idxAA <= bb)))
         sim <- getCopyNumberDataByResampling(length=length(idxAA), regData=datAA, bkp=bkpsAA, regions=reg)
         ssAA <- sim$profile
         
-        bkpsBB <- sapply(bkp, FUN=function(bb) max(which(idxBB<=bb)))
+        bkpsBB <- sapply(bkp, FUN=function(bb) max(which(idxBB <= bb)))
         sim <- getCopyNumberDataByResampling(length=length(idxBB), regData=datBB, bkp=bkpsBB, regions=reg)
         ssBB <- sim$profile
         

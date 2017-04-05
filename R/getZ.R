@@ -1,7 +1,7 @@
 #' @importFrom glmnet glmnet
 #' @importFrom Matrix bandSparse
 get.Z <- function(W, Y, lambda) {
-    stopifnot(length(lambda)==1L)  ## sanity check
+    stopifnot(length(lambda) == 1L)  ## sanity check
     
     L <- ncol(Y)
     p <- ncol(W)

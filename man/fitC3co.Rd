@@ -20,7 +20,7 @@ the fused lasso on the minor and major copy number dimension and a vector
 named \code{nb.arch} of integers which is the number of archetypes in the
 model}
 
-\item{warn}{issue a warning if Z1<=Z2 is not satisfied for a candidate number of subclones? Defaults to TRUE}
+\item{warn}{issue a warning if Z1 <= Z2 is not satisfied for a candidate number of subclones? Defaults to TRUE}
 
 \item{\dots}{Further arguments to be passed to \code{\link{positiveFusedLasso}}}
 
@@ -39,9 +39,9 @@ dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
-bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
-regions <-list(c("(0,3)", "(0,2)","(1,2)"),
-c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
+regions <-list(c("(0,3)", "(0,2)", "(1,2)"),
+c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 M <- getWeightMatrix(100, 0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
 dat <- mixSubclones(subClones=datSubClone, M)

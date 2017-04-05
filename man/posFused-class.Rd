@@ -3,28 +3,31 @@
 \docType{class}
 \name{posFused-class}
 \alias{posFused-class}
-\title{@title Class for the object returned by \code{positiveFusedLasso} function}
+\title{Class for the object returned by \code{positiveFusedLasso} function}
 \description{
-@slot S A list containing the (final) minor, major and total copy number
-       estimates for the latent features, as inferred by
-       \code{\link{positiveFusedLasso}}.
+Class for the object returned by \code{positiveFusedLasso} function
 }
-\details{
-@slot S0 idem for the initial estimates.
+\section{Slots}{
 
-@slot W A matrix containing weights inferred by \code{positiveFusedLasso}.
+\describe{
+\item{\code{S}}{A list containing the (final) minor, major and total copy number
+estimates for the latent features, as inferred by
+\code{\link{positiveFusedLasso}}.}
 
-@slot E A list containing estimates of minor copy number and major copy
-       number inferred by \code{positiveFusedLasso}.
+\item{\code{S0}}{idem for the initial estimates.}
 
-@slot BIC A numeric value, the value of the Bayesian Information Criterion
-       of the model.
+\item{\code{W}}{A matrix containing weights inferred by \code{positiveFusedLasso}.}
 
-@slot PVE A numeric value, the percentage of variation explained by
-       the model.
+\item{\code{E}}{A list containing estimates of minor copy number and major copy
+number inferred by \code{positiveFusedLasso}.}
 
-@slot param A list of parameters: number of subclones and penalty
-       coefficients.
+\item{\code{BIC}}{A numeric value, the value of the Bayesian Information Criterion
+of the model.}
 
-@exportClass posFused
-}
+\item{\code{PVE}}{A numeric value, the percentage of variation explained by
+the model.}
+
+\item{\code{param}}{A list of parameters: number of subclones and penalty
+coefficients.}
+}}
+

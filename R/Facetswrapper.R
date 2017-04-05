@@ -13,7 +13,7 @@ loadFacetsdata <- function(pathFacets) {
         df <- data.frame(chr=dat$chrom, pos=dat$maploc)
         df$tcn <- 2*dat$rCountT/dat$rCountN
         df$dh <- 2*abs(dat$vafT-1/2)
-        df$dh[dat$het==0] <- NA_real_
+        df$dh[dat$het == 0] <- NA_real_
         return(df)
     })
     return(dat)
@@ -24,7 +24,7 @@ loadFacetsdata <- function(pathFacets) {
 #' @export
 #' @param pathFacets The path to load Facets data.
 #' @param output.dir Directory to save segmentation
-#' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
+#' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat == TCN}, the segmentation will be done on TCN only. 
 #' @return A list which contains the breakpoints by chromosome and also the binning of TCN, C1 and C2.
 #' @examples
 #' if (require("facets", quietly=TRUE)) {

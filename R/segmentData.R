@@ -10,7 +10,7 @@
 #'   \item{pos}{Position on the genome}
 #'   \item{chr}{Chromosome}
 #'   }
-#' @param stat "TCN or "C1C2" parameter to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only. 
+#' @param stat "TCN or "C1C2" parameter to segment the data. If \code{stat == TCN}, the segmentation will be done on TCN only. 
 #' @param verbose A logical value indicating whether to print extra information. Defaults to FALSE
 #' @return Binned Minor and Major copy number with list of breakpoints
 #' #' 
@@ -49,11 +49,11 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
     
     tcn <- lapply(dat, FUN = function(x) x$tcn)
     tcn <- Reduce(cbind, tcn)
-    if (stat=="C1C2") {
+    if (stat == "C1C2") {
         dh <- lapply(dat, FUN = function(x) x$dh)
         dh <- Reduce(cbind, dh)
         dataToSeg <- cbind(tcn, dh)
-    } else if (stat=="TCN") {
+    } else if (stat == "TCN") {
         dataToSeg <- cbind(tcn) 
     } 
     chrs <- unique(dat[[1]]$chr)
@@ -64,7 +64,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         if (verbose) {
             message(sprintf("chr %s", cc))
         }
-        ww <- which(dat[[1]]$chr==cc)
+        ww <- which(dat[[1]]$chr == cc)
         if (verbose) {
             message("Joint segmentation")
         }
@@ -77,7 +77,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         
         tcn <- as.matrix(tcn)
         
-        if (stat=="C1C2") {
+        if (stat == "C1C2") {
             dh <- as.matrix(dh)
             binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
             for (bb in seq_len(ncol(tcn))) {
@@ -90,8 +90,8 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
                 binDatDH[, bb] <- means
             }
             
-            idxNAC1 <- which(rowSums(is.na(binDatTCN))>0)
-            idxNAC2 <- which(rowSums(is.na(binDatDH))>0)
+            idxNAC1 <- which(rowSums(is.na(binDatTCN)) > 0)
+            idxNAC2 <- which(rowSums(is.na(binDatDH)) > 0)
             idxNA <- unique(c(idxNAC1, idxNAC2))
             if (length(idxNA)) {
                 binDatTCNwithoutNA <- binDatTCN[-idxNA, ]
@@ -113,7 +113,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
                 means <- binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatTCN[, bb] <- means
             }
-            idxNA <- which(rowSums(is.na(binDatTCN))>0)
+            idxNA <- which(rowSums(is.na(binDatTCN)) > 0)
             if (length(idxNA)) {
                 binDatTCNwithoutNA <- binDatTCN[-idxNA, ]
                 bkpPosByCHR[[cc]] <- bkpPos[-idxNA]

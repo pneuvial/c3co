@@ -20,11 +20,11 @@ positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
 
 \item{lambda2}{A real number, the coefficient for the fused penalty for major copy numbers}
 
-\item{eps}{criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps)}
+\item{eps}{criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2) < eps)}
 
 \item{max.iter}{maximum number of iterations of the algorithm}
 
-\item{warn}{issue a warning if Z1<=Z2 is not always satisfied? Defaults to FALSE}
+\item{warn}{issue a warning if Z1 <= Z2 is not always satisfied? Defaults to FALSE}
 
 \item{verbose}{if you want to print some information during running}
 }
@@ -39,9 +39,9 @@ dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
-bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
-regions <-list(c("(0,3)", "(0,1)","(1,2)"), 
-c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
+regions <-list(c("(0,3)", "(0,1)", "(1,2)"), 
+c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 M <- rbind(c(40, 30, 0), 
   c(0, 70, 15),

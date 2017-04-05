@@ -13,7 +13,7 @@ PSCBSwrapper(pathSegPSCBS, pattern = NULL, output.dir, stat)
 
 \item{output.dir}{Directory to save segmentation}
 
-\item{stat}{"TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.}
+\item{stat}{"TCN or "C1C2" paramater to segment the data. If \code{stat == TCN}, the segmentation will be done on TCN only.}
 }
 \value{
 A list which contains the breakpoints by chromosome and also the binning of TCN, C1 and C2.

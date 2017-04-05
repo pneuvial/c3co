@@ -31,14 +31,14 @@
 initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor=c("C1+C2", "C1", "C2"), verbose=FALSE) {
     n <- nrow(Y1) # number of samples
     L <- ncol(Y1) # number of loci/segments
-    stopifnot(nb.arch<=n)
+    stopifnot(nb.arch <= n)
     flavor <- match.arg(flavor)
     
     if (is.null(Y2)) {
         Y <- Y1
     } else {
-        stopifnot(nrow(Y2)==n)  ## sanity check
-        stopifnot(ncol(Y2)==L)  ## sanity check
+        stopifnot(nrow(Y2) == n)  ## sanity check
+        stopifnot(ncol(Y2) == L)  ## sanity check
         Y <- switch(flavor, 
                     "C1+C2" = Y1 + Y2,
                     "C1" = Y1,

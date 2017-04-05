@@ -3,14 +3,17 @@
 \docType{class}
 \name{c3coFit-class}
 \alias{c3coFit-class}
-\title{@title Class for the object create by \code{c3coFit} function}
+\title{Class for the object create by \code{c3coFit} function}
 \description{
-@slot bkp A list of breakpoints for each chromosome.
+Class for the object create by \code{c3coFit} function
 }
-\details{
-@slot segDat A list that contains segmented data.
+\section{Slots}{
 
-@slot fit A List of [\code{\linkS4class{posFused}}] objects.
+\describe{
+\item{\code{bkp}}{A list of breakpoints for each chromosome.}
 
-@exportClass c3coClass
-}
+\item{\code{segDat}}{A list that contains segmented data.}
+
+\item{\code{fit}}{A List of [\code{\linkS4class{posFused}}] objects.}
+}}
+

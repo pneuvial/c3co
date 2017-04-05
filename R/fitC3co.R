@@ -12,7 +12,7 @@
 #' the fused lasso on the minor and major copy number dimension and a vector
 #' named \code{nb.arch} of integers which is the number of archetypes in the
 #' model
-#' @param warn issue a warning if Z1<=Z2 is not satisfied for a candidate number of subclones? Defaults to TRUE
+#' @param warn issue a warning if Z1 <= Z2 is not satisfied for a candidate number of subclones? Defaults to TRUE
 #' @param \dots Further arguments to be passed to \code{\link{positiveFusedLasso}}
 #' @param verbose A logical value indicating whether to print extra
 #' information. Defaults to FALSE
@@ -45,8 +45,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     n <- nrow(Y1)
     nseg <- ncol(Y1)
     if (!is.null(Y2)) {
-        stopifnot(nrow(Y2)==n)
-        stopifnot(ncol(Y2)==nseg)
+        stopifnot(nrow(Y2) == n)
+        stopifnot(ncol(Y2) == nseg)
     }
     lambda1 <- parameters.grid$lambda1
     if (is.null(lambda1)) {
@@ -75,7 +75,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     if (is.null(nb.arch)) {
         nb.arch  <- seq(from=2, to=nseg-1, by=1)
         if (verbose) {
-            message("Parameter 'nb.arch' not provided. Using default value: ", )
+            message("Parameter 'nb.arch' not provided. Using default value: ")
             mstr(nb.arch)
         }
     }
@@ -107,7 +107,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             l2 <- NULL
             if (!is.null(Y2)) l2 <- cfg[, "lambda2"]
             res <- positiveFusedLasso(Y1, Y2=Y2, Z1=Z0$Z1, Z2=Z0$Z2, lambda1=l1, lambda2=l2, verbose=FALSE)
-            if (res@BIC<BICp) { ## BIC has improved: update best model
+            if (res@BIC < BICp) { ## BIC has improved: update best model
                 res.l <- res
                 BICp <- res@BIC
                 bestConfig <- cfg

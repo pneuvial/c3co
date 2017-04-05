@@ -16,13 +16,13 @@
 mixSubclones <- function(subClones, W) {
     
     ## Sanity check
-    idxHom <- which(subClones[[1]]$genotype!="0.5")
+    idxHom <- which(subClones[[1]]$genotype != "0.5")
     sc <- sapply(seq_len(length(subClones)-1), FUN = function(i) {
         # Test if genotype of i is equal to genotype of j
         genoI <- subClones[[i]]$genotype
         for(j in (i+1):length(subClones)) {
             genoJ <- subClones[[j]]$genotype  
-            try(if (sum(genoI==genoJ)!=length(genoI)) stop(sprintf("genotypes are not the same for sublones %s and %s", i, j )))
+            try(if (sum(genoI == genoJ) != length(genoI)) stop(sprintf("genotypes are not the same for sublones %s and %s", i, j)))
         }
     })
     
@@ -48,7 +48,7 @@ mixSubclones <- function(subClones, W) {
     if (is.vector(W)) {W <- matrix(W, nrow = 1)}
     df.res <- apply(W, MARGIN=1L, FUN=function(weights) {
         
-        if (sum(weights)>100) { stop("Fraction Tumor upper than 100, please check weight vector") }
+        if (sum(weights) > 100) { stop("Fraction Tumor upper than 100, please check weight vector") }
         fracN <- 100-sum(weights)
         weights <- weights/100
         fracN <- fracN/100

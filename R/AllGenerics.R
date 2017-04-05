@@ -83,7 +83,7 @@ setMethod(
         rownames(W) <- rownamesW
         colnames(W) <- sprintf("Subclone %s", letters[1:ncol(W)])
         if (!missing(listPheno)) {
-            if (ncol(listPheno)!=ncol(colsPheno)) {
+            if (ncol(listPheno) != ncol(colsPheno)) {
                 stop("listPheno and colsPheno must have the same number of columns")
             }
         }

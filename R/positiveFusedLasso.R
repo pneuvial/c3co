@@ -7,9 +7,9 @@
 #' @param Z2 A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates
 #' @param lambda1 A real number, the coefficient for the fused penalty for minor copy numbers 
 #' @param lambda2 A real number, the coefficient for the fused penalty for major copy numbers 
-#' @param eps criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2)<eps) 
+#' @param eps criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2) < eps) 
 #' @param max.iter maximum number of iterations of the algorithm
-#' @param warn issue a warning if Z1<=Z2 is not always satisfied? Defaults to FALSE
+#' @param warn issue a warning if Z1 <= Z2 is not always satisfied? Defaults to FALSE
 #' @param verbose if you want to print some information during running
 #' @return An object of class [\code{\linkS4class{posFused}}]
 #' @examples
@@ -39,7 +39,7 @@
 positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.iter=50, warn=FALSE, verbose=FALSE) {
     n <- nrow(Y1) # number of individuals
     L <- ncol(Y1) # number of loci/segments
-    stopifnot(eps>0)
+    stopifnot(eps > 0)
     nb.arch <- ncol(Z1)
     Z <- Z0 <- list(Z1=Z1, Z2=Z2)
     ## Z0 <- list(Z=Z1+Z2, Z1=Z1, Z2=Z2)
@@ -70,10 +70,10 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
        
         ## __________________________________________________
         ## STEP 3: check for convergence of the weights
-        if (iter>1) {
+        if (iter > 1) {
             delta <- sqrt(sum((W-W.old)^2))
         }
-        cond <- (iter>max.iter || delta<eps)
+        cond <- (iter > max.iter || delta < eps)
         
         if (verbose) message("delta:", round(delta, digits=4))
         W.old <- W
