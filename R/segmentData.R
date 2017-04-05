@@ -30,7 +30,7 @@
 #' len <- 500*10
 #' nbClones <- 3
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
-#' regions <-list(c("(0,3)", "(0,2)", "(1,2)"), 
+#' regions <- list(c("(0,3)", "(0,2)", "(1,2)"), 
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
 #'                               nbClones, bkps, regions)
@@ -81,7 +81,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
                            modelSelectionMethod="Birge")
         bkp <- resSeg$bestBkp
         pos <- dat[[1]]$pos[ww]
-        bkpPos <-rowMeans(cbind(pos[bkp], pos[bkp+1]))
+        bkpPos <- rowMeans(cbind(pos[bkp], pos[bkp+1]))
         xOut <- c(min(pos), bkpPos, max(pos))
         xOut <- sort(unique(xOut))
         
