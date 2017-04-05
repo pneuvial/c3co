@@ -1,17 +1,24 @@
 #' Create a mixture of subclones
 #'
-#' @param subClones The subclones used to create the mixture ideally from the function \code{buildSubClones}.
-#' @param W A matrix of weights in percentage [0,100] (without fraction of normal cells)
+#' @param subClones The subclones used to create the mixture ideally from
+#' the function \code{buildSubClones}.
+#' 
+#' @param W A matrix of weights in percentage [0,100] (without fraction of
+#' normal cells)
+#' 
 #' @return The mixture
+#' 
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 2
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10)
-#' regions <-list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
-#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
+#' regions <- list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
+#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
+#'                               nbClones, bkps, regions)
 #' mixture <- mixSubclones(datSubClone, c(20, 30))
+#' 
 #' @export
 mixSubclones <- function(subClones, W) {
     
@@ -22,7 +29,10 @@ mixSubclones <- function(subClones, W) {
         genoI <- subClones[[i]]$genotype
         for(j in (i+1):length(subClones)) {
             genoJ <- subClones[[j]]$genotype  
-            try(if (sum(genoI == genoJ) != length(genoI)) stop(sprintf("genotypes are not the same for sublones %s and %s", i, j)))
+            try({
+              if (sum(genoI == genoJ) != length(genoI))
+                  stop(sprintf("genotypes are not the same for sublones %s and %s", i, j))
+            })
         }
     })
     
@@ -48,7 +58,9 @@ mixSubclones <- function(subClones, W) {
     if (is.vector(W)) {W <- matrix(W, nrow = 1)}
     df.res <- apply(W, MARGIN=1L, FUN=function(weights) {
         
-        if (sum(weights) > 100) { stop("Fraction Tumor upper than 100, please check weight vector") }
+        if (sum(weights) > 100) {
+            stop("Fraction Tumor upper than 100, please check weight vector")
+        }
         fracN <- 100-sum(weights)
         weights <- weights/100
         fracN <- fracN/100
@@ -67,7 +79,10 @@ mixSubclones <- function(subClones, W) {
         c2[idxHom] <- NA_real_
         dh <- (c2-c1)/(c2+c1)
         dh[idxHom] <- NA_real_
-        data.frame(c1=c1, c2=c2, tcn=tcn, dh=dh, genotype=subClones[[1]]$genotype, chr=rep(1, times=length(c1)), pos=seq_along(c1))
+        data.frame(c1=c1, c2=c2, tcn=tcn, dh=dh,
+                   genotype=subClones[[1]]$genotype,
+                   chr=rep(1, times=length(c1)),
+                   pos=seq_along(c1))
     })
     
     return(df.res)

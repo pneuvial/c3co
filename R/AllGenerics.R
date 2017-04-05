@@ -168,10 +168,13 @@ setMethod(
             
             bb <- c(minMaxPos[cc, "minPos"], bkp[[cc]], minMaxPos[cc, "maxPos"])
             bb <- as.numeric(bb)
-            zz <- rbind(Z[start[cc], ], Z[start[cc]:(start[cc+1]-1), ], Z[start[cc+1]-1, ])
+            zz <- rbind(Z[start[cc], ],
+                        Z[start[cc]:(start[cc+1]-1), ],
+                        Z[start[cc+1]-1, ])
             arch <- factor(rep(letters[1:ncol(zz)], each=length(bb))) 
             zz <- c(zz)
-            datCC <- data.frame(position=bb, "CopyNumber"=zz, arch=arch, chr=cc, stat=vv)
+            datCC <- data.frame(position=bb, CopyNumber=zz, arch=arch,
+                                chr=cc, stat=vv)
             dfList[[kk]] <- datCC
         }
         df.CHR <- do.call(rbind, args=dfList)

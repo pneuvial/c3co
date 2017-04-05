@@ -15,8 +15,9 @@ trim.heatmap <- function(data, trim) {
 }
 
 #' Heatmap function
+#' 
 #' @param x, matrix
-#' @param Rowv = TRUE, 
+#' @param Rowv = TRUE,
 #' @param Colv = if (symm) "Rowv" else TRUE,
 #' @param distfun = dist,
 #' @param hclustfun = hclust,

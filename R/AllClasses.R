@@ -52,6 +52,3 @@ setClass(
     fit = "list"
   )
 )
-
-##  LocalWords:  positiveFusedLasso param exportClass posFused coFit
-##  LocalWords:  setClass

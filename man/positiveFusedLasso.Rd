@@ -8,23 +8,31 @@ positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
   max.iter = 50, warn = FALSE, verbose = FALSE)
 }
 \arguments{
-\item{Y1}{A matrix containing the segmented minor copy number (\code{n} patients in row and \code{L} segments in columns)}
+\item{Y1}{A matrix containing the segmented minor copy number
+(\code{n} patients in row and \code{L} segments in columns)}
 
-\item{Y2}{A matrix containing the segmented major copy number (\code{n} patients in row and \code{L} segments in columns)}
+\item{Y2}{A matrix containing the segmented major copy number
+(\code{n} patients in row and \code{L} segments in columns)}
 
-\item{Z1}{A \code{L} x \code{p} matrix containing the \code{L} minor copy numbers of the \code{p} initial latent feature estimates}
+\item{Z1}{A \code{L} x \code{p} matrix containing the \code{L}
+minor copy numbers of the \code{p} initial latent feature estimates}
 
-\item{Z2}{A \code{L} x \code{p} matrix containing the \code{L} major copy numbers of the \code{p} initial latent feature estimates}
+\item{Z2}{A \code{L} x \code{p} matrix containing the \code{L}
+major copy numbers of the \code{p} initial latent feature estimates}
 
-\item{lambda1}{A real number, the coefficient for the fused penalty for minor copy numbers}
+\item{lambda1}{A real number, the coefficient for the fused penalty
+for minor copy numbers}
 
-\item{lambda2}{A real number, the coefficient for the fused penalty for major copy numbers}
+\item{lambda2}{A real number, the coefficient for the fused penalty
+for major copy numbers}
 
-\item{eps}{criterion to stop algorithm (when W do not change sqrt(sum((W-W.old)^2) < eps)}
+\item{eps}{criterion to stop algorithm (when W do not change
+sqrt(sum((W-W.old)^2) < eps)}
 
 \item{max.iter}{maximum number of iterations of the algorithm}
 
-\item{warn}{issue a warning if Z1 <= Z2 is not always satisfied? Defaults to FALSE}
+\item{warn}{issue a warning if Z1 <= Z2 is not always satisfied?
+Defaults to FALSE}
 
 \item{verbose}{if you want to print some information during running}
 }
@@ -40,9 +48,10 @@ dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
-regions <-list(c("(0,3)", "(0,1)", "(1,2)"), 
+regions <- list(c("(0,3)", "(0,1)", "(1,2)"), 
 c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
+datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
+                              nbClones, bkps, regions)
 M <- rbind(c(40, 30, 0), 
   c(0, 70, 15),
   c(10, 0, 35),
@@ -52,9 +61,11 @@ simu <- mixSubclones(subClones=datSubClone, M)
 seg <- segmentData(simu)
 lambda <- 0.001
 Z <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
-res <- positiveFusedLasso(seg$Y1, seg$Y2, Z$Z1, Z$Z2, lambda1=lambda, lambda2=lambda)
+res <- positiveFusedLasso(seg$Y1, seg$Y2, Z$Z1, Z$Z2,
+                          lambda1=lambda, lambda2=lambda)
 showPosFused(res)
-resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL, lambda1=lambda, lambda2=lambda)
+resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL,
+                           lambda1=lambda, lambda2=lambda)
 showPosFused(resC)
 
 }

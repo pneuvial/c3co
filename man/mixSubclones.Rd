@@ -7,9 +7,11 @@
 mixSubclones(subClones, W)
 }
 \arguments{
-\item{subClones}{The subclones used to create the mixture ideally from the function \code{buildSubClones}.}
+\item{subClones}{The subclones used to create the mixture ideally from
+the function \code{buildSubClones}.}
 
-\item{W}{A matrix of weights in percentage [0,100] (without fraction of normal cells)}
+\item{W}{A matrix of weights in percentage [0,100] (without fraction of
+normal cells)}
 }
 \value{
 The mixture
@@ -23,7 +25,9 @@ dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 2
 bkps <- list(c(100, 250)*10, c(150, 400)*10)
-regions <-list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
-datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
+regions <- list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
+datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
+                              nbClones, bkps, regions)
 mixture <- mixSubclones(datSubClone, c(20, 30))
+
 }
