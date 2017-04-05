@@ -34,7 +34,6 @@
 #' showPosFused(res)
 #' resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL, lambda1=lambda, lambda2=lambda)
 #' showPosFused(resC)
-#' @importFrom parallel mclapply
 positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.iter=50, warn=FALSE, verbose=FALSE) {
     n <- nrow(Y1) # number of individuals
     L <- ncol(Y1) # number of loci/segments
@@ -54,15 +53,6 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
         lst[["Z2"]] <- list(Y=Y2, lambda=lambda2)
     }
 
-    ## Preload namespaces needed by get.Z() so that they will not have to
-    ## be reloaded in each mclapply() fork.
-    requireNamespace("Matrix")
-    requireNamespace("glmnet")
-
-    ## In the first iteration, call lapply() so that S4 method dispatch
-    ## will be cached and then available to all of the following forks.
-    mclapply <- base::lapply
-
     while (!cond) {
         iter <- iter + 1
         ## __________________________________________________
@@ -72,12 +62,9 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
         
         ## __________________________________________________
         ## STEP 2: optimize wrt Z (fixed W)
-        Z <- mclapply(lst, FUN=function(ll) {  ## TODO: use future_lapply!
+        Z <- lapply(lst, FUN=function(ll) {  ## TODO: use future_lapply!
             get.Z(ll[["Y"]], ll[["lambda"]], W=W)
         })
-        
-        ## After the first iteration, use parallel::mclapply() 
-##        rm(list = "mclapply")
        
         ## __________________________________________________
         ## STEP 3: check for convergence of the weights
