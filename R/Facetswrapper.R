@@ -35,7 +35,6 @@ loadFacetsdata <- function(pathFacets){
 #' resc3co <- c3co(NULL, pathSeg=output.dir)
 #' }
 #' }
-
 Facetswrapper <- function (pathFacets, output.dir, stat){
     if (!requireNamespace("facets", quietly=TRUE)) {
         stop("Package 'facets' needed. Please install it from github/mskcc",             call. = FALSE)
