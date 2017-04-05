@@ -7,8 +7,8 @@ loadFacetsdata <- function(pathFacets) {
     ### Load Facets data
     dat <- lapply(list.files(pathFacets), FUN=function(ff) {
         df <- facets::readSnpMatrix(file.path(pathFacets, ff))
-        xx=facets::preProcSample(df)
-        dat=xx$pmat
+        xx <- facets::preProcSample(df)
+        dat <- xx$pmat
         ## Rename chromosome, x and CT to segment with c3co
         df <- data.frame(chr=dat$chrom, pos=dat$maploc)
         df$tcn <- 2*dat$rCountT/dat$rCountN

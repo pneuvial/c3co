@@ -3,10 +3,10 @@
 #' @importFrom stats quantile
 trim.heatmap <- function(data,trim) {
     ## data <- data - mean(data, na.rm = TRUE)
-    data = t(scale(t(data)))
+    data <- t(scale(t(data)))
     q <- quantile(data, probs = c((1 - trim), trim), na.rm = TRUE)
-    data[data < q[1]] = q[1]
-    data[data > q[2]] = q[2]
+    data[data < q[1]] <- q[1]
+    data[data > q[2]] <- q[2]
     maxi <- max(data, na.rm = TRUE)
     mini <- min(data, na.rm = TRUE)
     data[!is.na(data) & data > 0] <-  data[!is.na(data) &  data > 0]/maxi
@@ -283,7 +283,7 @@ heatmap.3 <- function(x,
                 stop("'ColSideColors' must be a matrix of nrow(x) rows")
             lmat <- rbind(lmat[1, ] + 1, c(NA_real_, 1), lmat[2, ] + 1)
             #lhei <- c(lhei[1], 0.2, lhei[2])
-            lhei=c(lhei[1], side.height.fraction*ColSideColorsSize/2, lhei[2])
+            lhei <- c(lhei[1], side.height.fraction*ColSideColorsSize/2, lhei[2])
         }
         
         if (!missing(RowSideColors)) {
@@ -313,16 +313,16 @@ heatmap.3 <- function(x,
             image(x=rbind(1:nr), col = RowSideColors[rowInd], axes = FALSE)
         } else {
             par(mar = c(margins[1], 0, 0, 0.5))
-            rsc = t(RowSideColors[,rowInd, drop=FALSE])
-            rsc.colors = matrix()  ## FIXME: == matrix(NA) - inefficient data type
-            rsc.names = names(table(rsc))
-            rsc.i = 1
+            rsc <- t(RowSideColors[,rowInd, drop=FALSE])
+            rsc.colors <- matrix()  ## FIXME: == matrix(NA) - inefficient data type
+            rsc.names <- names(table(rsc))
+            rsc.i <- 1
             for (rsc.name in rsc.names) {
-                rsc.colors[rsc.i] = rsc.name
-                rsc[rsc == rsc.name] = rsc.i
-                rsc.i = rsc.i + 1
+                rsc.colors[rsc.i] <- rsc.name
+                rsc[rsc == rsc.name] <- rsc.i
+                rsc.i <- rsc.i + 1
             }
-            rsc = matrix(as.numeric(rsc), nrow = dim(rsc)[1])
+            rsc <- matrix(as.numeric(rsc), nrow = dim(rsc)[1])
             image(x=t(rsc), col = as.vector(rsc.colors), axes = FALSE)
             if (length(rownames(RowSideColors)) > 0) {
                 axis(side=1L, at=0:(dim(rsc)[2] - 1)/max(1,(dim(rsc)[2] - 1)), labels=rownames(RowSideColors), las = 2, tick = FALSE)
@@ -337,16 +337,16 @@ heatmap.3 <- function(x,
             image(x=cbind(1:nc), col = ColSideColors[colInd], axes = FALSE)
         } else {
             par(mar = c(0.5, 0, 0, margins[2]))
-            csc = ColSideColors[colInd, , drop=FALSE]
-            csc.colors = matrix()  ## FIXME: == matrix(NA) - inefficient data type
-            csc.names = names(table(csc))
-            csc.i = 1
+            csc <- ColSideColors[colInd, , drop=FALSE]
+            csc.colors <- matrix()  ## FIXME: == matrix(NA) - inefficient data type
+            csc.names <- names(table(csc))
+            csc.i <- 1
             for (csc.name in csc.names) {
-                csc.colors[csc.i] = csc.name
-                csc[csc == csc.name] = csc.i
-                csc.i = csc.i + 1
+                csc.colors[csc.i] <- csc.name
+                csc[csc == csc.name] <- csc.i
+                csc.i <- csc.i + 1
             }
-            csc = matrix(as.numeric(csc), nrow = dim(csc)[1])
+            csc <- matrix(as.numeric(csc), nrow = dim(csc)[1])
             image(csc, col = as.vector(csc.colors), axes = FALSE)
             if (length(colnames(ColSideColors)) > 0) {
                 axis(side=2L, at=0:(dim(csc)[2] - 1)/max(1,(dim(csc)[2] - 1)), labels=colnames(ColSideColors), las = 2, tick = FALSE)

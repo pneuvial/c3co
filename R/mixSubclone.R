@@ -53,10 +53,10 @@ mixSubclones <- function(subClones, W) {
         weights <- weights/100
         fracN <- fracN/100
         
-        c1 <- rowSums(cbind(sapply(seq(along=subClones), FUN=function(ii) {
+        c1 <- rowSums(cbind(sapply(seq(along.with=subClones), FUN=function(ii) {
             weights[ii]*c1t[,ii]
         }),fracN*rowMeans(c1n)))
-        c2 <- rowSums(cbind(sapply(seq(along=subClones), FUN=function(ii) {
+        c2 <- rowSums(cbind(sapply(seq(along.with=subClones), FUN=function(ii) {
             weights[ii]*c2t[,ii]
         }),fracN*rowMeans(c2n)))
         tcn <- c1+c2
