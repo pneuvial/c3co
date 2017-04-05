@@ -22,8 +22,8 @@
 #'
 #' @exportClass posFused 
 setClass(
-  "posFused",
-  representation(
+  Class = "posFused",
+  representation = representation(
     S = "list",
     S0 = "list",
     W = "matrix",
@@ -43,11 +43,10 @@ setClass(
 #' 
 #' @slot fit A List of [\code{\linkS4class{posFused}}] objects.
 #' 
-#' @exportClass c3coClass
-#'
+#' @exportClass c3coFit
 setClass(
-  "c3coFit",
-  representation(
+  Class = "c3coFit",
+  representation = representation(
     bkp = "list",
     segDat = "list",
     fit = "list"
