@@ -123,8 +123,8 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
             }
             ## Define Y1 and Y2
             Y <- rbind(Y, binDatTCNwithoutNA)
-            Y1 <- NA
-            Y2 <- NA
+            Y1 <- NA_real_
+            Y2 <- NA_real_
         }
     }
     return(list(Y1=Y1, Y2=Y2, Y=Y, bkp=bkpPosByCHR))

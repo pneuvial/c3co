@@ -279,7 +279,7 @@ heatmap.3 <- function(x,
             #stop("'ColSideColors' must be a matrix")
             if (!is.character(ColSideColors) || nrow(ColSideColors) != nc)
                 stop("'ColSideColors' must be a matrix of nrow(x) rows")
-            lmat <- rbind(lmat[1, ] + 1, c(NA, 1), lmat[2, ] + 1)
+            lmat <- rbind(lmat[1, ] + 1, c(NA_real_, 1), lmat[2, ] + 1)
             #lhei <- c(lhei[1], 0.2, lhei[2])
             lhei=c(lhei[1], side.height.fraction*ColSideColorsSize/2, lhei[2])
         }
@@ -289,7 +289,7 @@ heatmap.3 <- function(x,
             #stop("'RowSideColors' must be a matrix")
             if (!is.character(RowSideColors) || ncol(RowSideColors) != nr)
                 stop("'RowSideColors' must be a matrix of ncol(x) columns")
-            lmat <- cbind(lmat[, 1] + 1, c(rep(NA, times=nrow(lmat) - 1), 1), lmat[,2] + 1)
+            lmat <- cbind(lmat[, 1] + 1, c(rep(NA_real_, times=nrow(lmat) - 1), 1), lmat[,2] + 1)
             #lwid <- c(lwid[1], 0.2, lwid[2])
             lwid <- c(lwid[1], side.height.fraction*RowSideColorsSize/2, lwid[2])
         }
@@ -372,7 +372,7 @@ heatmap.3 <- function(x,
     retval$breaks <- breaks
     retval$col <- col
     if (!invalid(na.color) & any(is.na(x))) { # load library(gplots)
-        mmat <- ifelse(is.na(x), 1, NA)
+        mmat <- ifelse(is.na(x), 1, NA_real_)
         image(x=1:nc, y=1:nr, z=mmat, axes = FALSE, xlab = "", ylab = "",
                         col = na.color, add = TRUE)
     }

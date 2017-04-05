@@ -13,7 +13,7 @@ loadFacetsdata <- function(pathFacets) {
         df <- data.frame(chr=dat$chrom, pos=dat$maploc)
         df$tcn <- 2*dat$rCountT/dat$rCountN
         df$dh <- 2*abs(dat$vafT-1/2)
-        df$dh[dat$het==0] <- NA
+        df$dh[dat$het==0] <- NA_real_
         return(df)
     })
     return(dat)

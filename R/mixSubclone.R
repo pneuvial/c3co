@@ -61,12 +61,12 @@ mixSubclones <- function(subClones, W) {
         }),fracN*rowMeans(c2n)))
         tcn <- c1+c2
         
-        c1[idxHom] <- NA
-        c1[idxHom] <- NA
-        c2[idxHom] <- NA
-        c2[idxHom] <- NA
+        c1[idxHom] <- NA_real_
+        c1[idxHom] <- NA_real_
+        c2[idxHom] <- NA_real_
+        c2[idxHom] <- NA_real_
         dh <- (c2-c1)/(c2+c1)
-        dh[idxHom] <- NA
+        dh[idxHom] <- NA_real_
         data.frame(c1=c1,c2=c2, tcn=tcn, dh=dh,genotype=subClones[[1]]$genotype, chr=rep(1, times=length(c1)), pos=seq_along(c1))
     })
     
