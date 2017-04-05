@@ -40,9 +40,9 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor
         stopifnot(nrow(Y2)==n)  ## sanity check
         stopifnot(ncol(Y2)==L)  ## sanity check
         Y <- switch(flavor, 
-                    "C1+C2"= Y1 + Y2,
-                    "C1"= Y1,
-                    "C2"= Y2)
+                    "C1+C2" = Y1 + Y2,
+                    "C1" = Y1,
+                    "C2" = Y2)
     }
     if (!init.random) {
         ## hierarchical agglomerative clustering on Y

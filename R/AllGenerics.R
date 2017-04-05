@@ -66,7 +66,7 @@ setMethod(
 #' @exportMethod Wplot
 setGeneric(
     name = "Wplot",
-    def = function(this, idxBest, rownamesW =NULL, col=NULL, margins=c(5, 7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5, ...) {
+    def = function(this, idxBest, rownamesW=NULL, col=NULL, margins=c(5, 7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5, ...) {
         standardGeneric("Wplot")
     }
 )
@@ -77,7 +77,7 @@ setGeneric(
 setMethod(
     f = "Wplot",
     signature = signature("c3coFit"),
-    definition = function(this, idxBest, rownamesW=NULL, col= NULL, margins=c(5, 7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5, ...) {
+    definition = function(this, idxBest, rownamesW=NULL, col=NULL, margins=c(5, 7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5, ...) {
         if (is.null(col)) { col <- colorRampPalette(brewer.pal(9, 'GnBu'))(100) }
         W <- this@fit[[idxBest]]@W
         rownames(W) <- rownamesW
