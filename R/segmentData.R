@@ -33,6 +33,7 @@
 #' res2 <- segmentData(dat, stat="TCN")
 #'
 #' @importFrom matrixStats binMeans
+#' @importFrom jointseg jointSeg
 segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
     stat <- match.arg(stat)
     
@@ -67,7 +68,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
         if (verbose) {
             message("Joint segmentation")
         }
-        resSeg <- jointseg::jointSeg(Y=dataToSeg[ww,], method="RBS", K=100, modelSelectionMethod="Birge")
+        resSeg <- jointSeg(Y=dataToSeg[ww,], method="RBS", K=100, modelSelectionMethod="Birge")
         bkp <- resSeg$bestBkp
         pos <- dat[[1]]$pos[ww]
         bkpPos <-rowMeans(cbind(pos[bkp], pos[bkp+1]))
