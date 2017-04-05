@@ -5,28 +5,28 @@
 #'
 #' @param Y1 A numeric n x S matrix, segment-level minor copy numbers. n is
 #' the number of samples and S the number of segments
-#' 
+#'
 #' @param Y2 An optional numeric n x S matrix, segment-level major copy
 #' numbers. If \code{NULL}, the model is estimated on Y1 only
-#' 
+#'
 #' @param parameters.grid A list composed of two vectors named \code{lambda1}
 #' and \code{lambda2} of real numbers which are the penalty coefficients for
 #' the fused lasso on the minor and major copy number dimension and a vector
 #' named \code{nb.arch} of integers which is the number of archetypes in the
 #' model
-#' 
+#'
 #' @param warn issue a warning if Z1 <= Z2 is not satisfied for a candidate
 #' number of subclones? Defaults to TRUE
-#' 
+#'
 #' @param \dots Further arguments to be passed to
 #' \code{\link{positiveFusedLasso}}
-#' 
+#'
 #' @param verbose A logical value indicating whether to print extra
 #' information. Defaults to FALSE
-#' 
+#'
 #' @return A list of \code{k} objects of class [\code{\linkS4class{c3coFit}}],
 #' where \code{k} is the number of candidate number of subclones
-#' 
+#'
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
@@ -53,7 +53,7 @@
 fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
                     ..., verbose=FALSE) {
     ## Sanity checks
-  
+
     n <- nrow(Y1)
     nseg <- ncol(Y1)
     if (!is.null(Y2)) {
@@ -106,7 +106,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         bestConfig <- NULL
 
         Z0 <- initializeZ(Y1, Y2=Y2, nb.arch=pp, ...)
-        
+
         if (verbose) {
             message("Parameter configuration: (",
                     paste(colnames(configs), collapse="; "), ")")
@@ -130,7 +130,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         fitList[[it]] <- res.l
         ## sanity check: minor CN < major CN in the best parameter
         ## configurations (not for all configs by default)
-        if (!is.null(Y2) & warn) {  
+        if (!is.null(Y2) & warn) {
             Z <- slot(res.l, "S")
             dZ <- Z$Z2 - Z$Z1
             tol <- 1e-2  ## arbitrary tolerance...
@@ -138,8 +138,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
                 warning("For model with ", pp, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
             }
         }
-        
-        
+
+
         it <- it + 1
         pp <- nb.arch[it]
         ## Z doesn't change anymore

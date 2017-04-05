@@ -7,32 +7,32 @@
 #'   \item{pos}{Position on the genome}
 #'   \item{chr}{Chromosome}
 #' }
-#' 
+#'
 #' @param parameters.grid A list composed of two vectors named \code{lambda1}
 #' and \code{lambda2} of real numbers which are the penalty coefficients for
 #' the fused lasso on the minor and major copy number dimension and a vector
 #' named \code{nb.arch} of integers which is the number of archetypes in the
 #' model
-#' 
+#'
 #' @param stat TCN or C1C2
-#' 
+#'
 #' @param pathSeg Path to the file that contain segmentation, by default
 #' \code{NULL}.
-#' 
+#'
 #' @param \dots Further arguments to be passed to \code{\link{fitC3co}}
-#' 
+#'
 #' @param verbose A logical value indicating whether to print extra
 #' information. Defaults to FALSE
-#' 
+#'
 #' @return An object of class [\code{\linkS4class{c3coFit}}]
-#' 
+#'
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 3
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
-#' regions <- list(c("(0,3)", "(0,2)", "(1,2)"), 
+#' regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
 #'                               nbClones, bkps, regions)
@@ -64,7 +64,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
                 stop("Argument 'dat' should contain columns named", str)
             }
         })
-        expectedL <- nrow(dat[[1]]) 
+        expectedL <- nrow(dat[[1]])
         checklength <- lapply(dat, FUN=function(dd) {
             nrowDD <- nrow(dd)
             if (nrowDD != expectedL) {
@@ -82,7 +82,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         parameters.grid <- list(lambda1=lambda1, lambda2=lambda2,
                                 nb.arch=nb.arch)
     }
-    
+
     checkGrid <- lapply(names(parameters.grid), FUN=function(na) {
         ecn <- c("lambda1", "lambda2", "nb.arch") ## expected
         mm <- match(na, ecn)
@@ -91,7 +91,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
             stop("Argument 'parameters.grid' should contain ", str)
         }
     })
-    
+
     if (!is.null(pathSeg)) {
         if (verbose) {
             print("Reading segmentation results from file: ")
@@ -102,11 +102,11 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         seg <- segmentData(dat, stat=stat, verbose=verbose)
     }
     bkpList <- seg$bkp
-    
+
     reslist <- new("c3coFit")
     reslist@bkp <- bkpList
     reslist@segDat <- list(Y1=seg$Y1, Y2=seg$Y2, Y=seg$Y)
-    
+
     if (stat == "C1C2") {
         Y1 <- t(seg$Y1)
         Y2 <- t(seg$Y2)
@@ -114,7 +114,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         Y1 <- t(seg$Y)
         Y2 <- NULL
     }
-    
+
     reslist@fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid,
                            ..., verbose=verbose)
     return(reslist)

@@ -2,7 +2,7 @@
 #' @importFrom Matrix bandSparse
 get.Z <- function(W, Y, lambda) {
     stopifnot(length(lambda) == 1L)  ## sanity check
-    
+
     L <- ncol(Y)
     p <- ncol(W)
     Dm1 <- -bandSparse(L, L, k=0:(L-1))
@@ -15,6 +15,6 @@ get.Z <- function(W, Y, lambda) {
     Z <- apply(Z, MARGIN=2L, FUN=function(z) {
       -rev(cumsum(rev(z)))
     })
-    
+
     Z
 }

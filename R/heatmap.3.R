@@ -15,7 +15,7 @@ trim.heatmap <- function(data, trim) {
 }
 
 #' Heatmap function
-#' 
+#'
 #' @param x, matrix
 #' @param Rowv = TRUE,
 #' @param Colv = if (symm) "Rowv" else TRUE,
@@ -128,7 +128,7 @@ heatmap.3 <- function(x,
                       ColSideColorsSize = 1,
                       RowSideColorsSize = 1,
                       KeyValueName="", ...) {
-    
+
     invalid <- function(x) {
         if (missing(x) || is.null(x) || length(x) == 0)
             return(TRUE)
@@ -138,7 +138,7 @@ heatmap.3 <- function(x,
             return(all(is.na(x)))
         else return(FALSE)
     }
-    
+
     x <- as.matrix(x)
     scale01 <- function(x, low = min(x), high = max(x)) {
         x <- (x - low)/(high - low)
@@ -216,8 +216,8 @@ heatmap.3 <- function(x,
     else {
         rowInd <- nr:1
     }
-    
-    
+
+
     ddc <- Colv
     colInd <- 1:nc
     retval$rowInd <- rowInd
@@ -276,7 +276,7 @@ heatmap.3 <- function(x,
         lwid <- c(keysize, 4)
     if (missing(lmat) || is.null(lmat)) {
         lmat <- rbind(4:3, 2:1)
-        
+
         if (!missing(ColSideColors)) {
             #if (!is.matrix(ColSideColors))
             #stop("'ColSideColors' must be a matrix")
@@ -286,7 +286,7 @@ heatmap.3 <- function(x,
             #lhei <- c(lhei[1], 0.2, lhei[2])
             lhei <- c(lhei[1], side.height.fraction*ColSideColorsSize/2, lhei[2])
         }
-        
+
         if (!missing(RowSideColors)) {
             #if (!is.matrix(RowSideColors))
             #stop("'RowSideColors' must be a matrix")
@@ -298,16 +298,16 @@ heatmap.3 <- function(x,
         }
         lmat[is.na(lmat)] <- 0
     }
-    
+
     if (length(lhei) != nrow(lmat))
         stop("lhei must have length = nrow(lmat) = ", nrow(lmat))
     if (length(lwid) != ncol(lmat))
         stop("lwid must have length = ncol(lmat) =", ncol(lmat))
     op <- par(no.readonly = TRUE)
     on.exit(par(op))
-    
+
     layout(lmat, widths = lwid, heights = lhei, respect = FALSE)
-    
+
     if (!missing(RowSideColors)) {
         if (!is.matrix(RowSideColors)) {
             par(mar = c(margins[1], 0, 0, 0.5))
@@ -330,9 +330,9 @@ heatmap.3 <- function(x,
             }
         }
     }
-    
+
     if (!missing(ColSideColors)) {
-        
+
         if (!is.matrix(ColSideColors)) {
             par(mar = c(0.5, 0, 0, margins[2]))
             image(x=cbind(1:nc), col = ColSideColors[colInd], axes = FALSE)
@@ -354,7 +354,7 @@ heatmap.3 <- function(x,
             }
         }
     }
-    
+
     par(mar = c(margins[1], 0, 0.5, margins[2]))
     x <- t(x)
     cellnote <- t(cellnote)
@@ -451,7 +451,7 @@ heatmap.3 <- function(x,
             min.raw <- min(x, na.rm = TRUE)
             max.raw <- max(x, na.rm = TRUE)
         }
-        
+
         z <- seq(from=min.raw, to=max.raw, length.out = length(col))
         image(z = matrix(z, ncol = 1), col = col, breaks = tmpbreaks,
                         xaxt = "n", yaxt = "n")

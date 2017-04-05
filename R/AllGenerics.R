@@ -1,7 +1,7 @@
 #' Display the content of an object of class posFused
 #'
 #' @param this an object of class: [\code{\linkS4class{posFused}}]
-#' 
+#'
 #' @rdname showPosFused
 #' @exportMethod showPosFused
 setGeneric(
@@ -33,35 +33,35 @@ setMethod(
 )
 
 #' Plot the weight matrix
-#' 
+#'
 #' @param this An object of class \code{\linkS4class{c3coFit}}
-#' 
+#'
 #' @param idxBest A integer, the number of latent features
-#' 
+#'
 #' @param rownamesW A vector that contains identification of patients
-#' 
+#'
 #' @param col A vector that contains colors for the heatmap
-#' 
+#'
 #' @param margins A vector margins
-#' 
+#'
 #' @param posLegend position of the legend to be passed to \code{plot}
-#' 
+#'
 #' @param listPheno A matrix that contains details on phenotype for each
 #'        patient. Could be location or time point of tumors for example
-#' 
+#'
 #' @param colsPheno Matrix that containts colors for each type of variable
 #'        in phenotype
-#' 
+#'
 #' @param colLegend colors for clinical data
-#' 
+#'
 #' @param labelLegend labels for clinical data
-#' 
+#'
 #' @param cexCol size of labels of columns by (default 1.5)
-#' 
+#'
 #' @param ... other paramaters to personalize heatmap (see \code{heatmap.3})
-#' 
+#'
 #' @return a heatmap of W
-#' 
+#'
 #' @rdname Wplot
 #' @exportMethod Wplot
 setGeneric(
@@ -89,7 +89,7 @@ setMethod(
         }
         if (!missing(colsPheno)) {
             heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col, scale="none", cexCol=cexCol, cexRow=1.5, margins = margins, key = TRUE, RowSideColors=t(colsPheno), ...)
-            
+
             #heatmap.3(W, Rowv=TRUE, dendrogram="row", RowSideColors=t(colsPheno), col=col, scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5, margins = c(5, 10), ...)
             if (!is.na(posLegend)) {
                 legend(posLegend, legend=labelLegend, fill=colLegend, border=FALSE, bty="n", y.intersp = 1, cex=1)
@@ -97,12 +97,12 @@ setMethod(
         } else {
             heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col, scale="none", cexCol=cexCol, cexRow=1.5, margins = margins, key = TRUE, ...)
             #heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col, scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5, margins = margins, ...)
-        }  
+        }
     })
 
 
 #' Display the content of an object of class c3coFit
-#' 
+#'
 #' @param this An object of class \code{\linkS4class{c3coFit}}
 #' @return nothing
 #' @rdname showC3coFit
@@ -129,13 +129,13 @@ setMethod(
     }
 )
 
-#' Create a data frame to plot Subclones 
-#' 
+#' Create a data frame to plot Subclones
+#'
 #' @param this An object of class \code{\linkS4class{c3coFit}}
 #' @param minMaxPos Matrix containing min and max position for each chromosome
 #' @param chromosomes A vector that contains the focused chromosomes
-#' @param var TCN, Minor or Major 
-#' @param idxBest a integer that is the best fitting of the data 
+#' @param var TCN, Minor or Major
+#' @param idxBest a integer that is the best fitting of the data
 #' @return A data frame to plot Latent profiles with ggplot
 #' @rdname createZdf
 #' @exportMethod createZdf
@@ -156,7 +156,7 @@ setMethod(
         lengthCHR <- sapply(bkp, FUN=length)
         start <- c(1, cumsum(lengthCHR)+1)
         fitZ <- this@fit[[idxBest]]@S
-        
+
         dfList <- list()
         configs <- expand.grid(var=var, chr=chromosomes)
         print(configs)
@@ -165,13 +165,13 @@ setMethod(
             cc <- configs[kk, "chr"]
             lab <- labs[[vv]]
             Z <- fitZ[[lab]]
-            
+
             bb <- c(minMaxPos[cc, "minPos"], bkp[[cc]], minMaxPos[cc, "maxPos"])
             bb <- as.numeric(bb)
             zz <- rbind(Z[start[cc], ],
                         Z[start[cc]:(start[cc+1]-1), ],
                         Z[start[cc+1]-1, ])
-            arch <- factor(rep(letters[1:ncol(zz)], each=length(bb))) 
+            arch <- factor(rep(letters[1:ncol(zz)], each=length(bb)))
             zz <- c(zz)
             datCC <- data.frame(position=bb, CopyNumber=zz, arch=arch,
                                 chr=cc, stat=vv)

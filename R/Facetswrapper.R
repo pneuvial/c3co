@@ -1,9 +1,9 @@
 #' Function to load Facets data and transform them to c3co format
 #'
 #' @param pathFacets The path to load Facets data csv.gz format.
-#' 
+#'
 #' @return A data frame under PSCBS format
-#' 
+#'
 #' @export
 loadFacetsdata <- function(pathFacets) {
     ### Load Facets data
@@ -25,15 +25,15 @@ loadFacetsdata <- function(pathFacets) {
 #' output.dir
 #'
 #' @param pathFacets The path to load Facets data.
-#' 
+#'
 #' @param output.dir Directory to save segmentation
-#' 
+#'
 #' @param stat "TCN or "C1C2" paramater to segment the data.
 #' If \code{stat == TCN}, the segmentation will be done on TCN only.
-#' 
+#'
 #' @return A list which contains the breakpoints by chromosome and also the
 #' binning of TCN, C1 and C2.
-#' 
+#'
 #' @examples
 #' if (require("facets", quietly=TRUE)) {
 #' pathFacets <- system.file("extdata", package="facets")
@@ -43,7 +43,7 @@ loadFacetsdata <- function(pathFacets) {
 #' resc3co <- c3co(NULL, pathSeg=output.dir)
 #' }
 #' }
-#' 
+#'
 #' @export
 Facetswrapper <- function(pathFacets, output.dir, stat) {
     if (!requireNamespace("facets", quietly=TRUE)) {

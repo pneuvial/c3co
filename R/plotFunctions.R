@@ -1,11 +1,11 @@
 #' Function to plot PVE
 #'
 #' @param res result from [\code{posFused}]
-#' 
+#'
 #' @param bestNbLatent best number of latent profiles.
-#' 
+#'
 #' @param ylim a vector that define min and max of y-axis
-#' 
+#'
 #' @return PVE curve
 #'
 #' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab ylim
@@ -21,7 +21,7 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
     if (!is.null(bestNbLatent)) {
         gg <- gg + geom_vline(xintercept=bestNbLatent, lty=2)
     }
-    gg  
+    gg
 }
 
 
@@ -29,9 +29,9 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
 #' Plot latent profiles along chromosomes
 #'
 #' @param df data.frame object output from \code{createZdf}
-#' 
+#'
 #' @return plot latent profiles along chromosomes
-#' 
+#'
 #' @importFrom ggplot2 ggplot geom_step aes_ facet_grid labeller label_both theme_bw scale_x_continuous labs
 #' @export
 Zplot <- function(df) {

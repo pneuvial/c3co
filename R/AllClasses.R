@@ -20,7 +20,7 @@
 #' @slot param A list of parameters: number of subclones and penalty
 #'       coefficients.
 #'
-#' @exportClass posFused 
+#' @exportClass posFused
 setClass(
   Class = "posFused",
   representation = representation(
@@ -36,13 +36,13 @@ setClass(
 
 
 #' Class for the object create by \code{c3coFit} function
-#' 
+#'
 #' @slot bkp A list of breakpoints for each chromosome.
-#' 
+#'
 #' @slot segDat A list that contains segmented data.
-#' 
+#'
 #' @slot fit A List of [\code{\linkS4class{posFused}}] objects.
-#' 
+#'
 #' @exportClass c3coFit
 setClass(
   Class = "c3coFit",

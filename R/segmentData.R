@@ -10,16 +10,16 @@
 #'   \item{pos}{Position on the genome}
 #'   \item{chr}{Chromosome}
 #' }
-#' 
+#'
 #' @param stat "TCN or "C1C2" parameter to segment the data.
 #' If \code{stat == TCN}, the segmentation will be done on TCN only.
-#' 
+#'
 #' @param verbose A logical value indicating whether to print extra
 #' information. Defaults to FALSE
-#' 
+#'
 #' @return Binned Minor and Major copy number with list of breakpoints
 #'
-#' 
+#'
 #' @references Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple
 #'   Change Points in the Mean for Large Sample.
 #'   http://hal.archives-ouvertes.fr/hal-00327146/
@@ -30,7 +30,7 @@
 #' len <- 500*10
 #' nbClones <- 3
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
-#' regions <- list(c("(0,3)", "(0,2)", "(1,2)"), 
+#' regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
 #'                               nbClones, bkps, regions)
@@ -45,7 +45,7 @@
 #' @export
 segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
     stat <- match.arg(stat)
-    
+
     checkColNames <- lapply(dat, FUN=function(dd) {
         coln <- colnames(dd)
         ecn <- c("tcn", "dh", "pos", "chr") ## expected
@@ -55,7 +55,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
             stop("Argument 'data' should contain columns named ", str)
         }
     })
-    
+
     tcn <- lapply(dat, FUN = function(x) x$tcn)
     tcn <- Reduce(cbind, tcn)
     if (stat == "C1C2") {
@@ -63,8 +63,8 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         dh <- Reduce(cbind, dh)
         dataToSeg <- cbind(tcn, dh)
     } else if (stat == "TCN") {
-        dataToSeg <- cbind(tcn) 
-    } 
+        dataToSeg <- cbind(tcn)
+    }
     chrs <- unique(dat[[1]]$chr)
     bkpPosByCHR <- list()
     Y1 <- Y2 <- NULL
@@ -84,9 +84,9 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         bkpPos <- rowMeans(cbind(pos[bkp], pos[bkp+1]))
         xOut <- c(min(pos), bkpPos, max(pos))
         xOut <- sort(unique(xOut))
-        
+
         tcn <- as.matrix(tcn)
-        
+
         if (stat == "C1C2") {
             dh <- as.matrix(dh)
             binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
@@ -99,7 +99,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
                 means <- binMeans(y=dh[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatDH[, bb] <- means
             }
-            
+
             idxNAC1 <- which(rowSums(is.na(binDatTCN)) > 0)
             idxNAC2 <- which(rowSums(is.na(binDatDH)) > 0)
             idxNA <- unique(c(idxNAC1, idxNAC2))
