@@ -69,10 +69,12 @@ trim.heatmap <- function(data,trim) {
 #' @param RowSideColorsSize = 1,
 #' @param KeyValueName = "", name of key
 #' @param ... additional parameters of \code{image}
-#' @export
-#' @importFrom graphics abline axis hist image layout lines mtext par plot plot.new rect text title
-#' @importFrom stats as.dendrogram density dist hclust median order.dendrogram reorder sd
 #' @return A Heatmap
+#'
+#' @importFrom graphics abline axis hist image layout lines mtext par plot plot.new rect text title
+#' @importFrom stats as.dendrogram density dist hclust median order.dendrogram reorder
+#' @importFrom matrixStats colSds rowSds
+#' @export
 heatmap.3 <- function(x,
                       Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
                       distfun = dist,
@@ -236,13 +238,13 @@ heatmap.3 <- function(x,
     if (scale == "row") {
         retval$rowMeans <- rm <- rowMeans(x, na.rm = na.rm)
         x <- sweep(x, MARGIN=1L, STATS=rm)
-        retval$rowSDs <- sx <- apply(x, MARGIN=1L, FUN=sd, na.rm = na.rm)
+        retval$rowSDs <- sx <- rowSds(x, na.rm = na.rm)
         x <- sweep(x, MARGIN=1L, STATS=sx, FUN="/")
     }
     else if (scale == "column") {
         retval$colMeans <- rm <- colMeans(x, na.rm = na.rm)
         x <- sweep(x, MARGIN=2L, STATS=rm)
-        retval$colSDs <- sx <- apply(x, MARGIN=2L, FUN=sd, na.rm = na.rm)
+        retval$colSDs <- sx <- colSds(x, na.rm = na.rm)
         x <- sweep(x, MARGIN=2L, STATS=sx, FUN="/")
     }
     if (missing(breaks) || is.null(breaks) || length(breaks) < 1) {
