@@ -27,6 +27,7 @@
 #' res <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
 #' resC <- initializeZ(seg$Y1+seg$Y2, nb.arch=4)
 #'
+#' @importFrom stats dist hclust cutree
 initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor=c("C1+C2", "C1", "C2"), verbose=FALSE) {
     n <- nrow(Y1) # number of samples
     L <- ncol(Y1) # number of loci/segments
@@ -45,10 +46,10 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor
     }
     if (!init.random){
         ## hierarchical agglomerative clustering on Y
-        dd <- stats::dist(Y)
+        dd <- dist(Y)
 #        dd <- as.dist(1 - 1/2*(cor(t(Y1)) + cor(t(Y2))))
-        hc <- stats::hclust(dd, method="ward.D")
-        cluster <- stats::cutree(hc, nb.arch)
+        hc <- hclust(dd, method="ward.D")
+        cluster <- cutree(hc, nb.arch)
         if (verbose) message("Clustering in ", nb.arch, " groups: ", cluster)
         
         ## subclones are initialized as intra-cluster averages

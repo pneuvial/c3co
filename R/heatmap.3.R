@@ -1,14 +1,15 @@
 ## Source: Benjamin Sadacca, Institut Curie
 ## ## trim.heatmap
+#' @importFrom stats quantile
 trim.heatmap <- function(data,trim){
     ## data <- data - mean(data, na.rm = TRUE)
     data = t(scale(t(data)))
-    q <- stats::quantile(data, c((1 - trim), trim), na.rm = TRUE)
+    q <- quantile(data, probs = c((1 - trim), trim), na.rm = TRUE)
     data[data < q[1]] = q[1]
     data[data > q[2]] = q[2]
     maxi <- max(data, na.rm = TRUE)
     mini <- min(data, na.rm = TRUE)
-    data[!is.na(data) & data > 0] <- data[!is.na(data) &  data > 0]/maxi
+    data[!is.na(data) & data > 0] <-  data[!is.na(data) &  data > 0]/maxi
     data[!is.na(data) & data < 0] <- -data[!is.na(data) &  data < 0]/mini
     return(data)
 }
@@ -17,8 +18,8 @@ trim.heatmap <- function(data,trim){
 #' @param x, matrix
 #' @param Rowv = TRUE, 
 #' @param Colv = if (symm) "Rowv" else TRUE,
-#' @param distfun = stats::dist,
-#' @param hclustfun = stats::hclust,
+#' @param distfun = dist,
+#' @param hclustfun = hclust,
 #' @param dendrogram = c("both","row", "column", "none"),
 #' @param symm = FALSE,
 #' @param scale = c("none","row", "column"),
@@ -38,8 +39,8 @@ trim.heatmap <- function(data,trim){
 #' @param na.color = par("bg"),
 #' @param trace = c("none", "column","row", "both"),
 #' @param tracecol = "cyan",
-#' @param hline = stats::median(breaks),
-#' @param vline = stats::median(breaks),
+#' @param hline = median(breaks),
+#' @param vline = median(breaks),
 #' @param linecol = tracecol,
 #' @param margins = c(5,5),
 #' @param ColSideColors, (optional) character vector of length ncol(x) containing the color names for a horizontal side bar that may be used to annotate the columns of x.
@@ -70,11 +71,12 @@ trim.heatmap <- function(data,trim){
 #' @param ... additional parameters of \code{image}
 #' @export
 #' @importFrom graphics abline axis hist image layout lines mtext par plot plot.new rect text title
+#' @importFrom stats as.dendrogram density dist hclust median order.dendrogram reorder sd
 #' @return A Heatmap
 heatmap.3 <- function(x,
                       Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
-                      distfun = stats::dist,
-                      hclustfun = stats::hclust,
+                      distfun = dist,
+                      hclustfun = hclust,
                       dendrogram = c("both","row", "column", "none"),
                       symm = FALSE,
                       scale = c("none","row", "column"),
@@ -94,8 +96,8 @@ heatmap.3 <- function(x,
                       na.color = par("bg"),
                       trace = c("none", "column","row", "both"),
                       tracecol = "cyan",
-                      hline = stats::median(breaks),
-                      vline = stats::median(breaks),
+                      hline = median(breaks),
+                      vline = median(breaks),
                       linecol = tracecol,
                       margins = c(5,5),
                       ColSideColors,
@@ -189,22 +191,22 @@ heatmap.3 <- function(x,
     }
     if (inherits(Rowv, "dendrogram")) {
         ddr <- Rowv
-        rowInd <- stats::order.dendrogram(ddr)
+        rowInd <- order.dendrogram(ddr)
     }
     else if (is.integer(Rowv)) {
         hcr <- hclustfun(distfun(x))
-        ddr <- stats::as.dendrogram(hcr)
-        ddr <- stats::reorder(ddr, Rowv)
-        rowInd <- stats::order.dendrogram(ddr)
+        ddr <- as.dendrogram(hcr)
+        ddr <- reorder(ddr, Rowv)
+        rowInd <- order.dendrogram(ddr)
         if (nr != length(rowInd))
             stop("row dendrogram ordering gave index of wrong length")
     }
     else if (isTRUE(Rowv)) {
         Rowv <- rowMeans(x, na.rm = na.rm)
         hcr <- hclustfun(distfun(x))
-        ddr <- stats::as.dendrogram(hcr)
-        ddr <- stats::reorder(ddr, Rowv)
-        rowInd <- stats::order.dendrogram(ddr)
+        ddr <- as.dendrogram(hcr)
+        ddr <- reorder(ddr, Rowv)
+        rowInd <- order.dendrogram(ddr)
         if (nr != length(rowInd))
             stop("row dendrogram ordering gave index of wrong length")
     }
@@ -234,13 +236,13 @@ heatmap.3 <- function(x,
     if (scale == "row") {
         retval$rowMeans <- rm <- rowMeans(x, na.rm = na.rm)
         x <- sweep(x, 1, rm)
-        retval$rowSDs <- sx <- apply(x, 1, stats::sd, na.rm = na.rm)
+        retval$rowSDs <- sx <- apply(x, 1, sd, na.rm = na.rm)
         x <- sweep(x, 1, sx, "/")
     }
     else if (scale == "column") {
         retval$colMeans <- rm <- colMeans(x, na.rm = na.rm)
         x <- sweep(x, 2, rm)
-        retval$colSDs <- sx <- apply(x, 2, stats::sd, na.rm = na.rm)
+        retval$colSDs <- sx <- apply(x, 2, sd, na.rm = na.rm)
         x <- sweep(x, 2, sx, "/")
     }
     if (missing(breaks) || is.null(breaks) || length(breaks) < 1) {
@@ -460,7 +462,7 @@ heatmap.3 <- function(x,
             mtext(side = 1, "Column Z-Score", line = 2)
         else mtext(side = 1, KeyValueName, line = 2,cex=cexKey)
         if (density.info == "density") {
-            dens <- stats::density(x, adjust = densadj, na.rm = TRUE)
+            dens <- density(x, adjust = densadj, na.rm = TRUE)
             omit <- dens$x < min(breaks) | dens$x > max(breaks)
             dens$x <- dens$x[-omit]
             dens$y <- dens$y[-omit]

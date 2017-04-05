@@ -31,6 +31,8 @@
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' res <- segmentData(dat)
 #' res2 <- segmentData(dat, stat="TCN")
+#'
+#' @importFrom matrixStats binMeans
 segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
     stat <- match.arg(stat)
     
@@ -78,12 +80,12 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
             dh <- as.matrix(dh)
             binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
             for (bb in 1:ncol(tcn)) {
-                means <- matrixStats::binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
+                means <- binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatTCN[, bb] <- means
             }
             binDatDH <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(dh))
             for (bb in 1:ncol(dh)) {
-                means <- matrixStats::binMeans(y=dh[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
+                means <- binMeans(y=dh[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatDH[, bb] <- means
             }
             
@@ -107,7 +109,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
         } else {
             binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
             for (bb in 1:ncol(tcn)) {
-                means <- matrixStats::binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
+                means <- binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatTCN[, bb] <- means
             }
             idxNA <- which(rowSums(is.na(binDatTCN))>0)

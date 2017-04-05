@@ -39,6 +39,7 @@ M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.ma
 dat <- mixSubclones(subClones=datSubClone, M)
 res <- segmentData(dat)
 res2 <- segmentData(dat, stat="TCN")
+
 }
 \references{
 Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple
