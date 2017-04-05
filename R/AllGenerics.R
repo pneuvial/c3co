@@ -1,34 +1,19 @@
-#' Display the content of an object of class posFused
-#'
-#' @param this an object of class: [\code{\linkS4class{posFused}}]
-#'
-#' @rdname showPosFused
-#' @exportMethod showPosFused
-setGeneric(
-    name = "showPosFused",
-    def = function(this) {
-        standardGeneric("showPosFused")
-    }
-)
-
 #' @importFrom utils str
-#' @rdname showPosFused
 setMethod(
-    f = "showPosFused",
+    f = "show",
     signature = signature("posFused"),
-    definition = function(this) {
-        cat("Subclones\n")
-        cat(str(this@S), "\n")
-        cat("Weights\n")
-        cat(str(this@W), "\n")
-        cat("Estimates\n")
-        cat(str(this@E), "\n")
-        cat("BIC\n")
-        cat(this@BIC, "\n")
-        cat("PVE\n")
-        cat(this@PVE, "\n")
-        cat("param\n")
-        cat(str(this@param), "\n")
+    definition = function(object) {
+        cat("Object of class 'posFused':\n")
+        cat("Subclones:")
+        str(object@S)
+        cat("Weight matrix:\n")
+        str(object@W)
+        cat("Copy-number estimates:\n")
+        str(object@E)
+        cat("Bayesian Information Criterion (BIC):", object@BIC, "\n")
+        cat("Percentage of Variance Explained (PVE):", object@PVE, "\n")
+        cat("Parameters:\n")
+        str(object@param)
     }
 )
 
@@ -89,7 +74,7 @@ setMethod(
         }
         if (!missing(colsPheno)) {
             heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col, scale="none", cexCol=cexCol, cexRow=1.5, margins = margins, key = TRUE, RowSideColors=t(colsPheno), ...)
-
+            
             #heatmap.3(W, Rowv=TRUE, dendrogram="row", RowSideColors=t(colsPheno), col=col, scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5, margins = c(5, 10), ...)
             if (!is.na(posLegend)) {
                 legend(posLegend, legend=labelLegend, fill=colLegend, border=FALSE, bty="n", y.intersp = 1, cex=1)
@@ -101,31 +86,18 @@ setMethod(
     })
 
 
-#' Display the content of an object of class c3coFit
-#'
-#' @param this An object of class \code{\linkS4class{c3coFit}}
-#' @return nothing
-#' @rdname showC3coFit
-#' @exportMethod showC3coFit
-setGeneric(
-    name = "showC3coFit",
-    def = function(this) {
-        standardGeneric("showC3coFit")
-    }
-)
-
 #' @importFrom utils str
-#' @rdname showC3coFit
 setMethod(
-    f = "showC3coFit",
+    f = "show",
     signature = signature("c3coFit"),
-    definition = function(this) {
-        cat("bkp\n")
-        cat(str(this@bkp), "\n")
-        cat("segmented Data\n")
-        cat(str(this@segDat), "\n")
-        cat("results of positive fused lasso\n")
-        cat(str(this@fit), "\n")
+    definition = function(object) {
+        cat("Object of class 'c3coFit':\n")
+        cat("Breakpoints:\n")
+        str(object@bkp)
+        cat("Segmented data:\n")
+        str(object@segDat)
+        cat("Results of positive fused lasso:\n")
+        cat("List of", length(object@fit), "objects of class 'posFused'")
     }
 )
 
@@ -156,7 +128,7 @@ setMethod(
         lengthCHR <- sapply(bkp, FUN=length)
         start <- c(1, cumsum(lengthCHR)+1)
         fitZ <- this@fit[[idxBest]]@S
-
+        
         dfList <- list()
         configs <- expand.grid(var=var, chr=chromosomes)
         print(configs)
@@ -165,7 +137,7 @@ setMethod(
             cc <- configs[kk, "chr"]
             lab <- labs[[vv]]
             Z <- fitZ[[lab]]
-
+            
             bb <- c(minMaxPos[cc, "minPos"], bkp[[cc]], minMaxPos[cc, "maxPos"])
             bb <- as.numeric(bb)
             zz <- rbind(Z[start[cc], ],

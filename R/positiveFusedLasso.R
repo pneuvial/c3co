@@ -51,10 +51,10 @@
 #' Z <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
 #' res <- positiveFusedLasso(seg$Y1, seg$Y2, Z$Z1, Z$Z2,
 #'                           lambda1=lambda, lambda2=lambda)
-#' showPosFused(res)
+#' res
 #' resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL,
 #'                            lambda1=lambda, lambda2=lambda)
-#' showPosFused(resC)
+#' resC
 #'
 #' @importFrom methods new
 #' @export

@@ -8,30 +8,30 @@ fitC3co(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, ...,
   verbose = FALSE)
 }
 \arguments{
-\item{Y1}{A numeric n x S matrix, segment-level minor copy numbers. n is
-the number of samples and S the number of segments}
+\item{Y1}{A numeric n x S matrix, segment-level minor copy numbers. n is the
+number of samples and S the number of segments}
 
-\item{Y2}{An optional numeric n x S matrix, segment-level major copy
-numbers. If \code{NULL}, the model is estimated on Y1 only}
+\item{Y2}{An optional numeric n x S matrix, segment-level major copy numbers.
+If \code{NULL}, the model is estimated on Y1 only}
 
-\item{parameters.grid}{A list composed of two vectors named \code{lambda1}
-and \code{lambda2} of real numbers which are the penalty coefficients for
-the fused lasso on the minor and major copy number dimension and a vector
-named \code{nb.arch} of integers which is the number of archetypes in the
+\item{parameters.grid}{A list composed of two vectors named \code{lambda1} 
+and \code{lambda2} of real numbers which are the penalty coefficients for 
+the fused lasso on the minor and major copy number dimension and a vector 
+named \code{nb.arch} of integers which is the number of archetypes in the 
 model}
 
-\item{warn}{issue a warning if Z1 <= Z2 is not satisfied for a candidate
+\item{warn}{issue a warning if Z1 <= Z2 is not satisfied for a candidate 
 number of subclones? Defaults to TRUE}
 
-\item{\dots}{Further arguments to be passed to
+\item{\dots}{Further arguments to be passed to 
 \code{\link{positiveFusedLasso}}}
 
-\item{verbose}{A logical value indicating whether to print extra
-information. Defaults to FALSE}
+\item{verbose}{A logical value indicating whether to print extra information.
+Defaults to FALSE}
 }
 \value{
 A list of \code{k} objects of class [\code{\linkS4class{c3coFit}}],
-where \code{k} is the number of candidate number of subclones
+  where \code{k} is the number of candidate number of subclones
 }
 \description{
 Estimate c3co model parameters from segment-level copy number data
