@@ -43,10 +43,10 @@ loadPSCBSdata <- function(pathSegPSCBS, pattern=NULL) {
 #' @param stat "TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.
 #' @param pattern if you have several patients in the pathSegPSCBS directory. 
 #' @return A list which contains the breakpoints by chromosome and also the binning of TCN, C1 and C2.
-PSCBSwrapper <- function(pathSegPSCBS,pattern=NULL, output.dir, stat) {
+PSCBSwrapper <- function(pathSegPSCBS, pattern=NULL, output.dir, stat) {
     dat <- loadPSCBSdata(pathSegPSCBS, pattern)
     ### Joint segmentation of all samples
     resSeg <- segmentData(dat, stat=stat)
     saveRDS(resSeg, file=file.path(output.dir, "segDat.rds"))
-    message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
+    message(sprintf("segment data has been saved to %s in segDat.rds file\n", output.dir)) 
 }

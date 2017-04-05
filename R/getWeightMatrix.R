@@ -19,10 +19,10 @@ getWeightMatrix <- function(prop.max, prob.min, nb.arch, nb.samp, sparse.coeff=0
     for (ss in seq_len(nb.samp)) {
         ind <- sample(size=nbSparse[ss], x=1:nb.arch)
         for (ii in ind) {
-            if (sum(M[ss,])>=100) { 
-                M[ss,ii] <- 100-sum(M[ss,]-contamVector[ss])
+            if (sum(M[ss, ])>=100) { 
+                M[ss, ii] <- 100-sum(M[ss, ]-contamVector[ss])
             }
-            M[ss,ii] <- ceiling(rbinom(1, size=(100-contamVector[ss])-sum(M[ss,]), prob=0.65)/5)*5
+            M[ss, ii] <- ceiling(rbinom(1, size=(100-contamVector[ss])-sum(M[ss, ]), prob=0.65)/5)*5
         }
     }
     return(M)

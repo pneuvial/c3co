@@ -1,7 +1,7 @@
 ## Source: Benjamin Sadacca, Institut Curie
 ## ## trim.heatmap
 #' @importFrom stats quantile
-trim.heatmap <- function(data,trim) {
+trim.heatmap <- function(data, trim) {
     ## data <- data - mean(data, na.rm = TRUE)
     data <- t(scale(t(data)))
     q <- quantile(data, probs = c((1 - trim), trim), na.rm = TRUE)
@@ -79,11 +79,11 @@ heatmap.3 <- function(x,
                       Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
                       distfun = dist,
                       hclustfun = hclust,
-                      dendrogram = c("both","row", "column", "none"),
+                      dendrogram = c("both", "row", "column", "none"),
                       symm = FALSE,
-                      scale = c("none","row", "column"),
+                      scale = c("none", "row", "column"),
                       na.rm = TRUE,
-                      revC = identical(Colv,"Rowv"),
+                      revC = identical(Colv, "Rowv"),
                       add.expr,
                       breaks,
                       symbreaks = max(x < 0, na.rm = TRUE) || scale != "none",
@@ -96,12 +96,12 @@ heatmap.3 <- function(x,
                       notecex = 1,
                       notecol = "cyan",
                       na.color = par("bg"),
-                      trace = c("none", "column","row", "both"),
+                      trace = c("none", "column", "row", "both"),
                       tracecol = "cyan",
                       hline = median(breaks),
                       vline = median(breaks),
                       linecol = tracecol,
-                      margins = c(5,5),
+                      margins = c(5, 5),
                       ColSideColors,
                       RowSideColors,
                       side.height.fraction=0.3,
@@ -126,7 +126,7 @@ heatmap.3 <- function(x,
                       lwid = NULL,
                       ColSideColorsSize = 1,
                       RowSideColorsSize = 1,
-                      KeyValueName="",...) {
+                      KeyValueName="", ...) {
     
     invalid <- function(x) {
         if (missing(x) || is.null(x) || length(x) == 0)
@@ -291,7 +291,7 @@ heatmap.3 <- function(x,
             #stop("'RowSideColors' must be a matrix")
             if (!is.character(RowSideColors) || ncol(RowSideColors) != nr)
                 stop("'RowSideColors' must be a matrix of ncol(x) columns")
-            lmat <- cbind(lmat[, 1] + 1, c(rep(NA_real_, times=nrow(lmat) - 1), 1), lmat[,2] + 1)
+            lmat <- cbind(lmat[, 1] + 1, c(rep(NA_real_, times=nrow(lmat) - 1), 1), lmat[, 2] + 1)
             #lwid <- c(lwid[1], 0.2, lwid[2])
             lwid <- c(lwid[1], side.height.fraction*RowSideColorsSize/2, lwid[2])
         }
@@ -313,7 +313,7 @@ heatmap.3 <- function(x,
             image(x=rbind(1:nr), col = RowSideColors[rowInd], axes = FALSE)
         } else {
             par(mar = c(margins[1], 0, 0, 0.5))
-            rsc <- t(RowSideColors[,rowInd, drop=FALSE])
+            rsc <- t(RowSideColors[, rowInd, drop=FALSE])
             rsc.colors <- matrix()  ## FIXME: == matrix(NA) - inefficient data type
             rsc.names <- names(table(rsc))
             rsc.i <- 1
@@ -325,7 +325,7 @@ heatmap.3 <- function(x,
             rsc <- matrix(as.numeric(rsc), nrow = dim(rsc)[1])
             image(x=t(rsc), col = as.vector(rsc.colors), axes = FALSE)
             if (length(rownames(RowSideColors)) > 0) {
-                axis(side=1L, at=0:(dim(rsc)[2] - 1)/max(1,(dim(rsc)[2] - 1)), labels=rownames(RowSideColors), las = 2, tick = FALSE)
+                axis(side=1L, at=0:(dim(rsc)[2] - 1)/max(1, (dim(rsc)[2] - 1)), labels=rownames(RowSideColors), las = 2, tick = FALSE)
             }
         }
     }
@@ -349,7 +349,7 @@ heatmap.3 <- function(x,
             csc <- matrix(as.numeric(csc), nrow = dim(csc)[1])
             image(csc, col = as.vector(csc.colors), axes = FALSE)
             if (length(colnames(ColSideColors)) > 0) {
-                axis(side=2L, at=0:(dim(csc)[2] - 1)/max(1,(dim(csc)[2] - 1)), labels=colnames(ColSideColors), las = 2, tick = FALSE)
+                axis(side=2L, at=0:(dim(csc)[2] - 1)/max(1, (dim(csc)[2] - 1)), labels=colnames(ColSideColors), las = 2, tick = FALSE)
             }
         }
     }
@@ -462,7 +462,7 @@ heatmap.3 <- function(x,
             mtext(side = 1, "Row Z-Score", line = 2)
         else if (scale == "column")
             mtext(side = 1, "Column Z-Score", line = 2)
-        else mtext(side = 1, KeyValueName, line = 2,cex=cexKey)
+        else mtext(side = 1, KeyValueName, line = 2, cex=cexKey)
         if (density.info == "density") {
             dens <- density(x, adjust = densadj, na.rm = TRUE)
             omit <- dens$x < min(breaks) | dens$x > max(breaks)
@@ -488,7 +488,7 @@ heatmap.3 <- function(x,
             mtext(side = 2, "Count", line = 2)
         }
         else title("percentage of
-clone in sample",cex.main=cexColorKey)
+clone in sample", cex.main=cexColorKey)
     }
     else plot.new()
     retval$colorTable <- data.frame(low = retval$breaks[-length(retval$breaks)],

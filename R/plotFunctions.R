@@ -7,7 +7,7 @@
 #'
 #' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab ylim
 #' @export
-pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0,1)) {
+pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
     PVEs <- sapply(res, FUN = function(rr) rr@PVE)
     nb.arch <- sapply(res, FUN = function(rr) rr@param$nb.arch)
     df.PVE <- data.frame(PVE=PVEs, nb.arch=nb.arch)
@@ -28,7 +28,7 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0,1)) {
 #' @importFrom ggplot2 ggplot geom_step aes_ facet_grid labeller label_both theme_bw scale_x_continuous labs
 Zplot <- function(df) {
     gg <- ggplot(df)
-    gg <- gg + geom_step(aes_(~position, ~CopyNumber, group=~arch, col=~arch,lty=~arch), direction="hv", lwd=1)
+    gg <- gg + geom_step(aes_(~position, ~CopyNumber, group=~arch, col=~arch, lty=~arch), direction="hv", lwd=1)
     gg <- gg + facet_grid(stat~chr, scales="free", labeller=labeller(.cols=label_both))
     gg <- gg + theme_bw()
     gg <- gg + labs(colour = "Subclone", lty="Subclone")

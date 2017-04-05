@@ -28,16 +28,16 @@ loadFacetsdata <- function(pathFacets) {
 #' @return A list which contains the breakpoints by chromosome and also the binning of TCN, C1 and C2.
 #' @examples
 #' if (require("facets", quietly=TRUE)) {
-#' pathFacets <- system.file("extdata",package="facets")
+#' pathFacets <- system.file("extdata", package="facets")
 #' output.dir <- R.utils::Arguments$getWritablePath("output")
-#' Facetswrapper(pathFacets,output.dir=output.dir, stat="TCN")
+#' Facetswrapper(pathFacets, output.dir=output.dir, stat="TCN")
 #' \dontrun{
 #' resc3co <- c3co(NULL, pathSeg=output.dir)
 #' }
 #' }
 Facetswrapper <- function(pathFacets, output.dir, stat) {
     if (!requireNamespace("facets", quietly=TRUE)) {
-        stop("Package 'facets' needed. Please install it from github/mskcc",             call. = FALSE)
+        stop("Package 'facets' needed. Please install it from github/mskcc", call. = FALSE)
     }
     ### To do may be cut this function into several function
     dat <- loadFacetsdata(pathFacets)
@@ -45,5 +45,5 @@ Facetswrapper <- function(pathFacets, output.dir, stat) {
     resSeg <-  segmentData(dat, stat=stat)
     ### Perform the c3co method
     saveRDS(resSeg, file=file.path(output.dir, "segDat.rds"))
-    message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
+    message(sprintf("segment data has been saved to %s in segDat.rds file\n", output.dir)) 
 }

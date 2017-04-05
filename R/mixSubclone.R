@@ -8,10 +8,10 @@
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 2
-#' bkps <- list(c(100,250)*10, c(150,400)*10)
-#' regions <-list(c("(0,3)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"))
+#' bkps <- list(c(100, 250)*10, c(150, 400)*10)
+#' regions <-list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
-#' mixture <- mixSubclones(datSubClone, c(20,30))
+#' mixture <- mixSubclones(datSubClone, c(20, 30))
 #' @export
 mixSubclones <- function(subClones, W) {
     
@@ -54,11 +54,11 @@ mixSubclones <- function(subClones, W) {
         fracN <- fracN/100
         
         c1 <- rowSums(cbind(sapply(seq(along.with=subClones), FUN=function(ii) {
-            weights[ii]*c1t[,ii]
-        }),fracN*rowMeans(c1n)))
+            weights[ii]*c1t[, ii]
+        }), fracN*rowMeans(c1n)))
         c2 <- rowSums(cbind(sapply(seq(along.with=subClones), FUN=function(ii) {
-            weights[ii]*c2t[,ii]
-        }),fracN*rowMeans(c2n)))
+            weights[ii]*c2t[, ii]
+        }), fracN*rowMeans(c2n)))
         tcn <- c1+c2
         
         c1[idxHom] <- NA_real_
@@ -67,7 +67,7 @@ mixSubclones <- function(subClones, W) {
         c2[idxHom] <- NA_real_
         dh <- (c2-c1)/(c2+c1)
         dh[idxHom] <- NA_real_
-        data.frame(c1=c1,c2=c2, tcn=tcn, dh=dh,genotype=subClones[[1]]$genotype, chr=rep(1, times=length(c1)), pos=seq_along(c1))
+        data.frame(c1=c1, c2=c2, tcn=tcn, dh=dh, genotype=subClones[[1]]$genotype, chr=rep(1, times=length(c1)), pos=seq_along(c1))
     })
     
     return(df.res)

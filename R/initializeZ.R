@@ -13,9 +13,9 @@
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 3
-#' bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
-#' regions <-list(c("(0,3)", "(0,1)","(1,2)"), 
-#' c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+#' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
+#' regions <-list(c("(0,3)", "(0,1)", "(1,2)"), 
+#' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 #' M <- rbind(c(40, 30, 0), 
 #'   c(0, 70, 15),

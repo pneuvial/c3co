@@ -26,7 +26,7 @@ setMethod(
         cat("BIC\n")
         cat(this@BIC, "\n")
         cat("PVE\n")
-        cat(this@PVE,"\n")
+        cat(this@PVE, "\n")
         cat("param\n")
         cat(str(this@param), "\n")
     }
@@ -66,7 +66,7 @@ setMethod(
 #' @exportMethod Wplot
 setGeneric(
     name = "Wplot",
-    def = function(this, idxBest, rownamesW =NULL, col=NULL, margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...) {
+    def = function(this, idxBest, rownamesW =NULL, col=NULL, margins=c(5, 7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5, ...) {
         standardGeneric("Wplot")
     }
 )
@@ -77,7 +77,7 @@ setGeneric(
 setMethod(
     f = "Wplot",
     signature = signature("c3coFit"),
-    definition = function(this, idxBest, rownamesW=NULL, col= NULL,margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...) {
+    definition = function(this, idxBest, rownamesW=NULL, col= NULL, margins=c(5, 7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5, ...) {
         if (is.null(col)) { col <- colorRampPalette(brewer.pal(9, 'GnBu'))(100) }
         W <- this@fit[[idxBest]]@W
         rownames(W) <- rownamesW
@@ -88,15 +88,15 @@ setMethod(
             }
         }
         if (!missing(colsPheno)) {
-            heatmap.3(W, Rowv=TRUE,dendrogram="row", col=col,scale="none", cexCol=cexCol, cexRow=1.5,margins = margins, key = TRUE,  RowSideColors=t(colsPheno),...)
+            heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col, scale="none", cexCol=cexCol, cexRow=1.5, margins = margins, key = TRUE, RowSideColors=t(colsPheno), ...)
             
-            #heatmap.3(W, Rowv=TRUE, dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = c(5,10),...)
+            #heatmap.3(W, Rowv=TRUE, dendrogram="row", RowSideColors=t(colsPheno), col=col, scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5, margins = c(5, 10), ...)
             if (!is.na(posLegend)) {
-                legend(posLegend,legend=labelLegend, fill=colLegend,border=FALSE, bty="n", y.intersp = 1, cex=1)
+                legend(posLegend, legend=labelLegend, fill=colLegend, border=FALSE, bty="n", y.intersp = 1, cex=1)
             }
         } else {
-            heatmap.3(W, Rowv=TRUE,dendrogram="row", col=col,scale="none", cexCol=cexCol, cexRow=1.5,margins = margins, key = TRUE, ...)
-            #heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = margins, ...)
+            heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col, scale="none", cexCol=cexCol, cexRow=1.5, margins = margins, key = TRUE, ...)
+            #heatmap.3(W, Rowv=TRUE, dendrogram="row", col=col, scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5, margins = margins, ...)
         }  
     })
 
@@ -121,11 +121,11 @@ setMethod(
     signature = signature("c3coFit"),
     definition = function(this) {
         cat("bkp\n")
-        cat(str(this@bkp),"\n")
+        cat(str(this@bkp), "\n")
         cat("segmented Data\n")
         cat(str(this@segDat), "\n")
         cat("results of positive fused lasso\n")
-        cat(str(this@fit),"\n")
+        cat(str(this@fit), "\n")
     }
 )
 
@@ -168,7 +168,7 @@ setMethod(
             
             bb <- c(minMaxPos[cc, "minPos"], bkp[[cc]], minMaxPos[cc, "maxPos"])
             bb <- as.numeric(bb)
-            zz <- rbind(Z[start[cc],], Z[start[cc]:(start[cc+1]-1),], Z[start[cc+1]-1,])
+            zz <- rbind(Z[start[cc], ], Z[start[cc]:(start[cc+1]-1), ], Z[start[cc+1]-1, ])
             arch <- factor(rep(letters[1:ncol(zz)], each=length(bb))) 
             zz <- c(zz)
             datCC <- data.frame(position=bb, "CopyNumber"=zz, arch=arch, chr=cc, stat=vv)

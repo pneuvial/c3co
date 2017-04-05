@@ -13,17 +13,17 @@
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 2
-#' bkps <- list(c(100,250)*10, c(150,400)*10)
-#' regions <-list(c("(0,3)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"))
+#' bkps <- list(c(100, 250)*10, c(150, 400)*10)
+#' regions <-list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 #' 
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 2
-#' bkps <- list(c(100,250)*10, c(150,400)*10)
-#' regions <-list(c("(0,1)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"))
-#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,  nbClones, bkps, regions)
+#' bkps <- list(c(100, 250)*10, c(150, 400)*10)
+#' regions <-list(c("(0,1)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
+#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
 #'
 #' @importFrom jointseg getCopyNumberDataByResampling
 #' @export
@@ -53,12 +53,12 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
     
     keepCols <- c("c", "b", "genotype", "region")
     dataAnnot <- data.frame(dataAnnotTP[, keepCols],
-                            dataAnnotN[, c("c","b")])
+                            dataAnnotN[, c("c", "b")])
     colnames(dataAnnot) <- c("ct", "baft", "genotype", "region", "cn", "bafn")
     
-    datAA <- subset(dataAnnot,genotype==0)
-    datAB <- subset(dataAnnot,genotype==0.5)
-    datBB <- subset(dataAnnot,genotype==1)
+    datAA <- subset(dataAnnot, genotype==0)
+    datAB <- subset(dataAnnot, genotype==0.5)
+    datBB <- subset(dataAnnot, genotype==1)
     
     subClone <- lapply(1:nbClones, FUN=function(ii) {
         bkp <- bkps[[ii]]
@@ -76,7 +76,7 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
         sim <- getCopyNumberDataByResampling(length=length(idxBB), regData=datBB, bkp=bkpsBB, regions=reg)
         ssBB <- sim$profile
         
-        ss <- rbind(ssAB, ssAA,ssBB)
+        ss <- rbind(ssAB, ssAA, ssBB)
         ss$pos <- pos
         o <- order(pos)
         ss[o, , drop=FALSE]

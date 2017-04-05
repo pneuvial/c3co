@@ -18,11 +18,11 @@
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 3
-#' bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
-#' regions <-list(c("(0,3)", "(0,2)","(1,2)"), 
-#' c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+#' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
+#' regions <-list(c("(0,3)", "(0,2)", "(1,2)"), 
+#' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
-#' M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
+#' M <- getWeightMatrix(100, 0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' l1 <- seq(from=1e-6, to=1e-5, length.out=3)
 #' l2 <- seq(from=1e-6, to=1e-5, length.out=3)
@@ -44,7 +44,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
             ecn <- c("tcn", "dh", "pos", "chr") ## expected
             mm <- match(ecn, coln)
             if (any(is.na(mm))) {
-                str <- sprintf("('%s')", paste(ecn, collapse="','"))
+                str <- sprintf("('%s')", paste(ecn, collapse="', '"))
                 stop("Argument 'dat' should contain columns named", str)
             }
         })
@@ -70,7 +70,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
         ecn <- c("lambda1", "lambda2", "nb.arch") ## expected
         mm <- match(na, ecn)
         if (any(is.na(mm))) {
-            str <- sprintf("('%s')", paste(ecn, collapse="','"))
+            str <- sprintf("('%s')", paste(ecn, collapse="', '"))
             stop("Argument 'parameters.grid' should contain ", str)
         }
     })
