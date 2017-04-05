@@ -4,7 +4,7 @@
 \alias{Zplot}
 \title{Plot latent profiles along chromosomes}
 \usage{
-Zplot(df)
+Zplot(df, scalePosToMb = FALSE)
 }
 \arguments{
 \item{df}{data.frame object output from \code{createZdf}}

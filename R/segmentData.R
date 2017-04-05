@@ -82,7 +82,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
                            modelSelectionMethod="Birge")
         bkp <- resSeg$bestBkp
         pos <- dat[[1]]$pos[ww]
-        bkpPos <- rowMeans(cbind(pos[bkp], pos[bkp+1]))
+        bkpPos <- rowMeans(cbind(pos[bkp], pos[bkp+1]))  ## FIXME: work on segments to avoid arbitrary bkp position?
         xOut <- c(min(pos), bkpPos, max(pos))
         xOut <- sort(unique(xOut))
 
@@ -129,14 +129,15 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
                 binDatTCNwithoutNA <- binDatTCN[-idxNA, ]
                 bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
             } else {
-                bkpPosByCHR[[cc]] <- bkpPos
                 binDatTCNwithoutNA <- binDatTCN
+                bkpPosByCHR[[cc]] <- bkpPos
             }
             ## Define Y1 and Y2
             Y <- rbind(Y, binDatTCNwithoutNA)
             Y1 <- NA_real_
             Y2 <- NA_real_
         }
+        bkpPosByCHR[[cc]] <- c(min(pos), bkpPosByCHR[[cc]], max(pos))
     }
     return(list(Y1=Y1, Y2=Y2, Y=Y, bkp=bkpPosByCHR))
 }

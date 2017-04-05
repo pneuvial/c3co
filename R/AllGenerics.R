@@ -104,7 +104,6 @@ setMethod(
 #' Create a data frame to plot Subclones
 #'
 #' @param this An object of class \code{\linkS4class{c3coFit}}
-#' @param minMaxPos Matrix containing min and max position for each chromosome
 #' @param chromosomes A vector that contains the focused chromosomes
 #' @param var TCN, Minor or Major
 #' @param idxBest a integer that is the best fitting of the data
@@ -113,7 +112,7 @@ setMethod(
 #' @exportMethod createZdf
 setGeneric(
     name = "createZdf",
-    def = function(this, minMaxPos, chromosomes, var="TCN", idxBest) {
+    def = function(this, chromosomes, idxBest, var="TCN", verbose=FALSE) {
         standardGeneric("createZdf")
     }
 )
@@ -121,32 +120,35 @@ setGeneric(
 setMethod(
     f = "createZdf",
     signature = signature("c3coFit"),
-    definition = function(this, minMaxPos, chromosomes, var=c("TCN", "Minor", "Major"), idxBest) {
+    definition = function(this, chromosomes, idxBest, var=c("TCN", "Minor", "Major"), verbose=FALSE) {
         var <- match.arg(var, several.ok=TRUE)
         labs <- list("TCN"="Z", "Minor"="Z1", "Major"="Z2")
         bkp <- this@bkp
-        lengthCHR <- sapply(bkp, FUN=length)
-        start <- c(1, cumsum(lengthCHR)+1)
+        lengthCHR <- sapply(bkp, FUN=function(x) length(x)-1) ## '-1' because 'bkp' includes first and last position on chr 
+        idx <- c(1, cumsum(lengthCHR) + 1)
         fitZ <- this@fit[[idxBest]]@S
-        
+        nbarch <- ncol(fitZ$Z)
+
         dfList <- list()
         configs <- expand.grid(var=var, chr=chromosomes)
-        print(configs)
+        if (verbose) print(configs)
         for (kk in 1:nrow(configs)) {
-            vv <- configs[kk, "var"]
+            vv <- as.character(configs[kk, "var"])
             cc <- configs[kk, "chr"]
             lab <- labs[[vv]]
             Z <- fitZ[[lab]]
-            
-            bb <- c(minMaxPos[cc, "minPos"], bkp[[cc]], minMaxPos[cc, "maxPos"])
+            if (is.null(Z)) next
+            idxCC <- idx[cc]:(idx[cc+1]-1)  ## indices of observations in current chr
+            Z <- Z[idxCC,, drop=FALSE]
+##            Z <- rbind(Z, Z[nrow(Z), ])  ## ad hoc: repeat last segment so that geom_step plots it?
+            dim(Z) <- NULL ## convert matrix to vector
+            bb <- bkp[[cc]]
             bb <- as.numeric(bb)
-            zz <- rbind(Z[start[cc], ],
-                        Z[start[cc]:(start[cc+1]-1), ],
-                        Z[start[cc+1]-1, ])
-            arch <- factor(rep(letters[1:ncol(zz)], each=length(bb)))
-            zz <- c(zz)
-            datCC <- data.frame(position=bb, CopyNumber=zz, arch=arch,
-                                chr=cc, stat=vv)
+            nbseg <- length(bb) - 1 ## '-1' because 'bb' includes first and last position on chr 
+            start <- bb[1:nbseg]
+            end <- bb[1:nbseg+1]
+            arch <- factor(rep(letters[1:nbarch], each=nbseg))
+            datCC <- data.frame(chr=cc, start=start, arch=arch, end=end, CopyNumber=Z, stat=vv)
             dfList[[kk]] <- datCC
         }
         df.CHR <- do.call(rbind, args=dfList)

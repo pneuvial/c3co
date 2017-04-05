@@ -32,12 +32,17 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
 #'
 #' @return plot latent profiles along chromosomes
 #'
-#' @importFrom ggplot2 ggplot geom_step aes_ facet_grid labeller label_both theme_bw scale_x_continuous labs
+#' @importFrom ggplot2 ggplot geom_step geom_segment aes facet_grid labeller label_both theme_bw scale_x_continuous labs
 #' @export
-Zplot <- function(df) {
-    gg <- ggplot(df)
-    gg <- gg + geom_step(aes_(~position, ~CopyNumber, group=~arch,
-                              col=~arch, lty=~arch), direction="hv", lwd=1)
+Zplot <- function(df, scalePosToMb=FALSE) {
+    if (scalePosToMb) {
+        df$start <- df$start/1e6 
+        df$end <- df$end/1e6 
+    }
+    gg <- ggplot(df, aes_(~start, ~CopyNumber, group=~arch,
+                          col=~arch, lty=~arch))
+    gg <- gg + geom_step(direction="hv", lwd=1)
+    gg <- gg + geom_segment(aes_(xend=~end, yend=~CopyNumber), lwd=1)  ## FIXME: we're actually plotting all the horizontal lines twice
     gg <- gg + facet_grid(stat~chr, scales="free",
                           labeller=labeller(.cols=label_both))
     gg <- gg + theme_bw()

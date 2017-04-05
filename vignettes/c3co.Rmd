@@ -122,27 +122,24 @@ pvePlot(resC@fit, ylim=c(0.80,1))
 We can compare the true and the estimated weight matrices. We can easily recover a classification close to the truth with the inferred weight matrix. 
 
 ```{r heatmap_C1C2, fig.width=7, fig.height=5}
-result.pveTCN <- sapply(resC@fit, function(cc) cc@PVE)
-result.pve <- sapply(res@fit, function(cc) cc@PVE)
-##idxBestC1C2 <- min(which(diff(abs(result.pve))<1e-3))+1
 best <- 2
 res.clustTRUE = hclust(dist(cbind(W, 100-rowSums(W))),method="ward.D")
 col = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
 Wplot(res, idxBest = best)
 ```
+
 ```{r heatmap_TCN, fig.width=7, fig.height=5}
 Wplot(resC, idxBest = best)
 ```
+
 ```{r heatmap_TRUE, fig.width=7, fig.height=5}
 heatmap.3(cbind(W, 100-rowSums(W)), dendrogram="row", main="TRUE", Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
 ```
 
-
 If we look at the subclones in the dimension of parental copy numbers, we can recover the simulated alterations.
 
 ```{r,Z1Z2hat, fig.width=7.5, fig.height=5}
-minMaxPos <- data.frame(chr=1, minPos=1, maxPos=len)
-df <- createZdf(res, minMaxPos, chromosomes=1, idxBest = best)
+df <- createZdf(res, chromosomes=1, idxBest = best)
 Zplot(df)
 ```
 
