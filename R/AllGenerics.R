@@ -9,23 +9,25 @@ setGeneric(
         standardGeneric("showPosFused")
     }
 )
+
+#' @importFrom utils str
 #' @rdname showPosFused
 setMethod(
     f = "showPosFused",
     signature = signature("posFused"),
     definition = function(this) {
         cat("Subclones\n")
-        cat(utils::str(this@S),"\n")
+        cat(str(this@S),"\n")
         cat("Weights\n")
-        cat(utils::str(this@W), "\n")
+        cat(str(this@W), "\n")
         cat("Estimates\n")
-        cat(utils::str(this@E),"\n")
+        cat(str(this@E),"\n")
         cat("BIC\n")
         cat(this@BIC,"\n")
         cat("PVE\n")
         cat(this@PVE,"\n")
         cat("param\n")
-        cat(utils::str(this@param),"\n")
+        cat(str(this@param),"\n")
     }
 )
 
@@ -52,6 +54,7 @@ setGeneric(
         standardGeneric("Wplot")
     }
 )
+#' @importFrom graphics legend
 #' @rdname Wplot
 setMethod(
     f = "Wplot",
@@ -71,7 +74,7 @@ setMethod(
             
             #heatmap.3(W, Rowv=TRUE, dendrogram="row",  RowSideColors=t(colsPheno), col=col,scale="none", key=TRUE, cexCol=cexCol, cexRow=1.5,margins = c(5,10),...)
             if(!is.na(posLegend)){
-                graphics::legend(posLegend,legend=labelLegend, fill=colLegend,border=FALSE, bty="n", y.intersp = 1, cex=1)
+                legend(posLegend,legend=labelLegend, fill=colLegend,border=FALSE, bty="n", y.intersp = 1, cex=1)
             }
         }else{
             heatmap.3(W, Rowv=TRUE,dendrogram="row", col=col,scale="none", cexCol=cexCol, cexRow=1.5,margins = margins, key = TRUE,...)
@@ -92,17 +95,19 @@ setGeneric(
         standardGeneric("showC3coFit")
     }
 )
+
+#' @importFrom utils str
 #' @rdname showC3coFit
 setMethod(
     f = "showC3coFit",
     signature = signature("c3coFit"),
     definition = function(this) {
         cat("bkp\n")
-        cat(utils::str(this@bkp),"\n")
+        cat(str(this@bkp),"\n")
         cat("segmented Data\n")
-        cat(utils::str(this@segDat), "\n")
+        cat(str(this@segDat), "\n")
         cat("results of positive fused lasso\n")
-        cat(utils::str(this@fit),"\n")
+        cat(str(this@fit),"\n")
     }
 )
 

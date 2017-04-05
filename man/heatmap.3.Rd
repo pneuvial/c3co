@@ -11,8 +11,8 @@ heatmap.3(x, Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
   symbreaks = max(x < 0, na.rm = TRUE) || scale != "none",
   col = "heat.colors", colsep, rowsep, sepcolor = "white",
   sepwidth = c(0.05, 0.05), cellnote, notecex = 1, notecol = "cyan",
-  na.color = graphics::par("bg"), trace = c("none", "column", "row",
-  "both"), tracecol = "cyan", hline = stats::median(breaks),
+  na.color = par("bg"), trace = c("none", "column", "row", "both"),
+  tracecol = "cyan", hline = stats::median(breaks),
   vline = stats::median(breaks), linecol = tracecol, margins = c(5, 5),
   ColSideColors, RowSideColors, side.height.fraction = 0.3, cexRow = 0.2 +
   1/log10(nr), cexCol = 0.2 + 1/log10(nc), cexMain = 1.5, cexKey = 1,
@@ -66,7 +66,7 @@ heatmap.3(x, Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
 
 \item{notecol}{= "cyan",}
 
-\item{na.color}{= graphics::par("bg"),}
+\item{na.color}{= par("bg"),}
 
 \item{trace}{= c("none", "column","row", "both"),}
 
