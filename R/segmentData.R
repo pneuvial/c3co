@@ -41,6 +41,7 @@
 #' res2 <- segmentData(dat, stat="TCN")
 #'
 #' @importFrom matrixStats binMeans
+#' @importFrom matrixStats rowAnyNAs
 #' @importFrom jointseg jointSeg
 #' @export
 segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
@@ -100,8 +101,8 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
                 binDatDH[, bb] <- means
             }
 
-            idxNAC1 <- which(rowSums(is.na(binDatTCN)) > 0)
-            idxNAC2 <- which(rowSums(is.na(binDatDH)) > 0)
+            idxNAC1 <- which(rowAnyNAs(binDatTCN))
+            idxNAC2 <- which(rowAnyNAs(binDatDH))
             idxNA <- unique(c(idxNAC1, idxNAC2))
             if (length(idxNA)) {
                 binDatTCNwithoutNA <- binDatTCN[-idxNA, ]
@@ -123,7 +124,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
                 means <- binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatTCN[, bb] <- means
             }
-            idxNA <- which(rowSums(is.na(binDatTCN)) > 0)
+            idxNA <- which(rowAnyNAs(binDatTCN))
             if (length(idxNA)) {
                 binDatTCNwithoutNA <- binDatTCN[-idxNA, ]
                 bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
