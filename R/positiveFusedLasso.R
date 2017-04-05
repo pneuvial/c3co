@@ -73,13 +73,13 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
         if (iter>1) {
             delta <- sqrt(sum((W-W.old)^2))
         }
-        cond <- (iter>max.iter | delta<eps)
+        cond <- (iter>max.iter || delta<eps)
         
-        if (verbose) message("delta:", round(delta, 4))
+        if (verbose) message("delta:", round(delta, digits=4))
         W.old <- W
     }
     if (verbose) message("Stopped after ", iter, " iterations")
-    if (verbose) message("delta:", round(delta, 4))
+    if (verbose) message("delta:", round(delta, digits=4))
     ## reshape output
     Z1 <- Z$Z1
     Z2 <- Z$Z2
@@ -99,7 +99,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
     resVar <- sum((Y-W %*% t(Z))^2)
     predVar <- sum((Y-rowMeans(Y))^2)
     loss <- resVar/(n*L)
-    kZ <- sum(apply(Z, 2, diff) != 0)
+    kZ <- sum(apply(Z, MARGIN=2L, FUN=diff) != 0)
     BIC <-  n*L*log(loss) + kZ*log(n*L)
     PVE <- 1-resVar/predVar
     

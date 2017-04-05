@@ -16,7 +16,7 @@ getWeightMatrix <- function(prop.max, prob.min, nb.arch, nb.samp, sparse.coeff=0
     M <- matrix(0, ncol=nb.arch, nrow=nb.samp)
     nbSparse <- replicate(nb.samp, rbinom(1, size=nb.arch-1, prob=sparse.coeff)+1)
     contamVector <- ceiling(rbinom(nb.samp, size=contam.max, prob=contam.coeff)/5)*5
-    for (ss in 1:nb.samp){
+    for (ss in seq_len(nb.samp)){
         ind <- sample(size=nbSparse[ss], x=1:nb.arch)
         for (ii in ind){
             if (sum(M[ss,])>=100) { 

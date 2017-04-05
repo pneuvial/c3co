@@ -50,9 +50,9 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     }
     lambda1 <- parameters.grid$lambda1
     if (is.null(lambda1)) {
-        lambda1 <- seq(from=1e-6, to=1e-4, length=10)
+        lambda1 <- seq(from=1e-6, to=1e-4, length.out=10)
         if (verbose) {
-            message("Regularization parameter lambda[1] not provided. Using default value: ", )
+            message("Regularization parameter lambda[1] not provided. Using default value: ")
             mstr(lambda1)
         }
     }
@@ -61,9 +61,9 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     configs <- expand.grid(lambda1=lambda1)  ## for when Y2 is NULL
     if (!is.null(Y2)) {
         if (is.null(lambda2)) {
-            lambda2 <- seq(from=1e-6, to=1e-4, length=10)
+            lambda2 <- seq(from=1e-6, to=1e-4, length.out=10)
             if (verbose) {
-                message("Regularization parameter lambda[2] not provided. Using default value: ", )
+                message("Regularization parameter lambda[2] not provided. Using default value: ")
                 mstr(lambda2)
             }
         }
@@ -79,7 +79,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             mstr(nb.arch)
         }
     }
-    rm(parameters.grid)
+    rm(list = "parameters.grid")
 
     it <- 1
     pp <- nb.arch[it]
@@ -98,7 +98,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         if (verbose) {
             message("Parameter configuration: (", paste(colnames(configs), collapse="; "), ")")
         }
-        for (cc in 1:nrow(configs)) {
+        for (cc in seq_len(nrow(configs))) {
             cfg <- configs[cc,, drop=FALSE]
             if (verbose) {
                 message(paste(cfg, collapse="; "))
@@ -128,9 +128,9 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         it <- it + 1
         pp <- nb.arch[it]
         ## Z doesn't change anymore
-        c1 <- sum(apply(res.l@S$Z, 2,function(ww) (sum(ww^2)<1e-3)))==0
+        c1 <- sum(apply(res.l@S$Z, MARGIN=2L, FUN=function(ww) { sum(ww^2) < 1e-3 })) == 0
         ## W doesn't change anymore
-        c2 <- sum(apply(res.l@W, 2,function(ww) (sum(ww^2)<1e-3)))==0
+        c2 <- sum(apply(res.l@W, MARGIN=2L, FUN=function(ww) { sum(ww^2) < 1e-3 })) == 0
         ## pp reach max of grid
         c3 <-  !is.na(pp)
         cond <- (c1 & c2 & c3)

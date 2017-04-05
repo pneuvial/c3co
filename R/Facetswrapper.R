@@ -5,7 +5,7 @@
 #' @return A data frame under PSCBS format
 loadFacetsdata <- function(pathFacets){
     ### Load Facets data
-    dat <- lapply(list.files(pathFacets), function (ff) {
+    dat <- lapply(list.files(pathFacets), FUN=function(ff) {
         df <- facets::readSnpMatrix(file.path(pathFacets, ff))
         xx=facets::preProcSample(df)
         dat=xx$pmat
@@ -44,6 +44,6 @@ Facetswrapper <- function (pathFacets, output.dir, stat){
     ### Joint segmentation of all samples
     resSeg <-  segmentData(dat, stat=stat)
     ### Perform the c3co method
-    saveRDS(resSeg, file.path(output.dir, "segDat.rds"))
+    saveRDS(resSeg, file=file.path(output.dir, "segDat.rds"))
     message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
 }

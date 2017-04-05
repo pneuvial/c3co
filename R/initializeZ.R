@@ -49,22 +49,22 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE, flavor
         dd <- dist(Y)
 #        dd <- as.dist(1 - 1/2*(cor(t(Y1)) + cor(t(Y2))))
         hc <- hclust(dd, method="ward.D")
-        cluster <- cutree(hc, nb.arch)
+        cluster <- cutree(hc, k=nb.arch)
         if (verbose) message("Clustering in ", nb.arch, " groups: ", cluster)
         
         ## subclones are initialized as intra-cluster averages
-        Z.init <- sapply(split(as.data.frame(Y), cluster), colMeans)
-        Z1.init <- sapply(split(as.data.frame(Y1), cluster), colMeans)
-        Z2.init <- sapply(split(as.data.frame(Y2), cluster), colMeans)
+        Z.init <- sapply(split(as.data.frame(Y), f=cluster), FUN=colMeans)
+        Z1.init <- sapply(split(as.data.frame(Y1), f=cluster), FUN=colMeans)
+        Z2.init <- sapply(split(as.data.frame(Y2), f=cluster), FUN=colMeans)
         if (is.null(Y2)){
             Z1.init <- Z.init
             Z2.init <- NULL
         }
     } else {
-        idxs <- sample(1:n,nb.arch, replace=FALSE)
-        Z.init <- t(Y[idxs, ])
-        Z1.init <- t(Y1[idxs, ])
-        Z2.init <- t(Y2[idxs, ])
+        idxs <- sample(1:n, size=nb.arch, replace=FALSE)
+        Z.init <- t(Y[idxs, , drop=FALSE])
+        Z1.init <- t(Y1[idxs, , drop=FALSE])
+        Z2.init <- t(Y2[idxs, , drop=FALSE])
         if (is.null(Y2)){
             Z2.init <- NULL
         }

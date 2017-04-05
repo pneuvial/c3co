@@ -137,7 +137,7 @@ setMethod(
         var <- match.arg(var, several.ok=TRUE)
         labs <- list("TCN"="Z", "Minor"="Z1", "Major"="Z2")
         bkp <- this@bkp
-        lengthCHR <- sapply(bkp, length)
+        lengthCHR <- sapply(bkp, FUN=length)
         start <- c(1, cumsum(lengthCHR)+1)
         fitZ <- this@fit[[idxBest]]@S
         
@@ -158,7 +158,7 @@ setMethod(
             datCC <- data.frame(position=bb, "CopyNumber"=zz, arch=arch, chr=cc, stat=vv)
             dfList[[kk]] <- datCC
         }
-        df.CHR <- do.call(rbind, dfList)
+        df.CHR <- do.call(rbind, args=dfList)
         return(df.CHR)
     }
 )

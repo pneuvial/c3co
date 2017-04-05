@@ -60,26 +60,26 @@ buildSubclones <- function(len, dataAnnotTP, dataAnnotN, nbClones, bkps=list(), 
     datAB <- subset(dataAnnot,genotype==0.5)
     datBB <- subset(dataAnnot,genotype==1)
     
-    subClone <- lapply(1:nbClones, function(ii){
+    subClone <- lapply(1:nbClones, FUN=function(ii){
         bkp <- bkps[[ii]]
         reg <- regions[[ii]]
         
-        bkpsAB <- sapply(bkp, function(bb) max(which(idxAB<=bb)))
+        bkpsAB <- sapply(bkp, FUN=function(bb) max(which(idxAB<=bb)))
         sim <- getCopyNumberDataByResampling(length=length(idxAB), regData=datAB, bkp=bkpsAB, regions=reg)
         ssAB <- sim$profile
         
-        bkpsAA <- sapply(bkp,function(bb) max(which(idxAA<=bb)))
+        bkpsAA <- sapply(bkp, FUN=function(bb) max(which(idxAA<=bb)))
         sim <- getCopyNumberDataByResampling(length=length(idxAA), regData=datAA, bkp=bkpsAA, regions=reg)
         ssAA <- sim$profile
         
-        bkpsBB <- sapply(bkp,function(bb) max(which(idxBB<=bb)))
+        bkpsBB <- sapply(bkp, FUN=function(bb) max(which(idxBB<=bb)))
         sim <- getCopyNumberDataByResampling(length=length(idxBB), regData=datBB, bkp=bkpsBB, regions=reg)
         ssBB <- sim$profile
         
         ss <- rbind(ssAB, ssAA,ssBB)
         ss$pos <- pos
         o <- order(pos)
-        ss[o, ]
+        ss[o, , drop=FALSE]
     })
     return(subClone)
 }

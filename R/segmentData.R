@@ -37,7 +37,7 @@
 segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
     stat <- match.arg(stat)
     
-    checkColNames <- lapply(dat, function(dd) {
+    checkColNames <- lapply(dat, FUN=function(dd) {
         coln <- colnames(dd)
         ecn <- c("tcn", "dh", "pos", "chr") ## expected
         mm <- match(ecn, coln)
@@ -80,12 +80,12 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
         if (stat=="C1C2") {
             dh <- as.matrix(dh)
             binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
-            for (bb in 1:ncol(tcn)) {
+            for (bb in seq_len(ncol(tcn))) {
                 means <- binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatTCN[, bb] <- means
             }
             binDatDH <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(dh))
-            for (bb in 1:ncol(dh)) {
+            for (bb in seq_len(ncol(dh))) {
                 means <- binMeans(y=dh[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatDH[, bb] <- means
             }
@@ -109,7 +109,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE){
             Y2 <- Y*(1+DH)/2
         } else {
             binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
-            for (bb in 1:ncol(tcn)) {
+            for (bb in seq_len(ncol(tcn))) {
                 means <- binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatTCN[, bb] <- means
             }

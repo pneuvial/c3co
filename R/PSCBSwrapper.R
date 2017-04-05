@@ -6,7 +6,7 @@
 #' @return A data frame under PSCBS format
 loadPSCBSdata <- function(pathSegPSCBS, pattern=NULL){
     ### Load PSCBS data
-    dat <- lapply(list.files(pathSegPSCBS, pattern=pattern), function (ff) {
+    dat <- lapply(list.files(pathSegPSCBS, pattern=pattern), FUN=function(ff) {
         df <- readRDS(file.path(pathSegPSCBS, ff))$data
         ## Rename chromosome, x and CT to segment with c3co
         df$chr <- df$chromosome
@@ -17,18 +17,18 @@ loadPSCBSdata <- function(pathSegPSCBS, pattern=NULL){
     })
     ### Check positions
     chr <- unique(dat[[1]]$chr)
-    posFull <- lapply(chr, function (cc) {
-        pp <- Reduce(intersect, lapply(dat, function(dd){
+    posFull <- lapply(chr, FUN=function(cc) {
+        pp <- Reduce(intersect, lapply(dat, FUN=function(dd){
             d <- subset(dd, chr==cc)
             d$pos
         }))
     })
     ### Reduce data
-    dat <- lapply(dat, function (ff) {
-        df <- do.call(rbind, lapply(chr, function (cc){
+    dat <- lapply(dat, FUN=function(ff) {
+        df <- do.call(rbind, args=lapply(chr, function(cc){
             d <- subset(ff, chr==cc)
-            pos <- NULL; rm(pos);
-            d <- subset(d, pos%in%posFull[[cc]])
+            pos <- NULL; rm(list = "pos");
+            d <- subset(d, pos %in% posFull[[cc]])
         }))
         return(as.data.frame(df))
     })
@@ -47,6 +47,6 @@ PSCBSwrapper <- function (pathSegPSCBS,pattern=NULL, output.dir, stat){
     dat <- loadPSCBSdata(pathSegPSCBS, pattern)
     ### Joint segmentation of all samples
     resSeg <- segmentData(dat, stat=stat)
-    saveRDS(resSeg, file.path(output.dir, "segDat.rds"))
+    saveRDS(resSeg, file=file.path(output.dir, "segDat.rds"))
     message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
 }

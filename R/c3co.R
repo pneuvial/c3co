@@ -39,7 +39,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
         if(!is.list(dat)){
             stop("Argument 'dat' should be a list ")
         }
-        checkCols <- lapply(dat, function (dd) {
+        checkCols <- lapply(dat, FUN=function(dd) {
             coln <- colnames(dd)
             ecn <- c("tcn", "dh", "pos", "chr") ## expected
             mm <- match(ecn, coln)
@@ -49,7 +49,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
             }
         })
         expectedL <- nrow(dat[[1]]) 
-        checklength <- lapply(dat, function (dd) {
+        checklength <- lapply(dat, FUN=function(dd) {
             nrowDD <- nrow(dd)
             if (nrowDD != expectedL) {
                 stop("Each data.frame in 'dat' should have the same size")
@@ -60,13 +60,13 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
         new.getZ <- FALSE
     }
     if (is.null(parameters.grid)){
-        lambda1 <- seq(from=1e-6, to=1e-4, length=10)
-        lambda2 <- seq(from=1e-6, to=1e-4, length=10)
+        lambda1 <- seq(from=1e-6, to=1e-4, length.out=10)
+        lambda2 <- seq(from=1e-6, to=1e-4, length.out=10)
         nb.arch  <- 2:(length(dat)-1)
         parameters.grid <- list(lambda1=lambda1, lambda2=lambda2, nb.arch=nb.arch)
     }
     
-    checkGrid <- lapply(names(parameters.grid), function (na) {
+    checkGrid <- lapply(names(parameters.grid), FUN=function(na) {
         ecn <- c("lambda1", "lambda2", "nb.arch") ## expected
         mm <- match(na, ecn)
         if (any(is.na(mm))) {
@@ -101,5 +101,3 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
     reslist@fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid, ..., verbose=verbose)
     return(reslist)
 }
-
-
