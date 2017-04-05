@@ -56,6 +56,5 @@ Facetswrapper <- function(pathFacets, output.dir, stat) {
     resSeg <-  segmentData(dat, stat=stat)
     ### Perform the c3co method
     saveRDS(resSeg, file=file.path(output.dir, "segDat.rds"))
-    message(sprintf("segment data has been saved to %s in segDat.rds file\n",
-                    output.dir))
+    mprintf("segment data has been saved to %s in segDat.rds file", output.dir)
 }
