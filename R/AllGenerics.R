@@ -55,12 +55,14 @@ setGeneric(
     }
 )
 #' @importFrom graphics legend
+#' @importFrom grDevices colorRampPalette
+#' @importFrom RColorBrewer brewer.pal
 #' @rdname Wplot
 setMethod(
     f = "Wplot",
     signature = signature("c3coFit"),
     definition = function(this, idxBest, rownamesW=NULL, col= NULL,margins=c(5,7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5,...){
-        if(is.null(col)){col=grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)}
+        if(is.null(col)){col=colorRampPalette(brewer.pal(9, 'GnBu'))(100)}
         W <- this@fit[[idxBest]]@W
         rownames(W) <- rownamesW
         colnames(W) <- sprintf("Subclone %s", letters[1:ncol(W)])

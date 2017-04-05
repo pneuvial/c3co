@@ -29,6 +29,8 @@
 #' parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
 #' res <- c3co(dat, parameters.grid)
 #' resC <- c3co(dat, stat="TCN", parameters.grid)
+#'
+#' @importFrom methods new
 #' @export
 c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL, ..., verbose=FALSE){
     ## Sanity checks
@@ -84,7 +86,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"), pathSeg=NULL,
     }
     bkpList <- seg$bkp
     
-    reslist <- methods::new("c3coFit")
+    reslist <- new("c3coFit")
     reslist@bkp <- bkpList
     reslist@segDat <- list(Y1=seg$Y1, Y2=seg$Y2, Y=seg$Y)
     

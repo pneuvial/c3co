@@ -34,6 +34,8 @@
 #' showPosFused(res)
 #' resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL, lambda1=lambda, lambda2=lambda)
 #' showPosFused(resC)
+#' 
+#' @importFrom methods new
 positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.iter=50, warn=FALSE, verbose=FALSE) {
     n <- nrow(Y1) # number of individuals
     L <- ncol(Y1) # number of loci/segments
@@ -111,6 +113,6 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2, max.i
     S <- list(Z=Z, Z1=Z1, Z2=Z2)
     E <- list(Y1=Y1hat, Y2=Y2hat)
     param <- list(nb.arch=nb.arch, lambda1=lambda1, lambda2=lambda2)
-    objRes <- methods::new("posFused", S=S, S0=Z0, W=W, E=E, BIC=BIC, PVE=PVE, param=param)
+    objRes <- new("posFused", S=S, S0=Z0, W=W, E=E, BIC=BIC, PVE=PVE, param=param)
     return(objRes)
 }

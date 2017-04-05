@@ -48,4 +48,5 @@ l2 <- seq(from=1e-6, to=1e-5, length=3)
 parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
 res <- c3co(dat, parameters.grid)
 resC <- c3co(dat, stat="TCN", parameters.grid)
+
 }
