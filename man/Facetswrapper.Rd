@@ -2,7 +2,8 @@
 % Please edit documentation in R/Facetswrapper.R
 \name{Facetswrapper}
 \alias{Facetswrapper}
-\title{Function to transform Facets data, perfom the segmentation and save it into output.dir}
+\title{Function to transform Facets data, perfom the segmentation and save it into
+output.dir}
 \usage{
 Facetswrapper(pathFacets, output.dir, stat)
 }
@@ -11,21 +12,25 @@ Facetswrapper(pathFacets, output.dir, stat)
 
 \item{output.dir}{Directory to save segmentation}
 
-\item{stat}{"TCN or "C1C2" paramater to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.}
+\item{stat}{"TCN or "C1C2" paramater to segment the data.
+If \code{stat == TCN}, the segmentation will be done on TCN only.}
 }
 \value{
-A list which contains the breakpoints by chromosome and also the binning of TCN, C1 and C2.
+A list which contains the breakpoints by chromosome and also the
+binning of TCN, C1 and C2.
 }
 \description{
-Function to transform Facets data, perfom the segmentation and save it into output.dir
+Function to transform Facets data, perfom the segmentation and save it into
+output.dir
 }
 \examples{
 if (require("facets", quietly=TRUE)) {
-pathFacets <- system.file("extdata",package="facets")
+pathFacets <- system.file("extdata", package="facets")
 output.dir <- R.utils::Arguments$getWritablePath("output")
-Facetswrapper(pathFacets,output.dir=output.dir, stat="TCN")
+Facetswrapper(pathFacets, output.dir=output.dir, stat="TCN")
 \dontrun{
 resc3co <- c3co(NULL, pathSeg=output.dir)
 }
 }
+
 }

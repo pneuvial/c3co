@@ -6,21 +6,19 @@
 \alias{createZdf,c3coFit-method}
 \title{Create a data frame to plot Subclones}
 \usage{
-createZdf(this, minMaxPos, chromosomes, var = "TCN", idxBest)
+createZdf(this, chromosomes, idxBest, var = "TCN", verbose = FALSE)
 
-\S4method{createZdf}{c3coFit}(this, minMaxPos, chromosomes, var = c("TCN",
-  "Minor", "Major"), idxBest)
+\S4method{createZdf}{c3coFit}(this, chromosomes, idxBest, var = c("TCN",
+  "Minor", "Major"), verbose = FALSE)
 }
 \arguments{
 \item{this}{An object of class \code{\linkS4class{c3coFit}}}
 
-\item{minMaxPos}{Matrix containing min and max position for each chromosome}
-
 \item{chromosomes}{A vector that contains the focused chromosomes}
 
-\item{var}{TCN, Minor or Major}
-
 \item{idxBest}{a integer that is the best fitting of the data}
+
+\item{var}{TCN, Minor or Major}
 }
 \value{
 A data frame to plot Latent profiles with ggplot

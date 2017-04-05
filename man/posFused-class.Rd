@@ -3,23 +3,31 @@
 \docType{class}
 \name{posFused-class}
 \alias{posFused-class}
-\title{@title Class for the object returned by \code{positiveFusedLasso} function
- @slot S A list containing the (final) minor, major and total copy number estimates for the latent features, as inferred by \code{\link{positiveFusedLasso}}
- @slot S0 idem for the initial estimates
- @slot W A matrix containing weights inferred by \code{positiveFusedLasso}
- @slot E A list containing estimates of minor copy number and major copy number inferred by \code{positiveFusedLasso}
- @slot BIC A numeric value, the value of the Bayesian Information Criterion of the model
- @slot PVE A numeric value, the percentage of variation explained by the model
- @slot param A list of parameters: number of subclones and penalty coefficients
- @exportClass posFused}
+\title{Class for the object returned by \code{positiveFusedLasso} function}
 \description{
-@title Class for the object returned by \code{positiveFusedLasso} function
- @slot S A list containing the (final) minor, major and total copy number estimates for the latent features, as inferred by \code{\link{positiveFusedLasso}}
- @slot S0 idem for the initial estimates
- @slot W A matrix containing weights inferred by \code{positiveFusedLasso}
- @slot E A list containing estimates of minor copy number and major copy number inferred by \code{positiveFusedLasso}
- @slot BIC A numeric value, the value of the Bayesian Information Criterion of the model
- @slot PVE A numeric value, the percentage of variation explained by the model
- @slot param A list of parameters: number of subclones and penalty coefficients
- @exportClass posFused
+Class for the object returned by \code{positiveFusedLasso} function
 }
+\section{Slots}{
+
+\describe{
+\item{\code{S}}{A list containing the (final) minor, major and total copy number
+estimates for the latent features, as inferred by
+\code{\link{positiveFusedLasso}}.}
+
+\item{\code{S0}}{idem for the initial estimates.}
+
+\item{\code{W}}{A matrix containing weights inferred by \code{positiveFusedLasso}.}
+
+\item{\code{E}}{A list containing estimates of minor copy number and major copy
+number inferred by \code{positiveFusedLasso}.}
+
+\item{\code{BIC}}{A numeric value, the value of the Bayesian Information Criterion
+of the model.}
+
+\item{\code{PVE}}{A numeric value, the percentage of variation explained by
+the model.}
+
+\item{\code{param}}{A list of parameters: number of subclones and penalty
+coefficients.}
+}}
+

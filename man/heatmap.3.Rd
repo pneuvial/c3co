@@ -5,23 +5,23 @@
 \title{Heatmap function}
 \usage{
 heatmap.3(x, Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
-  distfun = stats::dist, hclustfun = stats::hclust, dendrogram = c("both",
-  "row", "column", "none"), symm = FALSE, scale = c("none", "row",
-  "column"), na.rm = TRUE, revC = identical(Colv, "Rowv"), add.expr, breaks,
+  distfun = dist, hclustfun = hclust, dendrogram = c("both", "row",
+  "column", "none"), symm = FALSE, scale = c("none", "row", "column"),
+  na.rm = TRUE, revC = identical(Colv, "Rowv"), add.expr, breaks,
   symbreaks = max(x < 0, na.rm = TRUE) || scale != "none",
   col = "heat.colors", colsep, rowsep, sepcolor = "white",
   sepwidth = c(0.05, 0.05), cellnote, notecex = 1, notecol = "cyan",
-  na.color = graphics::par("bg"), trace = c("none", "column", "row",
-  "both"), tracecol = "cyan", hline = stats::median(breaks),
-  vline = stats::median(breaks), linecol = tracecol, margins = c(5, 5),
-  ColSideColors, RowSideColors, side.height.fraction = 0.3, cexRow = 0.2 +
-  1/log10(nr), cexCol = 0.2 + 1/log10(nc), cexMain = 1.5, cexKey = 1,
-  cexColorKey = 1, labRow = NULL, labCol = NULL, key = TRUE,
-  keysize = 1.5, density.info = c("none", "histogram", "density"),
-  denscol = tracecol, symkey = max(x < 0, na.rm = TRUE) || symbreaks,
-  densadj = 0.25, main = NULL, xlab = NULL, ylab = NULL, lmat = NULL,
-  lhei = NULL, lwid = NULL, ColSideColorsSize = 1,
-  RowSideColorsSize = 1, KeyValueName = "", ...)
+  na.color = par("bg"), trace = c("none", "column", "row", "both"),
+  tracecol = "cyan", hline = median(breaks), vline = median(breaks),
+  linecol = tracecol, margins = c(5, 5), ColSideColors, RowSideColors,
+  side.height.fraction = 0.3, cexRow = 0.2 + 1/log10(nr), cexCol = 0.2 +
+  1/log10(nc), cexMain = 1.5, cexKey = 1, cexColorKey = 1,
+  labRow = NULL, labCol = NULL, key = TRUE, keysize = 1.5,
+  density.info = c("none", "histogram", "density"), denscol = tracecol,
+  symkey = max(x < 0, na.rm = TRUE) || symbreaks, densadj = 0.25,
+  main = NULL, xlab = NULL, ylab = NULL, lmat = NULL, lhei = NULL,
+  lwid = NULL, ColSideColorsSize = 1, RowSideColorsSize = 1,
+  KeyValueName = "", ...)
 }
 \arguments{
 \item{x, }{matrix}
@@ -30,9 +30,9 @@ heatmap.3(x, Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
 
 \item{Colv}{= if (symm) "Rowv" else TRUE,}
 
-\item{distfun}{= stats::dist,}
+\item{distfun}{= dist,}
 
-\item{hclustfun}{= stats::hclust,}
+\item{hclustfun}{= hclust,}
 
 \item{dendrogram}{= c("both","row", "column", "none"),}
 
@@ -66,15 +66,15 @@ heatmap.3(x, Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
 
 \item{notecol}{= "cyan",}
 
-\item{na.color}{= graphics::par("bg"),}
+\item{na.color}{= par("bg"),}
 
 \item{trace}{= c("none", "column","row", "both"),}
 
 \item{tracecol}{= "cyan",}
 
-\item{hline}{= stats::median(breaks),}
+\item{hline}{= median(breaks),}
 
-\item{vline}{= stats::median(breaks),}
+\item{vline}{= median(breaks),}
 
 \item{linecol}{= tracecol,}
 
@@ -130,7 +130,7 @@ heatmap.3(x, Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
 
 \item{KeyValueName}{= "", name of key}
 
-\item{...}{additionnal parameters of \code{image}}
+\item{...}{additional parameters of \code{image}}
 }
 \value{
 A Heatmap

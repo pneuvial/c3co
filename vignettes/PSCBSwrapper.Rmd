@@ -42,25 +42,14 @@ Wplot(resc3co, idxBest = 2)
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
 dat <- loadPSCBSdata(pathPSCBS)
-minMaxPos <- do.call(rbind, lapply(1:2, function(chromosome){
-  print(chromosome)
-  df <- dat[[1]]
-  df$chr <- as.numeric(df$chr)
-  idx <- which(df$chr==chromosome)
-  df.sub <- df[idx,]
-  print(str(df.sub))
-  pos <- df.sub$pos
-  return(list(chr=chromosome, minPos=min(pos), maxPos=max(pos)))
-}))
 ```
 
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
-df <- createZdf(resc3co, minMaxPos, chromosomes=c(1,2), idxBest=2)
-df$position <- df$position/1e6 ## scale to Mb
+df <- createZdf(resc3co, chromosomes=c(1,2), idxBest=2)
 ```
 
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
-Zplot(df)
+Zplot(df, scalePosToMb=TRUE)
 ```
 
 ## Session Information

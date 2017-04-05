@@ -8,37 +8,42 @@ segmentData(dat, stat = c("C1C2", "TCN"), verbose = FALSE)
 }
 \arguments{
 \item{dat}{A list of \code{data.frame} containing
-\describe{
- \item{tcn}{Total copy number}
- \item{dh}{Mirrored B allele fraction}
- \item{pos}{Position on the genome}
- \item{chr}{Chromosome}
- }}
+ \describe{
+  \item{tcn}{Total copy number}
+  \item{dh}{Mirrored B allele fraction}
+  \item{pos}{Position on the genome}
+  \item{chr}{Chromosome}
+}}
 
-\item{stat}{"TCN or "C1C2" parameter to segment the data. If \code{stat==TCN}, the segmentation will be done on TCN only.}
+\item{stat}{"TCN or "C1C2" parameter to segment the data.
+If \code{stat == TCN}, the segmentation will be done on TCN only.}
 
-\item{verbose}{A logical value indicating whether to print extra information. Defaults to FALSE}
+\item{verbose}{A logical value indicating whether to print extra
+information. Defaults to FALSE}
 }
 \value{
 Binned Minor and Major copy number with list of breakpoints
-#'
 }
 \description{
-Joint segmentation by Recursive Binary Segmentation followed by Dynamic Programming
+Joint segmentation by Recursive Binary Segmentation followed by
+Dynamic Programming
 }
 \examples{
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
-bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
-regions <-list(c("(0,3)", "(0,2)","(1,2)"), 
-c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
-datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkps, regions)
-M <- getWeightMatrix(100,0, 3, 15, sparse.coeff=0.7, contam.coeff=0.6, contam.max=2)
+bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
+regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
+c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
+datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
+                              nbClones, bkps, regions)
+M <- getWeightMatrix(100, 0, 3, 15, sparse.coeff=0.7,
+                     contam.coeff=0.6, contam.max=2)
 dat <- mixSubclones(subClones=datSubClone, M)
 res <- segmentData(dat)
 res2 <- segmentData(dat, stat="TCN")
+
 }
 \references{
 Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple
