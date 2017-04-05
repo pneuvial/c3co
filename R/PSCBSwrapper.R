@@ -46,7 +46,7 @@ loadPSCBSdata <- function(pathSegPSCBS, pattern=NULL){
 PSCBSwrapper <- function (pathSegPSCBS,pattern=NULL, output.dir, stat){
     dat <- loadPSCBSdata(pathSegPSCBS, pattern)
     ### Joint segmentation of all samples
-    resSeg <- c3co::segmentData(dat, stat=stat)
+    resSeg <- segmentData(dat, stat=stat)
     saveRDS(resSeg, file.path(output.dir, "segDat.rds"))
     message(sprintf("segment data has been saved to %s in segDat.rds file\n",output.dir)) 
 }

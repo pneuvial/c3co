@@ -45,4 +45,5 @@ nbClones <- 2
 bkps <- list(c(100,250)*10, c(150,400)*10)
 regions <-list(c("(0,1)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"))
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,  nbClones, bkps, regions)
+
 }
