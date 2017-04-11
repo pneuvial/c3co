@@ -39,4 +39,6 @@ Remotes: mpierrejean/acnr,
     mpierrejean/jointseg,
     pneuvial/c3co-data,
     mskcc/facets
+URL: https://github.com/pneuvial/c3co
+BugReports: https://github.com/pneuvial/c3co/issues
 RoxygenNote: 6.0.1
