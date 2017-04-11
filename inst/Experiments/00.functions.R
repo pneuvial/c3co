@@ -3,7 +3,7 @@ simulateSubclones <- function(len, nbClones, nBkp) {
     u <- numeric(0)
     minLength <- 100
     while (length(u) < nBkp) {
-        j <- sample(x = interval, size = 1, replace = FALSE)
+        j <- sample(x=interval, size=1, replace=FALSE)
         u <- c(u, j)
         b.inf <- max(1, j - minLength)
         b.sup <- min(len, j + minLength)
@@ -79,7 +79,6 @@ fllat <- function(dat, nb.arch.grid) {
     methods::new("c3coFit", bkp=list(), segDat=list(), fit=res)
 }
 
-
 loadDataBest <- function(mm, stat, b, nbClones=5){
   print(sprintf("meth=%s, stat=%s", mm, stat))
   pathRes <- "results"
@@ -96,7 +95,6 @@ loadDataBest <- function(mm, stat, b, nbClones=5){
     return(dataBest)
   }
 }
-
 
 expand <- function(mat, start, end){
   matEx <- t(apply(mat, 2, function(cc){
@@ -118,7 +116,7 @@ ComputeROC <- function(roc, FPRs) {
 }
 
 
-SESPC1C2 <- function(Z1,Z2,alteredLoci,ind, tol, c1Mean, c2Mean){
+SESPC1C2 <- function(Z1, Z2, alteredLoci, ind, tol, c1Mean, c2Mean){
   sespRes <- sapply(tol, function(tt){
     getTPTN <- rowSums(sapply(1:ncol(alteredLoci), function(j){
       k <- ind[j]
@@ -130,11 +128,11 @@ SESPC1C2 <- function(Z1,Z2,alteredLoci,ind, tol, c1Mean, c2Mean){
       TP <- sum(pos[wwA])
       ww <- which(!regJ)      
       FP <- sum(pos[ww])  
-      return(c(FP = FP,TP = TP, pos = length(wwA), neg = length(ww)))
+      return(c(FP=FP, TP=TP, pos=length(wwA), neg=length(ww)))
     }))
     se <- getTPTN["TP"]/getTPTN["pos"]
     sp <- getTPTN["FP"]/getTPTN["neg"]
-    return(list(tp = se,fp = sp))
+    return(list(tp=se, fp=sp))
   })
   return(sespRes)
 }
@@ -151,11 +149,11 @@ SESPTCN <- function(Z,alteredLoci, ind,tol, cMean){
       ww <- which(!regJ)      
       FP <- sum(pos[ww])
       
-      return(c(FP = FP,TP = TP, pos = length(wwA), neg = length(ww)))
-    }), na.rm = T)
+      return(c(FP=FP, TP=TP, pos=length(wwA), neg=length(ww)))
+    }), na.rm=TRUE)
     se <- getTPTN["TP"]/getTPTN["pos"]
     sp <- getTPTN["FP"]/getTPTN["neg"]
-    return(list(tp = se,fp = sp))
+    return(list(tp=se, fp=sp))
   })
   return(sespRes)
 }
@@ -173,13 +171,14 @@ ComputeAUC <- function(roc, FPRs) {
 }
 
 
-## Get loci as positive
-getPos <- function(tt, zz1,cMean){
+## Get positive loci 
+getPos <- function(tt, zz1, cMean){
   pos <- (abs(zz1 - cMean) >= tt)
   return(pos)
 }
-## Get loci as positive for C1 C2 dimension
-getPosC1C2 <- function(tt,zz1,zz2, c1Mean, c2Mean){
+
+## Get positive loci for C1 C2
+getPosC1C2 <- function(tt, zz1, zz2, c1Mean, c2Mean){
   pos <- ((abs(zz1 - c1Mean) >= tt | abs(zz2 - c2Mean) >= tt))
   return(pos)
 }

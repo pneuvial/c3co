@@ -1,12 +1,12 @@
 library("c3co")
 library("FLLat")
-library("parallel")
 library("R.utils")
 library("acnr")
 library("future")
 library("listenv")
 
 plan(multiprocess, workers=3L) ## see https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html
+
 lambda.grid <- seq(from=1e-6, to=1e-4, length=10)
 p.list <- 2:10 ## candidate number of subclones
 parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid, nb.arch=p.list)
@@ -21,7 +21,7 @@ n <- 30
 nbClones <- 5
 nbSimu <- 5
 
-len <- 800*3  ## 3 is to obtain around 800 point for heterozygous
+len <- 800*3  ## to obtain ~800 heterozygous loci
 nbClones <- 5
 nBkp <- 10     ## Breakpoints in subclones
 
@@ -32,5 +32,3 @@ pathRes <- Arguments$getWritablePath("results")
 pathWeights <- Arguments$getWritablePath("weights")
 pathSubClones <- Arguments$getWritablePath("subclones")
 pathDat <- Arguments$getWritablePath("data")
-
-
