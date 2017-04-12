@@ -27,12 +27,16 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
 
 
 #' Plot latent profiles along chromosomes
-#'
+#' 
 #' @param df data.frame object output from \code{createZdf}
-#'
+#'   
+#' @param scalePosToMb a logical value, should 'x' positions be scaled to
+#'   MegaBases? Defaults to FALSE
+#'   
 #' @return plot latent profiles along chromosomes
-#'
-#' @importFrom ggplot2 ggplot geom_step geom_segment aes facet_grid labeller label_both theme_bw scale_x_continuous labs
+#'   
+#' @importFrom ggplot2 ggplot geom_step geom_segment aes facet_grid labeller
+#'   label_both theme_bw scale_x_continuous labs
 #' @export
 Zplot <- function(df, scalePosToMb=FALSE) {
     if (scalePosToMb) {

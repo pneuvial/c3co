@@ -2,6 +2,13 @@ Package: c3co
 =============
 
 
+Version: 0.2.0-9000 [2017-04-12]
+
+ o Changed default grid of values for penalization parameters: now ranges 
+   uniformly *on the log scale* over the interval.
+ o More code cleanups 
+
+
 Version: 0.2.0 [2017-03-31]
 
 CODE REFACTORING:

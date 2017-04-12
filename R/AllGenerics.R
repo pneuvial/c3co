@@ -104,10 +104,18 @@ setMethod(
 #' Create a data frame to plot Subclones
 #'
 #' @param this An object of class \code{\linkS4class{c3coFit}}
+
 #' @param chromosomes A vector that contains the focused chromosomes
+
 #' @param var TCN, Minor or Major
+
 #' @param idxBest a integer that is the best fitting of the data
+
+#' @param verbose A logical value indicating whether to print extra information.
+#'   Defaults to FALSE
+
 #' @return A data frame to plot Latent profiles with ggplot
+
 #' @rdname createZdf
 #' @exportMethod createZdf
 setGeneric(

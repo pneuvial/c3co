@@ -8,6 +8,9 @@ Zplot(df, scalePosToMb = FALSE)
 }
 \arguments{
 \item{df}{data.frame object output from \code{createZdf}}
+
+\item{scalePosToMb}{a logical value, should 'x' positions be scaled to
+MegaBases? Defaults to FALSE}
 }
 \value{
 plot latent profiles along chromosomes

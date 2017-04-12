@@ -49,31 +49,33 @@
 #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 #' 
 #' @importFrom methods slot
+#' @importFrom matrixStats colMaxs
 #' @export
 fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
                     ..., verbose=FALSE) {
     ## Sanity checks
-
+    
     n <- nrow(Y1)
     nseg <- ncol(Y1)
     if (!is.null(Y2)) {
         stopifnot(nrow(Y2) == n)
         stopifnot(ncol(Y2) == nseg)
     }
+    lambda <- 10^(-seq(from=6, to=4, length.out=10))
     lambda1 <- parameters.grid$lambda1
     if (is.null(lambda1)) {
-        lambda1 <- seq(from=1e-6, to=1e-4, length.out=10)
+        lambda1 <- lambda
         if (verbose) {
             message("Regularization parameter lambda[1] not provided. Using default value: ")
             mstr(lambda1)
         }
     }
-
+    
     lambda2 <- parameters.grid$lambda2
     configs <- expand.grid(lambda1=lambda1)  ## for when Y2 is NULL
     if (!is.null(Y2)) {
         if (is.null(lambda2)) {
-            lambda2 <- seq(from=1e-6, to=1e-4, length.out=10)
+            lambda2 <- lambda
             if (verbose) {
                 message("Regularization parameter lambda[2] not provided. Using default value: ")
                 mstr(lambda2)
@@ -81,7 +83,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         }
         configs <- expand.grid(lambda1=lambda1, lambda2=lambda2)
     }
-
+    
     ## candidate number of subclones
     nb.arch <- parameters.grid$nb.arch
     if (is.null(nb.arch)) {
@@ -92,21 +94,21 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         }
     }
     rm(list = "parameters.grid")
-
+    
     it <- 1
     pp <- nb.arch[it]
-    cond <- TRUE
+    cond <- FALSE  ## condition for (early) stopping
     fitList <- list()
-    while (cond) {
+    while (!cond) {
         if (verbose) {
             message("Number of latent features: ", pp)
         }
         ## Initialization
         BICp <- +Inf
         bestConfig <- NULL
-
+        
         Z0 <- initializeZ(Y1, Y2=Y2, nb.arch=pp, ...)
-
+        
         if (verbose) {
             message("Parameter configuration: (",
                     paste(colnames(configs), collapse="; "), ")")
@@ -138,21 +140,18 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
                 warning("For model with ", pp, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
             }
         }
-
-
+        
         it <- it + 1
         pp <- nb.arch[it]
-        ## Z doesn't change anymore
-        c1 <- sum(apply(res.l@S$Z, MARGIN=2L, FUN=function(ww) {
-          sum(ww^2) < 1e-3
-        })) == 0
-        ## W doesn't change anymore
-        c2 <- sum(apply(res.l@W, MARGIN=2L, FUN=function(ww) {
-          sum(ww^2) < 1e-3
-        })) == 0
-        ## pp reach max of grid
-        c3 <-  !is.na(pp)
-        cond <- (c1 & c2 & c3)
+        ## stop early if Z contains a column identical to 0
+        c1 <- any(colMaxs(abs(res.l@S$Z)) < 1e-3)
+        ## stop early if W doesn't change anymore
+        c2 <- any(colMaxs(abs(res.l@W)) < 1e-3)
+        ## stop if pp has reached the max of its grid
+        c3 <-  is.na(pp)
+        message("c1:", c1)
+        message("c2:", c1)
+        cond <- (c1 | c2 | c3)
     }
     return(fitList)
 }

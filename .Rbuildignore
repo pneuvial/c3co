@@ -1,6 +1,5 @@
 #----------------------------
 # Git and SVN related
-#----------------------------
 ^.svn
 ^.git
 ^.make
@@ -9,23 +8,14 @@ OVERVIEW[.]md
 README[.]md
 CONDUCT[.]md
 
-#----------------------------
 # devtools
-#----------------------------
 ^revdep
-
-#----------------------------
 # Travis-CI et al.
-#----------------------------
 ^[.]travis[.]yml$
 ^travis-tool[.]sh$
 ^pkg-build[.]sh$
 ^appveyor[.]yml$
-
-
-#----------------------------
 # R related
-#----------------------------
 Rplots.pdf$
 ^cran-comments[.].*$
 ^vignettes/.*[.](pdf|PDF)$
@@ -33,7 +23,6 @@ Rplots.pdf$
 ^vignettes/[.]install_extras$
 ^Makefile$
 ^.*[.]tar[.]gz$
-
 ^c3co\.Rproj$
 ^\.Rproj\.user$     # used for temporary files.
 ^README\.Rmd$       # An Rmarkdown file used to generate README.md
@@ -42,10 +31,7 @@ Rplots.pdf$
 ^\.travis\.yml$
 ^appveyor\.yml$
 appveyor.yml
-
-#----------------------------
 # sym links to data|img dirs
-#----------------------------
 ^annotationData$
 ^cnRegionData$
 ^probeData$
@@ -60,5 +46,5 @@ appveyor.yml
 ^output
 ^c3co-data$
 ^fig
-
 TODO.md
+^NEWS\.md$
