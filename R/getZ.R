@@ -6,8 +6,10 @@ get.Z <- function(W, Y, lambda) {
     L <- ncol(Y)
     p <- ncol(W)
     Dm1 <- -bandSparse(L, L, k=0:(L-1))
-    X <- kronecker(Dm1, W)
-
+    sW <- as(W, "sparseMatrix")  ## to avoid a NOTE due to kronecker's multiple dispatch
+    X <- kronecker(Dm1, sW)
+    rm(sW)
+    
     z.tilde <- glmnet(X, c(Y), lambda=lambda, intercept=FALSE,
                       standardize=FALSE)$beta
 
