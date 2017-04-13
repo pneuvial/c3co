@@ -8,6 +8,8 @@ Zplot(df, scalePosToMb = FALSE)
 }
 \arguments{
 \item{df}{data.frame object output from \code{createZdf}}
+
+\item{scalePosToMb}{by default FALSE rescale positions to Mb if TRUE}
 }
 \value{
 plot latent profiles along chromosomes
@@ -15,3 +17,4 @@ plot latent profiles along chromosomes
 \description{
 Plot latent profiles along chromosomes
 }
+

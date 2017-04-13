@@ -152,7 +152,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         })) == 0
         ## pp reach max of grid
         c3 <-  !is.na(pp)
-        cond <- (c1 & c2 & c3)
+        #cond <- (c1 & c2 & c3)
+        cond <- c3
     }
     return(fitList)
 }

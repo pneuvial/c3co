@@ -1,0 +1,99 @@
+---
+title: "Reproducing the manuscript figures"
+author: "Morgane Pierre-Jean, Julien Chiquet, Henrik Bengtsson and Pierre Neuvial"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette aims to reproduce the manuscript figures of the real data application. The results of the C3CO method on real data have previously been saved in ```c3co.data``` package. All scripts to achieve data are in ```c3co.data``` package.
+
+```{r loadPackage}
+library("c3co")
+library("c3co.data")
+library("RColorBrewer")
+library("ggplot2")
+library("reshape")
+```
+
+```{r loadData}
+dataSet <- "GSE47077"
+patientID <- "RK29"
+pathdat <- system.file(sprintf("extdata/%s", dataSet), package="c3co.data", mustWork=TRUE)
+filename <- sprintf("resC3CO-%s.rds", patientID)
+resC3co <- readRDS(file.path(pathdat, filename))
+```
+## Plot PVE
+
+In order to choose the best number of features, it is possible to plot the percentage of variation explained (PVE) from the result of ```c3co``` function.
+```{r plotPVE, fig.width=7}
+pvePlot(resC3co@fit, 9, ylim=c(0.70,1))
+```
+```{r bestNumber}
+bestp <- 8
+dataBest <- resC3co@fit[[bestp]]
+```
+
+## Plot matrix W
+
+Then, we can easily visualize the weight matrix. R3, R5, and R9 samples are apart from the other samples, this conclusion is similar to the analysis in the initial paper.
+ 
+```{r wplot, fig.width=8, fig.height=5}
+Wplot(resC3co, idxBest=bestp, rownamesW=sprintf("R%s",1:nrow(dataBest@W)), cexCol = 0.6)
+```
+
+## Plot latent profiles
+
+### selected chromosomes:
+
+We decide to plot only chromosomes 9 and 14. Indeed, these chromosomes are cited in the initial paper because we can observe losses except for R3, R5, and R9 samples. R3, R5, and R9 are essentially characterized by the subclone C.
+
+```{r chromosomes}
+chs <- c(9, 14)
+chrTag <- sprintf("chr=%s", paste(chs, collapse="-"))
+```
+
+```{r plotFeatures, fig.width=8}
+stats <- c("TCN", "Minor", "Major")
+df <- createZdf(resC3co, chromosomes=chs, var=stats, idxBest=bestp, verbose=TRUE)
+gArch <- Zplot(df)
+gArch
+```
+
+### All chromosomes:
+
+```{r plotAllchr, eval=FALSE}
+for (chs in 1:24) {
+    chrTag <- sprintf("chr=%s", paste(chs, collapse="-"))
+    df <- createZdf(resC3co, chromosomes=chs, var=stats, idxBest=bestp, verbose=TRUE)
+    gArch <- Zplot(df)
+    gArch
+}
+```
+
+## Futher analysis 
+```{r createGetPos}
+getAlteredSegments <- function(tol, zz1, zz2, c1Mean, c2Mean){
+  loss <- ((c1Mean-zz1) >= tol)| ((c2Mean-zz2) >= tol)
+  gain <- ((zz2 - c2Mean) >= tol)|((zz1-c1Mean) >= tol)
+  ## coding gains as 3
+  gain <- apply(gain, 2, function (gg) {
+    idx <- which(gg)
+    gg[idx] <- 3
+    return(gg)
+  })
+  ## coding loh segments as 4 (gain + loss)
+  pos <- loss+gain
+  return(pos)
+}
+```
+```{r plotAlt, fig.width=8}
+getAlt <- getAlteredSegments(tol=0.1, dataBest@S$Z1, dataBest@S$Z2, 1, 1)
+colnames(getAlt) <- sprintf("Subclone %s", letters[1:ncol(dataBest@W)])
+df.Alt <- melt(getAlt)
+ggplot(df.Alt)+geom_raster(aes(x=factor(X1), y=factor(X2), fill=factor(value)))+scale_fill_manual(values = c("grey", "blue", "red", "green"),name= "Alterations", labels = c("no", "loss", "gain", "loh"))+geom_vline(xintercept=cumsum(sapply(resC3co@bkp, length)))
+
+```

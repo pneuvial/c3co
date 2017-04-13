@@ -19,6 +19,8 @@ createZdf(this, chromosomes, idxBest, var = "TCN", verbose = FALSE)
 \item{idxBest}{a integer that is the best fitting of the data}
 
 \item{var}{TCN, Minor or Major}
+
+\item{verbose}{print information}
 }
 \value{
 A data frame to plot Latent profiles with ggplot
@@ -26,3 +28,4 @@ A data frame to plot Latent profiles with ggplot
 \description{
 Create a data frame to plot Subclones
 }
+

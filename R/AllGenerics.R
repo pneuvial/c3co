@@ -107,6 +107,7 @@ setMethod(
 #' @param chromosomes A vector that contains the focused chromosomes
 #' @param var TCN, Minor or Major
 #' @param idxBest a integer that is the best fitting of the data
+#' @param verbose print information
 #' @return A data frame to plot Latent profiles with ggplot
 #' @rdname createZdf
 #' @exportMethod createZdf
