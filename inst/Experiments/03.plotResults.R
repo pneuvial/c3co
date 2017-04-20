@@ -54,7 +54,7 @@ ggsave(gRandIndex,filename=sprintf("%s/RandIndex.pdf",pathFig), width = 7, heigh
 ### Archetypes ROC curves Full resolution
 #######################################################################
 message("Compute ROC and AUC on Subclones")
-tol <- c(seq(from = 0.0, to = 1, length = 20))
+tol <- c(seq(from = 0.0, to = 5, length = 20))
 tol <- sort(tol, decreasing = TRUE)
 
 
@@ -92,7 +92,7 @@ colnames(dataPVE) <- c("Features", "method", "PVE", "Features","method", "sds")
 dataPVE$Features <- dataPVE$Features+1
 dataPVE$method <- factor(dataPVE$method, levels=c("FLLAT-TCN","C3CO-TCN","C3CO-C1C2"))
 pPVE <-  ggplot(dataPVE)+geom_line(aes(x=Features,y=PVE,colour=method, lty=method))
-pPVE <- pPVE+geom_ribbon(aes(ymin=PVE-sds, ymax=PVE+sds,x=Features,fill=method ),alpha=0.3)+ scale_x_continuous(limits=c(2, 10), breaks=seq(from=2, to =10, by=1))+theme_bw()+scale_y_continuous(limits=c(0.15,1))
+pPVE <- pPVE+geom_ribbon(aes(ymin=PVE-sds, ymax=PVE+sds,x=Features,fill=method ),alpha=0.3)+ scale_x_continuous(limits=c(2, 10), breaks=seq(from=2, to =10, by=1))+theme_bw()+scale_y_continuous(limits=c(0,1))
 pPVE
 ggsave(pPVE, filename=file.path(pathFig, "PVEs.pdf"), width=7, height=5)
 

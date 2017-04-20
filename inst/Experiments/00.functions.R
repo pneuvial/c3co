@@ -192,7 +192,7 @@ lossW <- function(nbSimu, meth, stats,weightsMat){
   for (b in 1:nbSimu) {
     print(b)
     M <- weightsMat[[b]]
-    WT <- cbind(M, 100 - rowSums(M))/100
+    WT <- cbind(M, 1 - rowSums(M))
     for (ii in 1:length(stats)) {
       stat = stats[ii]
       mm <- meth[ii]
@@ -222,22 +222,25 @@ lossW <- function(nbSimu, meth, stats,weightsMat){
 randIndW <- function(nbSimu, meth, stats, weightsMat){
   randIndexArray <- array(dim = c(nbSimu, length(stats)),dimnames = list(b = 1:nbSimu, method = sprintf("%s-%s",meth,stats)))
   for (b in 1:nbSimu) {
-    M <- weightsMat[[b]]/100
+    M <- weightsMat[[b]]
     WT <- cbind(M, 1-rowSums(M))
-    clustWT <-  cutree(hclust(dist(WT),method = "ward.D"), ncol(WT))
+    d_clust <- mclust::Mclust(t(WT), G=1:20)
+    p.best <- dim(d_clust$z)[2]
+    print(p.best)
+    clustWT <-  cutree(hclust(dist(WT),method = "ward.D"), p.best)
+    
     for (ii in 1:length(stats)) {
       stat = stats[ii]
       mm <- meth[ii]
       randIndex <- NA
       dataBest <- loadDataBest(mm, stat, b)
       if (!is.null(dataBest)) {
-        clustWhat <- cutree(hclust(dist(dataBest@W), method = "ward.D"), ncol(dataBest@W))
-        randIndex <- flexclust::randIndex(clustWT, clustWhat)
+        clustWhat <- cutree(hclust(dist(dataBest@W), method = "ward.D"), p.best)
+        randIndex <- mclust::adjustedRandIndex(clustWT, clustWhat)
       }
       randIndexArray[b,ii] <- randIndex
     }
   }
-  names(randIndexArray) <- c("b", "method")
   return(randIndexArray)
 }
 
@@ -279,7 +282,7 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
   for (b in 1:nbSimu) {
     print(b)
     M <- weightsMat[[b]]
-    WT <- cbind(M, 100 - rowSums(M))/100
+    WT <- cbind(M, 1 - rowSums(M))
     for (ss in 1:length(stats)) {
       stat <- stats[ss]
       mm <- meth[ss]      
@@ -304,8 +307,8 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
           print(filename)
           file <- file.path(pathRes,filename)
           bkp <- readRDS(file)[[b]]@bkp[[1]]
-          start <- c(1,ceiling(bkp))
-          end <- c(floor(bkp), len)
+          start <- c(ceiling(bkp)[-length(bkp)])
+          end <- c(floor(bkp)[-1])
           Z1hatFull <- expand(Z1,start, end)
           Z2hatFull <- expand(Z2,start, end)
           ZhatFull <- expand(Z,start, end)
@@ -320,8 +323,8 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
             print(filename)
             file <- file.path(pathRes,filename)
             bkp <- readRDS(file)[[b]]@bkp[[1]]
-            start <- c(1,ceiling(bkp))
-            end <- c(floor(bkp), len)            
+            start <- c(ceiling(bkp)[-length(bkp)])
+            end <- c(floor(bkp)[-1])        
             ZhatFull <- expand(Z,start, end)
           }
           SESP <- SESPTCN(ZhatFull,alteredLociInClones, ind,tol, 2)
