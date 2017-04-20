@@ -90,7 +90,7 @@ plot(datSubClone[[1]]$baft, col=cols[factor(datSubClone[[1]]$genotype)], cex=cex
 Once the subclones are created, we can generate a weight matrix $W$ in order to build mixtures.
 
 ```{r, warning=FALSE, cache=FALSE}
-W = getWeightMatrix(70, 30, nb.arch=3, nb.samp=10)
+W = rSparseWeightMatrix(nb.samp=10, nb.arch=3, sparse.coeff = 0.4)
 datList <- mixSubclones(subClones=datSubClone, W)
 str(datList[[1]])
 ```
@@ -102,9 +102,9 @@ Note that `datList` is a list of data frames with the following required columns
 Then the c3co method can be applied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
 
 ```{r c3co, warning=FALSE}
-lambda.grid <-  seq(from=1e-6, to=1e-5, length=3) ## only of length 3 so that the vignette runs fast enough
+lambda.grid <-  seq(from=1e-6, to=1e-4, length=5) ## only of length 3 so that the vignette runs fast enough
 nb.arch <- 2:5
-parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid, nb.arch=nb.arch) 
+parameters.grid <- list(lambda=lambda.grid, nb.arch=nb.arch) 
 res <- c3co(datList, parameters.grid, verbose=FALSE)
 resC <- c3co(datList, parameters.grid, stat="TCN", verbose=TRUE)
 ```
@@ -123,7 +123,7 @@ We can compare the true and the estimated weight matrices. We can easily recover
 
 ```{r heatmap_C1C2, fig.width=7, fig.height=5}
 best <- 2
-res.clustTRUE = hclust(dist(cbind(W, 100-rowSums(W))),method="ward.D")
+res.clustTRUE = hclust(dist(cbind(W, 1-rowSums(as.matrix(W)))),method="ward.D")
 col = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
 Wplot(res, idxBest = best)
 ```
@@ -133,7 +133,7 @@ Wplot(resC, idxBest = best)
 ```
 
 ```{r heatmap_TRUE, fig.width=7, fig.height=5}
-heatmap.3(cbind(W, 100-rowSums(W)), dendrogram="row", main="TRUE", Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
+heatmap.3(cbind(W, 1-rowSums(as.matrix(W))), dendrogram="row", main="TRUE", Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
 ```
 
 If we look at the subclones in the dimension of parental copy numbers, we can recover the simulated alterations.

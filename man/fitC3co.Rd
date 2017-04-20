@@ -46,15 +46,13 @@ regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
                               nbClones, bkps, regions)
-M <- getWeightMatrix(100, 0, 3, 15, sparse.coeff=0.7,
-                     contam.coeff=0.6, contam.max=2)
+M <- rSparseWeightMatrix(15, 3, sparse.coeff=0.7)
 dat <- mixSubclones(subClones=datSubClone, M)
 seg <- segmentData(dat)
 
-l1 <- seq(from=1e-6, to=1e-5, length.out=3)
-l2 <- seq(from=1e-6, to=1e-5, length.out=3)
-parameters.grid <- list(lambda1=l1, lambda2=l2, nb.arch=2:6)
-fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
+l1 <- seq(from=1e-6, to=1e-4, length.out=5)
+parameters.grid <- list(lambda=l1, nb.arch=2:6)
+fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid, verbose=TRUE)
 fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 
 }
