@@ -35,15 +35,14 @@ get.Z <- function(W, Y, lambda) {
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
 #'                               nbClones, bkps, regions)
-#' W <- rSparseWeightMatrix(15, 7, 0.4)
-#' simu <- mixSubclones(subClones=datSubClone, M)
+#' W <- rSparseWeightMatrix(15, 3, 0.4)
+#' simu <- mixSubclones(subClones=datSubClone, W)
 #' seg <- segmentData(simu)
 #' Y1 <- seg$Y1
-#' v2 <- get.Z.v2(W, t(Y1), lambda=1e-5)
-#' v1 <- c3co:::get.Z(W, t(Y1), lambda=1e-5)
-
-
-
+#' Y2 <- seg$Y2
+#' W1 <- cbind(W, 1-rowSums(W))
+#' v1 <- get.Z.v2(W1, t(Y1), lambda=1e-2)
+#' v2 <- get.Z.v2(W1, t(Y2), lambda=1e-2)
 get.Z.v2 <- function(W, Y, lambda) {
   stopifnot(length(lambda) == 1L)  ## sanity check
   
@@ -51,24 +50,20 @@ get.Z.v2 <- function(W, Y, lambda) {
   p <- ncol(W)
   
   ## temp variables
-  X1 <-  bandSparse(L, L-1, k=-(1:(L-1)))
-  Il <- bandSparse(L, L, k=0)
-  Pw <- W%*%t(solve(t(W)%*%W))%*%t(W)
-  Pl <- matrix(1, L, L)/L
-  sW <- as(W, "sparseMatrix")  ## to avoid a NOTE due to kronecker's multiple dispatch
+  X1 <- bandSparse(L, L-1, k=-(1:(L-1)))
+  W.WtWm1 <- W %*% t(solve(t(W)%*%W))
+  Pw <- W.WtWm1 %*% t(W)
   
   ## Lasso regression 
-  X.tilde <- kronecker((Il-Pl)%*%X1, sW)
-  rm(sW)
-  Y.tilde <- Y- kronecker(Pl, Pw)%*%Y
-  z.tilde <- glmnet(X.tilde, as.numeric(Y.tilde), lambda=lambda, intercept=FALSE,
-                    standardize=FALSE)$beta
+  X.tilde <- kronecker(scale(X1,TRUE,FALSE), as(W, "sparseMatrix")) 
+  y.tilde <- as.numeric(sweep(Y,1,rowMeans(Pw %*% Y),"-")) 
+  z.tilde <- glmnet(X.tilde, y.tilde, lambda=lambda, intercept=FALSE, standardize=FALSE)$beta
   
   ## Go back to Z 
   Z <- matrix(z.tilde, nrow=(L-1), ncol=p, byrow=TRUE)
-  gamma <- Pl%*%t(Y-W%*%t(X1%*%Z))%*%(W%*%solve(t(W)%*%W))
-  Z = gamma+X1%*%Z
+  X1.Z  <- rbind(0,apply(Z, 2, cumsum))
   
-  Z
+  return(sweep(X1.Z, 2, colMeans(t(Y) %*% W.WtWm1 - X1.Z), "+"))
 }
+
 
