@@ -7,7 +7,7 @@ library("listenv")
 
 plan(multiprocess, workers=3L) ## see https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html
 
-lambda.grid <- seq(from=1e-6, to=1e-4, length=10)
+lambda.grid <- 10^(-seq(from=6, to=4, length.out=10))
 p.list <- 2:10 ## candidate number of subclones
 parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid, nb.arch=p.list)
 forceM <- forceSim <- FALSE
@@ -19,9 +19,9 @@ set.seed(10)  ## for reproducibility
 ####################################################################
 n <- 30
 nbClones <- 5
-nbSimu <- 5
+nbSimu <- 100
 
-len <- 800*3  ## to obtain ~800 heterozygous loci
+len <- 8000*3  ## to obtain ~800 heterozygous loci
 nbClones <- 5
 nBkp <- 10     ## Breakpoints in subclones
 

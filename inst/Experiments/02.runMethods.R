@@ -20,7 +20,16 @@ for (ss in 1:nbSimu) {
     resTCN[[ss]] %<-% c3co(dat, parameters.grid=parameters.grid, stat="TCN")
     ## FLlat
     resFLLAT[[ss]] %<-% fllat(dat, nb.arch.grid=p.list)
-}
+
+    library("profvis")
+    p <- profvis({
+        resC <-c3co(dat, parameters.grid=parameters.grid, stat="TCN")
+    })
+    resC1C2[[ss]] %<-% c3co(dat, parameters.grid=parameters.grid, stat="C1C2")
+    ## FLlat
+    resFLLAT[[ss]] %<-% fllat(dat, nb.arch.grid=p.list)
+    
+    }
 
 saveRDS(subClones, file.path(pathSubClones, sprintf("subclones.rds")))
 saveRDS(weightMats, file.path(pathWeights, sprintf("weightsMat.rds")))

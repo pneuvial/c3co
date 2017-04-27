@@ -1,12 +1,13 @@
-library(c3co)
-library(reshape)
-library(tis)
-library(ggplot2)
-library(matrixStats)
-library(mclust)
+library("c3co")
+library("reshape2")  ## reshape2::melt
+library("tis")       ## tis::lintegrate
+library("ggplot2")
+library("matrixStats")
+library("mclust")
+library("flexclust") ## flexclust::randIndex
 
-source("00.functions.R")
-source("01.setup.R")
+#source("00.functions.R")
+#source("01.setup.R")
 stats <- c("TCN","C1C2", "TCN")
 meth <- c("FLLAT","C3CO", "C3CO")
 pathFig <- R.utils::Arguments$getWritablePath("Figures")
@@ -34,7 +35,7 @@ message("Compute loss between true and estimated weights")
 
 weightsMat <- readRDS(file.path(pathWeights, sprintf("weightsMat.rds")))
 weightsArray <- lossW(nbSimu, meth, stats, weightsMat)
-dataArrayWeights <- data.frame(melt(weightsArray))
+dataArrayWeights <- data.frame(reshape2::melt(weightsArray))
 dataArrayWeights$method <- factor(dataArrayWeights$method, levels = c("FLLAT-TCN","C3CO-TCN","C3CO-C1C2"))
 gWeights <- ggplot(dataArrayWeights) + geom_boxplot(aes(x = method, y = value, fill = method)) + ylab("Loss") + xlab("") + theme_bw()
 gWeights
