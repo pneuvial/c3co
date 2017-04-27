@@ -9,7 +9,7 @@ resTCN <- listenv::listenv()
 resFLLAT <- listenv::listenv()
 for (ss in 1:nbSimu) {
     ## weight matrix
-    M <- getWeightMatrix(70, 20, nbClones, n)
+    M <- rSparseWeightMatrix(n, nbClones, 0.7)
     weightMats[[ss]] <- M
     
     ## simulated profiles
@@ -37,4 +37,3 @@ saveRDS(dats, file.path(pathDat, sprintf("simu.rds")))
 saveRDS(as.list(resC1C2), file.path(pathRes, sprintf("results_C3CO_C1C2.rds")))
 saveRDS(as.list(resTCN), file.path(pathRes, sprintf("results_C3CO_TCN.rds")))
 saveRDS(as.list(resFLLAT), file.path(pathRes, sprintf("results_FLLAT_TCN.rds")))
-

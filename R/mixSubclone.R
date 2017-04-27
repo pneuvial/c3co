@@ -17,7 +17,8 @@
 #' regions <- list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
 #'                               nbClones, bkps, regions)
-#' mixture <- mixSubclones(datSubClone, c(20, 30))
+#' w <- rSparseWeightMatrix(1, 5)               
+#' mixture <- mixSubclones(datSubClone, w)
 #'
 #' @export
 mixSubclones <- function(subClones, W) {
@@ -58,13 +59,10 @@ mixSubclones <- function(subClones, W) {
     if (is.vector(W)) {W <- matrix(W, nrow = 1)}
     df.res <- apply(W, MARGIN=1L, FUN=function(weights) {
 
-        if (sum(weights) > 100) {
-            stop("Fraction Tumor upper than 100, please check weight vector")
+        if (sum(weights) > 1) {
+            stop("Fraction Tumor upper than 1, please check weight vector")
         }
-        fracN <- 100-sum(weights)
-        weights <- weights/100
-        fracN <- fracN/100
-
+        fracN <- 1-sum(weights)
         c1 <- rowSums(cbind(sapply(seq(along.with=subClones), FUN=function(ii) {
             weights[ii]*c1t[, ii]
         }), fracN*rowMeans(c1n)))

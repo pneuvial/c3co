@@ -9,7 +9,7 @@ plan(multiprocess, workers=3L) ## see https://cran.r-project.org/web/packages/fu
 
 lambda.grid <- 10^(-seq(from=6, to=4, length.out=10))
 p.list <- 2:10 ## candidate number of subclones
-parameters.grid <- list(lambda1=lambda.grid, lambda2=lambda.grid, nb.arch=p.list)
+parameters.grid <- list(lambda=lambda.grid, nb.arch=p.list)
 forceM <- forceSim <- FALSE
 
 set.seed(10)  ## for reproducibility

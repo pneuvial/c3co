@@ -35,11 +35,7 @@
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
 #'                               nbClones, bkps, regions)
-#' M <- rbind(c(40, 30, 0),
-#'   c(0, 70, 15),
-#'   c(10, 0, 35),
-#'   c(15, 0, 0),
-#'   c(0, 0, 0))
+#' M <- rSparseWeightMatrix(5,3, 0.90)
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
 #' res <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
