@@ -41,8 +41,8 @@ get.Z <- function(W, Y, lambda) {
 #' Y1 <- seg$Y1
 #' Y2 <- seg$Y2
 #' W1 <- cbind(W, 1-rowSums(W))
-#' v1 <- get.Z.v2(W1, t(Y1), lambda=1e-2)
-#' v2 <- get.Z.v2(W1, t(Y2), lambda=1e-2)
+#' v1 <- get.Z.v2(W1, t(Y1), lambda=1e-5)
+#' v2 <- get.Z.v2(W1, t(Y2), lambda=1e-5)
 get.Z.v2 <- function(W, Y, lambda) {
   stopifnot(length(lambda) == 1L)  ## sanity check
   
