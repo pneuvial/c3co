@@ -51,7 +51,7 @@ get.Z.v2 <- function(W, Y, lambda) {
   
   ## temp variables
   X1 <- bandSparse(L, L-1, k=-(1:(L-1)))
-  W.WtWm1 <- W %*% t(solve(t(W)%*%W))
+  W.WtWm1 <- W %*% solve(t(W)%*%W)
   Pw <- W.WtWm1 %*% t(W)
   
   ## Lasso regression 
