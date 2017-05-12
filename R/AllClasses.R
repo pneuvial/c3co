@@ -14,6 +14,8 @@
 #' @slot BIC A numeric value, the value of the Bayesian Information Criterion
 #'       of the model.
 #'
+#' @slot pen A numeric value, the value of the penalty used in the BIC
+#'
 #' @slot PVE A numeric value, the percentage of variation explained by
 #'       the model.
 #'
@@ -29,6 +31,7 @@ setClass(
     W = "matrix",
     E = "list",
     BIC = "numeric",
+    pen = "numeric",
     PVE = "numeric",
     param = "list"
   )
