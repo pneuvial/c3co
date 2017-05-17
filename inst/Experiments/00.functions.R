@@ -70,13 +70,23 @@ fllat <- function(dat, nb.arch.grid) {
     YTCNtoSeg <- t(sapply(dat, function(cc) cc$tcn))
     Y <- log2(YTCNtoSeg)-1
     result.pve <- FLLat::FLLat.PVE(na.omit(t(Y)), J.seq=nb.arch.grid) 
-    res <- sapply(nb.arch.grid, function(pp) {
+    res <- lapply(nb.arch.grid, function(pp) {
         rr <- FLLat::FLLat.BIC(na.omit(t(Y)), J=pp)
         W <- rr$opt.FLLat$Theta
         Z <- rr$opt.FLLat$Beta   
-        resFLLAT <- methods::new("posFused", S=list(Z=Z), W=t(W), E=list(Y=t(W)%*%t(Z)), PVE=result.pve$PVEs[which(pp==nb.arch.grid)], BIC=rr$opt.FLLat$bic, param=list(nb.arch=pp, lambda1=rr$lam1, lambda2=rr$lam2))
+        resFLLAT <- methods::new("posFused", S=list(Z=Z), W=t(W), E=list(Y=t(W)%*%t(Z)))
+        BIC=rr$opt.FLLat$bic
+        lambda1=rr$lam1
+        lambda2=rr$lam2
+        return(list(resFLLAT=resFLLAT, l1=lambda1, l2=lambda2, BIC=BIC))
     })
-    methods::new("c3coFit", bkp=list(), segDat=list(), fit=res)
+    l1 <- sapply(res, function (rr) rr$l1)
+    l2 <- sapply(res, function (rr) rr$l2)
+    BIC <- sapply(res, function (rr) rr$BIC)
+    resF <- lapply(res, function (rr) rr$resFLLAT)
+    config <- data.frame(nb.feat = nb.arch.grid,lambda1=l1,  lambda2=l2, PVE=result.pve$PVEs, BIC=BIC)
+    ret <- methods::new("c3coFit", bkp=list(), segDat=list(), fit=resF, config=config)
+    return(ret)
 }
 
 loadDataBest <- function(mm, stat, b, nbClones=5){
@@ -89,7 +99,7 @@ loadDataBest <- function(mm, stat, b, nbClones=5){
   if (file.exists(file)) {
     res <- readRDS(file)[[b]]
     fit <- res@fit
-    pves <- unlist(sapply(fit, function(rr) rr@PVE))
+    pves <- res@config$PVE
     pBest <- min(c(which(diff(pves) < 1e-3),length(pves) ))
     dataBest <- fit[[pBest]]
     return(dataBest)
@@ -192,7 +202,7 @@ lossW <- function(nbSimu, meth, stats,weightsMat){
   for (b in 1:nbSimu) {
     print(b)
     M <- weightsMat[[b]]
-    WT <- cbind(M, 1 - rowSums(M))
+    WT <- cbind(M, 1 - rowSums(as.matrix(M)))
     for (ii in 1:length(stats)) {
       stat = stats[ii]
       mm <- meth[ii]
@@ -223,7 +233,7 @@ randIndW <- function(nbSimu, meth, stats, weightsMat){
   randIndexArray <- array(dim = c(nbSimu, length(stats)),dimnames = list(b = 1:nbSimu, method = sprintf("%s-%s",meth,stats)))
   for (b in 1:nbSimu) {
     M <- weightsMat[[b]]
-    WT <- cbind(M, 1-rowSums(M))
+    WT <- as.matrix(cbind(M, 1-rowSums(as.matrix(M))))
     d_clust <- mclust::Mclust(t(WT), G=1:20)
     p.best <- dim(d_clust$z)[2]
     print(p.best)
@@ -259,7 +269,7 @@ pveEval <- function(nbSimu, meth, stats){
       file <- file.path(pathRes,filename)
       if(file.exists(file)){
         res <- readRDS(file)[[b]]
-        PVEArray[b,ii,1:length(res@fit)] <- sapply(res@fit, function (rr) rr@PVE)
+        PVEArray[b,ii,1:length(res@fit)] <- res@config$PVE
       }
     }
   }
@@ -282,7 +292,7 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
   for (b in 1:nbSimu) {
     print(b)
     M <- weightsMat[[b]]
-    WT <- cbind(M, 1 - rowSums(M))
+    WT <- cbind(M, 1 - rowSums(as.matrix(M)))
     for (ss in 1:length(stats)) {
       stat <- stats[ss]
       mm <- meth[ss]      

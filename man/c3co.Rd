@@ -50,9 +50,8 @@ datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
                               nbClones, bkps, regions)
 M <- rSparseWeightMatrix(15, 3, 0.5)
 dat <- mixSubclones(subClones=datSubClone, M)
-l1 <- seq(from=1e-6, to=1e-3, length.out=10)
+l1 <- seq(from=1e-6, to=1e-4, length.out=10)
 parameters.grid <- list(lambda=l1, nb.arch=2:6)
 res <- c3co(dat, parameters.grid)
 resC <- c3co(dat, stat="TCN", parameters.grid)
-
 }

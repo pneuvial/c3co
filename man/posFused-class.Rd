@@ -20,14 +20,5 @@ estimates for the latent features, as inferred by
 
 \item{\code{E}}{A list containing estimates of minor copy number and major copy
 number inferred by \code{positiveFusedLasso}.}
-
-\item{\code{BIC}}{A numeric value, the value of the Bayesian Information Criterion
-of the model.}
-
-\item{\code{PVE}}{A numeric value, the percentage of variation explained by
-the model.}
-
-\item{\code{param}}{A list of parameters: number of subclones and penalty
-coefficients.}
 }}
 

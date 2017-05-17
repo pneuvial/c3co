@@ -7,7 +7,7 @@ library("listenv")
 
 plan(multiprocess, workers=3L) ## see https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html
 
-lambda.grid <- seq(from=1e-6, to=1e-4, length=10)
+lambda.grid <- seq(from=1e-5, to=1e-1, length=10)
 p.list <- 2:10 ## candidate number of subclones
 parameters.grid <- list(lambda=lambda.grid, nb.arch=p.list)
 forceM <- forceSim <- FALSE

@@ -80,9 +80,10 @@ initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE,
         idxs <- sample(1:n, size=nb.arch, replace=FALSE)
         Z.init <- t(Y[idxs, , drop=FALSE])
         Z1.init <- t(Y1[idxs, , drop=FALSE])
-        Z2.init <- t(Y2[idxs, , drop=FALSE])
         if (is.null(Y2)) {
-            Z2.init <- NULL
+          Z2.init <- NULL
+        }else{
+          Z2.init <- t(Y2[idxs, , drop=FALSE])
         }
     }
     Z <- list(Z=Z.init, Z1=Z1.init, Z2=Z2.init)

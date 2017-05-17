@@ -38,11 +38,10 @@
 #'                               nbClones, bkps, regions)
 #' M <- rSparseWeightMatrix(15, 3, 0.5)
 #' dat <- mixSubclones(subClones=datSubClone, M)
-#' l1 <- seq(from=1e-6, to=1e-3, length.out=10)
+#' l1 <- seq(from=1e-6, to=1e-4, length.out=10)
 #' parameters.grid <- list(lambda=l1, nb.arch=2:6)
 #' res <- c3co(dat, parameters.grid)
 #' resC <- c3co(dat, stat="TCN", parameters.grid)
-#'
 #' @importFrom methods new
 #' @export
 c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
@@ -77,7 +76,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     }
 
     checkGrid <- lapply(names(parameters.grid), FUN=function(na) {
-        ecn <- c("lambda",  "nb.arch") ## expected
+        ecn <- c("lambda", "lambda1", "lambda2", "nb.arch") ## expected
         mm <- match(na, ecn)
         if (any(is.na(mm))) {
             str <- sprintf("('%s')", paste(ecn, collapse="', '"))
@@ -108,7 +107,10 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         Y2 <- NULL
     }
 
-    reslist@fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid,
+    fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid,
                            ..., verbose=verbose)
+    reslist@fit <- fit$fit
+    reslist@config <- fit$config
+    
     return(reslist)
 }

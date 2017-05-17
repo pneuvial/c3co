@@ -55,10 +55,10 @@ datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
 M <- rSparseWeightMatrix(15, 3, 0.4)
 simu <- mixSubclones(subClones=datSubClone, M)
 seg <- segmentData(simu)
-lambda <- 0.001
+lambda <- 0.0001
 Z <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
 res <- positiveFusedLasso(seg$Y1, seg$Y2, Z$Z1, Z$Z2,
-                          lambda1=lambda, lambda2=lambda)
+                          lambda1=lambda, lambda2=lambda, verbose=TRUE)
 res
 resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL,
                            lambda1=lambda, lambda2=lambda)
