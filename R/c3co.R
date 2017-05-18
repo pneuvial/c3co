@@ -46,7 +46,7 @@
 #' @importFrom methods new
 #' @export
 c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
-                 pathSeg=NULL, segDat=NULL, ..., verbose=FALSE) {
+                 segDat=NULL, ..., verbose=FALSE) {
     ## Sanity checks
     stat <- match.arg(stat)
     if (!is.null(dat)) {

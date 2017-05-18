@@ -4,8 +4,8 @@
 \alias{c3co}
 \title{Cancer subclone inference}
 \usage{
-c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
-  segDat = NULL, ..., verbose = FALSE)
+c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), segDat = NULL,
+  ..., verbose = FALSE)
 }
 \arguments{
 \item{dat}{A list of data frames for each patient, each of them of the form
