@@ -24,17 +24,17 @@ dataSet <- "GSE47077"
 patientID <- "RK29"
 pathdat <- system.file(sprintf("extdata/%s", dataSet), package="c3co.data", mustWork=TRUE)
 filename <- sprintf("resC3CO-%s.rds", patientID)
-resC3co <- readRDS(file.path(pathdat, filename))
+data("resC3CO", package = "c3co.data")
 ```
 ## Plot PVE
 
 In order to choose the best number of features, it is possible to plot the percentage of variation explained (PVE) from the result of ```c3co``` function.
 ```{r plotPVE, fig.width=7}
-pvePlot(resC3co@fit, 9, ylim=c(0.70,1))
+pvePlot(resC3CO, 9, ylim=c(0,1))
 ```
 ```{r bestNumber}
-bestp <- 8
-dataBest <- resC3co@fit[[bestp]]
+bestp <- 3
+dataBest <- resC3CO@fit[[bestp]]
 ```
 
 ## Plot matrix W
@@ -42,7 +42,7 @@ dataBest <- resC3co@fit[[bestp]]
 Then, we can easily visualize the weight matrix. R3, R5, and R9 samples are apart from the other samples, this conclusion is similar to the analysis in the initial paper.
  
 ```{r wplot, fig.width=8, fig.height=5}
-Wplot(resC3co, idxBest=bestp, rownamesW=sprintf("R%s",1:nrow(dataBest@W)), cexCol = 0.6)
+Wplot(resC3CO, idxBest=bestp, rownamesW=sprintf("R%s",1:nrow(dataBest@W)), cexCol = 0.6)
 ```
 
 ## Plot latent profiles
@@ -58,7 +58,7 @@ chrTag <- sprintf("chr=%s", paste(chs, collapse="-"))
 
 ```{r plotFeatures, fig.width=8}
 stats <- c("TCN", "Minor", "Major")
-df <- createZdf(resC3co, chromosomes=chs, var=stats, idxBest=bestp, verbose=TRUE)
+df <- createZdf(resC3CO, chromosomes=chs, var=stats, idxBest=bestp, verbose=TRUE)
 gArch <- Zplot(df)
 gArch
 ```
@@ -68,7 +68,7 @@ gArch
 ```{r plotAllchr, eval=FALSE}
 for (chs in 1:24) {
     chrTag <- sprintf("chr=%s", paste(chs, collapse="-"))
-    df <- createZdf(resC3co, chromosomes=chs, var=stats, idxBest=bestp, verbose=TRUE)
+    df <- createZdf(resC3CO, chromosomes=chs, var=stats, idxBest=bestp, verbose=TRUE)
     gArch <- Zplot(df)
     gArch
 }
@@ -91,9 +91,9 @@ getAlteredSegments <- function(tol, zz1, zz2, c1Mean, c2Mean){
 }
 ```
 ```{r plotAlt, fig.width=8}
-getAlt <- getAlteredSegments(tol=0.1, dataBest@S$Z1, dataBest@S$Z2, 1, 1)
+getAlt <- getAlteredSegments(tol=0.1, dataBest@S$Z1, dataBest@S$Z2, 1, 1.1)
 colnames(getAlt) <- sprintf("Subclone %s", letters[1:ncol(dataBest@W)])
 df.Alt <- melt(getAlt)
-ggplot(df.Alt)+geom_raster(aes(x=factor(X1), y=factor(X2), fill=factor(value)))+scale_fill_manual(values = c("grey", "blue", "red", "green"),name= "Alterations", labels = c("no", "loss", "gain", "loh"))+geom_vline(xintercept=cumsum(sapply(resC3co@bkp, length)))
+ggplot(df.Alt)+geom_raster(aes(x=factor(X1), y=factor(X2), fill=factor(value)))+ scale_fill_brewer(palette="Set1",name= "Alterations", labels = c("no", "loss", "gain", "loh"))+geom_vline(xintercept=cumsum(sapply(resC3CO@bkp, length)+1))
 
 ```
