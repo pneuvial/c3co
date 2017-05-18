@@ -36,7 +36,7 @@ Now, you can run c3co by using this line:
 ```{r, message=FALSE, eval=TRUE}
 lambda.grid <- seq(from=1e-6, to =1e-4, length=5)
 parameters.grid <- list(lambda=lambda.grid, nb.arch=2:4)
-resc3co <- c3co(dat=NULL, parameters.grid, pathSeg=file.path(output.dir, "segDat.rds"))
+resc3co <- c3co(dat=NULL, parameters.grid, segDat=file.path(output.dir, "segDat.rds"))
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
 Wplot(resc3co, idxBest = 2)

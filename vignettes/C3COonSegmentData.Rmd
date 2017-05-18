@@ -1,0 +1,32 @@
+---
+title: "Run C3CO from segment data"
+author: "Morgane Pierre-Jean, Julien Chiquet, Henrik Bengtsson and Pierre Neuvial"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette aims to help users to run C3CO on segmented data. 
+
+This example is based on segmented data from GSE47077 data sets. This data set is in \code'c3co.data' package. It is also possible to use c3co algorithm from a \code'.rds' file containing segmentation.
+
+Note that the file or the data must be a \code'list',  the following 
+```{r}
+data("segDat", package="c3co.data")
+names(segDat)
+```
+
+```{r}
+str(segDat)
+```
+
+```{r, eval=FALSE}
+library("c3co")
+lambda.grid <- 10^(-seq(from = 2, to = 5, by = 1)) ## penalty
+p.list <- 2:5 ## candidate number of subclones
+parameters.grid <- list(lambda = lambda.grid, nb.arch = p.list)
+resC3CO <- c3co(NULL, segDat = segDat, parameters.grid = parameters.grid)
+```

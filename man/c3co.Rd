@@ -5,7 +5,7 @@
 \title{Cancer subclone inference}
 \usage{
 c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
-  ..., verbose = FALSE)
+  segDat = NULL, ..., verbose = FALSE)
 }
 \arguments{
 \item{dat}{A list of data frames for each patient, each of them of the form
@@ -24,8 +24,9 @@ model}
 
 \item{stat}{TCN or C1C2}
 
-\item{pathSeg}{Path to the file that contain segmentation, by default
-\code{NULL}.}
+\item{segDat}{Either a path to the file that contains segmentation (.rds file), 
+by default \code{NULL} or a file that contains segmentation 
+(for example use segmentData function in the package)}
 
 \item{\dots}{Further arguments to be passed to \code{\link{fitC3co}}}
 

@@ -16,8 +16,9 @@
 #'
 #' @param stat TCN or C1C2
 #'
-#' @param pathSeg Path to the file that contain segmentation, by default
-#' \code{NULL}.
+#' @param segDat Either a path to the file that contains segmentation (.rds file), 
+#' by default \code{NULL} or a file that contains segmentation 
+#' (for example use segmentData function in the package)
 #'
 #' @param \dots Further arguments to be passed to \code{\link{fitC3co}}
 #'
@@ -45,7 +46,7 @@
 #' @importFrom methods new
 #' @export
 c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
-                 pathSeg=NULL, ..., verbose=FALSE) {
+                 pathSeg=NULL, segDat=NULL, ..., verbose=FALSE) {
     ## Sanity checks
     stat <- match.arg(stat)
     if (!is.null(dat)) {
@@ -84,12 +85,26 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         }
     })
 
-    if (!is.null(pathSeg)) {
+    if (!is.null(segDat)) {
+      if(class(segDat)=="character"){
         if (verbose) {
             print("Reading segmentation results from file: ")
-            print(pathSeg)
+            print(segDat)
         }
-        seg <- readRDS(pathSeg)
+        seg <- readRDS(segDat)
+      }else{
+        ## Sanity check
+        checkGrid <- lapply(names(segDat), FUN=function(na) {
+          ecn <- c("bkp", "Y1", "Y2", "Y") ## expected
+          mm <- match(na, ecn)
+          if (any(is.na(mm))) {
+            str <- sprintf("('%s')", paste(ecn, collapse="', '"))
+            stop("Argument 'parameters.grid' should contain ", str)
+          }
+        })
+        print("Segmented data is provided, skip segment step")
+        seg <- segDat
+      }
     } else {
         seg <- segmentData(dat, stat=stat, verbose=verbose)
     }
