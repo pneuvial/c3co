@@ -22,18 +22,16 @@ library("reshape")
 ```{r loadData}
 dataSet <- "GSE47077"
 patientID <- "RK29"
-pathdat <- system.file(sprintf("extdata/%s", dataSet), package="c3co.data", mustWork=TRUE)
-filename <- sprintf("resC3CO-%s.rds", patientID)
 data("resC3CO", package = "c3co.data")
 ```
 ## Plot PVE
 
 In order to choose the best number of features, it is possible to plot the percentage of variation explained (PVE) from the result of ```c3co``` function.
 ```{r plotPVE, fig.width=7}
-pvePlot(resC3CO, 9, ylim=c(0,1))
+pvePlot(resC3CO, 5, ylim=c(0,1))
 ```
 ```{r bestNumber}
-bestp <- 3
+bestp <- 4
 dataBest <- resC3CO@fit[[bestp]]
 ```
 
@@ -42,7 +40,7 @@ dataBest <- resC3CO@fit[[bestp]]
 Then, we can easily visualize the weight matrix. R3, R5, and R9 samples are apart from the other samples, this conclusion is similar to the analysis in the initial paper.
  
 ```{r wplot, fig.width=8, fig.height=5}
-Wplot(resC3CO, idxBest=bestp, rownamesW=sprintf("R%s",1:nrow(dataBest@W)), cexCol = 0.6)
+Wplot(resC3CO, idxBest=bestp, rownamesW=sprintf("%s-%s",patientID, 1:nrow(dataBest@W)), cexCol = 0.6)
 ```
 
 ## Plot latent profiles
@@ -94,6 +92,6 @@ getAlteredSegments <- function(tol, zz1, zz2, c1Mean, c2Mean){
 getAlt <- getAlteredSegments(tol=0.1, dataBest@S$Z1, dataBest@S$Z2, 1, 1.1)
 colnames(getAlt) <- sprintf("Subclone %s", letters[1:ncol(dataBest@W)])
 df.Alt <- melt(getAlt)
-ggplot(df.Alt)+geom_raster(aes(x=factor(X1), y=factor(X2), fill=factor(value)))+ scale_fill_brewer(palette="Set1",name= "Alterations", labels = c("no", "loss", "gain", "loh"))+geom_vline(xintercept=cumsum(sapply(resC3CO@bkp, length)+1))
+ggplot(df.Alt)+geom_raster(aes(x=factor(X1), y=factor(X2), fill=factor(value)))+ scale_fill_brewer(palette="Set1",name= "Alterations", labels = c("no", "loss", "gain", "loh"))+geom_vline(xintercept=cumsum(sapply(resC3CO@bkp, length)-1))
 
 ```
