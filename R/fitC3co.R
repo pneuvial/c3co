@@ -41,8 +41,8 @@
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(dat)
 #' 
-#' l1 <- seq(from=1e-5, to=1e-1, length.out=5)
-#' parameters.grid <- list(lambda=l1, nb.arch=2:6)
+#' l1 <- seq(from=1e-8, to=1e-5, length.out=5)
+#' parameters.grid <- list(lambda1=l1,lambda2=l1,  nb.arch=2:6)
 #' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
 #' #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid, verbose=TRUE)
 #' @importFrom methods slot
@@ -122,14 +122,14 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
     pp <- nb.arch[it]
     cond <- FALSE  ## condition for (early) stopping
     fitList <- list()
-    bestConfigp <- NULL
+    bestConfigp <- allConfig <- NULL
     while (!cond) {
         if (verbose) {
             message("Number of latent features: ", pp)
         }
         ## Initialization
-        BICp <- 0
-        bestConfig <- NULL
+        BICp <- +Inf
+        bestConfig <- aConf <- NULL
         
         Z0 <- initializeZ(Y1, Y2=Y2, nb.arch=pp, ...)
         
@@ -158,12 +158,16 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
             predVar <- sum((Y-rowMeans(Y))^2)
             loss <- resVar/(n*nseg)
             kZ <- sum(apply(res@S$Z, MARGIN=2L, FUN=diff) != 0)
-            BIC <-  n*nseg*log(loss) + kZ*log(n*nseg)
-            PVE <- 1-resVar/predVar
+            BIC <-  -(n*nseg*log(loss) + kZ*log(n*nseg))
+            PVE <- round(1-resVar/predVar,4)
+            Likelihood <- -(n*nseg*log(resVar/n*nseg)+n*nseg*(1+log(2*pi)))/2
+            aConf <-  c(pp, cfg, PVE, BIC, Likelihood)
+            allConfig <- rbind(allConfig, aConf)
+            
             if (BIC < BICp) { ## BIC has improved: update best model
                 res.l <- res
                 BICp <- BIC
-                bestConfig <- c(pp, cfg, PVE, BICp)
+                bestConfig <- c(pp, cfg, PVE, BICp, Likelihood)
             }
         }
         fitList[[it]] <- res.l
@@ -185,7 +189,11 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         cond <-  is.na(pp)
     }
     bestConfigp <- as.data.frame(bestConfigp)
-    colnames (bestConfigp) <- c("nb.feat", colnames(configs), "PVE", "BIC")
+    colnames (bestConfigp) <- c("nb.feat", colnames(configs), "PVE", "BIC", "Likelihood")
     rownames(bestConfigp) <- NULL
-    return(list(fit =fitList, config=bestConfigp))
+    
+    allConfig <- as.data.frame(allConfig)
+    colnames (allConfig) <- c("nb.feat", colnames(configs), "PVE", "BIC", "Likelihood")
+    rownames(allConfig) <- NULL
+    return(list(fit =fitList, config=list(best=bestConfigp, all=allConfig)))
 }

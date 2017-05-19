@@ -104,7 +104,7 @@ Note that `datList` is a list of data frames with the following required columns
 Then the c3co method can be applied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
 
 ```{r c3co, warning=FALSE, message=FALSE}
-l1 <- seq(from = 10, to = 10^-3, length = 10)
+l1 <- seq(from = 0, to = 10^-6, length = 10)
 nb.arch <- 2:6
 parameters.grid <- list(lambda=l1, nb.arch=nb.arch) 
 res <- c3co(datList, parameters.grid, verbose=FALSE)

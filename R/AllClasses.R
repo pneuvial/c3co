@@ -29,7 +29,8 @@ setClass(
 #'
 #' @slot segDat A list that contains segmented data.
 #' 
-#' @slot config A data.frame containing PVE, BIC and parameters of models
+#' @slot config A list containing PVE, BIC and parameters for all tested models 
+#'                and for the best model
 #'
 #' @slot fit A List of [\code{\linkS4class{posFused}}] objects.
 #'
@@ -39,7 +40,7 @@ setClass(
   representation = representation(
     bkp = "list",
     segDat = "list",
-    config = "data.frame",
+    config = "list",
     fit = "list"
   )
 )

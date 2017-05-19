@@ -11,7 +11,7 @@
 #' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab ylim
 #' @export
 pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
-    gg <- ggplot(res@config, aes_(x=~nb.feat, y=~PVE))
+    gg <- ggplot(res@config$best, aes_(x=~nb.feat, y=~PVE))
     gg <- gg + geom_line() + geom_point()
     gg <- gg + ylim(ylim) + xlab("Number of latent profiles")
     gg <- gg + theme_bw()
