@@ -16,8 +16,9 @@
 #'
 #' @param stat TCN or C1C2
 #'
-#' @param pathSeg Path to the file that contain segmentation, by default
-#' \code{NULL}.
+#' @param segDat Either a path to the file that contains segmentation (.rds file), 
+#' by default \code{NULL} or a file that contains segmentation 
+#' (for example use segmentData function in the package)
 #'
 #' @param \dots Further arguments to be passed to \code{\link{fitC3co}}
 #'
@@ -38,15 +39,14 @@
 #'                               nbClones, bkps, regions)
 #' M <- rSparseWeightMatrix(15, 3, 0.5)
 #' dat <- mixSubclones(subClones=datSubClone, M)
-#' l1 <- seq(from=1e-6, to=1e-3, length.out=10)
+#' l1 <- seq(from=1e-6, to=1e-4, length.out=10)
 #' parameters.grid <- list(lambda=l1, nb.arch=2:6)
 #' res <- c3co(dat, parameters.grid)
 #' resC <- c3co(dat, stat="TCN", parameters.grid)
-#'
 #' @importFrom methods new
 #' @export
 c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
-                 pathSeg=NULL, ..., verbose=FALSE) {
+                 segDat=NULL, ..., verbose=FALSE) {
     ## Sanity checks
     stat <- match.arg(stat)
     if (!is.null(dat)) {
@@ -77,7 +77,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     }
 
     checkGrid <- lapply(names(parameters.grid), FUN=function(na) {
-        ecn <- c("lambda",  "nb.arch") ## expected
+        ecn <- c("lambda", "lambda1", "lambda2", "nb.arch") ## expected
         mm <- match(na, ecn)
         if (any(is.na(mm))) {
             str <- sprintf("('%s')", paste(ecn, collapse="', '"))
@@ -85,12 +85,26 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         }
     })
 
-    if (!is.null(pathSeg)) {
+    if (!is.null(segDat)) {
+      if(class(segDat)=="character"){
         if (verbose) {
             print("Reading segmentation results from file: ")
-            print(pathSeg)
+            print(segDat)
         }
-        seg <- readRDS(pathSeg)
+        seg <- readRDS(segDat)
+      }else{
+        ## Sanity check
+        checkGrid <- lapply(names(segDat), FUN=function(na) {
+          ecn <- c("bkp", "Y1", "Y2", "Y") ## expected
+          mm <- match(na, ecn)
+          if (any(is.na(mm))) {
+            str <- sprintf("('%s')", paste(ecn, collapse="', '"))
+            stop("Argument 'parameters.grid' should contain ", str)
+          }
+        })
+        print("Segmented data is provided, skip segment step")
+        seg <- segDat
+      }
     } else {
         seg <- segmentData(dat, stat=stat, verbose=verbose)
     }
@@ -108,7 +122,10 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         Y2 <- NULL
     }
 
-    reslist@fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid,
+    fit <- fitC3co(Y1, Y2=Y2, parameters.grid=parameters.grid,
                            ..., verbose=verbose)
+    reslist@fit <- fit$fit
+    reslist@config <- fit$config
+    
     return(reslist)
 }

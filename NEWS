@@ -1,10 +1,15 @@
 Package: c3co
 =============
+Version: 0.2.2-9000 [2017-05-17]
+
+ o Changed structure of c3co object by adding 'config' slot
+ o Bugs fixed for Z inferrence when (WtW)^-1 is non-inversible
+
 Version: 0.2.1-9000 [2017-04-20]
 
  o Removed conditions c1 and c2 in fitc3co
  o Changed generation of weight matrix (new function rSparseWeightMatrix)
- o Set lambda1=lambda2 for Minor and Major inference
+ o Set lambda1=lambda2 for Minor and Major inference by default
 
 
 Version: 0.2.0-9000 [2017-04-12]

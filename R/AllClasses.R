@@ -10,16 +10,7 @@
 #'
 #' @slot E A list containing estimates of minor copy number and major copy
 #'       number inferred by \code{positiveFusedLasso}.
-#'
-#' @slot BIC A numeric value, the value of the Bayesian Information Criterion
-#'       of the model.
-#'
-#' @slot PVE A numeric value, the percentage of variation explained by
-#'       the model.
-#'
-#' @slot param A list of parameters: number of subclones and penalty
-#'       coefficients.
-#'
+#'       
 #' @exportClass posFused
 setClass(
   Class = "posFused",
@@ -27,10 +18,7 @@ setClass(
     S = "list",
     S0 = "list",
     W = "matrix",
-    E = "list",
-    BIC = "numeric",
-    PVE = "numeric",
-    param = "list"
+    E = "list"
   )
 )
 
@@ -40,6 +28,9 @@ setClass(
 #' @slot bkp A list of breakpoints for each chromosome.
 #'
 #' @slot segDat A list that contains segmented data.
+#' 
+#' @slot config A list containing PVE, BIC and parameters for all tested models 
+#'                and for the best model
 #'
 #' @slot fit A List of [\code{\linkS4class{posFused}}] objects.
 #'
@@ -49,6 +40,7 @@ setClass(
   representation = representation(
     bkp = "list",
     segDat = "list",
+    config = "list",
     fit = "list"
   )
 )

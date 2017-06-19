@@ -14,6 +14,9 @@ Class for the object create by \code{c3coFit} function
 
 \item{\code{segDat}}{A list that contains segmented data.}
 
+\item{\code{config}}{A list containing PVE, BIC and parameters for all tested models 
+and for the best model}
+
 \item{\code{fit}}{A List of [\code{\linkS4class{posFused}}] objects.}
 }}
 

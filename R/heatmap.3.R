@@ -140,7 +140,7 @@ heatmap.3 <- function(x,
     }
 
     x <- as.matrix(x)
-    scale01 <- function(x, low = min(x), high = max(x)) {
+    scale01 <- function(x, low = 0, high = 1) {
         x <- (x - low)/(high - low)
         x
     }
@@ -255,7 +255,7 @@ heatmap.3 <- function(x,
     }
     if (length(breaks) == 1) {
         if (!symbreaks)
-            breaks <- seq(from=min(x, na.rm = na.rm), to=max(x, na.rm = na.rm),
+            breaks <- seq(from=0, to=1,
                           length.out = breaks)
         else {
             extreme <- max(abs(x), na.rm = TRUE)
@@ -448,8 +448,8 @@ heatmap.3 <- function(x,
             tmpbreaks[length(tmpbreaks)] <- max(abs(x), na.rm = TRUE)
         }
         else {
-            min.raw <- min(x, na.rm = TRUE)
-            max.raw <- max(x, na.rm = TRUE)
+            min.raw <- 0
+            max.raw <- 1
         }
 
         z <- seq(from=min.raw, to=max.raw, length.out = length(col))

@@ -4,7 +4,7 @@
 \alias{c3co}
 \title{Cancer subclone inference}
 \usage{
-c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), pathSeg = NULL,
+c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), segDat = NULL,
   ..., verbose = FALSE)
 }
 \arguments{
@@ -24,8 +24,9 @@ model}
 
 \item{stat}{TCN or C1C2}
 
-\item{pathSeg}{Path to the file that contain segmentation, by default
-\code{NULL}.}
+\item{segDat}{Either a path to the file that contains segmentation (.rds file), 
+by default \code{NULL} or a file that contains segmentation 
+(for example use segmentData function in the package)}
 
 \item{\dots}{Further arguments to be passed to \code{\link{fitC3co}}}
 
@@ -50,9 +51,8 @@ datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
                               nbClones, bkps, regions)
 M <- rSparseWeightMatrix(15, 3, 0.5)
 dat <- mixSubclones(subClones=datSubClone, M)
-l1 <- seq(from=1e-6, to=1e-3, length.out=10)
+l1 <- seq(from=1e-6, to=1e-4, length.out=10)
 parameters.grid <- list(lambda=l1, nb.arch=2:6)
 res <- c3co(dat, parameters.grid)
 resC <- c3co(dat, stat="TCN", parameters.grid)
-
 }

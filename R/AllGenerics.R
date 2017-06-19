@@ -10,10 +10,6 @@ setMethod(
         str(object@W)
         cat("Copy-number estimates:\n")
         str(object@E)
-        cat("Bayesian Information Criterion (BIC):", object@BIC, "\n")
-        cat("Percentage of Variance Explained (PVE):", object@PVE, "\n")
-        cat("Parameters:\n")
-        str(object@param)
     }
 )
 
@@ -96,6 +92,8 @@ setMethod(
         str(object@bkp)
         cat("Segmented data:\n")
         str(object@segDat)
+        cat("Configuration:\n")
+        str(object@config)
         cat("Results of positive fused lasso:\n")
         cat("List of", length(object@fit), "objects of class 'posFused'")
     }

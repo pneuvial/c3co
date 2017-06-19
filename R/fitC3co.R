@@ -41,11 +41,10 @@
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(dat)
 #' 
-#' l1 <- seq(from=1e-6, to=1e-4, length.out=5)
-#' parameters.grid <- list(lambda=l1, nb.arch=2:6)
-#' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid, verbose=TRUE)
-#' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
-#' 
+#' l1 <- seq(from=1e-8, to=1e-5, length.out=5)
+#' parameters.grid <- list(lambda1=l1,lambda2=l1,  nb.arch=2:6)
+#' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
+#' #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid, verbose=TRUE)
 #' @importFrom methods slot
 #' @importFrom matrixStats colMaxs
 #' @export
@@ -59,27 +58,53 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         stopifnot(nrow(Y2) == n)
         stopifnot(ncol(Y2) == nseg)
     }
-    lambda <- 10^(-seq(from=6, to=4, length.out=10))
-    lambda1 <- parameters.grid$lambda
-    if (is.null(lambda1)) {
-        lambda1 <- lambda
-        if (verbose) {
-            message("Regularization parameter lambda[1] not provided. Using default value: ")
-            mstr(lambda1)
+    ### Define grids
+    lambda <-  parameters.grid$lambda
+    lambda1 <- parameters.grid$lambda1
+    lambda2 <- parameters.grid$lambda2
+    if (!is.null(lambda)) {
+      lambda1 <- lambda
+      if (!is.null(Y2)) {
+          lambda2 <- lambda
+          if (verbose) {
+            message("Only one regularization parameter is provided. Using the same value for lambda[1] and lambda[2] : ")
+            mstr(lambda)
+          }
+          configs <- cbind(lambda1 = lambda1, lambda2 = lambda2)
+      }else{
+        configs <- cbind(lambda1 = lambda1)
+      }
+    }else{
+      ## Case C1-C2
+      if (!is.null(Y2)) {
+        if(is.null(lambda1) & is.null(lambda2)){
+          lambda <- 10^(-seq(from=6, to=4, length.out=10))
+          if (verbose) {
+            message("Regularization parameter lambda is not provided. Using default value: ")
+            mstr(lambda)
+          }
+          configs <- cbind(lambda1 = lambda, lambda2 = lambda)
+        }else {
+          configs <- expand.grid(lambda1 = lambda1, lambda2 = lambda2) 
         }
-    }
-    
-    lambda2 <- parameters.grid$lambda
-    configs <- expand.grid(lambda1=lambda1)  ## for when Y2 is NULL
-    if (!is.null(Y2)) {
-        if (is.null(lambda2)) {
-            lambda2 <- lambda
-            if (verbose) {
-                message("Regularization parameter lambda[2] not provided. Using default value: ")
-                mstr(lambda2)
-            }
+        
+      ## Case TCN
+      }else{
+        lambda <- c(lambda1, lambda2)
+        if(!is.null(lambda)){
+          if(verbose){
+            message("Only regularization parameter lambda[1] or lambda[2] is used")
+            mstr(lambda)
+          }
+        }else{
+          lambda <- 10^(-seq(from=6, to=4, length.out=10))
+          if(verbose){
+            message("Regularization parameter lambda or lambda[1] or  lambda[2] is not provided. Using value: ")
+            mstr(lambda)
+          }
         }
-        configs <- cbind(lambda1=lambda1, lambda2=lambda2)
+        configs <- cbind(lambda1 = lambda)
+      }
     }
     
     ## candidate number of subclones
@@ -97,13 +122,14 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
     pp <- nb.arch[it]
     cond <- FALSE  ## condition for (early) stopping
     fitList <- list()
+    bestConfigp <- allConfig <- NULL
     while (!cond) {
         if (verbose) {
             message("Number of latent features: ", pp)
         }
         ## Initialization
         BICp <- +Inf
-        bestConfig <- NULL
+        bestConfig <- aConf <- NULL
         
         Z0 <- initializeZ(Y1, Y2=Y2, nb.arch=pp, ...)
         
@@ -121,13 +147,31 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
             if (!is.null(Y2)) l2 <- cfg[, "lambda2"]
             res <- positiveFusedLasso(Y1, Y2=Y2, Z1=Z0$Z1, Z2=Z0$Z2,
                                       lambda1=l1, lambda2=l2, verbose=FALSE)
-            if (res@BIC < BICp) { ## BIC has improved: update best model
+            ## Calculate model fit statistics
+            if(!is.null(Y2)){
+              Y <- Y1 + Y2
+            }else{
+              Y <- Y1
+            }
+            
+            resVar <- sum((Y-res@W %*% t(res@S$Z))^2)
+            predVar <- sum((Y-rowMeans(Y))^2)
+            loss <- resVar/(n*nseg)
+            kZ <- sum(apply(res@S$Z, MARGIN=2L, FUN=diff) != 0)
+            BIC <-  -(n*nseg*log(loss) + kZ*log(n*nseg))
+            PVE <- round(1-resVar/predVar,4)
+            Likelihood <- -(n*nseg*log(resVar/n*nseg)+n*nseg*(1+log(2*pi)))/2
+            aConf <-  c(pp, cfg, PVE, BIC, Likelihood)
+            allConfig <- rbind(allConfig, aConf)
+            
+            if (BIC < BICp) { ## BIC has improved: update best model
                 res.l <- res
-                BICp <- res@BIC
-                bestConfig <- cfg
+                BICp <- BIC
+                bestConfig <- c(pp, cfg, PVE, BICp, Likelihood)
             }
         }
         fitList[[it]] <- res.l
+        bestConfigp <- rbind(bestConfigp, bestConfig)
         ## sanity check: minor CN < major CN in the best parameter
         ## configurations (not for all configs by default)
         if (!is.null(Y2) & warn) {
@@ -144,5 +188,12 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         ## stop if pp has reached the max of its grid
         cond <-  is.na(pp)
     }
-    return(fitList)
+    bestConfigp <- as.data.frame(bestConfigp)
+    colnames (bestConfigp) <- c("nb.feat", colnames(configs), "PVE", "BIC", "Likelihood")
+    rownames(bestConfigp) <- NULL
+    
+    allConfig <- as.data.frame(allConfig)
+    colnames (allConfig) <- c("nb.feat", colnames(configs), "PVE", "BIC", "Likelihood")
+    rownames(allConfig) <- NULL
+    return(list(fit =fitList, config=list(best=bestConfigp, all=allConfig)))
 }

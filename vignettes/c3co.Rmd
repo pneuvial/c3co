@@ -41,8 +41,10 @@ The corresponding (noiseless) copy number profiles are displayed in the figure b
 ```{r, message=FALSE,warning=FALSE}
 stopifnot(packageVersion("acnr") >= '0.2.6')
 library("c3co")
-#library("ggplot2")
-set.seed(10)
+library("ggplot2")
+library("mclust")
+library("reshape")
+set.seed(9)
 ```
 
 ### Creating a synthetic data set
@@ -90,7 +92,7 @@ plot(datSubClone[[1]]$baft, col=cols[factor(datSubClone[[1]]$genotype)], cex=cex
 Once the subclones are created, we can generate a weight matrix $W$ in order to build mixtures.
 
 ```{r, warning=FALSE, cache=FALSE}
-W = rSparseWeightMatrix(nb.samp=10, nb.arch=3, sparse.coeff = 0.4)
+W = rSparseWeightMatrix(nb.samp=10, nb.arch=3, sparse.coeff = 0.8)
 datList <- mixSubclones(subClones=datSubClone, W)
 str(datList[[1]])
 ```
@@ -101,35 +103,35 @@ Note that `datList` is a list of data frames with the following required columns
 
 Then the c3co method can be applied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
 
-```{r c3co, warning=FALSE}
-lambda.grid <-  seq(from=1e-6, to=1e-4, length=5) ## only of length 3 so that the vignette runs fast enough
-nb.arch <- 2:5
-parameters.grid <- list(lambda=lambda.grid, nb.arch=nb.arch) 
+```{r c3co, warning=FALSE, message=FALSE}
+l1 <- seq(from = 0, to = 10^-6, length = 10)
+nb.arch <- 2:6
+parameters.grid <- list(lambda=l1, nb.arch=nb.arch) 
 res <- c3co(datList, parameters.grid, verbose=FALSE)
-resC <- c3co(datList, parameters.grid, stat="TCN", verbose=TRUE)
+resC <- c3co(datList, parameters.grid, stat="TCN", verbose=FALSE)
 ```
 
 For each $p$,  `c3co` only retains the combination of the penalization coefficients $(\lambda_1, \lambda_2)$ which minimizes the Bayesian Information Criterion (BIC) of the model. The next step is to choose the best $p$ (number of subclones). Following @nowak2011fused, we compare the models for different values of $p$ through their percentage of variance explained (PVE), and select the last $p$ before the final plateau of the PVE. In this example, it seems that the best is $\hat{p}=4$ (which is the true number of subclones).
 
 ```{r}
-pvePlot(res@fit, ylim=c(0.80,1))
+pvePlot(res, ylim=c(0.0,1))
 ```
 
 ```{r}
-pvePlot(resC@fit, ylim=c(0.80,1))
+pvePlot(resC, ylim=c(0.0,1))
 ```
 
 We can compare the true and the estimated weight matrices. We can easily recover a classification close to the truth with the inferred weight matrix. 
 
 ```{r heatmap_C1C2, fig.width=7, fig.height=5}
-best <- 2
+best <- 3
 res.clustTRUE = hclust(dist(cbind(W, 1-rowSums(as.matrix(W)))),method="ward.D")
 col = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
-Wplot(res, idxBest = best)
+Wplot(res, idxBest = best, cexCol = 0.4)
 ```
 
 ```{r heatmap_TCN, fig.width=7, fig.height=5}
-Wplot(resC, idxBest = best)
+Wplot(resC, idxBest = best, cexCol = 0.4)
 ```
 
 ```{r heatmap_TRUE, fig.width=7, fig.height=5}
@@ -141,6 +143,42 @@ If we look at the subclones in the dimension of parental copy numbers, we can re
 ```{r,Z1Z2hat, fig.width=7.5, fig.height=5}
 df <- createZdf(res, chromosomes=1, idxBest = best)
 Zplot(df)
+```
+
+## Further analysis
+### Performance  of clustering
+
+```{r,clust}
+WC1C2 <- res@fit[[best]]@W
+WTCN <- resC@fit[[best]]@W
+Wtrue <- cbind(W, 1-rowSums(as.matrix(W)))
+adjustedRandIndex(cutree(hclust(dist(WC1C2), method="ward.D2"),4), cutree(hclust(dist(Wtrue), method="ward.D2"),4))
+adjustedRandIndex(cutree(hclust(dist(WTCN), method="ward.D2"),4), cutree(hclust(dist(Wtrue), method="ward.D2"),4))
+```
+## Performance of alteration detection
+```{r, fig.width=7.5, fig.height=5}
+getAlteredSegments <- function(tol, zz1, zz2, c1Mean, c2Mean){
+  loss <- ((c1Mean-zz1) >= tol)| ((c2Mean-zz2) >= tol)
+  gain <- ((zz2 - c2Mean) >= tol)|((zz1-c1Mean) >= tol)
+  ## coding gains as 3
+  gain <- apply(gain, 2, function (gg) {
+    idx <- which(gg)
+    gg[idx] <- 3
+    return(gg)
+  })
+  ## coding loh segments as 4 (gain + loss)
+  pos <- loss+gain
+  return(pos)
+}
+
+dataBest <- res@fit[[best]]
+meanMin <- mean(df$CopyNumber[which(df$arch=="d"&df$stat=="Minor")])
+getAlt <- getAlteredSegments(tol=0.2, dataBest@S$Z1, dataBest@S$Z2, 1, 1.1)
+colnames(getAlt) <- sprintf("Subclone %s", letters[1:ncol(dataBest@W)])
+df.Alt <- melt(getAlt)
+df.Alt$x.min <- rep(res@bkp[[1]][-7], 4)
+df.Alt$x.max <- rep(res@bkp[[1]][-1], 4)
+ggplot(df.Alt, aes(xmin = x.min, xmax = x.max, ymin = 1, ymax =2, fill = factor(value))) + geom_rect() + facet_grid(X2~.)+theme(axis.text.y = element_blank(), axis.ticks = element_blank())+scale_fill_discrete(labels= c("Normal", "Loss", "Gain", "LoH"), name="States")
 ```
 
 ## Session information

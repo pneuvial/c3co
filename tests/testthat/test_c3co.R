@@ -27,18 +27,20 @@ M <- rSparseWeightMatrix(15, 3)
 
 dat <- mixSubclones(subClones = datSubClone, W = M)
 
-l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10)
+l1 <- 10^(-seq(from = 2, to = 8, by = 1))
 
 parameters.grid <- list(lambda = l1, nb.arch = 2:6)
 
 test_that("c3co terminates on C1,C2", {
   res <- c3co(dat, parameters.grid = parameters.grid)
-  df <- createZdf(res, chromosomes=1, idxBest=2)
+  df <- createZdf(res, chromosomes=1, idxBest=3)
+  pvePlot(res)
   Zplot(df)
 })
 
 test_that("c3co terminates on TCN", {
   resC <- c3co(dat, parameters.grid = parameters.grid, stat = "TCN")
-  df <- createZdf(resC, chromosomes=1, idxBest=2)
+  df <- createZdf(resC, chromosomes=1, idxBest=3)
+  pvePlot(resC)
   Zplot(df)
 })

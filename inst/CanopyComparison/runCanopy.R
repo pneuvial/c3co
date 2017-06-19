@@ -10,48 +10,22 @@ data(toy2)
 Y1 <- t(toy2$Wm)
 Y2 <- t(toy2$WM)
 lambda <- 1e-5
+bkpPosByCHR <- list(c(1,2,3))
+segDat <- list(Y1=t(Y1), Y2=t(Y2), Y=t(Y1+Y2), bkp=bkpPosByCHR)
 
 message("Run c3co\n")
 K = 2:8
-rC1C2 <- lapply(K, function (kk) positive.fused(Y1,Y2, kk,lambda1 = lambda, lambda2 = lambda, init.random=FALSE))
+parameters.grid <- list(lambda=lambda,  nb.arch=K)
+rC1C2 <- c3co(dat=NULL, segDat= segDat, parameters.grid)
 
-n <- nrow(Y1)
-loss <- sapply(rC1C2, function (rr) sum(((Y1+Y2)-(rr@E$Y1+rr@E$Y2))^2))
-kZ <- sapply(rC1C2, function (rr) sum(apply(rr@S$Z, 2, diff)!=0))
-PVE <- 1-loss/(sum(((Y1+Y2)-rowMeans(Y1+Y2))^2))
-plot(K,PVE, type="l", ylim=c(0.9,1))
-kbest <- 4
+pvePlot(rC1C2,ylim=c(0.9,1))
+rC1C2@config$best$PVE
+kbest <- 3
 
-bestRes <- rC1C2[[which(K==kbest)]]
-savePath <- Arguments$getWritablePath("data-Canopy")
-saveRDS(bestRes, file=file.path(savePath, "res_c3co.rds"))
-bestRes <- readRDS(file.path(savePath, "res_c3co.rds"))
-
-W <- round(bestRes@W,2)[1:10,]
+W <- rC1C2@fit[[kbest]]@W[10:1,]
 res.clust = hclust(dist(W),method="ward.D")
 col = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
-
-figPath <- Arguments$getWritablePath("Figures-Canopy")
-filename <- "heatmap,toy,c3co"
-pdf(sprintf("%s/%s.pdf", figPath, filename), width=13, height=8)
-Wplot(bestRes, rownamesW=rownames(W), cellnote=W, notecol="black")
-dev.off()
-
-rC1C2k4 <- lapply(1:50,function(ss) positive.fused(Y1,Y2, 4,lambda1 = lambda, lambda2 = lambda, init.random=TRUE))
-loss <- sapply(rC1C2k4, function (rr) sum(((Y1+Y2)-(rr@E$Y1+rr@E$Y2))^2))
-
-bestK4 <- rC1C2k4[[which.min(loss)]]
-
-WK4 <- round(bestK4@W,2)[1:10,]
-res.clust = hclust(dist(WK4),method="ward.D")
-col = colorRampPalette(brewer.pal(9, 'GnBu'))(100)
-
-figPath <- Arguments$getWritablePath("Figures-Canopy")
-filename <- "heatmap,toy,c3co-v2"
-pdf(sprintf("%s/%s.pdf", figPath, filename), width=13, height=8)
-Wplot(bestK4, rownamesW=rownames(WK4), cellnote=WK4, notecol="black")
-dev.off()
-
+gplots::heatmap.2(W, Rowv=FALSE, dendrogram="column", col=col, scale="none", cexRow=1.5,key = TRUE, cellnote = W, notecol="black", margins = c(10,9), trace="none")
 
 
 message("Canopy can take a little bit time")

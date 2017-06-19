@@ -43,10 +43,10 @@
 #' M <- rSparseWeightMatrix(15, 3, 0.4)
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
-#' lambda <- 0.001
+#' lambda <- 0.0001
 #' Z <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
 #' res <- positiveFusedLasso(seg$Y1, seg$Y2, Z$Z1, Z$Z2,
-#'                           lambda1=lambda, lambda2=lambda)
+#'                           lambda1=lambda, lambda2=lambda, verbose=TRUE)
 #' res
 #' resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL,
 #'                            lambda1=lambda, lambda2=lambda)
@@ -73,25 +73,49 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
     if (!is.null(Y2)) {
         lst[["Z2"]] <- list(Y=Y2, lambda=lambda2)
     }
-
     while (!cond) {
         iter <- iter + 1
         ## __________________________________________________
         ## STEP 1: optimize wrt W (fixed Z1, Z2)
         Zmat <- rbind(Z$Z1, Z$Z2)
         W <- get.W(Zmat, Ymat)
-
-        ## __________________________________________________
-        ## STEP 2: optimize wrt Z (fixed W)
-        Z <- lapply(lst, FUN=function(ll) {
-            get.Z(ll[["Y"]], ll[["lambda"]], W=W)
-        })
-
+        if(iter == 1){
+          delta <- tryCatch({
+            i <- solve(t(W) %*% W)
+            delta <- Inf
+          }, error = function(err) {
+            # error handler picks up where error was generated
+            if(verbose) message("ERROR to solve inv(WtW):  ",err)
+            delta <- 0
+            return(delta)
+          })
+          if(delta == 0){
+            if(verbose) message("No solution of this combination of lambda")
+          }else{
+            ## STEP 2: optimize wrt Z (fixed W)
+            Z <- lapply(lst, FUN = function(ll) {
+              get.Z(Y = ll[["Y"]], lambda = ll[["lambda"]], W=W)
+            })
+          }
+        }else{
+          W <- tryCatch({
+            i <- solve(t(W) %*% W)
+            W
+          }, error = function(err) {
+            # error handler picks up where error was generated
+            if(verbose) message("ERROR to solve inv(WtW):  ",err)
+            return(W.old)
+          })
+          ## STEP 2: optimize wrt Z (fixed W)
+          Z <- lapply(lst, FUN = function(ll) {
+            get.Z(Y = ll[["Y"]], lambda = ll[["lambda"]], W=W)
+          })
+          delta <- sqrt(sum((W - W.old)^2))
+        }
+        
         ## __________________________________________________
         ## STEP 3: check for convergence of the weights
-        if (iter > 1) {
-            delta <- sqrt(sum((W-W.old)^2))
-        }
+        
         cond <- (iter > max.iter || delta < eps)
 
         if (verbose) message("delta:", round(delta, digits=4))
@@ -113,15 +137,6 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
         Y1hat <- W %*% t(Z)
         Y2hat <- NULL
     }
-
-    ## Calculate model fit statistics
-    resVar <- sum((Y-W %*% t(Z))^2)
-    predVar <- sum((Y-rowMeans(Y))^2)
-    loss <- resVar/(n*L)
-    kZ <- sum(apply(Z, MARGIN=2L, FUN=diff) != 0)
-    BIC <-  n*L*log(loss) + kZ*log(n*L)
-    PVE <- 1-resVar/predVar
-
     if (!is.null(Y2) & warn) {  ## sanity check: minor CN < major CN
         dZ <- Z2-Z1
         tol <- 1e-2  ## arbitrary tolerance...
@@ -131,8 +146,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
     }
     S <- list(Z=Z, Z1=Z1, Z2=Z2)
     E <- list(Y1=Y1hat, Y2=Y2hat)
-    param <- list(nb.arch=nb.arch, lambda1=lambda1, lambda2=lambda2)
     objRes <- new("posFused",
-                  S=S, S0=Z0, W=W, E=E, BIC=BIC, PVE=PVE, param=param)
+                  S=S, S0=Z0, W=W, E=E)
     return(objRes)
 }

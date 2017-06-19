@@ -1,6 +1,6 @@
 #' Function to plot PVE
 #'
-#' @param res result from [\code{posFused}]
+#' @param res result from [\code{c3co}]
 #'
 #' @param bestNbLatent best number of latent profiles.
 #'
@@ -11,10 +11,7 @@
 #' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab ylim
 #' @export
 pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
-    PVEs <- sapply(res, FUN = function(rr) rr@PVE)
-    nb.arch <- sapply(res, FUN = function(rr) rr@param$nb.arch)
-    df.PVE <- data.frame(PVE=PVEs, nb.arch=nb.arch)
-    gg <- ggplot(df.PVE, aes_(x=~nb.arch, y=~PVE))
+    gg <- ggplot(res@config$best, aes_(x=~nb.feat, y=~PVE))
     gg <- gg + geom_line() + geom_point()
     gg <- gg + ylim(ylim) + xlab("Number of latent profiles")
     gg <- gg + theme_bw()
@@ -36,7 +33,7 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
 #' @return plot latent profiles along chromosomes
 #'   
 #' @importFrom ggplot2 ggplot geom_step geom_segment aes facet_grid labeller
-#'   label_both theme_bw scale_x_continuous labs
+#'   label_both theme_bw scale_x_continuous labs scale_y_continuous
 #' @export
 Zplot <- function(df, scalePosToMb=FALSE) {
     if (scalePosToMb) {
@@ -47,7 +44,7 @@ Zplot <- function(df, scalePosToMb=FALSE) {
                           col=~arch, lty=~arch))
     gg <- gg + geom_step(direction="hv", lwd=1)
     gg <- gg + geom_segment(aes_(xend=~end, yend=~CopyNumber), lwd=1)  ## FIXME: we're actually plotting all the horizontal lines twice
-    gg <- gg + facet_grid(stat~chr, scales="free",
+    gg <- gg + facet_grid(stat~chr,
                           labeller=labeller(.cols=label_both))
     gg <- gg + theme_bw()
     gg <- gg + labs(colour = "Subclone", lty="Subclone")

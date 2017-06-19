@@ -25,9 +25,10 @@ library("c3co")
 In this document we use the data from a public data set saved into \code{c3co.data} package.
 \code{PSCBSwrapper} function segments and saves data from \code{PSCBS} format to c3co format.
 ```{r, eval=TRUE}
-pathPSCBS <- system.file("extdata", "PSCBS", package="c3co.data", mustWork=TRUE)
+data("PSCBSdata", package="c3co.data")
 output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
-PSCBSwrapper(pathPSCBS, output.dir=output.dir, stat="C1C2")
+stopifnot(!is.null(PSCBSdata))
+PSCBSwrapper(PSCBSdata, output.dir=output.dir, stat="C1C2")
 ```
 
 ## Run c3co ##
@@ -35,13 +36,13 @@ Now, you can run c3co by using this line:
 ```{r, message=FALSE, eval=TRUE}
 lambda.grid <- seq(from=1e-6, to =1e-4, length=5)
 parameters.grid <- list(lambda=lambda.grid, nb.arch=2:4)
-resc3co <- c3co(NULL, parameters.grid, pathSeg=file.path(output.dir, "segDat.rds"))
+resc3co <- c3co(dat=NULL, parameters.grid, segDat=file.path(output.dir, "segDat.rds"))
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
 Wplot(resc3co, idxBest = 2)
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
-dat <- loadPSCBSdata(pathPSCBS)
+dat <- PSCBSdata
 ```
 
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
