@@ -119,9 +119,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
     predVar <- sum((Y-rowMeans(Y))^2)
     loss <- resVar/(n*L)
     kZ <- sum(apply(Z, MARGIN=2L, FUN=diff) != 0)
-    pen <- kZ*log(n*L)
-    negloglik <- n*L*log(loss)
-    BIC <-  negloglik + pen
+    BIC <-  n*L*log(loss) + kZ*log(n*L)
     PVE <- 1-resVar/predVar
 
     if (!is.null(Y2) & warn) {  ## sanity check: minor CN < major CN
@@ -135,6 +133,6 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
     E <- list(Y1=Y1hat, Y2=Y2hat)
     param <- list(nb.arch=nb.arch, lambda1=lambda1, lambda2=lambda2)
     objRes <- new("posFused",
-                  S=S, S0=Z0, W=W, E=E, BIC=BIC, pen=pen, PVE=PVE, param=param)
+                  S=S, S0=Z0, W=W, E=E, BIC=BIC, PVE=PVE, param=param)
     return(objRes)
 }

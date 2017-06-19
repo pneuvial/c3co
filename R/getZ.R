@@ -25,7 +25,7 @@ get.Z <- function(W, Y, lambda) {
 #' @importFrom glmnet glmnet
 #' @importFrom Matrix bandSparse
 #' @importFrom methods as
-#' @examples
+#' @example 
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10

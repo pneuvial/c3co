@@ -85,7 +85,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
     ## candidate number of subclones
     nb.arch <- parameters.grid$nb.arch
     if (is.null(nb.arch)) {
-        nb.arch  <- seq(from=2, to=min(nseg, n)-1, by=1)
+        nb.arch  <- seq(from=2, to=nseg-1, by=1)
         if (verbose) {
             message("Parameter 'nb.arch' not provided. Using default value: ")
             mstr(nb.arch)
