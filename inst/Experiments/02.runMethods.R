@@ -16,6 +16,7 @@ for (ss in 1:nbSimu) {
     dat <- mixSubclones(subClones=subClones, M)
     dats[[ss]] <- dat
     ## c3co
+    print(parameters.grid)
     resC1C2[[ss]] %<-% c3co(dat, parameters.grid=parameters.grid, stat="C1C2")
     resTCN[[ss]] %<-% c3co(dat, parameters.grid=parameters.grid, stat="TCN")
     ## FLlat

@@ -118,9 +118,7 @@ for (ss in 1:nbSimu) {
 ### Comparison
 list_res <- as.list(resC1C2_2)
 nbEq <- sum(sapply(list_res, function (rr){
-  res <- sapply(rr@fit, function(ff){
-    r <- ff@param$lambda1==ff@param$lambda2
-  })
+  res <- unlist(rr@config$best$lambda1)==unlist(rr@config$best$lambda2)
 }))/(length(p.list)*nbSimu)
 
 ## Finally the best results with BIC are obtained when lambda1=lambda2

@@ -108,7 +108,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
           })
           ## STEP 2: optimize wrt Z (fixed W)
           Z <- lapply(lst, FUN = function(ll) {
-            get.Z(Y = ll[["Y"]], lambda = ll[["lambda"]], W=W)
+            round(get.Z(Y = ll[["Y"]], lambda = ll[["lambda"]], W=W), 2)
           })
           delta <- sqrt(sum((W - W.old)^2))
         }

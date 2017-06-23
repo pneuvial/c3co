@@ -44,7 +44,7 @@ library("c3co")
 library("ggplot2")
 library("mclust")
 library("reshape")
-set.seed(9)
+set.seed(147)
 ```
 
 ### Creating a synthetic data set
@@ -55,7 +55,8 @@ We start by defining the characteristics of the subclone profiles: profile lengt
 len <- 500*10
 nbClones <- 3
 bkps <- list(c(100,250)*10, c(150,400)*10,c(150,400)*10)
-regions <-list(c("(0,1)", "(0,2)","(1,2)"), c("(1,1)", "(0,1)","(1,1)"), c("(0,2)", "(0,1)","(1,1)"))
+regions <- list(c("(1,2)", "(0,2)", "(1,2)"),
+  c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 ```
 
 Then, we load an annotated data set from the `acnr` package.  The `buildSubclones` function can then be used to generate the subclone profiles with the above characteristics, by resampling from the annotated data set.
@@ -92,7 +93,7 @@ plot(datSubClone[[1]]$baft, col=cols[factor(datSubClone[[1]]$genotype)], cex=cex
 Once the subclones are created, we can generate a weight matrix $W$ in order to build mixtures.
 
 ```{r, warning=FALSE, cache=FALSE}
-W = rSparseWeightMatrix(nb.samp=10, nb.arch=3, sparse.coeff = 0.8)
+W = rSparseWeightMatrix(15, 3, 0.7)
 datList <- mixSubclones(subClones=datSubClone, W)
 str(datList[[1]])
 ```
@@ -104,10 +105,12 @@ Note that `datList` is a list of data frames with the following required columns
 Then the c3co method can be applied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
 
 ```{r c3co, warning=FALSE, message=FALSE}
-l1 <- seq(from = 0, to = 10^-6, length = 10)
+l1 <- seq(from=1e-8, to=1e-5, length.out=10)
 nb.arch <- 2:6
-parameters.grid <- list(lambda=l1, nb.arch=nb.arch) 
-res <- c3co(datList, parameters.grid, verbose=FALSE)
+parameters.grid <- list(lambda1=l1, nb.arch=nb.arch) 
+res <- c3co(datList, parameters.grid, verbose=FALSE, warn=FALSE)
+l2 <- seq(from=1e-6, to=1e-3, length.out=5)
+parameters.grid <- list(lambda=l2, nb.arch=nb.arch) 
 resC <- c3co(datList, parameters.grid, stat="TCN", verbose=FALSE)
 ```
 
@@ -124,7 +127,7 @@ pvePlot(resC, ylim=c(0.0,1))
 We can compare the true and the estimated weight matrices. We can easily recover a classification close to the truth with the inferred weight matrix. 
 
 ```{r heatmap_C1C2, fig.width=7, fig.height=5}
-best <- 3
+best <- 2
 res.clustTRUE = hclust(dist(cbind(W, 1-rowSums(as.matrix(W)))),method="ward.D")
 col = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
 Wplot(res, idxBest = best, cexCol = 0.4)
@@ -147,6 +150,7 @@ Zplot(df)
 
 ## Further analysis
 ### Performance  of clustering
+In this section, we show the ablility of the method to recover the simulated clustering of patients.
 
 ```{r,clust}
 WC1C2 <- res@fit[[best]]@W
@@ -156,6 +160,8 @@ adjustedRandIndex(cutree(hclust(dist(WC1C2), method="ward.D2"),4), cutree(hclust
 adjustedRandIndex(cutree(hclust(dist(WTCN), method="ward.D2"),4), cutree(hclust(dist(Wtrue), method="ward.D2"),4))
 ```
 ## Performance of alteration detection
+In this section, we show the ablility of the method to recover the simulated altered regions.
+
 ```{r, fig.width=7.5, fig.height=5}
 getAlteredSegments <- function(tol, zz1, zz2, c1Mean, c2Mean){
   loss <- ((c1Mean-zz1) >= tol)| ((c2Mean-zz2) >= tol)
@@ -176,8 +182,8 @@ meanMin <- mean(df$CopyNumber[which(df$arch=="d"&df$stat=="Minor")])
 getAlt <- getAlteredSegments(tol=0.2, dataBest@S$Z1, dataBest@S$Z2, 1, 1.1)
 colnames(getAlt) <- sprintf("Subclone %s", letters[1:ncol(dataBest@W)])
 df.Alt <- melt(getAlt)
-df.Alt$x.min <- rep(res@bkp[[1]][-7], 4)
-df.Alt$x.max <- rep(res@bkp[[1]][-1], 4)
+df.Alt$x.min <- rep(res@bkp[[1]][-length(res@bkp[[1]])], best+1)
+df.Alt$x.max <- rep(res@bkp[[1]][-1], best+1)
 ggplot(df.Alt, aes(xmin = x.min, xmax = x.max, ymin = 1, ymax =2, fill = factor(value))) + geom_rect() + facet_grid(X2~.)+theme(axis.text.y = element_blank(), axis.ticks = element_blank())+scale_fill_discrete(labels= c("Normal", "Loss", "Gain", "LoH"), name="States")
 ```
 

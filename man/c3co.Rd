@@ -16,11 +16,13 @@ c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), segDat = NULL,
   \item{chr}{Chromosome}
 }}
 
-\item{parameters.grid}{A list composed of two vectors named \code{lambda1}
-and \code{lambda2} of real numbers which are the penalty coefficients for
-the fused lasso on the minor and major copy number dimension and a vector
-named \code{nb.arch} of integers which is the number of archetypes in the
-model}
+\item{parameters.grid}{is a list composed of : the penalty coefficients named either
+\code{lambda}, \code{lambda1} and \code{lambda2}. For the model on minor and major cn, 
+it is possible to give two grids (one for minor cn and one for major cn), and all
+combination is tested. If only one grid is given the consider 
+that \code{lambda1}=\code{lambda2}.
+and composed of : a vector named \code{nb.arch} of integers which is the number of 
+features in the model}
 
 \item{stat}{TCN or C1C2}
 
@@ -44,15 +46,18 @@ dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
+set.seed(88)
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
-regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
-c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
+regions <- list(c("(1,2)", "(0,2)", "(1,2)"),
+c("(0,3)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
                               nbClones, bkps, regions)
-M <- rSparseWeightMatrix(15, 3, 0.5)
+M <- rSparseWeightMatrix(15, 3, 0.7)
 dat <- mixSubclones(subClones=datSubClone, M)
 l1 <- seq(from=1e-6, to=1e-4, length.out=10)
 parameters.grid <- list(lambda=l1, nb.arch=2:6)
 res <- c3co(dat, parameters.grid)
-resC <- c3co(dat, stat="TCN", parameters.grid)
+l2 <- seq(from=1e-6, to=1e-5, length.out=10)
+parameters.grid.2 <- list(lambda=l2, nb.arch=2:6)
+resC <- c3co(dat, stat="TCN", parameters.grid.2)
 }

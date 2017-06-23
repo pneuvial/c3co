@@ -3,5 +3,5 @@
 The following files do this:
 - 00.functions useful functions to run simulations and create figures
 - 01.setup.R set up the parameters
-- 02.evalMethods.R run c3co on C1 C2 and TCN the FLLAT
+- 02.evalMethods.R run c3co on C1 C2 and TCN and also  FLLAT
 - 03.plotResults.R plot figures 

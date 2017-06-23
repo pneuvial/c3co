@@ -95,11 +95,17 @@ loadDataBest <- function(mm, stat, b, nbClones=5){
   filename <- sprintf("results_%s_%s.rds", mm, stat)
   print(filename)
   file <- file.path(pathRes,filename)
+  totFiles <- readRDS(file)
   dataBest <- NULL
+
   if (file.exists(file)) {
-    res <- readRDS(file)[[b]]
+    res <- totFiles[[b]]
     fit <- res@fit
-    pves <- res@config$PVE
+    if(mm =="FLLAT"){
+      pves <- res@config$PVE
+    }else{
+      pves <- res@config$best$PVE
+    }    
     pBest <- min(c(which(diff(pves) < 1e-3),length(pves) ))
     dataBest <- fit[[pBest]]
     return(dataBest)
@@ -236,6 +242,7 @@ randIndW <- function(nbSimu, meth, stats, weightsMat){
     WT <- as.matrix(cbind(M, 1-rowSums(as.matrix(M))))
     d_clust <- mclust::Mclust(t(WT), G=1:20)
     p.best <- dim(d_clust$z)[2]
+    #p.best <- ncol(M)
     print(p.best)
     clustWT <-  cutree(hclust(dist(WT),method = "ward.D"), p.best)
     
@@ -247,13 +254,13 @@ randIndW <- function(nbSimu, meth, stats, weightsMat){
       if (!is.null(dataBest)) {
         clustWhat <- cutree(hclust(dist(dataBest@W), method = "ward.D"), p.best)
         randIndex <- mclust::adjustedRandIndex(clustWT, clustWhat)
+
       }
       randIndexArray[b,ii] <- randIndex
     }
   }
   return(randIndexArray)
 }
-
 
 ## Get PVE values
 pveEval <- function(nbSimu, meth, stats){
@@ -269,7 +276,11 @@ pveEval <- function(nbSimu, meth, stats){
       file <- file.path(pathRes,filename)
       if(file.exists(file)){
         res <- readRDS(file)[[b]]
-        PVEArray[b,ii,1:length(res@fit)] <- res@config$PVE
+        if(mm=="FLLAT") {
+	  PVEArray[b,ii,1:length(res@fit)] <- res@config$PVE
+	  }else{
+		 PVEArray[b,ii,1:length(res@fit)] <- res@config$best$PVE	
+		 }	  	  
       }
     }
   }
@@ -352,4 +363,5 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
   
   return(AUCs_arch)
 }
+
 
