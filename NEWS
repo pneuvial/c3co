@@ -1,5 +1,10 @@
 Package: c3co
 =============
+Version: 0.2.3-9000 [2017-06-28]
+
+ o Force Z1<=Z2
+ o Bugs fixed for W set type=2 in lsei
+
 Version: 0.2.2-9000 [2017-05-17]
 
  o Changed structure of c3co object by adding 'config' slot
