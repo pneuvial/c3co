@@ -43,12 +43,12 @@
 #' M <- rSparseWeightMatrix(15, 3, 0.4)
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
-#' lambda <- 0.0001
-#' Z <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
-#' res <- positiveFusedLasso(seg$Y1, seg$Y2, Z$Z1, Z$Z2,
+#' lambda <- 0.00001
+#' Z <- initializeZ(t(seg$Y1), t(seg$Y2), nb.arch=10)
+#' res <- positiveFusedLasso(t(seg$Y1), t(seg$Y2), Z$Z1, Z$Z2,
 #'                           lambda1=lambda, lambda2=lambda, verbose=TRUE)
 #' res
-#' resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL,
+#' resC <- positiveFusedLasso(t(seg$Y1+seg$Y2), Y2=NULL, Z1=Z$Z, Z2=NULL,
 #'                            lambda1=lambda, lambda2=lambda)
 #' resC
 #'
@@ -108,7 +108,7 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
           })
           ## STEP 2: optimize wrt Z (fixed W)
           Z <- lapply(lst, FUN = function(ll) {
-            round(get.Z(Y = ll[["Y"]], lambda = ll[["lambda"]], W=W), 2)
+            get.Z(Y = ll[["Y"]], lambda = ll[["lambda"]], W=W)
           })
           delta <- sqrt(sum((W - W.old)^2))
         }
@@ -142,6 +142,12 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
         tol <- 1e-2  ## arbitrary tolerance...
         if (min(dZ) < - tol) {
             warning("For model with ", nb.arch, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
+          idx <- 1:ncol(Z2)
+          Z1 <- sapply(idx, function(ii){
+            jj <- which(Z1[,ii]>Z2[,ii])
+            Z1[jj, ii] <- Z2[jj, ii]
+            return(Z1 [,ii])
+          })
         }
     }
     S <- list(Z=Z, Z1=Z1, Z2=Z2)
