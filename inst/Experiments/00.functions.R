@@ -89,9 +89,8 @@ fllat <- function(dat, nb.arch.grid) {
     return(ret)
 }
 
-loadDataBest <- function(mm, stat, b, nbClones=5){
+loadDataBest <- function(mm, stat, b, nbClones=5, pathRes){
   print(sprintf("meth=%s, stat=%s", mm, stat))
-  pathRes <- "results"
   filename <- sprintf("results_%s_%s.rds", mm, stat)
   print(filename)
   file <- file.path(pathRes,filename)
@@ -212,7 +211,7 @@ lossW <- function(nbSimu, meth, stats,weightsMat){
     for (ii in 1:length(stats)) {
       stat = stats[ii]
       mm <- meth[ii]
-      dataBest <- loadDataBest(mm, stat, b)
+      dataBest <- loadDataBest(mm, stat, b, pathRes)
       if (!is.null(dataBest)) {
         W <- dataBest@W    
         eps <- 0.1
@@ -240,19 +239,15 @@ randIndW <- function(nbSimu, meth, stats, weightsMat){
   for (b in 1:nbSimu) {
     M <- weightsMat[[b]]
     WT <- as.matrix(cbind(M, 1-rowSums(as.matrix(M))))
-    d_clust <- mclust::Mclust(t(WT), G=1:20)
-    p.best <- dim(d_clust$z)[2]
-    #p.best <- ncol(M)
-    print(p.best)
-    clustWT <-  cutree(hclust(dist(WT),method = "ward.D"), p.best)
+    clustWT <-  cutree(hclust(dist(WT),method = "ward.D2"), ncol(WT))
     
     for (ii in 1:length(stats)) {
       stat = stats[ii]
       mm <- meth[ii]
       randIndex <- NA
-      dataBest <- loadDataBest(mm, stat, b)
+      dataBest <- loadDataBest(mm, stat, b, pathRes)
       if (!is.null(dataBest)) {
-        clustWhat <- cutree(hclust(dist(dataBest@W), method = "ward.D"), p.best)
+        clustWhat <- cutree(hclust(dist(dataBest@W), method = "ward.D2"), ncol(dataBest@W))
         randIndex <- mclust::adjustedRandIndex(clustWT, clustWhat)
 
       }
@@ -263,24 +258,23 @@ randIndW <- function(nbSimu, meth, stats, weightsMat){
 }
 
 ## Get PVE values
-pveEval <- function(nbSimu, meth, stats){
+pveEval <- function(nbSimu, meth, stat, pathRes){
   PVEArray <- array(dim=c(nbSimu, length(stats), max(p.list)-1),dimnames=list(b=1:nbSimu, method=sprintf("%s-%s",meth,stats)))
   for(b in 1:nbSimu){
     print(b)
     for(ii in 1:length(stats)){
       stat=stats[ii]
       mm=meth[ii]
-      pathRes <- "results"
       filename <- sprintf("results_%s_%s.rds", mm, stat)
       print(filename)
       file <- file.path(pathRes,filename)
       if(file.exists(file)){
         res <- readRDS(file)[[b]]
         if(mm=="FLLAT") {
-	  PVEArray[b,ii,1:length(res@fit)] <- res@config$PVE
-	  }else{
-		 PVEArray[b,ii,1:length(res@fit)] <- res@config$best$PVE	
-		 }	  	  
+	        PVEArray[b,ii,1:length(res@fit)] <- res@config$PVE
+	      }else{
+		      PVEArray[b,ii,1:length(res@fit)] <- res@config$best$PVE	
+		     }	  	  
       }
     }
   }
@@ -288,7 +282,7 @@ pveEval <- function(nbSimu, meth, stats){
 }
 
 ## Compute AUC on Subclones
-computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsByClones){
+computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsByClones, pathRes){
   rocArrayArchFull <- array(dim = c(nbSimu, length(stats), 2,length(tol)),dimnames = list(b = 1:nbSimu, method = sprintf("%s-%s",meth,stats), ROC = c("tp", "fp")))
   alteredLociInClones <- sapply(1:(length(regionsByClones) - 1), function(c){
     if (c != length(regionsByClones)){
@@ -307,7 +301,7 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
     for (ss in 1:length(stats)) {
       stat <- stats[ss]
       mm <- meth[ss]      
-      dataBest <- loadDataBest(mm,stat, b)
+      dataBest <- loadDataBest(mm,stat, b, pathRes)
       if (!is.null(dataBest)) {
         message(sprintf("Compute ROC and AUC for method %s, var %s and data set %s" ,mm, stat, b))
         Z <- dataBest@S$Z
@@ -323,7 +317,6 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
         if (stat == "C1C2") {
           Z1 <- dataBest@S$Z1
           Z2 <- dataBest@S$Z2
-          pathRes <- "results"
           filename <- sprintf("results_%s_%s.rds", mm, stat)
           print(filename)
           file <- file.path(pathRes,filename)
@@ -339,7 +332,6 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
           if(mm == "FLLAT") {
             ZhatFull <- t(2*2^Z)          
           }else{
-            pathRes <- "results"
             filename <- sprintf("results_%s_%s.rds", mm, stat)
             print(filename)
             file <- file.path(pathRes,filename)

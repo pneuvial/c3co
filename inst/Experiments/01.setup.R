@@ -5,9 +5,9 @@ library("acnr")
 library("future")
 library("listenv")
 
-plan(multiprocess, workers=20L) ## see https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html
+plan(multiprocess, workers=25L) ## see https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html
 
-lambda.grid <- seq(from=1e-7, to=1e-4, length=10)
+lambda.grid <- seq(from=1e-6, to=1e-5, length=10)
 p.list <- 2:10 ## candidate number of subclones
 parameters.grid <- list(lambda=lambda.grid, nb.arch=p.list)
 forceM <- forceSim <- FALSE
@@ -31,4 +31,4 @@ nBkp <- 10     ## Breakpoints in subclones
 pathRes <- Arguments$getWritablePath("results")
 pathWeights <- Arguments$getWritablePath("weights")
 pathSubClones <- Arguments$getWritablePath("subclones")
-pathDat <- Arguments$getWritablePath("data")
+pathDat <- Arguments$getWritablePath("data-v2")

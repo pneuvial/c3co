@@ -33,7 +33,7 @@ p
 message("Compute loss between true and estimated weights")
 
 weightsMat <- readRDS(file.path(pathWeights, sprintf("weightsMat.rds")))
-weightsArray <- lossW(nbSimu, meth, stats, weightsMat)
+weightsArray <- lossW(nbSimu, meth, stats, weightsMat, pathRes)
 dataArrayWeights <- data.frame(melt(weightsArray))
 dataArrayWeights$method <- factor(dataArrayWeights$method, levels = c("FLLAT-TCN","C3CO-TCN","C3CO-C1C2"))
 gWeights <- ggplot(dataArrayWeights) + geom_boxplot(aes(x = method, y = value, fill = method)) + ylab("Loss") + xlab("") + theme_bw()
@@ -42,7 +42,7 @@ ggsave(gWeights,filename = sprintf("%s/weightLoss.pdf",pathFig), width = 7, heig
 
 ### RandIndex
 message("Compute Rand Index to evaluate capacity to recover weights")
-randIndexArray <- randIndW(nbSimu, meth, stats, weightsMat)
+randIndexArray <- randIndW(nbSimu, meth, stats, weightsMat, pathRes)
 dataArrayrandIndex <- data.frame(melt(randIndexArray))
 dataArrayrandIndex$method <- factor(dataArrayrandIndex$method, levels = c("FLLAT-TCN", "C3CO-TCN", "C3CO-C1C2"))
 gRandIndex <- ggplot(dataArrayrandIndex) + geom_boxplot(aes(x = method, y = value,fill = method)) + ylab("Rand Index") + xlab("") + theme_bw()
@@ -74,7 +74,7 @@ regionsByClones <- lapply(1:length(subClones), function(iii){
 })   
 regionsByClones[[length(subClones) + 1]] <- "(1,1)"
 
-AUCs_arch <- computeAUC(nbSimu, meth, stats, tol, subClones, weightsMat, regionsByClones) 
+AUCs_arch <- computeAUC(nbSimu, meth, stats, tol, subClones, weightsMat, regionsByClones, pathRes) 
 df.auc.arch <- melt(AUCs_arch)
 df.auc.arch$AUC <- df.auc.arch$value
 df.auc.arch$method <- factor(df.auc.arch$method, levels=c("FLLAT-TCN","C3CO-TCN","C3CO-C1C2"))
@@ -84,7 +84,7 @@ ggsave(gAUC, filename=file.path(pathFig, "AUCsZ.pdf"), width=10, height=5)
 
 ### PVE
 message("Compute the PVEs")
-PVEArray <- pveEval(nbSimu, meth, stats)
+PVEArray <- pveEval(nbSimu, meth, stats, pathRes)
 meanPVE <- apply(PVEArray, 2,colMeans, na.rm=TRUE)
 sdPVE <- apply(PVEArray, 2,colSds, na.rm=TRUE)
 dataPVE <- cbind(melt(meanPVE), melt(sdPVE))
@@ -92,11 +92,7 @@ colnames(dataPVE) <- c("Features", "method", "PVE", "Features","method", "sds")
 dataPVE$Features <- dataPVE$Features+1
 dataPVE$method <- factor(dataPVE$method, levels=c("FLLAT-TCN","C3CO-TCN","C3CO-C1C2"))
 pPVE <-  ggplot(dataPVE)+geom_line(aes(x=Features,y=PVE,colour=method, lty=method))
-pPVE <- pPVE+geom_ribbon(aes(ymin=PVE-sds, ymax=PVE+sds,x=Features,fill=method ),alpha=0.3)+ scale_x_continuous(limits=c(2, 10), breaks=seq(from=2, to =10, by=1))+theme_bw()+scale_y_continuous(limits=c(0,1.3), breaks=seq(from=0.0, to =1.1, by=0.2))
+pPVE <- pPVE+geom_ribbon(aes(ymin=PVE-sds, ymax=PVE+sds,x=Features,fill=method ),alpha=0.3)+ scale_x_continuous(limits=c(2, 10), breaks=seq(from=2, to =10, by=1))+theme_bw()+scale_y_continuous(limits=c(0,1.05), breaks=seq(from=0.0, to =1.1, by=0.2))
 pPVE
+
 ggsave(pPVE, filename=file.path(pathFig, "PVEs.pdf"), width=7, height=5)
-
-
-
-
-
