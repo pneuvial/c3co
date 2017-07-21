@@ -60,4 +60,8 @@ gp <- ggplot(df.tcn) +
     xlab("Genome position") + 
     geom_vline(xintercept=EstBkps, lty=2, colour="#FF0000", lwd=0.7)
 gp
-ggsave(gp, filename = "fig/exampleSimulatedProfile.png", width=5, height=2.5)
+
+figPath <- R.utils::Arguments$getWritablePath("fig")
+filename <- "exampleSimulatedProfile.png"
+pathname <- file.path(figPath, filename)
+ggsave(gp, filename=pathname, width=5, height=2.5)
