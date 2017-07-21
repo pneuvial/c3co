@@ -4,7 +4,7 @@
 \alias{positiveFusedLasso}
 \title{Positive fused lasso function}
 \usage{
-positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.01,
+positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.1,
   max.iter = 50, warn = FALSE, verbose = FALSE)
 }
 \arguments{
@@ -47,6 +47,7 @@ dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
 nbClones <- 3
+set.seed(2)
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
 c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
@@ -55,12 +56,12 @@ datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
 M <- rSparseWeightMatrix(15, 3, 0.4)
 simu <- mixSubclones(subClones=datSubClone, M)
 seg <- segmentData(simu)
-lambda <- 0.0001
-Z <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
-res <- positiveFusedLasso(seg$Y1, seg$Y2, Z$Z1, Z$Z2,
+lambda <- 0.01
+Z <- initializeZ(t(seg$Y1), t(seg$Y2), nb.arch=3)
+res <- positiveFusedLasso(t(seg$Y1), t(seg$Y2), Z$Z1, Z$Z2,
                           lambda1=lambda, lambda2=lambda, verbose=TRUE)
 res
-resC <- positiveFusedLasso(seg$Y1+seg$Y2, Y2=NULL, Z1=Z$Z, Z2=NULL,
+resC <- positiveFusedLasso(t(seg$Y1+seg$Y2), Y2=NULL, Z1=Z$Z, Z2=NULL,
                            lambda1=lambda, lambda2=lambda)
 resC
 

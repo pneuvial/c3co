@@ -51,7 +51,7 @@ dat <- mixSubclones(subClones=datSubClone, M)
 seg <- segmentData(dat)
 
 l1 <- seq(from=1e-8, to=1e-5, length.out=5)
-parameters.grid <- list(lambda1=l1,lambda2=l1,  nb.arch=2:6)
+parameters.grid <- list(lambda1=l1,  nb.arch=2:6)
 fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
-#' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid, verbose=TRUE)
+fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 }

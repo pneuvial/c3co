@@ -42,9 +42,9 @@
 #' seg <- segmentData(dat)
 #' 
 #' l1 <- seq(from=1e-8, to=1e-5, length.out=5)
-#' parameters.grid <- list(lambda1=l1,lambda2=l1,  nb.arch=2:6)
+#' parameters.grid <- list(lambda1=l1,  nb.arch=2:6)
 #' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
-#' #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid, verbose=TRUE)
+#' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 #' @importFrom methods slot
 #' @importFrom matrixStats colMaxs
 #' @export
@@ -122,6 +122,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
     pp <- nb.arch[it]
     cond <- FALSE  ## condition for (early) stopping
     fitList <- list()
+    allRes <- allLoss <- list()
     bestConfigp <- allConfig <- NULL
     while (!cond) {
         if (verbose) {
@@ -130,8 +131,15 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         ## Initialization
         BICp <- +Inf
         bestConfig <- aConf <- NULL
-        
-        Z0 <- initializeZ(Y1, Y2=Y2, nb.arch=pp, ...)
+        ## Scale step
+        Y1.bar <- colMeans(Y1)
+        Y1.scale <- scale(Y1, Y1.bar, FALSE)
+        Y2.scale <- NULL
+        if(!is.null(Y2)){
+          Y2.bar <- colMeans(Y2)
+          Y2.scale <- scale(Y2, Y2.bar, FALSE)
+        }
+        Z0 <- initializeZ(Y1.scale, Y2=Y2.scale, nb.arch=pp, ...)
         
         if (verbose) {
             message("Parameter configuration: (",
@@ -144,32 +152,46 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
             }
             l1 <- cfg[, "lambda1"]
             l2 <- NULL
-            if (!is.null(Y2)) l2 <- cfg[, "lambda2"]
-            res <- positiveFusedLasso(Y1, Y2=Y2, Z1=Z0$Z1, Z2=Z0$Z2,
-                                      lambda1=l1, lambda2=l2, verbose=FALSE)
+            if (!is.null(Y2.scale)) l2 <- cfg[, "lambda2"]
+            res <- positiveFusedLasso(Y1.scale, Y2=Y2.scale, Z1=Z0$Z1, Z2=Z0$Z2,
+                                      lambda1=l1, lambda2=l2)
             ## Calculate model fit statistics
-            if(!is.null(Y2)){
-              Y <- Y1 + Y2
+            if(!is.null(Y2.scale)){
+              Y.scale <- Y1.scale + Y2.scale
             }else{
-              Y <- Y1
+              Y.scale <- Y1.scale
             }
+            ## Compute R2
+            R2 <- 1 - sum((Y.scale-res@W %*% t(res@S$Z))^2) / sum((Y.scale)^2)
             
-            resVar <- sum((Y-res@W %*% t(res@S$Z))^2)
-            predVar <- sum((Y-rowMeans(Y))^2)
+            resVar <- sum((Y.scale-res@W %*% t(res@S$Z))^2)
             loss <- resVar/(n*nseg)
             kZ <- sum(apply(res@S$Z, MARGIN=2L, FUN=diff) != 0)
             BIC <-  -(n*nseg*log(loss) + kZ*log(n*nseg))
-            PVE <- round(1-resVar/predVar,4)
             Likelihood <- -(n*nseg*log(resVar/n*nseg)+n*nseg*(1+log(2*pi)))/2
-            aConf <-  c(pp, cfg, PVE, BIC, Likelihood)
+            aConf <-  c(pp, cfg, R2, BIC, Likelihood)
             allConfig <- rbind(allConfig, aConf)
-            
+            allRes[[cc]] <- res
+            allLoss[[cc]] <- loss
             if (BIC < BICp) { ## BIC has improved: update best model
                 res.l <- res
                 BICp <- BIC
-                bestConfig <- c(pp, cfg, PVE, BICp, Likelihood)
+                bestConfig <- c(pp, cfg, R2, BICp, Likelihood)
+            }
+            ## Re-Scale step
+            res.l@E$Y1 <- res.l@E$Y1 + Y1.bar
+            res.l@S$Z1 <- res.l@S$Z1 + Y1.bar
+            res.l@E$Y <- res.l@E$Y1
+            res.l@S$Z <- res.l@S$Z1
+            if(!is.null(Y2.scale)){
+              res.l@E$Y2 <- res.l@E$Y2 + Y2.bar
+              res.l@S$Z2 <- res.l@S$Z2 + Y2.bar
+              res.l@E$Y <- res.l@E$Y1+ res.l@E$Y2
+              res.l@S$Z <- res.l@S$Z1 + res.l@S$Z2
             }
         }
+        
+        
         fitList[[it]] <- res.l
         bestConfigp <- rbind(bestConfigp, bestConfig)
         ## sanity check: minor CN < major CN in the best parameter
@@ -195,5 +217,5 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
     allConfig <- as.data.frame(allConfig)
     colnames (allConfig) <- c("nb.feat", colnames(configs), "PVE", "BIC", "Likelihood")
     rownames(allConfig) <- NULL
-    return(list(fit =fitList, config=list(best=bestConfigp, all=allConfig)))
+    return(list(fit =fitList, config=list(best=bestConfigp, all=allConfig, res=allRes, loss=allLoss)))
 }

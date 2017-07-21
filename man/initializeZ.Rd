@@ -4,7 +4,7 @@
 \alias{initializeZ}
 \title{Initialization of the c3co model parameters}
 \usage{
-initializeZ(Y1, Y2 = NULL, nb.arch = ncol(Y1), init.random = FALSE,
+initializeZ(Y1, Y2 = NULL, nb.arch = nrow(Y1), init.random = FALSE,
   flavor = c("C1+C2", "C1", "C2"), verbose = FALSE)
 }
 \arguments{

@@ -35,6 +35,7 @@
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
 #' nbClones <- 3
+#' set.seed(2)
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
@@ -43,8 +44,8 @@
 #' M <- rSparseWeightMatrix(15, 3, 0.4)
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
-#' lambda <- 0.00001
-#' Z <- initializeZ(t(seg$Y1), t(seg$Y2), nb.arch=10)
+#' lambda <- 0.01
+#' Z <- initializeZ(t(seg$Y1), t(seg$Y2), nb.arch=3)
 #' res <- positiveFusedLasso(t(seg$Y1), t(seg$Y2), Z$Z1, Z$Z2,
 #'                           lambda1=lambda, lambda2=lambda, verbose=TRUE)
 #' res
@@ -54,7 +55,7 @@
 #'
 #' @importFrom methods new
 #' @export
-positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
+positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-1,
                                max.iter=50, warn=FALSE, verbose=FALSE) {
     n <- nrow(Y1) # number of individuals
     L <- ncol(Y1) # number of loci/segments
@@ -115,14 +116,13 @@ positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-2,
         
         ## __________________________________________________
         ## STEP 3: check for convergence of the weights
-        
         cond <- (iter > max.iter || delta < eps)
-
         if (verbose) message("delta:", round(delta, digits=4))
         W.old <- W
     }
     if (verbose) message("Stopped after ", iter, " iterations")
     if (verbose) message("delta:", round(delta, digits=4))
+    
     ## reshape output
     Z1 <- Z$Z1
     Z2 <- Z$Z2
