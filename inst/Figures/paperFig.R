@@ -32,19 +32,11 @@ dat <- mixSubclones(subClones=subClones, M)
 
 df.tcn <- data.frame(tcn=c(dat[[1]]$tcn, dat[[2]]$tcn), pos=dat[[1]]$pos, sample=factor(rep(1:2, each=len)))
 
-trueBkps <- sort(unlist(bkpsByClones))
-trueBkps1 <- sort(bkpsByClones[[1]])
-trueSeg1 <- matrixStats::binMeans(y=dat[[1]]$tcn, x=1:len, bx=c(1, unique(trueBkps), len))
-trueSeg2 <- matrixStats:: binMeans(y=dat[[2]]$tcn, x=1:len, bx=c(1, trueBkps1, len))
-df.trueSeg <- data.frame(y=c(trueSeg1, trueSeg1[length(trueSeg1)],
-                             trueSeg2,trueSeg2[length(trueSeg2)]),
-                         x=c(1, unique(trueBkps), len, 1, trueBkps1, len), 
-                         sample=factor(rep(1:2, times=c(length(trueSeg1)+1,length(trueSeg2)+1))))
 bkpsEst <- jointseg::jointSeg(Y=cbind(dat[[1]]$tcn,dat[[2]]$tcn), K=15)
 EstBkps <- bkpsEst$bestBkp
 
-EstSeg1 <- matrixStats::binMeans(y=dat[[1]]$tcn, x=1:len, bx=c(1,EstBkps,len))
-EstSeg2 <- matrixStats::binMeans(y=dat[[2]]$tcn, x=1:len, bx=c(1,EstBkps,len))
+EstSeg1 <- matrixStats::binMeans(y=dat[[1]]$tcn, x=1:len, bx=c(1, EstBkps, len))
+EstSeg2 <- matrixStats::binMeans(y=dat[[2]]$tcn, x=1:len, bx=c(1, EstBkps, len))
 df.EstSeg <- data.frame(y=c(EstSeg1, EstSeg1[length(EstSeg1)], EstSeg2, EstSeg2[length(EstSeg2)]),
                         x=rep(c(1, EstBkps, len), 2), 
                         sample=factor(rep(1:2, times=c(length(EstSeg1)+1, length(EstSeg2)+1))))
