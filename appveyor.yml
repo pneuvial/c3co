@@ -11,6 +11,9 @@
 environment:
   _R_CHECK_FORCE_SUGGESTS_: false
 
+  global:
+    BIOC_USE_DEVEL: "FALSE"
+
   matrix:
   - R_VERSION: devel
     R_ARCH: x64
@@ -31,14 +34,16 @@ init:
         Invoke-WebRequest http://raw.github.com/HenrikBengtsson/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
         Import-Module '..\appveyor-tool.ps1'
 install:
-  ps: Bootstrap
+  ps: |
+    Bootstrap
+    InstallRtools
 
 # Adapt as necessary starting from here
 
 build_script:
   - echo Current directory=%CD%
   - travis-tool.sh install_r R.utils knitr PSCBS aroma.light ggplot2 glmnet limSolve RColorBrewer
-  - travis-tool.sh install_bioc BiocStyle aroma.light
+  - travis-tool.sh install_bioc BiocStyle aroma.light DNAcopy
   - travis-tool.sh install_github mpierrejean/acnr mpierrejean/jointseg pneuvial/c3co-data
 
 test_script:
