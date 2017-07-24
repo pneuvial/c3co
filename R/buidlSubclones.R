@@ -18,6 +18,8 @@
 #' @param dataAnnotN A data frame containing paired normal data from which the 
 #'   subclone data are sampled. Same format as argument \code{dataAnnotTP}. Must
 #'   not be \code{NULL} if argument \code{dataAnnotTP} is not \code{NULL}
+#' 
+#' @param eps A numeric value, the signal to noise ratio for simulated data.
 #'   
 #' @return A list of locus-level data for each subclone
 #'   
@@ -49,7 +51,7 @@
 #' @importFrom jointseg getCopyNumberDataByResampling
 #' @importFrom stats rnorm
 #' @export
-buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataAnnotN=NULL) {
+buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataAnnotN=NULL, eps=0.25) {
     if (nbClones != length(regions)) {
         stop("Argument 'nbClones' should match 'length(regions)'")
     }
@@ -110,8 +112,7 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
         }
         
         n <- 5e3     ## number of data points to be sampled from
-        eps <- 0.25  ## noise level
-        
+
         CN1 <- rep(1, length(C))  ## for hets in the matched normal
         CN0 <- rep(0, length(C))  ## for homs in the matched normal
         CN2 <- rep(2, length(C))  ## for homs in the matched normal
