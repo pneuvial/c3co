@@ -115,8 +115,8 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
         CN1 <- rep(1, length(C))  ## for hets in the matched normal
         CN0 <- rep(0, length(C))  ## for homs in the matched normal
         CN2 <- rep(2, length(C))  ## for homs in the matched normal
-        C <- C1+C2                ## for Homs
         C0 <- rep(0, length(C))   ## for Homs
+        C <- C1+C2                ## for Homs
         
         ## Hets
         dat <- getDat(C1, C2, n, eps) 
@@ -126,6 +126,12 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
                        cn=datN$c, bafn=datN$b, stringsAsFactors=FALSE)
         rm(dat, datN)
         
+        ## symmetrization
+        nr <- nrow(datAB)
+        ww <- sample(nr, round(nr/2))
+        datAB[ww, "baft"] <- 1-datAB[ww, "baft"]
+        datAB[ww, "bafn"] <- 1-datAB[ww, "bafn"]
+
         ## Homs AA:  CA=C1+C2, CB=0
         dat <- getDat(C, C0, n, eps) 
         datN <- getDat(CN2, CN0, n, eps)  ## "matched normal"
