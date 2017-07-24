@@ -1,29 +1,33 @@
 #' Joint segmentation
-#'
-#' Joint segmentation by Recursive Binary Segmentation followed by
-#' Dynamic Programming
-#'
-#' @param dat A list of \code{data.frame} containing
-#'  \describe{
-#'   \item{tcn}{Total copy number}
-#'   \item{dh}{Mirrored B allele fraction}
-#'   \item{pos}{Position on the genome}
-#'   \item{chr}{Chromosome}
-#' }
-#'
-#' @param stat "TCN or "C1C2" parameter to segment the data.
-#' If \code{stat == TCN}, the segmentation will be done on TCN only.
-#'
-#' @param verbose A logical value indicating whether to print extra
-#' information. Defaults to FALSE
-#'
+#' 
+#' Joint segmentation by Recursive Binary Segmentation followed by Dynamic 
+#' Programming
+#' 
+#' @param dat A list of \code{data.frame} containing \describe{ \item{tcn}{Total
+#'   copy number} \item{dh}{Mirrored B allele fraction} \item{pos}{Position on 
+#'   the genome} \item{chr}{Chromosome} }
+#'   
+#' @param stat "TCN or "C1C2" parameter to segment the data. If \code{stat == 
+#'   TCN}, the segmentation will be done on TCN only.
+#'   
+#' @param verbose A logical value indicating whether to print extra information.
+#'   Defaults to FALSE
+#'   
 #' @return Binned Minor and Major copy number with list of breakpoints
-#'
-#'
-#' @references Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple
-#'   Change Points in the Mean for Large Sample.
+#'   
+#' @references Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple 
+#'   Change Points in the Mean for Large Sample. 
 #'   http://hal.archives-ouvertes.fr/hal-00327146/
-
+#'   
+#' @references Pierre-Jean, M., Rigaill, G. & Neuvial, P. (2015). Performance 
+#'   evaluation of DNA copy number segmentation methods.  Briefings in 
+#'   Bioinformatics 16 (4): 600-615
+#'   
+#' @seealso \code{\link[jointseg]{jointSeg}}
+#'   
+#' @details This function is a wrapper around the \code{jointSeg} function in
+#'   the \code{jointseg} package.
+#'   
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
@@ -32,13 +36,12 @@
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
-#'                               nbClones, bkps, regions)
+#' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
 #' M <- rSparseWeightMatrix(15, 3, sparse.coeff=0.7)
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' res <- segmentData(dat)
 #' res2 <- segmentData(dat, stat="TCN")
-#'
+#' 
 #' @importFrom matrixStats binMeans
 #' @importFrom matrixStats rowAnyNAs
 #' @importFrom jointseg jointSeg

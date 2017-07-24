@@ -2,7 +2,7 @@
 % Please edit documentation in R/PSCBSwrapper.R
 \name{loadPSCBSdata}
 \alias{loadPSCBSdata}
-\title{Function to load PSCBS data and transform them to c3co format}
+\title{Function to load PSCBS data and transform them into c3co format}
 \usage{
 loadPSCBSdata(PSCBSdata, pattern = NULL)
 }
@@ -15,5 +15,5 @@ loadPSCBSdata(PSCBSdata, pattern = NULL)
 A data frame under PSCBS format
 }
 \description{
-Function to load PSCBS data and transform them to c3co format
+Function to load PSCBS data and transform them into c3co format
 }

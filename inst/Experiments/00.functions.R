@@ -60,8 +60,7 @@ simulateSubclones <- function(len, nbClones, nBkp) {
     
     dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFraction=1)
     dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFraction=0)
-    subClones <- c3co::buildSubclones(len, dataAnnotTP, dataAnnotN,
-                                nbClones, bkpsByClones,regionsByClones)
+    subClones <- c3co::buildSubclones(len, nbClones, bkpsByClones, regionsByClones, dataAnnotTP, dataAnnotN)
     subClones
 }
 

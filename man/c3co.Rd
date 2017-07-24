@@ -50,8 +50,7 @@ set.seed(88)
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 regions <- list(c("(1,2)", "(0,2)", "(1,2)"),
 c("(0,3)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
-                              nbClones, bkps, regions)
+datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
 M <- rSparseWeightMatrix(15, 3, 0.7)
 dat <- mixSubclones(subClones=datSubClone, M)
 l1 <- seq(from=1e-6, to=1e-4, length.out=10)

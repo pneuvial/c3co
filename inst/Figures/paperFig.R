@@ -23,11 +23,13 @@ dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE13372", tumorFraction=0)
 
 len <- 800*3 ## 3 because roughly 1/3 of heterozygous SNPs
 stopifnot(all(sapply(bkpsByClones, max) < len))  ## sanity check
-subClones <- buildSubclones(len, dataAnnotTP, dataAnnotN, nbClones, bkpsByClones, regionsByClones)
+subClones <- buildSubclones(len, nbClones, bkpsByClones, regionsByClones,dataAnnotTP, dataAnnotN)
 
 ### Simulate Samples
 n <- 2
-M <- matrix(c(60, 20, 60, 0), ncol=n, byrow=TRUE)
+M <- rbind(c(60, 20),  ## 20% normal
+           c(60, 0))   ## 40% normal
+
 dat <- mixSubclones(subClones=subClones, M)
 
 df.tcn <- data.frame(tcn=c(dat[[1]]$tcn, dat[[2]]$tcn), pos=dat[[1]]$pos, sample=factor(rep(1:2, each=len)))

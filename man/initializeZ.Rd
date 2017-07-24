@@ -45,12 +45,11 @@ nbClones <- 3
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
 c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
-                              nbClones, bkps, regions)
-M <- rSparseWeightMatrix(5,3, 0.90)
+datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
+M <- rSparseWeightMatrix(10,3, 0.90)
 simu <- mixSubclones(subClones=datSubClone, M)
 seg <- segmentData(simu)
-res <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
+res <- initializeZ(seg$Y1, seg$Y2)
 resC <- initializeZ(seg$Y1+seg$Y2, nb.arch=4)
 
 }

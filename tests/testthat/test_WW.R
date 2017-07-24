@@ -10,8 +10,7 @@ regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
                 c("(1,1)", "(0,1)", "(1,1)"), 
                 c("(0,2)", "(0,1)", "(1,1)"))
 
-datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
-                               nbClones, bkps, regions)
+datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
 M <- rSparseWeightMatrix(15, 3, sparse.coeff=0.7)
 dat <- mixSubclones(subClones=datSubClone, M)
 seg <- segmentData(dat)

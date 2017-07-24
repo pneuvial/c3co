@@ -92,8 +92,7 @@ if(!file.exists(filename)){
   c1c2 <- "\\(([0-9]),([0-9])\\)"
   dataAnnotTP <- loadCnRegionData(dataSet="GSE13372", tumorFrac=1)
   dataAnnotN <- loadCnRegionData(dataSet="GSE13372", tumorFrac=0)
-  subClones <- buildSubclones(len,dataAnnotTP, dataAnnotN,
-                              nbClones, bkpsByClones,regionsByClones)
+  subClones <- buildSubclones(len, nbClones, bkpsByClones, regionsByClones, dataAnnotTP, dataAnnotN)
   saveRDS(subClones, filename)
 }else{
   subClones <- readRDS(filename)

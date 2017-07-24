@@ -1,5 +1,5 @@
 ---
-title: "How to use c3co with PSCBS data"
+title: "Using c3co with PSCBS data"
 author: "Morgane Pierre-Jean and Pierre Neuvial"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -15,7 +15,7 @@ vignette: >
 
 ## Introduction
 
-This document provides a brief tutorial on using the c3co package from PSCBS data.
+This document provides a brief tutorial for using the c3co package on data segmented by PSCBS.
 
 ```{r}
 library("c3co")
@@ -23,12 +23,13 @@ library("c3co.data")
 ```
 
 ## Using wrapper
-In this document we use the data from a public data set saved into \code{c3co.data} package.
-\code{PSCBSwrapper} function segments and saves data from \code{PSCBS} format to c3co format.
+
+In this document we a public data set saved into the \code{c3co.data} package.
+The \code{PSCBSwrapper} function segments and saves data from \code{PSCBS} format to c3co format.
+
 ```{r, eval=TRUE}
 data("PSCBSdata", package="c3co.data")
 output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
-stopifnot(!is.null(PSCBSdata))
 PSCBSwrapper(PSCBSdata, output.dir=output.dir, stat="C1C2")
 ```
 

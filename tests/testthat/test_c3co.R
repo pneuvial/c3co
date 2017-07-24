@@ -17,11 +17,11 @@ regions <- list(
 )
 
 datSubClone <- buildSubclones(len = len,
-                              dataAnnotTP = dataAnnotTP,
-                              dataAnnotN = dataAnnotN,
                               nbClones = nbClones,
                               bkps = bkps,
-                              regions = regions)
+                              regions = regions,
+                              dataAnnotTP = dataAnnotTP,
+                              dataAnnotN = dataAnnotN)
 
 M <- rSparseWeightMatrix(15, 3)
 

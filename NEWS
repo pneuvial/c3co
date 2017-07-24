@@ -1,5 +1,11 @@
 Package: c3co
 =============
+Version: 0.2.4-9000 [2017-07-24]
+
+ o In 'fitC3co': the model is now applied on centered data.
+ o 'buildSubclone' can now also generate purely simulated data if no real data are given as input.
+
+
 Version: 0.2.3-9000 [2017-06-28]
 
  o Force Z1<=Z2

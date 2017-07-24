@@ -1,5 +1,5 @@
 ---
-title: "Run C3CO from segment data"
+title: "Run c3co from segmented data"
 author: "Morgane Pierre-Jean, Julien Chiquet, Henrik Bengtsson and Pierre Neuvial"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

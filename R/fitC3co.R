@@ -35,8 +35,7 @@
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-#' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
-#'                               nbClones, bkps, regions)
+#' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
 #' M <- rSparseWeightMatrix(15, 3, sparse.coeff=0.7)
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(dat)
@@ -131,15 +130,15 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         ## Initialization
         BICp <- +Inf
         bestConfig <- aConf <- NULL
-        ## Scale step
+        ## Centering step
         Y1.bar <- colMeans(Y1)
-        Y1.scale <- scale(Y1, Y1.bar, FALSE)
-        Y2.scale <- NULL
+        Y1c <- scale(Y1, center=Y1.bar, scale=FALSE)
+        Y2c <- NULL
         if(!is.null(Y2)){
           Y2.bar <- colMeans(Y2)
-          Y2.scale <- scale(Y2, Y2.bar, FALSE)
+          Y2c <- scale(Y2, center=Y2.bar, scale=FALSE)
         }
-        Z0 <- initializeZ(Y1.scale, Y2=Y2.scale, nb.arch=pp, ...)
+        Z0 <- initializeZ(Y1c, Y2=Y2c, nb.arch=pp, ...)
         
         if (verbose) {
             message("Parameter configuration: (",
@@ -152,19 +151,19 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
             }
             l1 <- cfg[, "lambda1"]
             l2 <- NULL
-            if (!is.null(Y2.scale)) l2 <- cfg[, "lambda2"]
-            res <- positiveFusedLasso(Y1.scale, Y2=Y2.scale, Z1=Z0$Z1, Z2=Z0$Z2,
+            if (!is.null(Y2c)) l2 <- cfg[, "lambda2"]
+            res <- positiveFusedLasso(Y1c, Y2=Y2c, Z1=Z0$Z1, Z2=Z0$Z2,
                                       lambda1=l1, lambda2=l2)
             ## Calculate model fit statistics
-            if(!is.null(Y2.scale)){
-              Y.scale <- Y1.scale + Y2.scale
+            if(!is.null(Y2c)){
+              Yc <- Y1c + Y2c
             }else{
-              Y.scale <- Y1.scale
+              Yc <- Y1c
             }
             ## Compute R2
-            R2 <- 1 - sum((Y.scale-res@W %*% t(res@S$Z))^2) / sum((Y.scale)^2)
+            R2 <- 1 - sum((Yc-res@W %*% t(res@S$Z))^2) / sum((Yc)^2)
             
-            resVar <- sum((Y.scale-res@W %*% t(res@S$Z))^2)
+            resVar <- sum((Yc-res@W %*% t(res@S$Z))^2)
             loss <- resVar/(n*nseg)
             kZ <- sum(apply(res@S$Z, MARGIN=2L, FUN=diff) != 0)
             BIC <-  -(n*nseg*log(loss) + kZ*log(n*nseg))
@@ -178,12 +177,12 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
                 BICp <- BIC
                 bestConfig <- c(pp, cfg, R2, BICp, Likelihood)
             }
-            ## Re-Scale step
+            ## De-centering step
             res.l@E$Y1 <- res.l@E$Y1 + Y1.bar
             res.l@S$Z1 <- res.l@S$Z1 + Y1.bar
             res.l@E$Y <- res.l@E$Y1
             res.l@S$Z <- res.l@S$Z1
-            if(!is.null(Y2.scale)){
+            if(!is.null(Y2c)){
               res.l@E$Y2 <- res.l@E$Y2 + Y2.bar
               res.l@S$Z2 <- res.l@S$Z2 + Y2.bar
               res.l@E$Y <- res.l@E$Y1+ res.l@E$Y2
