@@ -35,15 +35,15 @@
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, dataAnnotTP, dataAnnotN,
 #'                               nbClones, bkps, regions)
-#' M <- rSparseWeightMatrix(5,3, 0.90)
+#' M <- rSparseWeightMatrix(10,3, 0.90)
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
-#' res <- initializeZ(seg$Y1, seg$Y2, nb.arch=4)
+#' res <- initializeZ(seg$Y1, seg$Y2)
 #' resC <- initializeZ(seg$Y1+seg$Y2, nb.arch=4)
 #'
 #' @importFrom stats dist hclust cutree
 #' @export
-initializeZ <- function(Y1, Y2=NULL, nb.arch=ncol(Y1), init.random=FALSE,
+initializeZ <- function(Y1, Y2=NULL, nb.arch=nrow(Y1), init.random=FALSE,
                         flavor=c("C1+C2", "C1", "C2"), verbose=FALSE) {
     n <- nrow(Y1) # number of samples
     L <- ncol(Y1) # number of loci/segments
