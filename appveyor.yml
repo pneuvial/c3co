@@ -11,6 +11,9 @@
 environment:
   _R_CHECK_FORCE_SUGGESTS_: false
 
+  global:
+    BIOC_USE_DEVEL: "FALSE"
+
   matrix:
   - R_VERSION: devel
     R_ARCH: x64
@@ -31,7 +34,9 @@ init:
         Invoke-WebRequest http://raw.github.com/HenrikBengtsson/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
         Import-Module '..\appveyor-tool.ps1'
 install:
-  ps: Bootstrap
+  ps: |
+    Bootstrap
+    InstallRtools
 
 # Adapt as necessary starting from here
 
