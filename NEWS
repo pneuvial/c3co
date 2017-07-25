@@ -1,10 +1,14 @@
 Package: c3co
 =============
+
+Version: 0.2.5-9000 [2017-07-25]
+
+ o Added several flavors for the initialization of Z: svd, NMF, and archetypal analysis
+
 Version: 0.2.4-9000 [2017-07-24]
 
- o In 'fitC3co': the model is now applied on centered data.
- o 'buildSubclone' can now also generate purely simulated data if no real data are given as input.
-
+ o In 'fitC3co': the model is now applied on centered data
+ o 'buildSubclone' can now also generate purely simulated data if no real data are given as input
 
 Version: 0.2.3-9000 [2017-06-28]
 
@@ -25,23 +29,23 @@ Version: 0.2.1-9000 [2017-04-20]
 
 Version: 0.2.0-9000 [2017-04-12]
 
- o Changed default grid of values for penalization parameters: now ranges 
+ o Changed default grid of values for penalization parameters: now ranges
    uniformly *on the log scale* over the interval.
- o More code cleanups 
+ o More code cleanups
 
 
 Version: 0.2.0 [2017-03-31]
 
 CODE REFACTORING:
 
- o More code cleanups 
+ o More code cleanups
  o Added minimal sanity checks for some function arguments
- o Added function 'initializeZ' so that the initialization is 
+ o Added function 'initializeZ' so that the initialization is
    performed only once per candidate number of subclones in 'c3co'
  o In class 'posFused', ddded slot 'S0' to store initial estimates of Z
  o Moved function 'get.Z.new' into 'get.Z'
- o Added function 'fitC3co' that performs the actual fitting 
-   from segment-level data. This function is called by the 
+ o Added function 'fitC3co' that performs the actual fitting
+   from segment-level data. This function is called by the
    main function 'c3co'
 
 Version: 0.1.15 [2017-03-21]

@@ -1,29 +1,56 @@
-#' Initialization of the c3co model parameters
+#' Initialization of the latent features of the c3co model
 #'
-#' @param Y1 A matrix containing the segmented minor copy number
-#' (\code{n} patients in row and \code{L} segments in columns)
+#' @param Y1 A matrix containing the segmented minor copy number (\code{n}
+#'   patients in row and \code{L} segments in columns)
 #'
-#' @param Y2 A matrix containing the segmented major copy number
-#' (\code{n} patients in row and \code{L} segments in columns)
+#' @param Y2 A matrix containing the segmented major copy number (\code{n}
+#'   patients in row and \code{L} segments in columns)
 #'
-#' @param nb.arch An integer which is the number of archetypes in the model
+#' @param p An integer value, the number of latent features in the model.
+#'   Defaults to \code{min(dim(Y1))}
 #'
-#' @param init.random if you want to use random initialization set parameter
-#' to TRUE
+#' @param flavor A character value specifying how initialization is perfomed.
+#'   Defaults to \code{"hclust"}. See Details
 #'
-#' @param flavor Statistic used to perform 'hclust' initialization.
-#' Should be either "C1+C2", "C1", or "C2"
+#' @param stat Statistic used to perform initialization. Should be either
+#'   "C1+C2", "C1", or "C2"
 #'
-#' @param verbose A logical value indicating whether to print extra
-#' information. Defaults to FALSE
+#' @param verbose A logical value indicating whether to print extra information.
+#'   Defaults to FALSE
 #'
-#' @return A list with two components:
-#' \describe{
-#'  \item{Z1}{A \code{L} x \code{p} matrix, the initial value for the
-#'            \code{L} minor copy numbers of the \code{p} latent features}
-#'  \item{Z2}{A \code{L} x \code{p} matrix, the initial value for the
-#'            \code{L} major copy numbers of the \code{p} latent features}
-#' }
+#' @details The latent features (LF) are inferred as follows according to the
+#'   value of argument 'flavor':
+#'
+#'   If \code{flavor=="hclust"} (the default), the LF are centers of clusters
+#'   derived by hierarchical agglomerative clustering on the Euclidean distance
+#'   between the input copy number profiles, and using Ward linkage
+#'   (\code{\link[stats]{hclust}}).
+#'
+#'   If \code{flavor=="nmf"}, the LF are the _coefficients_ of the non-negative
+#'   matrix factorization in \code{p} of the input copy number profiles.
+#'
+#'   If \code{flavor=="svd"}, the LF are the first \code{p} right singular
+#'   vectors of the singular value decomposition of the input copy number
+#'   profiles. The flavor is not recommended as it may produce matrices
+#'   with non-positive entries
+#'
+#'   If  \code{flavor=="archetypes"}, the LF are defined using archetypal
+#'   analysis.
+#'
+#'   If  \code{flavor=="subsampling"}, the LF are chosen at random among existing
+#'   profiles.
+#'
+#' @references Gaujoux R and Seoighe C (2010). A flexible R package for
+#'   nonnegative matrix factorization. BMC Bioinformatics, 11(1), pp. 367.
+#'
+#' @references Cutler A and Breiman L. (1994) Archetypal analysis.
+#'   Technometrics, 36(4):338-3474.
+#'
+#' @return A list with two components: \describe{ \item{Z1}{A \code{L} x
+#'   \code{p} matrix, the initial value for the \code{L} minor copy numbers of
+#'   the \code{p} latent features} \item{Z2}{A \code{L} x \code{p} matrix, the
+#'   initial value for the \code{L} major copy numbers of the \code{p} latent
+#'   features} }
 #'
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -32,60 +59,92 @@
 #' nbClones <- 3
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
-#'                 c("(1,1)", "(0,1)", "(1,1)"), 
+#'                 c("(1,1)", "(0,1)", "(1,1)"),
 #'                 c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-#' M <- rSparseWeightMatrix(6, nbClones, 0.90)
+#' M <- rSparseWeightMatrix(12, nbClones, 0.90)
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
-#' res <- initializeZ(seg$Y1, seg$Y2)
-#' resC <- initializeZ(seg$Y1+seg$Y2, nb.arch=2)
+#' Y1 <- t(seg$Y1)
+#' Y2 <- t(seg$Y2)
+#'
+#' resH <- initializeZ(Y1, Y2, p=nbClones)  ## corresponds to flavor "hclust")
+#' resNMF <- initializeZ(Y1, Y2, p=nbClones, flavor="nmf")
+#' \dontrun{
+#' ## often fails because of singularities:
+#' resArch <- initializeZ(Y1, Y2, p=nbClones, flavor="archetypes")
+#' }
+#' resSVD <- initializeZ(Y1, Y2, p=nbClones, flavor="svd")
+#' resC <- initializeZ(Y1, Y2, p=nbClones, flavor="subsampling")
+#'
+#' resNMF1 <- initializeZ(Y1, p=nbClones, flavor="nmf")
 #'
 #' @importFrom stats dist hclust cutree
+#' @importFrom NMF nmf coef
+#' @importFrom archetypes archetypes
 #' @export
-initializeZ <- function(Y1, Y2=NULL, nb.arch=nrow(Y1), init.random=FALSE,
-                        flavor=c("C1+C2", "C1", "C2"), verbose=FALSE) {
+initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
+                        flavor=c("hclust", "nmf", "archetypes", "svd", "subsampling"),
+                        stat=c("C1+C2", "C1", "C2"), verbose=FALSE) {
     n <- nrow(Y1) # number of samples
     L <- ncol(Y1) # number of loci/segments
-    stopifnot(nb.arch <= n)
+    stopifnot(p <= n)
     flavor <- match.arg(flavor)
+    stat <- match.arg(stat)
 
     if (is.null(Y2)) {
         Y <- Y1
     } else {
         stopifnot(nrow(Y2) == n)  ## sanity check
         stopifnot(ncol(Y2) == L)  ## sanity check
-        Y <- switch(flavor,
+        Y <- switch(stat,
                     "C1+C2" = Y1 + Y2,
                     "C1" = Y1,
                     "C2" = Y2)
     }
-    if (!init.random) {
-        ## hierarchical agglomerative clustering on Y
+    if (flavor=="hclust") {
         dd <- dist(Y)
-#        dd <- as.dist(1 - 1/2*(cor(t(Y1)) + cor(t(Y2))))
         hc <- hclust(dd, method="ward.D")
-        cluster <- cutree(hc, k=nb.arch)
-        if (verbose) message("Clustering in ", nb.arch, " groups: ", cluster)
-
-        ## subclones are initialized as intra-cluster averages
-        Z.init <- sapply(split(as.data.frame(Y), f=cluster), FUN=colMeans)
-        Z1.init <- sapply(split(as.data.frame(Y1), f=cluster), FUN=colMeans)
-        Z2.init <- sapply(split(as.data.frame(Y2), f=cluster), FUN=colMeans)
-        if (is.null(Y2)) {
-            Z1.init <- Z.init
-            Z2.init <- NULL
+        initHclust <- function(Y, p) {
+            cluster <- cutree(hc, k=p)
+            t(sapply(split(as.data.frame(Y), f=cluster), FUN=colMeans))
         }
-    } else {
-        idxs <- sample(1:n, size=nb.arch, replace=FALSE)
-        Z.init <- t(Y[idxs, , drop=FALSE])
-        Z1.init <- t(Y1[idxs, , drop=FALSE])
-        if (is.null(Y2)) {
-          Z2.init <- NULL
-        }else{
-          Z2.init <- t(Y2[idxs, , drop=FALSE])
+    } else if (flavor=="subsampling") {
+        idxs <- sample(1:n, replace=FALSE)
+        initSub <- function(Y, p) {
+            Y[idxs[1:p], , drop=FALSE]
         }
     }
-    Z <- list(Z=Z.init, Z1=Z1.init, Z2=Z2.init)
-    return(Z)
+
+    initZ <- switch(flavor,
+                    "nmf"=initNMF,
+                    "svd"=initSVD,
+                    "archetypes"=initArchetypes,
+                    "hclust"=initHclust,
+                    "subsampling"=initSub)
+    Z1 <- initZ(Y1, p)
+    if (is.null(Y2)) {
+        Z <- Z1
+        res <- list(Z=t(Z), Z1=t(Z1), Z2=NULL)
+    } else {
+        Z2 <- initZ(Y2, p)
+        Z <- initZ(Y, p)
+        res <- list(Z=t(Z), Z1=t(Z1), Z2=t(Z2))
+    }
+    return(res)
+}
+
+initNMF <- function(Y, p) {
+    fit <- nmf(Y, p)
+    Z <- coef(fit)  ## NB: W is 'basis(fit)'
+}
+
+initSVD <- function(Y, p) {
+    fit <- svd(Y, 0, p)
+    Z <- t(fit$v)
+}
+
+initArchetypes <- function(Y, p) {
+    fit <- archetypes(Y, p)
+    fit$archetypes  ## Note: W is 'fit$alphas'
 }

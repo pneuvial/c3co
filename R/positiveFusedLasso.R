@@ -44,7 +44,7 @@
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
 #' lambda <- 0.01
-#' Z <- initializeZ(t(seg$Y1), t(seg$Y2), nb.arch=3)
+#' Z <- initializeZ(t(seg$Y1), t(seg$Y2), p=3)
 #' res <- positiveFusedLasso(t(seg$Y1), t(seg$Y2), Z$Z1, Z$Z2,
 #'                           lambda1=lambda, lambda2=lambda, verbose=TRUE)
 #' res

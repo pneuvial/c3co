@@ -138,7 +138,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
             Y2.bar <- rowMeans(Y2)
             Y2c <- sweep(Y2, MARGIN=1, Y2.bar, FUN="-")
         }
-        Z0 <- initializeZ(Y1c, Y2=Y2c, nb.arch=pp, ...)
+        Z0 <- initializeZ(Y1c, Y2=Y2c, p=pp, ...)
         if (verbose) {
             message("Parameter configuration: (",
                     paste(colnames(configs), collapse="; "), ")")
