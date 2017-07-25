@@ -65,7 +65,7 @@ regions <- list(
 Then, we simulate the subclone profiles with the above characteristics:
 
 ```{r}
-datSubClone <- buildSubclones(len, nbClones, bkps, regions, eps=0.5)
+datSubClone <- buildSubclones(len, nbClones, bkps, regions, eps=0.25)
 ```
  
  

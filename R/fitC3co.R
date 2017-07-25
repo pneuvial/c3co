@@ -36,7 +36,7 @@
 #' regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-#' M <- rSparseWeightMatrix(15, 3, sparse.coeff=0.7)
+#' M <- rSparseWeightMatrix(14, 3, sparse.coeff=0.7)
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(dat)
 #' 
@@ -131,15 +131,14 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         BICp <- +Inf
         bestConfig <- aConf <- NULL
         ## Centering step
-        Y1.bar <- colMeans(Y1)
-        Y1c <- scale(Y1, center=Y1.bar, scale=FALSE)
+        Y1.bar <- rowMeans(Y1)
+        Y1c <- sweep(Y1, MARGIN=1, Y1.bar, FUN="-")
         Y2c <- NULL
         if(!is.null(Y2)){
-          Y2.bar <- colMeans(Y2)
-          Y2c <- scale(Y2, center=Y2.bar, scale=FALSE)
+            Y2.bar <- rowMeans(Y2)
+            Y2c <- sweep(Y2, MARGIN=1, Y2.bar, FUN="-")
         }
         Z0 <- initializeZ(Y1c, Y2=Y2c, nb.arch=pp, ...)
-        
         if (verbose) {
             message("Parameter configuration: (",
                     paste(colnames(configs), collapse="; "), ")")
@@ -178,19 +177,14 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
                 bestConfig <- c(pp, cfg, R2, BICp, Likelihood)
             }
             ## De-centering step
-            res.l@E$Y1 <- res.l@E$Y1 + Y1.bar
-            res.l@S$Z1 <- res.l@S$Z1 + Y1.bar
+            res.l@E$Y1 <- sweep(res.l@E$Y1, MARGIN=1, Y1.bar, FUN="+")
             res.l@E$Y <- res.l@E$Y1
-            res.l@S$Z <- res.l@S$Z1
             if(!is.null(Y2c)){
-              res.l@E$Y2 <- res.l@E$Y2 + Y2.bar
-              res.l@S$Z2 <- res.l@S$Z2 + Y2.bar
-              res.l@E$Y <- res.l@E$Y1+ res.l@E$Y2
-              res.l@S$Z <- res.l@S$Z1 + res.l@S$Z2
+                res.l@E$Y2 <- sweep(res.l@E$Y2, MARGIN=1, Y1.bar, FUN="+")
+                res.l@E$Y <- res.l@E$Y1+ res.l@E$Y2
             }
         }
-        
-        
+
         fitList[[it]] <- res.l
         bestConfigp <- rbind(bestConfigp, bestConfig)
         ## sanity check: minor CN < major CN in the best parameter
