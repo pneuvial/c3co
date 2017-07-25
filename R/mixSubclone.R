@@ -23,7 +23,7 @@
 mixSubclones <- function(subClones, W) {
 
     ## Sanity check
-    idxHom <- which(subClones[[1]]$genotype != "0.5")
+    idxHom <- which(subClones[[1]]$genotype != 0.5)
     sc <- sapply(seq_len(length(subClones)-1), FUN = function(i) {
         # Test if genotype of i is equal to genotype of j
         genoI <- subClones[[i]]$genotype
@@ -59,7 +59,7 @@ mixSubclones <- function(subClones, W) {
     df.res <- apply(W, MARGIN=1L, FUN=function(weights) {
 
         if (sum(weights) > 1) {
-            stop("Fraction Tumor upper than 1, please check weight vector")
+            stop("Tumor fraction larger than 1, please check weight vector")
         }
         fracN <- 1-sum(weights)
         c1 <- rowSums(cbind(sapply(seq(along.with=subClones), FUN=function(ii) {

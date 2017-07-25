@@ -13,12 +13,12 @@ get.Z <- function(W, Y, lambda) {
   
   ## Lasso regression 
   X.tilde <- kronecker(scale(X1,TRUE,FALSE), as(W, "sparseMatrix")) 
-  y.tilde <- as.numeric(sweep(Y,1,rowMeans(Pw %*% Y),"-")) 
+  y.tilde <- as.numeric(sweep(Y, 1, rowMeans(Pw %*% Y), "-")) 
   z.tilde <- glmnet(X.tilde, y.tilde, lambda=lambda, intercept=FALSE, standardize=FALSE)$beta
   
   ## Go back to Z 
   Z <- matrix(z.tilde, nrow=(L-1), ncol=p, byrow=TRUE)
-  X1.Z  <- rbind(0,apply(Z, 2, cumsum))
+  X1.Z  <- rbind(0, apply(Z, 2, cumsum))
   
   return(sweep(X1.Z, 2, colMeans(t(Y) %*% W.WtWm1 - X1.Z), "+"))
 }

@@ -32,13 +32,14 @@
 #' nbClones <- 3
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
-#' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
+#'                 c("(1,1)", "(0,1)", "(1,1)"), 
+#'                 c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-#' M <- rSparseWeightMatrix(10,3, 0.90)
+#' M <- rSparseWeightMatrix(6, nbClones, 0.90)
 #' simu <- mixSubclones(subClones=datSubClone, M)
 #' seg <- segmentData(simu)
 #' res <- initializeZ(seg$Y1, seg$Y2)
-#' resC <- initializeZ(seg$Y1+seg$Y2, nb.arch=4)
+#' resC <- initializeZ(seg$Y1+seg$Y2, nb.arch=2)
 #'
 #' @importFrom stats dist hclust cutree
 #' @export
