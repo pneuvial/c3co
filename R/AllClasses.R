@@ -8,6 +8,8 @@
 #'
 #' @slot W A matrix containing weights inferred by \code{positiveFusedLasso}.
 #'
+#' @slot mu A numeric containing the intercept terms inferred by \code{positiveFusedLasso}.
+#'
 #' @slot E A list containing estimates of minor copy number and major copy
 #'       number inferred by \code{positiveFusedLasso}.
 #'       
@@ -15,10 +17,11 @@
 setClass(
   Class = "posFused",
   representation = representation(
-    S = "list",
+    S  = "list",
     S0 = "list",
-    W = "matrix",
-    E = "list"
+    W  = "matrix",
+    mu = "numeric",
+    E  = "list"
   )
 )
 

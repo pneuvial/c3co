@@ -1,22 +1,15 @@
 #' Positive fused lasso function
 #'
-#' @param Y1 A matrix containing the segmented minor copy number
+#' @param Y A list of one or two matrices named Y1 and Y2 containing the segmented minor 
+#' (and possibly the major) copy number 
 #' (\code{n} patients in row and \code{L} segments in columns)
 #'
-#' @param Y2 A matrix containing the segmented major copy number
-#' (\code{n} patients in row and \code{L} segments in columns)
+#' @param Z A list of one or two \code{L} x \code{p} matrices names Z1 and Z2 containing the \code{L}
+#' minor (and possibly the major) copy numbers of the \code{p} initial 
+#' latent feature estimates
 #'
-#' @param Z1 A \code{L} x \code{p} matrix containing the \code{L}
-#' minor copy numbers of the \code{p} initial latent feature estimates
-#'
-#' @param Z2 A \code{L} x \code{p} matrix containing the \code{L}
-#' major copy numbers of the \code{p} initial latent feature estimates
-#'
-#' @param lambda1 A real number, the coefficient for the fused penalty
-#' for minor copy numbers
-#'
-#' @param lambda2 A real number, the coefficient for the fused penalty
-#' for major copy numbers
+#' @param lambda A numeric with one or two real numbers, the coefficients for the fused penalty
+#' for minor (and possibly the major) copy numbers
 #'
 #' @param eps criterion to stop algorithm (when W do not change
 #' sqrt(sum((W-W.old)^2) < eps)
@@ -54,104 +47,86 @@
 #'
 #' @importFrom methods new
 #' @export
-positiveFusedLasso <- function(Y1, Y2, Z1, Z2, lambda1, lambda2, eps=1e-1,
+positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
                                max.iter=50, warn=FALSE, verbose=FALSE) {
-    n <- nrow(Y1) # number of individuals
-    L <- ncol(Y1) # number of loci/segments
-    stopifnot(eps > 0)
-    nb.arch <- ncol(Z1)
-    Z <- Z0 <- list(Z1=Z1, Z2=Z2)
-    ## Z0 <- list(Z=Z1+Z2, Z1=Z1, Z2=Z2)
 
-    iter <- 0
-    cond <- FALSE
-    delta <- Inf
+  ## problem dimensions
+  M <- length(Y)  # number of signal (one or two)
+  stopifnot(length(lambda) == M)
+  Z0 <- Z
+  ## Yc is a list of matrices centered row-wise
+  Yc   <- lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-"))
+  # the vector of means averaged over the M signal (required for the intercept)
+  Ybar <- Reduce("+",lapply(Y, rowMeans))/M # average over the signals
+  
+  ## __________________________________________________
+  ## main loop for alternate optimization
+  iter <- 0
+  cond <- FALSE
+  delta <- Inf
+  while (!cond) {
+    iter <- iter + 1
     ## __________________________________________________
-    ## main loop for alternate optimization
-    Ymat <- cbind(Y1, Y2)
-    lst <- list(Z1=list(Y=Y1, lambda=lambda1))
-    if (!is.null(Y2)) {
-        lst[["Z2"]] <- list(Y=Y2, lambda=lambda2)
-    }
-    while (!cond) {
-        iter <- iter + 1
-        ## __________________________________________________
-        ## STEP 1: optimize wrt W (fixed Z1, Z2)
-        Zmat <- rbind(Z$Z1, Z$Z2)
-        W <- get.W(Zmat, Ymat)
-        if(iter == 1){
-          delta <- tryCatch({
-            i <- solve(t(W) %*% W)
-            delta <- Inf
-          }, error = function(err) {
-            # error handler picks up where error was generated
-            if(verbose) message("ERROR to solve inv(WtW):  ",err)
-            delta <- 0
-            return(delta)
-          })
-          if(delta == 0){
-            if(verbose) message("No solution of this combination of lambda")
-          }else{
-            ## STEP 2: optimize wrt Z (fixed W)
-            Z <- lapply(lst, FUN = function(ll) {
-              get.Z(Y = ll[["Y"]], lambda = ll[["lambda"]], W=W)
-            })
-          }
-        }else{
-          W <- tryCatch({
-            i <- solve(t(W) %*% W)
-            W
-          }, error = function(err) {
-            # error handler picks up where error was generated
-            if(verbose) message("ERROR to solve inv(WtW):  ",err)
-            return(W.old)
-          })
-          ## STEP 2: optimize wrt Z (fixed W)
-          Z <- lapply(lst, FUN = function(ll) {
-            get.Z(Y = ll[["Y"]], lambda = ll[["lambda"]], W=W)
-          })
-          delta <- sqrt(sum((W - W.old)^2))
-        }
-        
-        ## __________________________________________________
-        ## STEP 3: check for convergence of the weights
-        cond <- (iter > max.iter || delta < eps)
-        if (verbose) message("delta:", round(delta, digits=4))
-        W.old <- W
-    }
-    if (verbose) message("Stopped after ", iter, " iterations")
-    if (verbose) message("delta:", round(delta, digits=4))
+    ## STEP 1: optimize w.r.t. W (fixed Z)
     
-    ## reshape output
-    Z1 <- Z$Z1
-    Z2 <- Z$Z2
-    if (!is.null(Y2)) {
-        Y <- Y1 + Y2
-        Z <- Z1 + Z2
-        Y1hat <- W %*% t(Z1)
-        Y2hat <- W %*% t(Z2)
-    } else {
-        Y <- Y1
-        Z <- Z1
-        Y1hat <- W %*% t(Z)
-        Y2hat <- NULL
+    ## Matrices Z must be centering columnwise
+    ## the list of achetype matrices centered accordingly
+    Zc <- lapply(Z, function(z) sweep(z, 2, colMeans(z), "-"))
+    # the vector of means averaged over the M signal (required for the intercept)
+    Zbar <- Reduce("+",lapply(Z, colMeans))/M # average of the M signal
+
+    ## solve in W (here individuals - i.e. rows of Yc - are independent)
+    W <- get.W(do.call(rbind, Zc), do.call(cbind, Yc))
+    
+    ## the vector of intercept (one per patient)
+    mu <- Ybar - as.numeric(tcrossprod(Zbar, W))
+
+    ## __________________________________________________
+    ## STEP 2: optimize w.r.t. Z (fixed W)
+    ## centering Y with the current intercept mu
+    Yc.mu <- lapply(Y, function(y) sweep(y, 1, mu, "-"))
+    Z <- lapply(1:M, function(m) {
+      return(get.Z(Yc.mu[[m]], W, lambda[m]))
+    })
+    failure <- sapply(Z, inherits, "try-error")
+    if (any(failure))
+      Z <- Z0
+    
+    if (iter > 1)
+      delta <- sqrt(sum((W - W.old)^2))
+
+    ## __________________________________________________
+    ## STEP 3: check for convergence of the weights
+    cond <- (iter > max.iter || delta < eps || any(failure))
+    if (verbose) message("delta:", round(delta, digits=4))
+    W.old <- W
+  }
+  if (verbose) message("Stopped after ", iter, " iterations")
+  if (verbose) message("delta:", round(delta, digits=4))
+
+  ## reshape output
+  Yhat <- lapply(Z, function(Z_) sweep(W %*% t(Z_), 1, mu, "+"))  
+  names(Yhat) <- paste0("Yhat", 1:M)
+  names(Z)    <- paste0("Z", 1:M)
+
+  if(length(Yhat) > 1 & warn) { ## sanity check: minor CN < major CN
+    dZ <- Reduce("-", rev(Z))
+    tol <- 1e-2  ## arbitrary tolerance...
+    if (min(dZ) < -tol) {
+       warning("For model with ", nb.arch, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
+  #     idx <- 1:ncol(Z2)
+  #     Z1 <- sapply(idx, function(ii){
+  #       jj <- which(Z1[,ii]>Z2[,ii])
+  #       Z1[jj, ii] <- Z2[jj, ii]
+  #       return(Z1 [,ii])
+  #     })
     }
-    if (!is.null(Y2) & warn) {  ## sanity check: minor CN < major CN
-        dZ <- Z2-Z1
-        tol <- 1e-2  ## arbitrary tolerance...
-        if (min(dZ) < - tol) {
-            warning("For model with ", nb.arch, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
-          idx <- 1:ncol(Z2)
-          Z1 <- sapply(idx, function(ii){
-            jj <- which(Z1[,ii]>Z2[,ii])
-            Z1[jj, ii] <- Z2[jj, ii]
-            return(Z1 [,ii])
-          })
-        }
-    }
-    S <- list(Z=Z, Z1=Z1, Z2=Z2)
-    E <- list(Y1=Y1hat, Y2=Y2hat)
-    objRes <- new("posFused",
-                  S=S, S0=Z0, W=W, E=E)
-    return(objRes)
+    
+  }
+  
+  ## add Z, the sum of the two clones (use by Morganne in its representation)
+  Z$Z <- Reduce("+",Z)
+  objRes <- new("posFused", S=Z, S0=Z0, W=W, mu=mu, E=Yhat)
+  return(objRes)
 }
+

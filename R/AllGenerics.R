@@ -8,6 +8,8 @@ setMethod(
         str(object@S)
         cat("Weight matrix:\n")
         str(object@W)
+        cat("Intercept vector:\n")
+        str(object@mu)
         cat("Copy-number estimates:\n")
         str(object@E)
     }
