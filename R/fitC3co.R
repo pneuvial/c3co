@@ -47,83 +47,25 @@
 #' @importFrom methods slot
 #' @importFrom matrixStats colMaxs
 #' @export
-fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
-                    ..., verbose=FALSE) {
+fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=FALSE) {
+
+    ## preparing data
+    Y <- list(Y1=Y1);  if(!is.null(Y2)) {Y$Y2 <- Y2}
     ## Sanity checks
+    stopifnot(length(unique(lapply(Y, dim))) == 1) # are all the dimension equal ?
+    ## problem dimension
     n <- nrow(Y1)
     nseg <- ncol(Y1)
-    if (!is.null(Y2)) {
-        stopifnot(nrow(Y2) == n)
-        stopifnot(ncol(Y2) == nseg)
-    }
-    
-    ## preparing data for inner functions
-    Y <- list(Y1=Y1)
-    if(!is.null(Y2)) {
-      Y$Y2 <- Y2
-    }
+
     ## centered version of the data
     Yc   <- lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-"))
+    ## Compute total sum of squares
+    totVar <- sum((Reduce("+", Yc))^2)
     
     ### Define grids
-    lambda <-  parameters.grid$lambda
-    lambda1 <- parameters.grid$lambda1
-    lambda2 <- parameters.grid$lambda2
-    if (!is.null(lambda)) {
-      lambda1 <- lambda
-      if (!is.null(Y2)) {
-          lambda2 <- lambda
-          if (verbose) {
-            message("Only one regularization parameter is provided. Using the same value for lambda[1] and lambda[2] : ")
-            mstr(lambda)
-          }
-          configs <- cbind(lambda1 = lambda1, lambda2 = lambda2)
-      }else{
-        configs <- cbind(lambda1 = lambda1)
-      }
-    }else{
-      ## Case C1-C2
-      if (!is.null(Y2)) {
-        if(is.null(lambda1) & is.null(lambda2)){
-          lambda <- 10^(-seq(from=6, to=4, length.out=10))
-          if (verbose) {
-            message("Regularization parameter lambda is not provided. Using default value: ")
-            mstr(lambda)
-          }
-          configs <- cbind(lambda1 = lambda, lambda2 = lambda)
-        }else {
-          configs <- expand.grid(lambda1 = lambda1, lambda2 = lambda2) 
-        }
-        
-      ## Case TCN
-      }else{
-        lambda <- c(lambda1, lambda2)
-        if(!is.null(lambda)){
-          if(verbose){
-            message("Only regularization parameter lambda[1] or lambda[2] is used")
-            mstr(lambda)
-          }
-        }else{
-          lambda <- 10^(-seq(from=6, to=4, length.out=10))
-          if(verbose){
-            message("Regularization parameter lambda or lambda[1] or  lambda[2] is not provided. Using value: ")
-            mstr(lambda)
-          }
-        }
-        configs <- cbind(lambda1 = lambda)
-      }
-    }
-    
-    ## candidate number of subclones
-    nb.arch <- parameters.grid$nb.arch
-    if (is.null(nb.arch)) {
-        nb.arch  <- seq(from=2, to=nseg-1, by=1)
-        if (verbose) {
-            message("Parameter 'nb.arch' not provided. Using default value: ")
-            mstr(nb.arch)
-        }
-    }
-    rm(list = "parameters.grid")
+    parameters <- checkParams(parameters.grid, length(Y), verbose)
+    configs <- parameters$configs
+    nb.arch <- parameters$nb.arch
     
     it <- 1
     pp <- nb.arch[it]
@@ -158,7 +100,6 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
             
             ## Calculate model fit statistics - R2
             resVar <- sum((Reduce("+", Y) - res@E$Y)^2)
-            totVar <- sum((Reduce("+", Yc))^2)
             R2 <- 1 - resVar / totVar
             loss <- resVar/(n*nseg)
             kZ <- sum(apply(res@S$Z, MARGIN=2L, FUN=diff) != 0)
@@ -201,4 +142,68 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
     colnames (allConfig) <- c("nb.feat", colnames(configs), "PVE", "BIC", "Likelihood")
     rownames(allConfig) <- NULL
     return(list(fit =fitList, config=list(best=bestConfigp, all=allConfig, res=allRes, loss=allLoss)))
+}
+
+
+checkParams <- function(parameters.grid, M, verbose) {
+  
+    lambda <-  parameters.grid$lambda
+    lambda1 <- parameters.grid$lambda1
+    lambda2 <- parameters.grid$lambda2
+    if (!is.null(lambda)) {
+      lambda1 <- lambda
+      if (M > 1) {
+          lambda2 <- lambda
+          if (verbose) {
+            message("Only one regularization parameter is provided. Using the same value for lambda[1] and lambda[2] : ")
+            mstr(lambda)
+          }
+          configs <- cbind(lambda1 = lambda1, lambda2 = lambda2)
+      }else{
+        configs <- cbind(lambda1 = lambda1)
+      }
+    }else{
+      ## Case C1-C2
+      if (!is.null(Y2)) {
+        if(is.null(lambda1) & is.null(lambda2)){
+          lambda <- 10^(-seq(from=6, to=4, length.out=10))
+          if (verbose) {
+            message("Regularization parameter lambda is not provided. Using default value: ")
+            mstr(lambda)
+          }
+          configs <- cbind(lambda1 = lambda, lambda2 = lambda)
+        }else {
+          configs <- expand.grid(lambda1 = lambda1, lambda2 = lambda2) 
+        }
+        
+      ## Case TCN
+      } else{
+        lambda <- c(lambda1, lambda2)
+        if(!is.null(lambda)){
+          if(verbose){
+            message("Only regularization parameter lambda[1] or lambda[2] is used")
+            mstr(lambda)
+          }
+        }else{
+          lambda <- 10^(-seq(from=6, to=4, length.out=10))
+          if(verbose){
+            message("Regularization parameter lambda or lambda[1] or  lambda[2] is not provided. Using value: ")
+            mstr(lambda)
+          }
+        }
+        configs <- cbind(lambda1 = lambda)
+      }
+    }
+    
+    ## candidate number of subclones
+    nb.arch <- parameters.grid$nb.arch
+    if (is.null(nb.arch)) {
+        nb.arch  <- seq(from=2, to=nseg-1, by=1)
+        if (verbose) {
+            message("Parameter 'nb.arch' not provided. Using default value: ")
+            mstr(nb.arch)
+        }
+    }
+    return(list(nb.arch = nb.arch, configs = configs))
+
 }
