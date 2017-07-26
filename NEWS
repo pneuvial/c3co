@@ -3,7 +3,10 @@ Package: c3co
 
 Version: 0.2.5-9000 [2017-07-25]
 
- o Added several flavors for the initialization of Z: svd, NMF, and archetypal analysis
+ o Added several flavors for the initialization of Z: svd, NMF, and archetypal 
+ analysis. Added corresponding test script.
+ o Added function 'getToyData' (and corresponding test script) to generate toy 
+ locus-level and segment-level data.
 
 Version: 0.2.4-9000 [2017-07-24]
 

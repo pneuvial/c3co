@@ -1,0 +1,110 @@
+#' Create a toy subclone and mixture data set
+#' 
+#' @param n The number of observations
+#'   
+#' @param len The number of loci in each subclone
+#'   
+#' @param nbClones The number of subclones
+#'   
+#' @param nbBkps The total number of breakpoints
+#'   
+#' @param eps A numeric value, the signal to noise ratio for simulated data.
+#'   
+#' @param weightSparsity A numeric value in \code{[0,1]}: weights under 
+#'   \code{weightSparsity} are set to 0. This parameter controls the sparsity of
+#'   the weight matrix.
+#'   
+#' @return A list with two elements named \code{locus} and \code{segment}
+#'   containing locus-level and segment-level data. Each of them is a list of
+#'   three elements: \describe{
+#'   
+#'   \item{Y}{A \code{n} x \code{len} (or \code{nbBkp+1}) matrix of noisy
+#'   observations}
+#'   
+#'   \item{W}{A \code{n} x \code{nbClones} matrix of weights}
+#'   
+#'   \item{Z}{A \code{nbClones} x \code{len}  (or \code{nbBkp+1}) matrix of
+#'   latent features (subclones)}
+#'   
+#'   }
+#'   
+#' @details For simplicity, the breakpoints positions are drawn uniformly from
+#'   the set of all possible positions.
+#'   
+#' @export
+#' @examples
+#' 
+#' len <- 100
+#' nbClones <- 2
+#' nbBkps <- 5
+#' n <- 4
+#' 
+#' dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
+#' matplot(t(dat$locus$Y), t='s')
+#' matplot(t(dat$segment$Y), t='s')
+#' 
+#' dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
+#' matplot(t(dat$locus$Y), t='l')
+#' matplot(t(dat$segment$Y), t='s')
+#' 
+#' len <- 1000
+#' nbClones <- 5
+#' nbBkps <- 10
+#' eps <- 1
+#' n <- 20
+#' 
+#' dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
+#' matplot(t(dat$locus$Y), t='s')
+#' matplot(t(dat$segment$Y), t='s')
+#' 
+#' dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
+#' matplot(t(dat$locus$Y), t='l')
+#' matplot(t(dat$segment$Y), t='s')
+#' 
+#' l1 <- seq(from=1e-6, to=1e-4, length.out=10)
+#' parameters.grid <- list(lambda=l1, nb.arch=2:9)
+#' 
+#' Y <- dat$segment$Y
+#' fit <- fitC3co(Y, parameters.grid=parameters.grid)
+#' pvePlot2(fit$config$best)
+#' 
+getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1) {
+    ## number of segments
+    nbSegs <- nbBkps+1 
+    
+    ## subclones (segment-level)
+    z <- rnorm(nbSegs*nbClones)
+    Zs <- round(matrix(z, nrow=nbClones, ncol=nbSegs))
+    
+    ## breakpoint positions
+    bkp <- sample(len, size=nbBkps, replace=FALSE)
+    bkp <- sort(bkp)
+    
+    ## segment lengths
+    segLens <- diff(c(0, bkp))
+    segLens <- c(segLens, len-sum(segLens))
+
+    ## subclones (locus-level)
+    Zl <- t(apply(Zs, 1, rep, times=segLens))
+    
+    ## weights
+    ru <- runif(n*nbClones)
+    ru[ru<weightSparsity] <- 0
+    W <- matrix(ru, nrow=n, ncol=nbClones)
+    W <- round(sweep(W, MARGIN=1, STATS=rowSums(W), FUN="/"), 2)
+    W[, nbClones] <- 1-rowSums(W[, -nbClones, drop=FALSE]) ## make sure rows sum to 1 after rounding
+
+    ## segment-level data
+    e <- rnorm(n*nbSegs, sd=eps)
+    Es <- matrix(e, nrow=n, ncol=nbSegs)  ## noise
+    Ys <- W %*% Zs + Es                ## observations
+    seg <- list(Y=Ys, W=W, Z=Zs)
+    
+    ## locus-level data
+    e <- rnorm(n*len, sd=eps)
+    El <- matrix(e, nrow=n, ncol=len)  ## noise
+    Yl <- W %*% Zl + El                ## observations
+    loc <- list(Y=Yl, W=W, Z=Zl)
+    
+    return(list(locus=loc, segment=seg))
+}

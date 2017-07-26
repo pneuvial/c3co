@@ -11,7 +11,25 @@
 #' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab ylim
 #' @export
 pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
-    gg <- ggplot(res@config$best, aes_(x=~nb.feat, y=~PVE))
+    pvePlot2(res@config$best, bestNbLatent=bestNbLatent, ylim=ylim)
+}
+
+#' Function to plot PVE (low-level)
+#' 
+#' @param dat A data frame, typically the element \code{best} of the
+#'   \code{config} slot from \code{c3co} or \code{fitC3co}
+#'   
+#' @param bestNbLatent best number of latent profiles.
+#'   
+#' @param ylim a vector that define min and max of y-axis
+#'   
+#' @return PVE curve
+#'   
+#' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab
+#'   ylim
+#' @export
+pvePlot2 <- function(dat, bestNbLatent=NULL, ylim=c(0, 1)) {
+    gg <- ggplot(dat, aes_(x=~nb.feat, y=~PVE))
     gg <- gg + geom_line() + geom_point()
     gg <- gg + ylim(ylim) + xlab("Number of latent profiles")
     gg <- gg + theme_bw()
