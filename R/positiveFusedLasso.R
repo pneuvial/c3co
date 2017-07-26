@@ -24,36 +24,45 @@
 #' @return An object of class [\code{\linkS4class{posFused}}]
 #'
 #' @examples
-#' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-#' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
-#' len <- 500*10
-#' nbClones <- 3
-#' set.seed(2)
-#' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
-#' regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
-#' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-#' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-#' M <- rSparseWeightMatrix(15, 3, 0.4)
-#' simu <- mixSubclones(subClones=datSubClone, M)
-#' seg <- segmentData(simu)
-#' lambda <- 0.01
-#' Z <- initializeZ(t(seg$Y1), t(seg$Y2), p=3)
-#' res <- positiveFusedLasso(t(seg$Y1), t(seg$Y2), Z$Z1, Z$Z2,
-#'                           lambda1=lambda, lambda2=lambda, verbose=TRUE)
-#' res
-#' resC <- positiveFusedLasso(t(seg$Y1+seg$Y2), Y2=NULL, Z1=Z$Z, Z2=NULL,
-#'                            lambda1=lambda, lambda2=lambda)
-#' resC
+#' len <- 700*10
+#' nbClones <- 2
+#' bkps <- list(
+#'     c(20, 30, 50, 60)*100, 
+#'     c(10, 40, 60)*100)
+#' regions <- list(
+#'     c("(1,1)", "(1,2)", "(1,1)", "(0,1)", "(1,1)"),
+#'     c("(0,1)", "(1,1)", "(1,2)", "(1,1)"))
+#' 
+#' datSubClone <- buildSubclones(len, nbClones, bkps, regions, eps=0.2)
+#' W <-  rSparseWeightMatrix(5, nbClones, 0.7)
+#' datList <- mixSubclones(subClones=datSubClone, W)
+#' 
+#' segData.TCN  <- segmentData(datList,"TCN")
+#' Y1 <- t(segData.TCN$Y)
+#' Y <- list(Y1 = Y1)
+#' Z0.TCN <- initializeZ(Y1, p = 2, flavor = "nmf")
+#' Z <- list(Z1 = Z0.TCN$Z1)
+#' posFused <- positiveFusedLasso(Y, Z, 1e-3, verbose=TRUE)
+#' posFused 
+#' 
+#' segData.C1C2 <- segmentData(datList,"C1C2")
+#' Y1 <- t(segData.C1C2$Y1)
+#' Y2 <- t(segData.C1C2$Y2)
+#' Y <- list(Y1 = Y1, Y2 = Y2)
+#' Z0.C1C2 <- initializeZ(Y1, Y2, p=2, flavor = "nmf")
+#' Z <- list(Z1 = Z0.C1C2$Z1,Z2 = Z0.C1C2$Z2)
+#' posFusedC <- positiveFusedLasso(Y, Z, c(1e-3, 1e-3), verbose=TRUE)
+#' posFusedC
 #'
 #' @importFrom methods new
 #' @export
 positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
                                max.iter=50, warn=FALSE, verbose=FALSE) {
-
   ## problem dimensions
   M <- length(Y)  # number of signal (one or two)
   stopifnot(length(lambda) == M)
-  Z0 <- Z
+  
+  Z0 <- Z ## save original Z
   ## Yc is a list of matrices centered row-wise
   Yc   <- lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-"))
   # the vector of means averaged over the M signal (required for the intercept)
@@ -69,8 +78,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     ## __________________________________________________
     ## STEP 1: optimize w.r.t. W (fixed Z)
     
-    ## Matrices Z must be centering columnwise
-    ## the list of achetype matrices centered accordingly
+    ## matrices Z must be centered column-wise
     Zc <- lapply(Z, function(z) sweep(z, 2, colMeans(z), "-"))
     # the vector of means averaged over the M signal (required for the intercept)
     Zbar <- Reduce("+",lapply(Z, colMeans))/M # average of the M signal
@@ -104,12 +112,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   if (verbose) message("Stopped after ", iter, " iterations")
   if (verbose) message("delta:", round(delta, digits=4))
 
-  ## reshape output
-  Yhat <- lapply(Z, function(Z_) sweep(W %*% t(Z_), 1, mu, "+"))  
-  names(Yhat) <- paste0("Yhat", 1:M)
-  names(Z)    <- paste0("Z", 1:M)
-
-  if(length(Yhat) > 1 & warn) { ## sanity check: minor CN < major CN
+  if(M > 1 & warn) { ## sanity check: minor CN < major CN
     dZ <- Reduce("-", rev(Z))
     tol <- 1e-2  ## arbitrary tolerance...
     if (min(dZ) < -tol) {
@@ -121,11 +124,16 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   #       return(Z1 [,ii])
   #     })
     }
-    
   }
   
-  ## add Z, the sum of the two clones (use by Morganne in its representation)
-  Z$Z <- Reduce("+",Z)
+  ## reshape output
+  Yhat <- lapply(Z, function(Z_) sweep(W %*% t(Z_), 1, mu, "+"))  
+  names(Yhat) <- paste0("Y", 1:M)
+  ## accumulate Yhat and Z to get the sum of the two clones (used by Morganne in its representation)
+  Yhat$Y <- Reduce("+",Yhat)
+  names(Z)    <- paste0("Z", 1:M)
+  Z$Z    <- Reduce("+",Z)
+  
   objRes <- new("posFused", S=Z, S0=Z0, W=W, mu=mu, E=Yhat)
   return(objRes)
 }

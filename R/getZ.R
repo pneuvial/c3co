@@ -5,7 +5,7 @@ get.Z <- function(Y, W, lambda) {
 
   WtWm1 <- try(chol2inv(chol(crossprod(W))), TRUE)
   if(inherits(WtWm1, "try-error")) {
-    message("WtW is not invertible: no solution for this combinaison of lambda")
+    warning("WtW is not invertible: no solution for this combinaison of lambda")
     return(WtWm1)  
   } else {
     L <- ncol(Y)

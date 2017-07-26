@@ -151,18 +151,30 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
             l1 <- cfg[, "lambda1"]
             l2 <- NULL
             if (!is.null(Y2c)) l2 <- cfg[, "lambda2"]
-            res <- positiveFusedLasso(Y1c, Y2=Y2c, Z1=Z0$Z1, Z2=Z0$Z2,
-                                      lambda1=l1, lambda2=l2)
+###             
+            if (is.null(Y2)) {
+              Y <- list(Y1=Y1)
+              Z <- list(Z1 = Z0$Z1)
+              lambda <- l1
+            } else {
+              Y <- list(Y1 = Y1, Y2 = Y2)
+              Z <- list(Z1 = Z0$Z1, Z2 = Z0$Z2)
+              lambda <- c(l1, l2)
+            }
+            res <- positiveFusedLasso(Y, Z, lambda)
             ## Calculate model fit statistics
-            if(!is.null(Y2c)){
-              Yc <- Y1c + Y2c
+            if(!is.null(Y2)){
+              Y  <- Y1 + Y2
+              Yc <- sweep(Y1, 1, rowMeans(Y1), "-") + sweep(Y2, 1, rowMeans(Y2), "-")
             }else{
-              Yc <- Y1c
+              Y <- Y1
+              Yc <- sweep(Y1, 1, rowMeans(Y1), "-")
             }
             ## Compute R2
-            R2 <- 1 - sum((Yc-res@W %*% t(res@S$Z))^2) / sum((Yc)^2)
-            
-            resVar <- sum((Yc-res@W %*% t(res@S$Z))^2)
+            resVar <- sum((Y - res@E$Y)^2)
+            totVar <- sum((Yc)^2)
+            R2 <- 1 - resVar / totVar
+###             
             loss <- resVar/(n*nseg)
             kZ <- sum(apply(res@S$Z, MARGIN=2L, FUN=diff) != 0)
             BIC <-  -(n*nseg*log(loss) + kZ*log(n*nseg))
@@ -176,13 +188,13 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
                 BICp <- BIC
                 bestConfig <- c(pp, cfg, R2, BICp, Likelihood)
             }
-            ## De-centering step
-            res.l@E$Y1 <- sweep(res.l@E$Y1, MARGIN=1, Y1.bar, FUN="+")
-            res.l@E$Y <- res.l@E$Y1
-            if(!is.null(Y2c)){
-                res.l@E$Y2 <- sweep(res.l@E$Y2, MARGIN=1, Y1.bar, FUN="+")
-                res.l@E$Y <- res.l@E$Y1+ res.l@E$Y2
-            }
+            # ## De-centering step
+            # res.l@E$Y1 <- sweep(res.l@E$Y1, MARGIN=1, Y1.bar, FUN="+")
+            # res.l@E$Y <- res.l@E$Y1
+            # if(!is.null(Y2c)){
+            #     res.l@E$Y2 <- sweep(res.l@E$Y2, MARGIN=1, Y1.bar, FUN="+")
+            #     res.l@E$Y <- res.l@E$Y1+ res.l@E$Y2
+            # }
         }
 
         fitList[[it]] <- res.l
