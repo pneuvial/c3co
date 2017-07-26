@@ -1,0 +1,138 @@
+---
+title: "c3co"
+author: "Morgane Pierre-Jean, Julien Chiquet, Henrik Bengtsson and Pierre Neuvial"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: c3co.bib
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+The `c3co` package implements a constrained dictionary learning problem to recover cancer subclones from several DNA copy number profiles described in @pierre-jean:c3co. The c3co model may be seen as an extension of the FLLat method of @nowak2011fused, and of the e-FLLat method of @masecchia2013dictionary, with the following original features:
+
+* **interpretable weights**: we model each profile as a *convex combination* of latent profiles, making the corresponding weights directly interpretable as proportions of latent features;
+* **parent-specific copy numbers**: we leverage the allelic signals available from SNP array or sequencing data in order to explicitly integrate parent-specific copy numbers (Olshen *et al*, 2011) in the model. 
+* **segment-level**: we model tumor clonality at the level of copy number segments (not individual loci), which is the level of information at which such events occur.
+
+Notes: 
+
+* Although the c3co model is designed to deal with allelic signals, we emphasize that it is also applicable to data where only total copy number estimates are available, such as array-CGH data or low-pass sequencing data.
+
+* The FLLat method is implemented in the R package `FLLat`. The e-FLLat method is implemented in Python and is available from its authors.
+
+## Model 
+
+The figure below illustrates the model used in the `c3co` package. Two heterogeneous tumor samples (green and yellow circles) are composed of a collection of normal cells (gray discs) and two cancer subclones (red triangles and blue squares). One of the cancer subclones is present in both tumor samples. 
+
+![](img/features.png)
+![](img/features2.png)
+
+The corresponding (noiseless) copy number profiles are displayed in the figure below. They are given by a linear combination of the latent profiles. This Figure is adapted from @nowak2011fused.
+
+![](img/model.png)
+![](img/model2.png)
+
+
+## Setup
+```{r, message=FALSE,warning=FALSE}
+stopifnot(packageVersion("acnr") >= '0.2.6')
+library("c3co")
+library("ggplot2")
+library("mclust")
+library("reshape")
+set.seed(147)
+```
+
+## Creating a synthetic data set
+
+```{r}
+len <- 1000
+nbClones <- 5
+nbBkps <- 10
+eps <- 1
+n <- 20
+```
+
+### Noiseless profiles
+
+```{r}
+dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  
+matplot(t(dat$locus$Y), t='s')
+matplot(t(dat$segment$Y), t='s')
+```
+
+### Noisy profiles
+
+```{r}
+dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
+matplot(t(dat$locus$Y), t='l')
+matplot(t(dat$segment$Y), t='s')
+W <- dat$locus$W
+```
+
+
+## Fitting the `c3co` model
+
+```{r}
+l1 <- seq(from=1e-6, to=1e-4, length.out=10)
+candP <- 2:15
+parameters.grid <- list(lambda=l1, nb.arch=candP)
+```
+
+```{r}
+Y <- dat$segment$Y
+fit <- fitC3co(Y, parameters.grid=parameters.grid)
+```
+
+
+
+For each candidate number of subclones $p$ in `r candP`,  `c3co` only retains the combination of the penalization coefficients $(\lambda_1, \lambda_2)$ which minimizes the Bayesian Information Criterion (BIC) of the model. The next step is to choose the best $p$ (number of subclones). Following @nowak2011fused, we compare the models for different values of $p$ through their percentage of variance explained (PVE). 
+
+```{r}
+pvePlot2(fit$config$best, ylim=c(0.8, 1))
+```
+
+Here we arbitrarily choose 5 subclones (because we know it's the true number of subclones).
+
+We can compare the true and the estimated weight matrices:
+```{r}
+best <- 4
+```
+
+```{r heatmap, fig.width=7, fig.height=5}
+res.clustTRUE <- hclust(dist(cbind(W, 1-rowSums(as.matrix(W)))),method="ward.D")
+col <-  grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
+
+cfit <- new("c3coFit")  ## terrible hack to bypass lacking plot methods
+cfit@fit <- fit$fit
+Wplot(cfit, idxBest = best, cexCol = 0.4)
+```
+
+
+```{r heatmap_TRUE, fig.width=7, fig.height=5}
+heatmap.3(W, dendrogram="row", main="TRUE", Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
+```
+
+## Further analysis
+### Performance  of clustering
+In this section, we show the ablility of the method to recover the simulated clustering of patients.
+
+```{r,clust}
+fitW <- cfit@fit[[best]]@W
+adjustedRandIndex(cutree(hclust(dist(W), method="ward.D2"),4), cutree(hclust(dist(fitW), method="ward.D2"),4))
+```
+
+
+## Session information
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+
