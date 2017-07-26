@@ -122,14 +122,10 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
                     "archetypes"=initArchetypes,
                     "hclust"=initHclust,
                     "subsampling"=initSub)
-    Z1 <- initZ(Y1, p)
-    if (is.null(Y2)) {
-        Z <- Z1
-        res <- list(Z=t(Z), Z1=t(Z1), Z2=NULL)
-    } else {
-        Z2 <- initZ(Y2, p)
-        Z <- initZ(Y, p)
-        res <- list(Z=t(Z), Z1=t(Z1), Z2=t(Z2))
+
+    res <- list(Z1=t(initZ(Y1, p)))
+    if (!is.null(Y2)) {
+      res$Z2 <- t(initZ(Y2, p))
     }
     return(res)
 }

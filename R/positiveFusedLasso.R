@@ -62,7 +62,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   M <- length(Y)  # number of signal (one or two)
   stopifnot(length(lambda) == M)
   
-  Z0 <- Z ## save original Z
+  Z0 <- Z ## save the original Z
   ## Yc is a list of matrices centered row-wise
   Yc   <- lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-"))
   # the vector of means averaged over the M signal (required for the intercept)
@@ -70,18 +70,16 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   
   ## __________________________________________________
   ## main loop for alternate optimization
-  iter <- 0
-  cond <- FALSE
-  delta <- Inf
+  iter <- 0; cond <- FALSE; delta <- Inf
   while (!cond) {
     iter <- iter + 1
     ## __________________________________________________
     ## STEP 1: optimize w.r.t. W (fixed Z)
     
-    ## matrices Z must be centered column-wise
+    ## matrices Z must be centered column-wise for optimizing w.r.t W
     Zc <- lapply(Z, function(z) sweep(z, 2, colMeans(z), "-"))
-    # the vector of means averaged over the M signal (required for the intercept)
-    Zbar <- Reduce("+",lapply(Z, colMeans))/M # average of the M signal
+    # compute the vector of means averaged over the M signal (required for the intercept)
+    Zbar <- Reduce("+",lapply(Z, colMeans))/M
 
     ## solve in W (here individuals - i.e. rows of Yc - are independent)
     W <- get.W(do.call(rbind, Zc), do.call(cbind, Yc))
@@ -96,15 +94,13 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     Z <- lapply(1:M, function(m) {
       return(get.Z(Yc.mu[[m]], W, lambda[m]))
     })
+    ## If inversion of WtW failed, go back to the intialization ()
     failure <- sapply(Z, inherits, "try-error")
-    if (any(failure))
-      Z <- Z0
+    if (any(failure)) {Z <- Z0}
     
-    if (iter > 1)
-      delta <- sqrt(sum((W - W.old)^2))
-
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
+    if (iter > 1) {delta <- sqrt(sum((W - W.old)^2))}
     cond <- (iter > max.iter || delta < eps || any(failure))
     if (verbose) message("delta:", round(delta, digits=4))
     W.old <- W

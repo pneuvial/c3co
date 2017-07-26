@@ -79,13 +79,13 @@ W <- dat$locus$W
 
 ```{r}
 l1 <- seq(from=1e-6, to=1e-4, length.out=10)
-candP <- 2:15
+candP <- 2:10
 parameters.grid <- list(lambda=l1, nb.arch=candP)
 ```
 
 ```{r}
 Y <- dat$segment$Y
-fit <- fitC3co(Y, parameters.grid=parameters.grid)
+fit <- fitC3co(Y, parameters.grid=parameters.grid, verbose=TRUE)
 ```
 
 

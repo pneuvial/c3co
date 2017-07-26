@@ -50,13 +50,21 @@
 fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
                     ..., verbose=FALSE) {
     ## Sanity checks
-    
     n <- nrow(Y1)
     nseg <- ncol(Y1)
     if (!is.null(Y2)) {
         stopifnot(nrow(Y2) == n)
         stopifnot(ncol(Y2) == nseg)
     }
+    
+    ## preparing data for inner functions
+    Y <- list(Y1=Y1)
+    if(!is.null(Y2)) {
+      Y$Y2 <- Y2
+    }
+    ## centered version of the data
+    Yc   <- lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-"))
+    
     ### Define grids
     lambda <-  parameters.grid$lambda
     lambda1 <- parameters.grid$lambda1
@@ -130,15 +138,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         ## Initialization
         BICp <- +Inf
         bestConfig <- aConf <- NULL
-        ## Centering step
-        Y1.bar <- rowMeans(Y1)
-        Y1c <- sweep(Y1, MARGIN=1, Y1.bar, FUN="-")
-        Y2c <- NULL
-        if(!is.null(Y2)){
-            Y2.bar <- rowMeans(Y2)
-            Y2c <- sweep(Y2, MARGIN=1, Y2.bar, FUN="-")
-        }
-        Z0 <- initializeZ(Y1c, Y2=Y2c, p=pp, ...)
+        ## Z0 are initialized with the centered version of the data
+        Z0 <- initializeZ(Yc$Y1, Yc$Y2, p=pp, ...)
         if (verbose) {
             message("Parameter configuration: (",
                     paste(colnames(configs), collapse="; "), ")")
@@ -150,31 +151,15 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
             }
             l1 <- cfg[, "lambda1"]
             l2 <- NULL
-            if (!is.null(Y2c)) l2 <- cfg[, "lambda2"]
-###             
-            if (is.null(Y2)) {
-              Y <- list(Y1=Y1)
-              Z <- list(Z1 = Z0$Z1)
-              lambda <- l1
-            } else {
-              Y <- list(Y1 = Y1, Y2 = Y2)
-              Z <- list(Z1 = Z0$Z1, Z2 = Z0$Z2)
-              lambda <- c(l1, l2)
-            }
-            res <- positiveFusedLasso(Y, Z, lambda)
-            ## Calculate model fit statistics
-            if(!is.null(Y2)){
-              Y  <- Y1 + Y2
-              Yc <- sweep(Y1, 1, rowMeans(Y1), "-") + sweep(Y2, 1, rowMeans(Y2), "-")
-            }else{
-              Y <- Y1
-              Yc <- sweep(Y1, 1, rowMeans(Y1), "-")
-            }
-            ## Compute R2
-            resVar <- sum((Y - res@E$Y)^2)
-            totVar <- sum((Yc)^2)
+            if (!is.null(Y2)) l2 <- cfg[, "lambda2"]
+
+            ## THIS is the function that costs comme computation 
+            res <- positiveFusedLasso(Y, Z0, c(l1,l2))
+            
+            ## Calculate model fit statistics - R2
+            resVar <- sum((Reduce("+", Y) - res@E$Y)^2)
+            totVar <- sum((Reduce("+", Yc))^2)
             R2 <- 1 - resVar / totVar
-###             
             loss <- resVar/(n*nseg)
             kZ <- sum(apply(res@S$Z, MARGIN=2L, FUN=diff) != 0)
             BIC <-  -(n*nseg*log(loss) + kZ*log(n*nseg))
@@ -188,13 +173,6 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
                 BICp <- BIC
                 bestConfig <- c(pp, cfg, R2, BICp, Likelihood)
             }
-            # ## De-centering step
-            # res.l@E$Y1 <- sweep(res.l@E$Y1, MARGIN=1, Y1.bar, FUN="+")
-            # res.l@E$Y <- res.l@E$Y1
-            # if(!is.null(Y2c)){
-            #     res.l@E$Y2 <- sweep(res.l@E$Y2, MARGIN=1, Y1.bar, FUN="+")
-            #     res.l@E$Y <- res.l@E$Y1+ res.l@E$Y2
-            # }
         }
 
         fitList[[it]] <- res.l
