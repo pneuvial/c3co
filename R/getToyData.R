@@ -14,21 +14,20 @@
 #'   \code{weightSparsity} are set to 0. This parameter controls the sparsity of
 #'   the weight matrix.
 #'   
-#' @return A list with two elements named \code{locus} and \code{segment}
-#'   containing locus-level and segment-level data. Each of them is a list of
-#'   three elements: \describe{
+#' @return A list with three elements: \code{W}, a \code{n} x \code{nbClones}
+#'   matrix of weights, and  \code{locus} and \code{segment}, which contain
+#'   locus-level and segment-level data. Each of them is a list of two
+#'   elements: \describe{
 #'   
-#'   \item{Y}{A \code{n} x \code{len} (or \code{nbBkp+1}) matrix of noisy
+#'   \item{Y}{A \code{n} x \code{len} (or \code{nbBkp+1}) matrix of noisy 
 #'   observations}
 #'   
-#'   \item{W}{A \code{n} x \code{nbClones} matrix of weights}
-#'   
-#'   \item{Z}{A \code{nbClones} x \code{len}  (or \code{nbBkp+1}) matrix of
+#'   \item{Z}{A \code{nbClones} x \code{len}  (or \code{nbBkp+1}) matrix of 
 #'   latent features (subclones)}
 #'   
 #'   }
 #'   
-#' @details For simplicity, the breakpoints positions are drawn uniformly from
+#' @details For simplicity, the breakpoints positions are drawn uniformly from 
 #'   the set of all possible positions.
 #'   
 #' @export
@@ -68,13 +67,17 @@
 #' fit <- fitC3co(Y, parameters.grid=parameters.grid)
 #' pvePlot2(fit$config$best)
 #' 
-getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1) {
+getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1, intercept=TRUE) {
     ## number of segments
     nbSegs <- nbBkps+1 
     
     ## subclones (segment-level)
     z <- rnorm(nbSegs*nbClones)
     Zs <- round(matrix(z, nrow=nbClones, ncol=nbSegs))
+    if (intercept) {  ## <=> adding a 'normal' clone
+        nbClones <- nbClones+1
+        Zs <- rbind(Zs, 1)
+    }
     
     ## breakpoint positions
     bkp <- sample(len, size=nbBkps, replace=FALSE)
@@ -98,13 +101,13 @@ getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1) {
     e <- rnorm(n*nbSegs, sd=eps)
     Es <- matrix(e, nrow=n, ncol=nbSegs)  ## noise
     Ys <- W %*% Zs + Es                ## observations
-    seg <- list(Y=Ys, W=W, Z=Zs)
+    seg <- list(Y=Ys, Z=Zs)
     
     ## locus-level data
     e <- rnorm(n*len, sd=eps)
     El <- matrix(e, nrow=n, ncol=len)  ## noise
     Yl <- W %*% Zl + El                ## observations
-    loc <- list(Y=Yl, W=W, Z=Zl)
+    loc <- list(Y=Yl, Z=Zl)
     
-    return(list(locus=loc, segment=seg))
+    return(list(W=W, locus=loc, segment=seg))
 }
