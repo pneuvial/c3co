@@ -53,7 +53,7 @@
 #' Z <- list(Z1 = Z0.C1C2$Z1,Z2 = Z0.C1C2$Z2)
 #' posFusedC <- positiveFusedLasso(Y, Z, c(1e-3, 1e-3), verbose=TRUE)
 #' posFusedC
-#'
+#' 
 #' @importFrom methods new
 #' @export
 positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
@@ -73,6 +73,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   iter <- 0
   cond <- FALSE
   delta <- Inf
+  failure <- FALSE
   while (!cond) {
     iter <- iter + 1
     ## __________________________________________________
@@ -97,9 +98,9 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
       return(get.Z(Yc.mu[[m]], W, lambda[m]))
     })
     failure <- sapply(Z, inherits, "try-error")
-    if (any(failure))
+    if (any(failure)) {
       Z <- Z0
-    
+    }
     if (iter > 1)
       delta <- sqrt(sum((W - W.old)^2))
 
@@ -134,7 +135,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   names(Z)    <- paste0("Z", 1:M)
   Z$Z    <- Reduce("+",Z)
   
-  objRes <- new("posFused", S=Z, S0=Z0, W=W, mu=mu, E=Yhat)
+  objRes <- new("posFused", S=Z, S0=Z0, W=W, mu=mu, E=Yhat, failure=failure)
   return(objRes)
 }
 

@@ -21,7 +21,8 @@ setClass(
     S0 = "list",
     W  = "matrix",
     mu = "numeric",
-    E  = "list"
+    E  = "list",
+    failure = "logical"
   )
 )
 
