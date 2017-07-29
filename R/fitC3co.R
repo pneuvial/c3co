@@ -44,6 +44,21 @@
 #' parameters.grid <- list(lambda1=l1,  nb.arch=2:6)
 #' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
 #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
+#' 
+#' 
+#' ## A simpler example with toy data
+#' l1 <- 1e-4
+#' candP <- 2:10
+#' parameters.grid <- list(lambda=l1, nb.arch=candP)
+#' 
+#' dat <- getToyData(n=20, len=100, nbClones=2, nbBkps=5, eps=0.2)  ## almost noiseless!
+#' sdat <- dat$segment
+#' 
+#' res <- fitC3co(sdat$Y, parameters.grid=parameters.grid)
+#' pvePlot2(res$config$best, ylim=c(0.6, 1))
+#' mus <- sapply(res$fit, FUN=function(x) x@mu)
+#' ## the mus are all identical??
+#' 
 #' @importFrom methods slot
 #' @importFrom matrixStats colMaxs
 #' @export
@@ -128,7 +143,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
             message("Number of latent features: ", pp)
         }
         ## Initialization
-        BICp <- +Inf
+        BICp <- -Inf
         bestConfig <- aConf <- NULL
         ## Centering step
         Y1.bar <- rowMeans(Y1)
@@ -170,23 +185,27 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
               Y <- Y1
               Yc <- sweep(Y1, 1, rowMeans(Y1), "-")
             }
-            ## Compute R2
+            ## Compute R2 (aka PVE)
             resVar <- sum((Y - res@E$Y)^2)
             totVar <- sum((Yc)^2)
             R2 <- 1 - resVar / totVar
-###             
-            loss <- resVar/(n*nseg)
+
+            nnS <- n*nseg
+            loss <- resVar/nnS
             kZ <- sum(apply(res@S$Z, MARGIN=2L, FUN=diff) != 0)
-            BIC <-  -(n*nseg*log(loss) + kZ*log(n*nseg))
-            Likelihood <- -(n*nseg*log(resVar/n*nseg)+n*nseg*(1+log(2*pi)))/2
-            aConf <-  c(pp, cfg, R2, BIC, Likelihood)
+            kW <- sum(res@W != 0)
+            logLik <- -(nnS*log(loss) + nnS*(1+log(2*pi)))/2  ## the last bit is indep of model complexity
+            BIC.Z <-  logLik - 1/2*kZ*log(nnS)       ## the one in the manuscript as of July 2017
+            BIC.WZ <-  logLik - 1/2*(kZ+kW)*log(nnS) 
+            BIC <- BIC.WZ
+            aConf <-  c(pp, cfg, R2, BIC, logLik)
             allConfig <- rbind(allConfig, aConf)
             allRes[[cc]] <- res
             allLoss[[cc]] <- loss
-            if (BIC < BICp) { ## BIC has improved: update best model
+            if (BIC > BICp) { ## BIC has improved: update best model
                 res.l <- res
                 BICp <- BIC
-                bestConfig <- c(pp, cfg, R2, BICp, Likelihood)
+                bestConfig <- c(pp, cfg, R2, BICp, logLik)
             }
             # ## De-centering step
             # res.l@E$Y1 <- sweep(res.l@E$Y1, MARGIN=1, Y1.bar, FUN="+")
@@ -215,12 +234,13 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE,
         ## stop if pp has reached the max of its grid
         cond <-  is.na(pp)
     }
+    names(fitList) <- nb.arch
     bestConfigp <- as.data.frame(bestConfigp)
-    colnames (bestConfigp) <- c("nb.feat", colnames(configs), "PVE", "BIC", "Likelihood")
+    colnames (bestConfigp) <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik")
     rownames(bestConfigp) <- NULL
     
     allConfig <- as.data.frame(allConfig)
-    colnames (allConfig) <- c("nb.feat", colnames(configs), "PVE", "BIC", "Likelihood")
+    colnames (allConfig) <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik")
     rownames(allConfig) <- NULL
     return(list(fit =fitList, config=list(best=bestConfigp, all=allConfig, res=allRes, loss=allLoss)))
 }
