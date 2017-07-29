@@ -44,7 +44,6 @@ library("c3co")
 library("ggplot2")
 library("mclust")
 library("reshape")
-set.seed(147)
 ```
 
 ## Creating a synthetic data set
@@ -71,7 +70,7 @@ matplot(t(dat$segment$Y), t='s')
 dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
 matplot(t(dat$locus$Y), t='l')
 matplot(t(dat$segment$Y), t='s')
-W <- dat$locus$W
+W <- dat$W
 ```
 
 
@@ -87,7 +86,6 @@ parameters.grid <- list(lambda=l1, nb.arch=candP)
 Y <- dat$segment$Y
 fit <- fitC3co(Y, parameters.grid=parameters.grid)
 ```
-
 
 
 For each candidate number of subclones $p$ in `r candP`,  `c3co` only retains the combination of the penalization coefficients $(\lambda_1, \lambda_2)$ which minimizes the Bayesian Information Criterion (BIC) of the model. The next step is to choose the best $p$ (number of subclones). Following @nowak2011fused, we compare the models for different values of $p$ through their percentage of variance explained (PVE). 

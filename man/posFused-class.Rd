@@ -18,6 +18,8 @@ estimates for the latent features, as inferred by
 
 \item{\code{W}}{A matrix containing weights inferred by \code{positiveFusedLasso}.}
 
+\item{\code{mu}}{A numeric containing the intercept terms inferred by \code{positiveFusedLasso}.}
+
 \item{\code{E}}{A list containing estimates of minor copy number and major copy
 number inferred by \code{positiveFusedLasso}.}
 }}

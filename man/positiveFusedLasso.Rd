@@ -4,27 +4,20 @@
 \alias{positiveFusedLasso}
 \title{Positive fused lasso function}
 \usage{
-positiveFusedLasso(Y1, Y2, Z1, Z2, lambda1, lambda2, eps = 0.1,
-  max.iter = 50, warn = FALSE, verbose = FALSE)
+positiveFusedLasso(Y, Z, lambda, eps = 0.1, max.iter = 50, warn = FALSE,
+  verbose = FALSE)
 }
 \arguments{
-\item{Y1}{A matrix containing the segmented minor copy number
+\item{Y}{A list of one or two matrices named Y1 and Y2 containing the segmented minor 
+(and possibly the major) copy number 
 (\code{n} patients in row and \code{L} segments in columns)}
 
-\item{Y2}{A matrix containing the segmented major copy number
-(\code{n} patients in row and \code{L} segments in columns)}
+\item{Z}{A list of one or two \code{L} x \code{p} matrices names Z1 and Z2 containing the \code{L}
+minor (and possibly the major) copy numbers of the \code{p} initial 
+latent feature estimates}
 
-\item{Z1}{A \code{L} x \code{p} matrix containing the \code{L}
-minor copy numbers of the \code{p} initial latent feature estimates}
-
-\item{Z2}{A \code{L} x \code{p} matrix containing the \code{L}
-major copy numbers of the \code{p} initial latent feature estimates}
-
-\item{lambda1}{A real number, the coefficient for the fused penalty
-for minor copy numbers}
-
-\item{lambda2}{A real number, the coefficient for the fused penalty
-for major copy numbers}
+\item{lambda}{A numeric with one or two real numbers, the coefficients for the fused penalty
+for minor (and possibly the major) copy numbers}
 
 \item{eps}{criterion to stop algorithm (when W do not change
 sqrt(sum((W-W.old)^2) < eps)}
@@ -43,25 +36,34 @@ An object of class [\code{\linkS4class{posFused}}]
 Positive fused lasso function
 }
 \examples{
-dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
-dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
-len <- 500*10
-nbClones <- 3
-set.seed(2)
-bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
-regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
-c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-M <- rSparseWeightMatrix(15, 3, 0.4)
-simu <- mixSubclones(subClones=datSubClone, M)
-seg <- segmentData(simu)
-lambda <- 0.01
-Z <- initializeZ(t(seg$Y1), t(seg$Y2), p=3)
-res <- positiveFusedLasso(t(seg$Y1), t(seg$Y2), Z$Z1, Z$Z2,
-                          lambda1=lambda, lambda2=lambda, verbose=TRUE)
-res
-resC <- positiveFusedLasso(t(seg$Y1+seg$Y2), Y2=NULL, Z1=Z$Z, Z2=NULL,
-                           lambda1=lambda, lambda2=lambda)
-resC
+len <- 700*10
+nbClones <- 2
+bkps <- list(
+    c(20, 30, 50, 60)*100, 
+    c(10, 40, 60)*100)
+regions <- list(
+    c("(1,1)", "(1,2)", "(1,1)", "(0,1)", "(1,1)"),
+    c("(0,1)", "(1,1)", "(1,2)", "(1,1)"))
+
+datSubClone <- buildSubclones(len, nbClones, bkps, regions, eps=0.2)
+W <-  rSparseWeightMatrix(5, nbClones, 0.7)
+datList <- mixSubclones(subClones=datSubClone, W)
+
+segData.TCN  <- segmentData(datList,"TCN")
+Y1 <- t(segData.TCN$Y)
+Y <- list(Y1 = Y1)
+Z0.TCN <- initializeZ(Y1, p = 2, flavor = "nmf")
+Z <- list(Z1 = Z0.TCN$Z1)
+posFused <- positiveFusedLasso(Y, Z, 1e-3, verbose=TRUE)
+posFused 
+
+segData.C1C2 <- segmentData(datList,"C1C2")
+Y1 <- t(segData.C1C2$Y1)
+Y2 <- t(segData.C1C2$Y2)
+Y <- list(Y1 = Y1, Y2 = Y2)
+Z0.C1C2 <- initializeZ(Y1, Y2, p=2, flavor = "nmf")
+Z <- list(Z1 = Z0.C1C2$Z1,Z2 = Z0.C1C2$Z2)
+posFusedC <- positiveFusedLasso(Y, Z, c(1e-3, 1e-3), verbose=TRUE)
+posFusedC
 
 }
