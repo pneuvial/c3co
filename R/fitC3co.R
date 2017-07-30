@@ -85,15 +85,15 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     it <- 1
     pp <- nb.arch[it]
     cond <- FALSE  ## condition for (early) stopping
-    fitList <- list()
-    allRes <- allLoss <- list()
+    fitList <- allRes <- allLoss <- list()
     bestConfigp <- allConfig <- NULL
     while (!cond) {
         if (verbose) {
             message("Number of latent features: ", pp)
         }
         ## Initialization
-        BICp <- -Inf
+        bestRes <- NULL
+        bestBIC <- -Inf
         bestConfig <- aConf <- NULL
         ## Z0 are initialized with the centered version of the data
         Z0 <- initializeZ(Yc$Y1, Yc$Y2, p=pp, ...)
@@ -101,6 +101,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             message("Parameter configuration: (",
                     paste(colnames(configs), collapse="; "), ")")
         }
+        allRes[[pp]] <- list()
+        allLoss[[pp]] <- list()
         for (cc in seq_len(nrow(configs))) {
             cfg <- configs[cc, , drop=FALSE]
             if (verbose) {
@@ -113,35 +115,26 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             ## THIS is the function that costs comme computation 
             res <- positiveFusedLasso(Y, Z0, c(l1,l2))
             
-            ## Calculate model fit statistics - R2 (aka PVE)
-            resVar <- sum((Reduce("+", Y) - res@E$Y)^2)
-            R2 <- 1 - resVar / totVar
-            nnS <- n*nseg
-            loss <- resVar/nnS
-
-            kZ <- sum(apply(res@S$Z, MARGIN=2L, FUN=diff) != 0)
-            kW <- sum(res@W != 0)
-            logLik <- -(nnS*log(loss) + nnS*(1+log(2*pi)))/2  ## the last bit is indep of model complexity
-            BIC.Z <-  logLik - 1/2*kZ*log(nnS)       ## the one in the manuscript as of July 2017
-            BIC.WZ <-  logLik - 1/2*(kZ+kW)*log(nnS) 
-            BIC <- BIC.WZ
-            aConf <-  c(pp, cfg, R2, BIC, logLik)
+            stats <- modelFitStatistics(Reduce("+", Y), res@E$Y, res@W, res@S$Z)
+            BIC <- stats[["BIC"]]
+            aConf <-  c(pp, cfg, stats[["PVE"]], BIC, stats[["logLik"]], stats[["loss"]])
+            ## replace above line by: aConf <- stats
             allConfig <- rbind(allConfig, aConf)
-            allRes[[cc]] <- res
-            allLoss[[cc]] <- loss
-            if (BIC > BICp) { ## BIC has improved: update best model
-                res.l <- res
-                BICp <- BIC
-                bestConfig <- c(pp, cfg, R2, BICp, logLik)
+            allRes[[pp]][[cc]] <- res
+            allLoss[[pp]][[cc]] <- stats[["loss"]]
+            if (BIC > bestBIC) { ## BIC has improved: update best model
+                bestRes <- res
+                bestBIC <- BIC
+                bestConfig <- aConf
             }
         }
 
-        fitList[[it]] <- res.l
+        fitList[[it]] <- bestRes
         bestConfigp <- rbind(bestConfigp, bestConfig)
         ## sanity check: minor CN < major CN in the best parameter
         ## configurations (not for all configs by default)
         if (!is.null(Y2) & warn) {
-            Z <- slot(res.l, "S")
+            Z <- slot(bestRes, "S")
             dZ <- Z$Z2 - Z$Z1
             tol <- 1e-2  ## arbitrary tolerance...
             if (min(dZ) < - tol) {
@@ -155,14 +148,17 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         cond <-  is.na(pp)
     }
     names(fitList) <- nb.arch
+    cns <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik", "loss")
+    
     bestConfigp <- as.data.frame(bestConfigp)
-    colnames (bestConfigp) <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik")
+    colnames (bestConfigp) <- cns
     rownames(bestConfigp) <- NULL
     
     allConfig <- as.data.frame(allConfig)
-    colnames (allConfig) <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik")
+    colnames (allConfig) <- cns
     rownames(allConfig) <- NULL
-    return(list(fit =fitList, config=list(best=bestConfigp, all=allConfig, res=allRes, loss=allLoss)))
+    configList <- list(best=bestConfigp, all=allConfig, res=allRes, loss=allLoss)
+    return(list(fit=fitList, config=configList))
 }
 
 

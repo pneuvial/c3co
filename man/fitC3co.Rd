@@ -53,4 +53,19 @@ l1 <- seq(from=1e-8, to=1e-5, length.out=5)
 parameters.grid <- list(lambda1=l1,  nb.arch=2:6)
 fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
 fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
+
+
+## A simpler example with toy data
+l1 <- 1e-4
+candP <- 2:10
+parameters.grid <- list(lambda=l1, nb.arch=candP)
+
+dat <- getToyData(n=20, len=100, nbClones=2, nbBkps=5, eps=0.2)  ## almost noiseless!
+sdat <- dat$segment
+
+res <- fitC3co(sdat$Y, parameters.grid=parameters.grid)
+pvePlot2(res$config$best, ylim=c(0.6, 1))
+mus <- sapply(res$fit, FUN=function(x) x@mu)
+## the mus are all identical??
+
 }

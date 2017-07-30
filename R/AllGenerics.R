@@ -10,10 +10,16 @@ setMethod(
         str(object@W)
         cat("Intercept vector:\n")
         str(object@mu)
+        cat("Original signal:")
+        str(object@Y)
         cat("Copy-number estimates:\n")
         str(object@E)
     }
 )
+
+setGeneric("modelFitStats", function(object) {
+    standardGeneric("modelFitStats")
+})
 
 #' Plot the weight matrix
 #'

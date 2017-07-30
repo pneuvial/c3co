@@ -15,15 +15,17 @@
 #'       
 #' @exportClass posFused
 setClass(
-  Class = "posFused",
-  representation = representation(
-    S  = "list",
-    S0 = "list",
-    W  = "matrix",
-    mu = "numeric",
-    E  = "list",
-    failure = "logical"
-  )
+    Class = "posFused",
+    representation = representation(
+        Y  = "list",        ## original signal
+        S  = "list",        ## subclones (aka Z)
+        S0 = "list",        ## initial estimates of subclones (aka Z0)
+        W  = "matrix",      ## weights
+        mu = "numeric",     ## intercept
+        E  = "list",        ## signal reconstruction (aka Yhat)
+        params  = "numeric", 
+        failure = "logical"
+    )
 )
 
 
@@ -40,11 +42,11 @@ setClass(
 #'
 #' @exportClass c3coFit
 setClass(
-  Class = "c3coFit",
-  representation = representation(
-    bkp = "list",
-    segDat = "list",
-    config = "list",
-    fit = "list"
-  )
+    Class = "c3coFit",
+    representation = representation(
+        bkp = "list",
+        segDat = "list",
+        config = "list",
+        fit = "list"
+    )
 )

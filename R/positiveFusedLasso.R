@@ -43,7 +43,7 @@
 #' Z0.TCN <- initializeZ(Y1, p = 2, flavor = "nmf")
 #' Z <- list(Z1 = Z0.TCN$Z1)
 #' posFused <- positiveFusedLasso(Y, Z, 1e-3, verbose=TRUE)
-#' posFused 
+#' modelFitStats(posFused)
 #' 
 #' segData.C1C2 <- segmentData(datList,"C1C2")
 #' Y1 <- t(segData.C1C2$Y1)
@@ -52,7 +52,7 @@
 #' Z0.C1C2 <- initializeZ(Y1, Y2, p=2, flavor = "nmf")
 #' Z <- list(Z1 = Z0.C1C2$Z1,Z2 = Z0.C1C2$Z2)
 #' posFusedC <- positiveFusedLasso(Y, Z, c(1e-3, 1e-3), verbose=TRUE)
-#' posFusedC
+#' modelFitStats(posFusedC)
 #' 
 #' @importFrom methods new
 #' @export
@@ -61,12 +61,17 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   ## problem dimensions
   M <- length(Y)  # number of signal (one or two)
   stopifnot(length(lambda) == M)
+  stopifnot(length(Z) == M)
+  p <- nrow(Z[[1]])  ## number of subclones
+  
+  names(lambda) <- paste0("lambda", 1:M)
+  params <- c(nb.feat=p, lambda)
   
   Z0 <- Z ## save the original Z
   ## Yc is a list of matrices centered row-wise
   Yc   <- lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-"))
   # the vector of means averaged over the M signal (required for the intercept)
-  Ybar <- Reduce("+",lapply(Y, rowMeans))/M # average over the signals
+  Ybar <- Reduce("+", lapply(Y, rowMeans))/M # average over the signals
   
   ## __________________________________________________
   ## main loop for alternate optimization
@@ -123,14 +128,16 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   }
   
   ## reshape output
-  Yhat <- lapply(Z, function(Z_) sweep(W %*% t(Z_), 1, mu, "+"))  
+  ## accumulate Y, Yhat and Z to get the sum of the two clones (used by Morgane in her representation)
+  names(Y) <- paste0("Y", 1:M)
+  Y$Y <- Reduce("+",Y)
+  Yhat <- lapply(Z, function(Z_) sweep(W %*% t(Z_), 1, mu, "+"))  ## should be a method!!
   names(Yhat) <- paste0("Y", 1:M)
-  ## accumulate Yhat and Z to get the sum of the two clones (used by Morganne in its representation)
   Yhat$Y <- Reduce("+",Yhat)
   names(Z)    <- paste0("Z", 1:M)
   Z$Z    <- Reduce("+",Z)
   
-  objRes <- new("posFused", S=Z, S0=Z0, W=W, mu=mu, E=Yhat, failure=failure)
+  objRes <- new("posFused", Y=Y, S=Z, S0=Z0, W=W, mu=mu, E=Yhat, params=params, failure=failure)
   return(objRes)
 }
 

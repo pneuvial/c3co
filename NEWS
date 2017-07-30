@@ -1,8 +1,12 @@
 Package: c3co
 =============
 
-Version: 0.2.5-9000 [2017-07-25]
+Version: 0.2.5-9000 [2017-07-30]
 
+o Added method 'modelFitStats' for objects of class 'posFused'.
+o Added simple test scripts to inst/testScripts.
+o Cleanups in 'fitC3co' (definition of BIC, consistency with log-likelihood).
+ analysis. Added corresponding test script.
  o Added several flavors for the initialization of Z: svd, NMF, and archetypal 
  analysis. Added corresponding test script.
  o Added function 'getToyData' (and corresponding test script) to generate toy 

@@ -55,7 +55,7 @@ Y <- list(Y1 = Y1)
 Z0.TCN <- initializeZ(Y1, p = 2, flavor = "nmf")
 Z <- list(Z1 = Z0.TCN$Z1)
 posFused <- positiveFusedLasso(Y, Z, 1e-3, verbose=TRUE)
-posFused 
+modelFitStats(posFused)
 
 segData.C1C2 <- segmentData(datList,"C1C2")
 Y1 <- t(segData.C1C2$Y1)
@@ -64,6 +64,6 @@ Y <- list(Y1 = Y1, Y2 = Y2)
 Z0.C1C2 <- initializeZ(Y1, Y2, p=2, flavor = "nmf")
 Z <- list(Z1 = Z0.C1C2$Z1,Z2 = Z0.C1C2$Z2)
 posFusedC <- positiveFusedLasso(Y, Z, c(1e-3, 1e-3), verbose=TRUE)
-posFusedC
+modelFitStats(posFusedC)
 
 }
