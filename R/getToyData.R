@@ -14,6 +14,8 @@
 #'   \code{weightSparsity} are set to 0. This parameter controls the sparsity of
 #'   the weight matrix.
 #'   
+#' @param intercept A logical value indicating whether an intercept should be added (this corresponds to the presence of o normal subclone)
+#' 
 #' @return A list with three elements: \code{W}, a \code{n} x \code{nbClones}
 #'   matrix of weights, and  \code{locus} and \code{segment}, which contain
 #'   locus-level and segment-level data. Each of them is a list of two

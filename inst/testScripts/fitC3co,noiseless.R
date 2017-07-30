@@ -28,7 +28,7 @@ sweep(round(t(fit2@S$Z), 2), 1, round(fit2@mu, 2), "+")  ## Z is back!
 ## 2 subclones (= number of non-normal subclones)
 fit1 <- res$fit[[1]]
 modelFitStats(fit1)  ## not so good! 
-round(fit1@W, 2)     ## so... shouldn't the constraint on W be WtW+mu=1 ???
+round(fit1@W, 2)     ## so... shouldn't the constraint on W be 1^t W + 1^t mu = 1
 round(fit1@S$Z, 2)
 round(fit1@mu, 2)
 cbind(fit1@mu, fit1@W)

@@ -117,7 +117,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     dZ <- Reduce("-", rev(Z))
     tol <- 1e-2  ## arbitrary tolerance...
     if (min(dZ) < -tol) {
-       warning("For model with ", nb.arch, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
+       warning("For model with ", p, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
   #     idx <- 1:ncol(Z2)
   #     Z1 <- sapply(idx, function(ii){
   #       jj <- which(Z1[,ii]>Z2[,ii])

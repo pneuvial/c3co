@@ -17,6 +17,7 @@ setMethod(
     }
 )
 
+#' @exportMethod modelFitStats
 setGeneric("modelFitStats", function(object) {
     standardGeneric("modelFitStats")
 })

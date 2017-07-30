@@ -10,17 +10,25 @@ Class for the object returned by \code{positiveFusedLasso} function
 \section{Slots}{
 
 \describe{
-\item{\code{S}}{A list containing the (final) minor, major and total copy number
-estimates for the latent features, as inferred by
+\item{\code{Y}}{A list containing the original minor, major and total copy number
+signals.}
+
+\item{\code{S}}{A list containing the (final) minor, major and total copy number 
+estimates for the latent features, as inferred by 
 \code{\link{positiveFusedLasso}}.}
 
 \item{\code{S0}}{idem for the initial estimates.}
 
 \item{\code{W}}{A matrix containing weights inferred by \code{positiveFusedLasso}.}
 
-\item{\code{mu}}{A numeric containing the intercept terms inferred by \code{positiveFusedLasso}.}
+\item{\code{mu}}{A numeric containing the intercept terms inferred by
+\code{positiveFusedLasso}.}
 
-\item{\code{E}}{A list containing estimates of minor copy number and major copy
+\item{\code{E}}{A list containing estimates of minor copy number and major copy 
 number inferred by \code{positiveFusedLasso}.}
+
+\item{\code{failure}}{A logical value indicating whether the estimation worked or failed (because of the non-invertibility of \eqn{W^tW})s}
+
+\item{\code{params}}{A numeric vector, the input parameters}
 }}
 

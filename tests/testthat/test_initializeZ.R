@@ -25,11 +25,9 @@ p <- 3
 for (ff in flavors) {
     test_that("output of initializeZ has correct dimensions and contents", {
         res <- initializeZ(Y1, Y2, p=p, flavor=ff)
-        expect_equal(nS, nrow(res$Z))
         expect_equal(nS, nrow(res$Z1))
         expect_equal(nS, nrow(res$Z2))
         
-        expect_equal(p, ncol(res$Z))
         expect_equal(p, ncol(res$Z1))
         expect_equal(p, ncol(res$Z2))
         

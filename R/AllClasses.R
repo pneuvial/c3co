@@ -1,18 +1,26 @@
 #' Class for the object returned by \code{positiveFusedLasso} function
-#'
-#' @slot S A list containing the (final) minor, major and total copy number
-#'       estimates for the latent features, as inferred by
-#'       \code{\link{positiveFusedLasso}}.
-#'
+#' 
+#' @slot Y A list containing the original minor, major and total copy number
+#'   signals.
+#'   
+#' @slot S A list containing the (final) minor, major and total copy number 
+#'   estimates for the latent features, as inferred by 
+#'   \code{\link{positiveFusedLasso}}.
+#'   
 #' @slot S0 idem for the initial estimates.
-#'
+#'   
 #' @slot W A matrix containing weights inferred by \code{positiveFusedLasso}.
-#'
-#' @slot mu A numeric containing the intercept terms inferred by \code{positiveFusedLasso}.
-#'
-#' @slot E A list containing estimates of minor copy number and major copy
-#'       number inferred by \code{positiveFusedLasso}.
-#'       
+#'   
+#' @slot mu A numeric containing the intercept terms inferred by
+#'   \code{positiveFusedLasso}.
+#'   
+#' @slot E A list containing estimates of minor copy number and major copy 
+#'   number inferred by \code{positiveFusedLasso}.
+#' 
+#' @slot failure A logical value indicating whether the estimation worked or failed (because of the non-invertibility of \eqn{W^tW})s
+#' 
+#' @slot params A numeric vector, the input parameters
+#'   
 #' @exportClass posFused
 setClass(
     Class = "posFused",

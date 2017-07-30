@@ -78,7 +78,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     totVar <- sum((Reduce("+", Yc))^2)
     
     ### Define grids
-    parameters <- checkParams(parameters.grid, length(Y), verbose)
+    parameters <- checkParams(parameters.grid, length(Y), nseg, verbose)
     configs <- parameters$configs
     nb.arch <- parameters$nb.arch
     
@@ -162,7 +162,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
 }
 
 
-checkParams <- function(parameters.grid, M, verbose) {
+checkParams <- function(parameters.grid, M, nseg, verbose) {
   
     lambda <-  parameters.grid$lambda
     lambda1 <- parameters.grid$lambda1
@@ -181,7 +181,7 @@ checkParams <- function(parameters.grid, M, verbose) {
       }
     }else{
       ## Case C1-C2
-      if (!is.null(Y2)) {
+      if (M==2) {
         if(is.null(lambda1) & is.null(lambda2)){
           lambda <- 10^(-seq(from=6, to=4, length.out=10))
           if (verbose) {
