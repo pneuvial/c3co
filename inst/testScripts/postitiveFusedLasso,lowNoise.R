@@ -1,3 +1,13 @@
+## a simple problem with very little noise
+nbBkps <- 10
+nbClones <- 4
+
+Z <- matrix(1, nrow = nbClones, ncol=nbBkps+1)
+Z[2, 2] <- 2
+Z[3, 5:6] <- 2
+Z[4, 9:10] <- 2
+matplot(t(Z), t='s')
+
 ## - - - - - - - - - - - - - - - - - - - - 
 ## with the correct Z as a starting point
 ## - - - - - - - - - - - - - - - - - - - - 
@@ -9,22 +19,31 @@ Y <- W %*% Z + E
 res <- positiveFusedLasso(list(Y), list(t(Z)), lambda) 
 round(res@W, 2)  ## W
 round(t(res@S$Z), 2)  ## Z
+round(res@mu, 2) ## 0 because at initialization, getW gets the right W straight ahead.
 
-## should mu be 0 here??
-round(res@mu, 2) ## 0
-## yes because at initialization, getW gets the right W straight ahead.
-
-## what if normal clone not in Z0?
+## - - - - - - - - - - - - - - - - - - - - 
+## with the correct Z as a starting point
+## but without the normal clone !
+## - - - - - - - - - - - - - - - - - - - - 
 res <- positiveFusedLasso(list(Y), list(t(Z[-1, ])), lambda) ## with the correct Z minus normal subclone
-round(res@W, 2) ## shit already happens
-round(t(res@S$Z), 2)  ## Z is OK (but this is a noiseless setting !!! Should be perfect)
+round(res@W, 2)       ## W[-1, ] OK but W[1, ] not OK !!
+round(t(res@S$Z), 2)  ## Z is okay but already not perfect
 round(res@E$Y, 2) 
-round(res@mu, 2) ## not 0 where the wild things are
+round(res@mu, 2)      ## mu[1]!=0 because it tries to reconstruct Y[1, ] (normal patient)
+
+
+## what we would like in this situation is W[1, ] equal to 0, but this is not possible due to the convexity constraint on W! => something is wrong
+
+## a sanity check
 Y2 <- res@W %*% t(res@S$Z)  ## without adding back mu
 Y3 <- sweep(res@E$Y, 1, res@mu, "-") ## removing mu again (equivalent)
 identical(Y2, Y3)  ## TRUE
 
-## what if normal clone not in Z0 and not in Y either? Back to perfection!
+## - - - - - - - - - - - - - - - - - - - - 
+## what if normal clone not in Z0 
+## and not in Y either? 
+## Back to perfection!
+## - - - - - - - - - - - - - - - - - - - - 
 res <- positiveFusedLasso(list(Y[-1, ]), list(t(Z[-1, ])), lambda) ## with the correct Z,Y= minus normal subclone,sample
 round(res@W, 2)
 round(t(res@S$Z), 2)

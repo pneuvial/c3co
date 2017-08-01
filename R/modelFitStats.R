@@ -12,6 +12,7 @@ modelFitStatistics <- function(Y, Yhat, What, Zhat) {
     
     ## log-likelihood
     logLik <- -(nnS*log(loss) + nnS*(1+log(2*pi)))/2  ## the last bit is indep of model complexity
+    ## why *1+*?
     
     ## BIC penalty    
     kZ <- sum(apply(Zhat, MARGIN=2L, FUN=diff) != 0)  ## number of breakpoints
