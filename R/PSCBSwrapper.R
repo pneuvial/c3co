@@ -2,12 +2,11 @@
 #'
 #' @param PSCBSdata A list that contains PSCBS data.
 #'
-#' @param pattern if you have several patients in the pathSegPSCBS directory.
 #'
 #' @return A data frame under PSCBS format
 #'
 #' @export
-loadPSCBSdata <- function(PSCBSdata, pattern=NULL) {
+loadPSCBSdata <- function(PSCBSdata) {
     ### Load PSCBS data
     dat <- lapply(PSCBSdata, FUN=function(ff) {
         df <- ff$data
@@ -43,21 +42,16 @@ loadPSCBSdata <- function(PSCBSdata, pattern=NULL) {
 #'
 #' @param PSCBSdata A list that contains PSCBS data
 #'
-#' @param output.dir Directory to save segmentation
-#'
 #' @param stat "TCN or "C1C2" paramater to segment the data.
 #' If \code{stat == TCN}, the segmentation will be done on TCN only.
-#'
-#' @param pattern if you have several patients in the pathSegPSCBS directory.
 #'
 #' @return A list which contains the breakpoints by chromosome and also the
 #' binning of TCN, C1 and C2.
 #'
 #' @export
-PSCBSwrapper <- function(PSCBSdata, pattern=NULL, output.dir, stat) {
-    dat <- loadPSCBSdata(PSCBSdata, pattern)
+PSCBSwrapper <- function(PSCBSdata, stat) {
+    dat <- loadPSCBSdata(PSCBSdata)
     ### Joint segmentation of all samples
-    resSeg <- segmentData(dat, stat=stat)
-    saveRDS(resSeg, file=file.path(output.dir, "segDat.rds"))
-    mprintf("segment data has been saved to %s in segDat.rds file", output.dir)
-}
+    resSeg <- segmentData(dat, stat = stat)
+    return(resSeg)
+  }

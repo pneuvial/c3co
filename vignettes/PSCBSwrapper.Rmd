@@ -28,26 +28,26 @@ In this document we run c3co on a public data set in the  \code{PSCBS} format, w
 
 ```{r, eval=TRUE}
 data("PSCBSdata", package="c3co.data")
-output.dir <- R.utils::Arguments$getWritablePath("outputPSCBS")
-PSCBSwrapper(PSCBSdata, output.dir=output.dir, stat="C1C2")
+segDat <- PSCBSwrapper(PSCBSdata, stat = "C1C2")
 ```
 
 ## Run c3co ##
 Now, you can run c3co by using this line:
-```{r, message=FALSE, eval=TRUE}
-lambda.grid <- seq(from=1e-6, to =1e-4, length=5)
+```{r, message=FALSE, eval=TRUE, warning=FALSE}
+lambda.grid <- seq(from=1e-3, to =1e-1, length=10)
 parameters.grid <- list(lambda=lambda.grid, nb.arch=2:4)
-resc3co <- c3co(dat=NULL, parameters.grid, segDat=file.path(output.dir, "segDat.rds"))
+resc3co <- c3co(dat=NULL, parameters.grid, segDat=segDat)
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
-Wplot(resc3co, idxBest = 2)
-```
-```{r, fig.width=7, fig.height=5, eval=TRUE}
-dat <- PSCBSdata
+pvePlot(resc3co)
 ```
 
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
-df <- createZdf(resc3co, chromosomes=c(1,2), idxBest=2)
+Wplot(resc3co, idxBest = 2)
+```
+
+```{r, fig.width=7, fig.height=5, eval=TRUE}
+df <- createZdf(resc3co, chromosomes=1:2, idxBest=2)
 ```
 
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
