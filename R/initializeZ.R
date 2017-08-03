@@ -85,13 +85,13 @@
 #' @export
 initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
                         flavor=c("hclust", "nmf", "archetypes", "svd", "subsampling"),
-                        stat=c("C1+C2", "C1", "C2"), verbose=FALSE) {
+                        stat=c("C1+C2", "C1", "C2"), forceNormal=FALSE, verbose=FALSE) {
     n <- nrow(Y1) # number of samples
     L <- ncol(Y1) # number of loci/segments
-    stopifnot(p <= n)
+   # stopifnot(p <= n)
     flavor <- match.arg(flavor)
     stat <- match.arg(stat)
-
+    if(forceNormal) p <- p-1
     if (is.null(Y2)) {
         Y <- Y1
     } else {
@@ -123,9 +123,16 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
                     "hclust"=initHclust,
                     "subsampling"=initSub)
 
-    res <- list(Z1=t(initZ(Y1, p)))
+    if(forceNormal){
+      res <- list(Z1=cbind(t(initZ(Y1, p)), 1))
+    }else{
+      res <- list(Z1=t(initZ(Y1, p)))
+    }
     if (!is.null(Y2)) {
       res$Z2 <- t(initZ(Y2, p))
+      if(forceNormal){
+        res$Z2 <- cbind(res$Z2, 1)
+      }
     }
     return(res)
 }
