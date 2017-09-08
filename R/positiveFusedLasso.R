@@ -68,27 +68,50 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   params <- c(nb.feat=p, lambda)
   
   Z0 <- Z ## save the original Z
-  ## Yc is a list of matrices centered row-wise
-  Yc   <- lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-"))
+  ## Yc is a matrix of stacked matrices centered row-wise
+  Yc <- do.call(cbind, lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-")))
   # the vector of means averaged over the M signal (required for the intercept)
   Ybar <- Reduce("+", lapply(Y, rowMeans))/M # average over the signals
-  
+
   ## __________________________________________________
   ## main loop for alternate optimization
   iter <- 0; cond <- FALSE; delta <- Inf
   while (!cond) {
     iter <- iter + 1
+    
     ## __________________________________________________
     ## STEP 1: optimize w.r.t. W (fixed Z)
-    
-    ## matrices Z must be centered column-wise for optimizing w.r.t W
-    Zc <- lapply(Z, function(z) sweep(z, 2, colMeans(z), "-"))
-    # compute the vector of means averaged over the M signal (required for the intercept)
-    Zbar <- Reduce("+",lapply(Z, colMeans))/M
+    ## if (rank of W) < ncol(Z), there are too many archetypes...
+    foundW <- FALSE
+    while (!foundW) {
+      
+      ### TODO : maybe this will become useless if no intercept is required
 
-    ## solve in W (here individuals - i.e. rows of Yc - are independent)
-    W <- get.W(do.call(rbind, Zc), do.call(cbind, Yc))
-    
+      ## matrices Z must be centered column-wise for optimizing w.r.t W
+      Zc <- do.call(rbind, lapply(Z, function(z) sweep(z, 2, colMeans(z), "-")))
+      # compute the vector of means averaged over the M signal (required for the intercept)
+      Zbar <- Reduce("+",lapply(Z, colMeans))/M
+
+      ## solve in W (here individuals - i.e. rows of Yc - are independent)
+      W <- get.W(Zc, Yc)
+
+      ## Check rank deficiency
+      QR.W <- qr(W)
+      if (QR.W$rank < ncol(Zc)) {
+        message("W is rank deficent. Removing an archetype")
+        Z <- lapply(Z, function(z) z[,-1])
+      } else {
+        WtWm1  <- tcrossprod(backsolve(qr.R(QR.W),diag(ncol(Zc))))
+        foundW <- TRUE
+      }
+    }    
+
+  # WtWm1 <- try(chol2inv(chol(crossprod(W))), TRUE)
+  # if(inherits(WtWm1, "try-error")) {
+  #   warning("WtW is not invertible: no solution for this combinaison of lambda")
+  #   return(WtWm1)  
+  # } else {
+      
     ## the vector of intercept (one per patient)
     mu <- Ybar - as.numeric(tcrossprod(Zbar, W))
 
@@ -97,16 +120,13 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     ## centering Y with the current intercept mu
     Yc.mu <- lapply(Y, function(y) sweep(y, 1, mu, "-"))
     Z <- lapply(1:M, function(m) {
-      return(get.Z(Yc.mu[[m]], W, lambda[m]))
+      return(get.Z(Yc.mu[[m]], W, WtWm1, lambda[m]))
     })
-    ## If inversion of WtW failed, go back to the intialization ()
-    failure <- sapply(Z, inherits, "try-error")
-    if (any(failure)) {Z <- Z0}
-
+    
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
     if (iter > 1) {delta <- sqrt(sum((W - W.old)^2))}
-    cond <- (iter > max.iter || delta < eps || any(failure))
+    cond <- (iter > max.iter || delta < eps)
     if (verbose) message("delta:", round(delta, digits=4))
     W.old <- W
   }
@@ -137,7 +157,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   names(Z)    <- paste0("Z", 1:M)
   Z$Z    <- Reduce("+",Z)
   
-  objRes <- new("posFused", Y=Y, S=Z, S0=Z0, W=W, mu=mu, E=Yhat, params=params, failure=failure)
+  objRes <- new("posFused", Y=Y, S=Z, S0=Z0, W=W, mu=mu, E=Yhat, params=params)
   return(objRes)
 }
 

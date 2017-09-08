@@ -16,7 +16,7 @@ W <- diag(rep(1, nrow(Z)))
 E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0), nrow=nrow(W), ncol=ncol(Z))
 Y <- W %*% Z + E
 
-res <- positiveFusedLasso(list(Y), list(t(Z)), lambda) 
+res <- c3co::positiveFusedLasso(list(Y), list(t(Z)), lambda) 
 round(res@W, 2)  ## W
 round(t(res@S$Z), 2)  ## Z
 round(res@mu, 2) ## 0 because at initialization, getW gets the right W straight ahead.
@@ -25,12 +25,11 @@ round(res@mu, 2) ## 0 because at initialization, getW gets the right W straight 
 ## with the correct Z as a starting point
 ## but without the normal clone !
 ## - - - - - - - - - - - - - - - - - - - - 
-res <- positiveFusedLasso(list(Y), list(t(Z[-1, ])), lambda) ## with the correct Z minus normal subclone
+res <- c3co::positiveFusedLasso(list(Y), list(t(Z[-1, ])), lambda) ## with the correct Z minus normal subclone
 round(res@W, 2)       ## W[-1, ] OK but W[1, ] not OK !!
 round(t(res@S$Z), 2)  ## Z is okay but already not perfect
 round(res@E$Y, 2) 
 round(res@mu, 2)      ## mu[1]!=0 because it tries to reconstruct Y[1, ] (normal patient)
-
 
 ## what we would like in this situation is W[1, ] equal to 0, but this is not possible due to the convexity constraint on W! => something is wrong
 
@@ -44,13 +43,25 @@ identical(Y2, Y3)  ## TRUE
 ## and not in Y either? 
 ## Back to perfection!
 ## - - - - - - - - - - - - - - - - - - - - 
-res <- positiveFusedLasso(list(Y[-1, ]), list(t(Z[-1, ])), lambda) ## with the correct Z,Y= minus normal subclone,sample
+res <- c3co::positiveFusedLasso(list(Y[-1, ]), list(t(Z[-1, ])), lambda) ## with the correct Z,Y= minus normal subclone,sample
 round(res@W, 2)
 round(t(res@S$Z), 2)
 round(res@E$Y, 2) 
 round(res@mu, 2) 
 
 ## so the pb is to reconstruct a normal y w/o an explicit normal subclone 
+
+## - - - - - - - - - - - - - - - - - - - - 
+## what if normal clone in Z0 
+## and not in Y either? 
+## Manage this internally by removing the column of Z
+## This can be detected by checking the rank in W so that WtW remain invertible
+## - - - - - - - - - - - - - - - - - - - - 
+res <- c3co::positiveFusedLasso(list(Y[-1, ]), list(t(Z)), lambda) ## with the correct Z,Y= minus normal subclone,sample
+round(res@W, 2)
+round(t(res@S$Z), 2)
+round(res@E$Y, 2) 
+round(res@mu, 2) 
 
 ## - - - - - - - - - - - - - - - - - - - - 
 ## non-totally trivial W
@@ -63,12 +74,12 @@ stopifnot(all(rowSums(W)==1))
 E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0), nrow=nrow(W), ncol=ncol(Z))
 Y <- W %*% Z + E
 
-res <- positiveFusedLasso(list(Y), list(t(Z)), lambda) 
-round(res@W, 2) - W   ## good
-round(t(res@S$Z), 1)  ## not good! 
+res <- c3co::positiveFusedLasso(list(Y), list(t(Z)), lambda) 
+# round(res@W, 2) - W   ## good
+# round(t(res@S$Z), 1)  ## not good! 
 round(t(res@S$Z), 1) - Z
 round(res@mu, 2)
 Y-res@E$Y  ## still off by a constant!
 
-modelFitStats(res)  ## OMG we're back to negative PVE :(
+modelFitStats(res)  ## no more negative PVE :>)
 
