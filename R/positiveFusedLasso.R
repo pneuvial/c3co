@@ -58,12 +58,17 @@
 #' @export
 positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
                                max.iter=50, warn=FALSE, verbose=FALSE) {
+
   ## problem dimensions
-  M <- length(Y)  # number of signal (one or two)
-  stopifnot(length(lambda) == M)
-  stopifnot(length(Z) == M)
+  M <- length(Y)
   p <- nrow(Z[[1]])  ## number of subclones
   S <- ncol(Z[[1]])  ## number of archetypes
+
+### JC: in my opinion, these checks are useless 
+### because this function is not meant to be used by the user, right?
+  stopifnot(length(lambda) == M)
+  stopifnot(length(Z)      == M)
+
   Yc <- do.call(cbind, Y) # stacked signals
 
   ## __________________________________________________
@@ -75,8 +80,9 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     ## __________________________________________________
     ## STEP 1: optimize w.r.t. W (fixed Z)
     ## if (rank of W) < ncol(Z), there are too many archetypes...
-    foundW <- FALSE
-    while (!foundW) {
+    WtWm1 <- NULL
+    while (is.null(WtWm1)) {
+      
       ## solve in W (here individuals - i.e. rows of Yc - are independent)
       W <- get.W(do.call(rbind, Z), Yc)
 
@@ -84,19 +90,19 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
       QR.W <- qr(W)
       if (QR.W$rank < S) {
         message("W is rank deficent. Removing an archetype")
+### JC: this means that the column of one must be the first column
+### if other rank defiency occurs, we remove the first one arbitrarly
         Z <- lapply(Z, function(z) z[,-1])
         S <-  S-1
       } else {
+        ## use QR decomposition to save time inverting WtW
         WtWm1  <- tcrossprod(backsolve(qr.R(QR.W),diag(S)))
-        foundW <- TRUE
       }
     }    
 
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
-    Z <- lapply(1:M, function(m) {
-      return(get.Z(Y[[m]], W, WtWm1, lambda[m]))
-    })
+    Z <- mapply(get.Z, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY=FALSE)
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
@@ -108,7 +114,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   if (verbose) message("Stopped after ", iter, " iterations")
   if (verbose) message("delta:", round(delta, digits=4))
 
-  if(M > 1 & warn) { ## sanity check: minor CN < major CN
+  if(length(Y) > 1 & warn) { ## sanity check: minor CN < major CN
     dZ <- Reduce("-", rev(Z))
     tol <- 1e-2  ## arbitrary tolerance...
     if (min(dZ) < -tol) {
@@ -117,20 +123,27 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   }
   
   ## reshape output
-### JC: found this piece of code dirty...   
   ## accumulate Y, Yhat and Z to get the sum of the two clones (used by Morgane in her representation)
   names(Y) <- paste0("Y", 1:M)
+### JC: having a list whose first element has the same name is rather ugly
+### and not helful at all to the user  
   Y$Y <- Reduce("+",Y)
-  Yhat <- lapply(Z, function(Z_) W %*% t(Z_))  ## should be a method!!
+### JC: should be a method  
+  Yhat <- lapply(Z, function(Z_) W %*% t(Z_))
   names(Yhat) <- paste0("Y", 1:M)
   Yhat$Y <- Reduce("+",Yhat)
+
   names(Z)    <- paste0("Z", 1:M)
+### JC: same remark than for Y$Y
   Z$Z    <- Reduce("+",Z)
 
 ### JC: Useless ???
   names(lambda) <- paste0("lambda", 1:M)
   params <- c(nb.feat=p, lambda)
 
+### JC: why Z is called S outside of this function
+### why not calling Y Z and W by their true name like, 
+### signals, archetypes, weights, when outside of this function?
   objRes <- new("posFused", Y=Y, S=Z, W=W, E=Yhat, params=params)
   return(objRes)
 }

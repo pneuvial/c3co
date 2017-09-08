@@ -1,7 +1,7 @@
 #' @importFrom glmnet glmnet
 #' @importFrom Matrix bandSparse
 #' @importFrom methods as
-get.Z <- function(Y, W, WtWm1, lambda) {
+get.Z <- function(Y, lambda, W, WtWm1) {
   
   L <- ncol(Y)
   p <- ncol(W)
