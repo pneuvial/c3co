@@ -63,15 +63,8 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   stopifnot(length(lambda) == M)
   stopifnot(length(Z) == M)
   p <- nrow(Z[[1]])  ## number of subclones
-  
-  names(lambda) <- paste0("lambda", 1:M)
-  params <- c(nb.feat=p, lambda)
-  
-  Z0 <- Z ## save the original Z
-  ## Yc is a matrix of stacked matrices centered row-wise
-  Yc <- do.call(cbind, lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-")))
-  # the vector of means averaged over the M signal (required for the intercept)
-  Ybar <- Reduce("+", lapply(Y, rowMeans))/M # average over the signals
+  S <- ncol(Z[[1]])  ## number of archetypes
+  Yc <- do.call(cbind, Y) # stacked signals
 
   ## __________________________________________________
   ## main loop for alternate optimization
@@ -84,43 +77,25 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     ## if (rank of W) < ncol(Z), there are too many archetypes...
     foundW <- FALSE
     while (!foundW) {
-      
-      ### TODO : maybe this will become useless if no intercept is required
-
-      ## matrices Z must be centered column-wise for optimizing w.r.t W
-      Zc <- do.call(rbind, lapply(Z, function(z) sweep(z, 2, colMeans(z), "-")))
-      # compute the vector of means averaged over the M signal (required for the intercept)
-      Zbar <- Reduce("+",lapply(Z, colMeans))/M
-
       ## solve in W (here individuals - i.e. rows of Yc - are independent)
-      W <- get.W(Zc, Yc)
+      W <- get.W(do.call(rbind, Z), Yc)
 
       ## Check rank deficiency
       QR.W <- qr(W)
-      if (QR.W$rank < ncol(Zc)) {
+      if (QR.W$rank < S) {
         message("W is rank deficent. Removing an archetype")
         Z <- lapply(Z, function(z) z[,-1])
+        S <-  S-1
       } else {
-        WtWm1  <- tcrossprod(backsolve(qr.R(QR.W),diag(ncol(Zc))))
+        WtWm1  <- tcrossprod(backsolve(qr.R(QR.W),diag(S)))
         foundW <- TRUE
       }
     }    
 
-  # WtWm1 <- try(chol2inv(chol(crossprod(W))), TRUE)
-  # if(inherits(WtWm1, "try-error")) {
-  #   warning("WtW is not invertible: no solution for this combinaison of lambda")
-  #   return(WtWm1)  
-  # } else {
-      
-    ## the vector of intercept (one per patient)
-    mu <- Ybar - as.numeric(tcrossprod(Zbar, W))
-
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
-    ## centering Y with the current intercept mu
-    Yc.mu <- lapply(Y, function(y) sweep(y, 1, mu, "-"))
     Z <- lapply(1:M, function(m) {
-      return(get.Z(Yc.mu[[m]], W, WtWm1, lambda[m]))
+      return(get.Z(Y[[m]], W, WtWm1, lambda[m]))
     })
     
     ## __________________________________________________
@@ -138,26 +113,25 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     tol <- 1e-2  ## arbitrary tolerance...
     if (min(dZ) < -tol) {
        warning("For model with ", p, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
-  #     idx <- 1:ncol(Z2)
-  #     Z1 <- sapply(idx, function(ii){
-  #       jj <- which(Z1[,ii]>Z2[,ii])
-  #       Z1[jj, ii] <- Z2[jj, ii]
-  #       return(Z1 [,ii])
-  #     })
     }
   }
   
   ## reshape output
+### JC: found this piece of code dirty...   
   ## accumulate Y, Yhat and Z to get the sum of the two clones (used by Morgane in her representation)
   names(Y) <- paste0("Y", 1:M)
   Y$Y <- Reduce("+",Y)
-  Yhat <- lapply(Z, function(Z_) sweep(W %*% t(Z_), 1, mu, "+"))  ## should be a method!!
+  Yhat <- lapply(Z, function(Z_) W %*% t(Z_))  ## should be a method!!
   names(Yhat) <- paste0("Y", 1:M)
   Yhat$Y <- Reduce("+",Yhat)
   names(Z)    <- paste0("Z", 1:M)
   Z$Z    <- Reduce("+",Z)
-  
-  objRes <- new("posFused", Y=Y, S=Z, S0=Z0, W=W, mu=mu, E=Yhat, params=params)
+
+### JC: Useless ???
+  names(lambda) <- paste0("lambda", 1:M)
+  params <- c(nb.feat=p, lambda)
+
+  objRes <- new("posFused", Y=Y, S=Z, W=W, E=Yhat, params=params)
   return(objRes)
 }
 
