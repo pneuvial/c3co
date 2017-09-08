@@ -26,10 +26,10 @@ round(t(res@S$Z), 2)  ## Z
 ## - - - - - - - - - - - - - - - - - - - - 
 res <- c3co::positiveFusedLasso(list(Y), list(t(Z[-1, ])), lambda) ## with the correct Z minus normal subclone
 round(res@W, 2)       ## W[-1, ] OK but W[1, ] not OK !!
-round(t(res@S$Z), 2)  ## Z is okay but already not perfect
+round(t(res@S$Z), 2)  ## Z is almost not perfect
 round(res@E$Y, 2) 
 
-## what we would like in this situation is W[1, ] equal to 0, but this is not possible due to the convexity constraint on W! => something is wrong
+## what we would like in this situation is W[1, ] equal to 0, but this is not possible due to the convexity constraint on W! Conclusion: force a column of 1 in Z as input of positiveFusedLasso
 
 ## - - - - - - - - - - - - - - - - - - - - 
 ## what if normal clone not in Z0 
@@ -54,11 +54,12 @@ round(res@W, 2)
 round(t(res@S$Z), 2)
 round(res@E$Y, 2) 
 
-## - - - - - - - - - - - - - - - - - - - - 
-## non-totally trivial W
-## - - - - - - - - - - - - - - - - - - - - 
+## - - - - - - - - - - - - - - - - - - - - - -
+## non-totally trivial W: normal contamination
+## - - - - - - - - - - - - - - - - - - - - - -
 lambda <- 1e-4
-W <- rbind(c(1, 1, 0, 0)/2,
+W <- rbind(c(1, 0, 0, 0),
+           c(1, 1, 0, 0)/2,
            c(1, 0, 1, 0)/2,
            c(1, 0, 0, 1)/2)
 stopifnot(all(rowSums(W)==1))
@@ -66,8 +67,48 @@ E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0), nrow=nrow(W), ncol=ncol(Z))
 Y <- W %*% Z + E
 
 res <- c3co::positiveFusedLasso(list(Y), list(t(Z)), lambda) 
+round(res@W, 2)
 round(t(res@S$Z), 1)
 Y-res@E$Y  ## rather good
 
 modelFitStats(res)  ## no more negative PVE :>)
 
+## - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## normal contamination but normal clone *not observed*
+## - - - - - - - - - - - - - - - - - - - - - - - - - - -
+lambda <- 1e-4
+W1 <- W[-1, ]
+stopifnot(all(rowSums(W1)==1))
+E <- matrix(rnorm(nrow(W1)*ncol(Z), sd=0), nrow=nrow(W1), ncol=ncol(Z))
+Y <- W1 %*% Z + E
+
+res <- c3co::positiveFusedLasso(list(Y), list(t(Z)), lambda) 
+round(res@W, 2)
+round(t(res@S$Z), 1)
+Y-res@E$Y  ## rather good given that we have 3 patients and 4 archetypes !!!
+## in fact here the *true* W is singular because nrow(W) > ncol(W) !
+
+modelFitStats(res)  ## no more negative PVE :>)
+
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## normal contamination 
+## but normal clone *not observed*
+## but nb of patients >= nb of archetypes (otherwise can't expect recovering truth)
+## - - - - - - - - - - - - - - - - - - - - - - - - - - -
+lambda <- 1e-4
+W <- rbind(c(1, 1, 0, 0)/2,
+           c(1, 0, 1, 0)/2,
+           c(1, 0, 0, 1)/2,
+           c(0, 0, 1, 1)/2)
+qr(W)$rank  ## not singular
+stopifnot(all(rowSums(W)==1))
+E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0), nrow=nrow(W), ncol=ncol(Z))
+Y <- W %*% Z + E
+
+res <- c3co::positiveFusedLasso(list(Y), list(t(Z)), lambda) 
+round(res@W, 2)
+round(t(res@S$Z), 1)
+Y-res@E$Y  ## rather good
+
+modelFitStats(res)  ## no more negative PVE :>)

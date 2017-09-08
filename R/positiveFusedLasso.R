@@ -61,13 +61,11 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 
   ## problem dimensions
   M <- length(Y)
-  p <- nrow(Z[[1]])  ## number of subclones
-  S <- ncol(Z[[1]])  ## number of archetypes
+  p <- ncol(Z[[1]])  ## number of subclones/archetypes/latent features
 
-### JC: in my opinion, these checks are useless 
-### because this function is not meant to be used by the user, right?
   stopifnot(length(lambda) == M)
   stopifnot(length(Z)      == M)
+  if (p>nrow(Y[[1]])) { warning("Under-identified problem: more latent features than samples")}
 
   Yc <- do.call(cbind, Y) # stacked signals
 
@@ -88,15 +86,15 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 
       ## Check rank deficiency
       QR.W <- qr(W)
-      if (QR.W$rank < S) {
-        message("W is rank deficent. Removing an archetype")
+      if (QR.W$rank < p) {
+        message("W is rank deficent. Removing a latent feature")
 ### JC: this means that the column of one must be the first column
-### if other rank defiency occurs, we remove the first one arbitrarly
+### if other rank defiency occurs, we remove the first one arbitrarily
         Z <- lapply(Z, function(z) z[,-1])
-        S <-  S-1
+        p <-  p-1
       } else {
         ## use QR decomposition to save time inverting WtW
-        WtWm1  <- tcrossprod(backsolve(qr.R(QR.W),diag(S)))
+        WtWm1  <- tcrossprod(backsolve(qr.R(QR.W),diag(p)))
       }
     }    
 
