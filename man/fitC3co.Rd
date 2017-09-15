@@ -37,6 +37,7 @@ A list of \code{k} objects of class [\code{\linkS4class{c3coFit}}],
 Estimate c3co model parameters from segment-level copy number data
 }
 \examples{
+set.seed(7)
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10

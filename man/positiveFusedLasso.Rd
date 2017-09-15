@@ -36,6 +36,7 @@ An object of class [\code{\linkS4class{posFused}}]
 Positive fused lasso function
 }
 \examples{
+set.seed(7)
 len <- 700*10
 nbClones <- 2
 bkps <- list(

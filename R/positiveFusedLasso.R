@@ -24,6 +24,7 @@
 #' @return An object of class [\code{\linkS4class{posFused}}]
 #'
 #' @examples
+#' set.seed(7)
 #' len <- 700*10
 #' nbClones <- 2
 #' bkps <- list(
@@ -91,6 +92,8 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 ### JC: this means that the column of one must be the first column
 ### if other rank defiency occurs, we remove the first one arbitrarily
         Z <- lapply(Z, function(z) z[,-1])
+        ## Remove matched W.old column
+        W.old <- W[,-1] 
         p <-  p-1
       } else {
         ## use QR decomposition to save time inverting WtW

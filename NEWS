@@ -1,6 +1,12 @@
 Package: c3co
 =============
 
+Version: 0.2.6-9000 [2017-15-09]
+
+o Force normal component in Z
+o Check rank of W
+o Added test scripts
+
 Version: 0.2.5-9000 [2017-07-30]
 
 o Added method 'modelFitStats' for objects of class 'posFused'.

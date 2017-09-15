@@ -107,7 +107,7 @@ resC <- c3co(datList, parameters.grid, stat="TCN", verbose=FALSE)
 For each candidate number of subclones $p$ in `r nb.arch`,  `c3co` only retains the combination of the penalization coefficients $(\lambda_1, \lambda_2)$ which minimizes the Bayesian Information Criterion (BIC) of the model. The next step is to choose the best $p$ (number of subclones). Following @nowak2011fused, we compare the models for different values of $p$ through their percentage of variance explained (PVE), and select the last $p$ before the final plateau of the PVE. 
 
 ```{r}
-pvePlot(res, ylim=c(0.8, 1))
+pvePlot(res,  ylim=c(0.8, 1))
 ```
 
 ```{r}
@@ -169,7 +169,7 @@ getAlteredSegments <- function(tol, zz1, zz2, c1Mean, c2Mean){
 
 dataBest <- res@fit[[best]]
 meanMin <- mean(df$CopyNumber[which(df$arch=="d"&df$stat=="Minor")])
-getAlt <- getAlteredSegments(tol=0.2, dataBest@S$Z1, dataBest@S$Z2, 1, 1.1)
+getAlt <- getAlteredSegments(tol=0.1, dataBest@S$Z1, dataBest@S$Z2, 0.6, 0.8)
 colnames(getAlt) <- sprintf("Subclone %s", letters[1:ncol(dataBest@W)])
 df.Alt <- reshape::melt(getAlt)
 df.Alt$x.min <- rep(res@bkp[[1]][-length(res@bkp[[1]])], best+1)

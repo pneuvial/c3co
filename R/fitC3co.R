@@ -28,6 +28,7 @@
 #'   where \code{k} is the number of candidate number of subclones
 #'   
 #' @examples
+#' set.seed(7)
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10

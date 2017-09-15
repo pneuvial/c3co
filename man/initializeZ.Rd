@@ -6,7 +6,7 @@
 \usage{
 initializeZ(Y1, Y2 = NULL, p = min(dim(Y1)), flavor = c("hclust", "nmf",
   "archetypes", "svd", "subsampling"), stat = c("C1+C2", "C1", "C2"),
-  verbose = FALSE)
+  forceNormal = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{Y1}{A matrix containing the segmented minor copy number (\code{n}
@@ -23,6 +23,9 @@ Defaults to \code{"hclust"}. See Details}
 
 \item{stat}{Statistic used to perform initialization. Should be either
 "C1+C2", "C1", or "C2"}
+
+\item{forceNormal}{A logical value indicating whether a normal component is forced in initialization
+Defaults to FALSE}
 
 \item{verbose}{A logical value indicating whether to print extra information.
 Defaults to FALSE}

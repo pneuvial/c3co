@@ -5,14 +5,10 @@
 \title{Function to transform PSCBS data, perfom the segmentation and save it
 into output.dir}
 \usage{
-PSCBSwrapper(PSCBSdata, pattern = NULL, output.dir, stat)
+PSCBSwrapper(PSCBSdata, stat)
 }
 \arguments{
 \item{PSCBSdata}{A list that contains PSCBS data}
-
-\item{pattern}{if you have several patients in the pathSegPSCBS directory.}
-
-\item{output.dir}{Directory to save segmentation}
 
 \item{stat}{"TCN or "C1C2" paramater to segment the data.
 If \code{stat == TCN}, the segmentation will be done on TCN only.}

@@ -1,3 +1,10 @@
+#' Print statistics of a c3co model
+#' 
+#' @param Y Original matrix of data
+#' @param Yhat Estimates 
+#' @param What Inferred weight matrix
+#' @param Zhat Inferred subclones matrix
+#' @return The main statistics of the inferred model.
 modelFitStatistics <- function(Y, Yhat, What, Zhat) {
     n <- nrow(Y)
     nseg <- ncol(Y)
@@ -23,7 +30,7 @@ modelFitStatistics <- function(Y, Yhat, What, Zhat) {
     c(BIC=BIC.WZ, PVE=PVE, logLik=logLik, loss=loss)
 }
 
-
+#' @rdname modelFitStats
 setMethod("modelFitStats", signature(object = "posFused"), function(object) {
     stats <- modelFitStatistics(object@Y$Y, object@E$Y, object@W, object@S$Z)
     pars <- object@params

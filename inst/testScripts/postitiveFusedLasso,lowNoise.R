@@ -11,7 +11,7 @@ matplot(t(Z), t='s')
 ## - - - - - - - - - - - - - - - - - - - - 
 ## with the correct Z as a starting point
 ## - - - - - - - - - - - - - - - - - - - - 
-lambda <- 1e-5
+lambda <- 1e-3
 W <- diag(rep(1, nrow(Z)))
 E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0), nrow=nrow(W), ncol=ncol(Z))
 Y <- W %*% Z + E
@@ -96,7 +96,7 @@ modelFitStats(res)  ## no more negative PVE :>)
 ## but normal clone *not observed*
 ## but nb of patients >= nb of archetypes (otherwise can't expect recovering truth)
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - -
-lambda <- 1e-4
+lambda <- 5e-4
 W <- rbind(c(1, 1, 0, 0)/2,
            c(1, 0, 1, 0)/2,
            c(1, 0, 0, 1)/2,
@@ -107,8 +107,57 @@ E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0), nrow=nrow(W), ncol=ncol(Z))
 Y <- W %*% Z + E
 
 res <- c3co::positiveFusedLasso(list(Y), list(t(Z)), lambda) 
-round(res@W, 2)
-round(t(res@S$Z), 1)
+round(res@W, 2)## First line is not perfect, due to subclone 2 only in profile 1
+round(t(res@S$Z), 2)## Subclones are quite good except subclone 2
 Y-res@E$Y  ## rather good
+modelFitStats(res)  
 
-modelFitStats(res)  ## no more negative PVE :>)
+
+## - - - - - - - - - - - - - - - - - - - - 
+## Colinearity test
+## - - - - - - - - - - - - - - - - - - - - 
+nbBkps <- 10
+nbClones <- 4
+Z <- matrix(1, nrow = nbClones, ncol=nbBkps+1)
+Z[2, 2] <- 2
+Z[3, 5:6] <- 2
+Z[4,] <- 0.5*(Z[2,]+Z[3,])
+matplot(t(Z), t='s')
+## - - - - - - - - - - - - - - - - - - - - 
+## with the correct Z as a starting point and no noise
+## - - - - - - - - - - - - - - - - - - - - 
+lambda <- 1e-3
+W <- rbind(c(0, 1, 0, 0),
+           c(0, 1, 1, 0)/2,
+           c(0, 1, 0, 1)/2,
+           c(0, 0, 1, 1)/2)
+E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0.0), nrow=nrow(W), ncol=ncol(Z))
+Y <- W %*% Z + E
+res <- c3co::positiveFusedLasso(list(Y), list(t(Z[-c(1), ])), lambda) 
+round(res@W, 2)  ## W
+round(t(res@S$Z), 2)  ## Z
+qr(t(res@S$Z))$rank 
+par(mfrow=c(2,2))
+matplot(round(res@S$Z, 2), type="s")
+matplot(t(Z[-1,]), type="s")
+matplot(t(Y), type="s")
+matplot(t(res@E$Y), type="s")
+heatmap.3(round(res@W, 2) )
+heatmap.3(W[,-1]) 
+
+## - - - - - - - - - - - - - - - - - - - - 
+## with the correct Z as a starting point with noise
+## - - - - - - - - - - - - - - - - - - - - 
+E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0.1), nrow=nrow(W), ncol=ncol(Z))
+Y <- W %*% Z + E
+res <- c3co::positiveFusedLasso(list(Y), list(t(Z[-c(1), ])), lambda=1e-4)
+round(res@W, 2)  ## W
+round(t(res@S$Z), 2)  ## Z
+qr(t(res@S$Z))$rank 
+par(mfrow=c(2,2))
+matplot(round(res@S$Z, 2), type="s")
+matplot(t(Z[-1,]), type="s")
+matplot(t(Y), type="s")
+matplot(t(res@E$Y), type="s")
+heatmap.3(round(res@W, 2) )
+heatmap.3(W[,-1]) 

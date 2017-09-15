@@ -1,8 +1,11 @@
+context("c3co test")
+
+set.seed(7)
 dataAnnotTP <- acnr::loadCnRegionData(dataSet = "GSE11976", tumorFraction = 1.0)
 dataAnnotN <- acnr::loadCnRegionData(dataSet = "GSE11976", tumorFraction = 0.0)
 
 len <- 500 * 10
-nbClones <- 3L
+nbClones <- 3
 
 bkps <- list(
   c(100, 250) * 10,

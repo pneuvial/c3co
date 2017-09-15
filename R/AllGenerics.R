@@ -17,6 +17,10 @@ setMethod(
     }
 )
 
+#' Compute statistics of a c3co model
+#'
+#' @param object An object of class \code{\linkS4class{posFused}}
+#' @rdname modelFitStats
 #' @exportMethod modelFitStats
 setGeneric("modelFitStats", function(object) {
     standardGeneric("modelFitStats")

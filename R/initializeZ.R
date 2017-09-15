@@ -14,7 +14,10 @@
 #'
 #' @param stat Statistic used to perform initialization. Should be either
 #'   "C1+C2", "C1", or "C2"
-#'
+#'   
+#' @param forceNormal A logical value indicating whether a normal component is forced in initialization
+#'   Defaults to FALSE
+#'   
 #' @param verbose A logical value indicating whether to print extra information.
 #'   Defaults to FALSE
 #'

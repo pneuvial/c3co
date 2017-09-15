@@ -4,12 +4,10 @@
 \alias{loadPSCBSdata}
 \title{Function to load PSCBS data and transform them into c3co format}
 \usage{
-loadPSCBSdata(PSCBSdata, pattern = NULL)
+loadPSCBSdata(PSCBSdata)
 }
 \arguments{
 \item{PSCBSdata}{A list that contains PSCBS data.}
-
-\item{pattern}{if you have several patients in the pathSegPSCBS directory.}
 }
 \value{
 A data frame under PSCBS format
