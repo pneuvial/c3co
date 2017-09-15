@@ -34,8 +34,8 @@ segDat <- PSCBSwrapper(PSCBSdata, stat = "C1C2")
 ## Run c3co ##
 Now, you can run c3co by using this line:
 ```{r, message=FALSE, eval=TRUE, warning=FALSE}
-lambda.grid <- seq(from=1e-3, to =1e-1, length=10)
-parameters.grid <- list(lambda=lambda.grid, nb.arch=2:4)
+lambda.grid <- seq(from=1e-4, to =1e-3, length=10)
+parameters.grid <- list(lambda=lambda.grid, nb.arch=2:5)
 resc3co <- c3co(dat=NULL, parameters.grid, segDat=segDat)
 ```
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
@@ -43,7 +43,7 @@ pvePlot(resc3co)
 ```
 
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
-Wplot(resc3co, idxBest = 2)
+Wplot(resc3co, idxBest = 3)
 ```
 
 ```{r, fig.width=7, fig.height=5, eval=TRUE}
