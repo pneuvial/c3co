@@ -1,32 +1,35 @@
 ---
-title: "c3co"
+title: "Cancer Subclones from Total Copy Numbers"
 author: "Morgane Pierre-Jean, Julien Chiquet, Henrik Bengtsson and Pierre Neuvial"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: c3co.bib
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Cancer Subclones from Total Copy Numbers}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-The `c3co` package implements a constrained dictionary learning problem to recover cancer subclones from several DNA copy number profiles described in @pierre-jean:c3co. The c3co model may be seen as an extension of the FLLat method of @nowak2011fused, and of the e-FLLat method of @masecchia2013dictionary, with the following original features:
+The c3co package implements a constrained dictionary learning problem to recover cancer subclones from several DNA copy number profiles described in @pierre-jean:c3co. The c3co model may be seen as an extension of the Fused Lasso Latent Feature Model (FLLat) method of @nowak2011fused, and of the Enhanced FLLat (E-FLLat) method of @masecchia2013dictionary, with the following original features:
 
 * **interpretable weights**: we model each profile as a *convex combination* of latent profiles, making the corresponding weights directly interpretable as proportions of latent features;
-* **parent-specific copy numbers**: we leverage the allelic signals available from SNP array or sequencing data in order to explicitly integrate parent-specific copy numbers (Olshen *et al*, 2011) in the model. 
+
+* **parent-specific copy numbers**: we leverage the allelic signals available from SNP array or sequencing data in order to explicitly integrate parent-specific copy numbers (@olshen11parent-specific) in the model.
+
 * **segment-level**: we model tumor clonality at the level of copy number segments (not individual loci), which is the level of information at which such events occur.
 
 Notes: 
 
 * Although the c3co model is designed to deal with allelic signals, we emphasize that it is also applicable to data where only total copy number estimates are available, such as array-CGH data or low-pass sequencing data.
 
-* The FLLat method is implemented in the R package `FLLat`. The e-FLLat method is implemented in Python and is available from its authors.
+* The FLLat method is implemented in the R package [FLLat]. The E-FLLat method is implemented in Python package [PyCGH].
+
 
 ## Model 
 
-The figure below illustrates the model used in the `c3co` package. Two heterogeneous tumor samples (green and yellow circles) are composed of a collection of normal cells (gray discs) and two cancer subclones (red triangles and blue squares). One of the cancer subclones is present in both tumor samples. 
+The figure below illustrates the model used in the c3co package. Two heterogeneous tumor samples (green and yellow circles) are composed of a collection of normal cells (gray discs) and two cancer subclones (red triangles and blue squares). One of the cancer subclones is present in both tumor samples. 
 
 ![](img/features.png)
 ![](img/features2.png)
@@ -38,8 +41,7 @@ The corresponding (noiseless) copy number profiles are displayed in the figure b
 
 
 ## Setup
-```{r, message=FALSE,warning=FALSE}
-stopifnot(packageVersion("acnr") >= '0.2.6')
+```{r, message=FALSE, warning=FALSE}
 library("c3co")
 library("ggplot2")
 library("mclust")
@@ -59,42 +61,42 @@ n <- 20
 ### Noiseless profiles
 
 ```{r}
-dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  
-matplot(t(dat$locus$Y), t='s')
-matplot(t(dat$segment$Y), t='s')
+dat <- getToyData(n, len, nbClones, nbBkps, eps = 0)  
+matplot(t(dat$locus$Y), t = "s")
+matplot(t(dat$segment$Y), t = "s")
 ```
 
 ### Noisy profiles
 
 ```{r}
-dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
-matplot(t(dat$locus$Y), t='l')
-matplot(t(dat$segment$Y), t='s')
+dat <- getToyData(n, len, nbClones, nbBkps, eps = 0.2)  ## noisy
+matplot(t(dat$locus$Y), t = "l")
+matplot(t(dat$segment$Y), t = "s")
 W <- dat$W
 ```
 
 
-## Fitting the `c3co` model
+## Fitting the c3co model
 
 ```{r}
-l1 <- seq(from=1e-6, to=1e-4, length.out=10)
+l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10)
 candP <- 2:10
-parameters.grid <- list(lambda=l1, nb.arch=candP)
+parameters.grid <- list(lambda = l1, nb.arch = candP)
 ```
 
 ```{r}
 Y <- dat$segment$Y
-fit <- fitC3co(Y, parameters.grid=parameters.grid, verbose=TRUE)
+fit <- fitC3co(Y, parameters.grid = parameters.grid, verbose = TRUE)
 ```
 
 
-For each candidate number of subclones $p$ in `r candP`,  `c3co` only retains the combination of the penalization coefficients $(\lambda_1, \lambda_2)$ which minimizes the Bayesian Information Criterion (BIC) of the model. The next step is to choose the best $p$ (number of subclones). Following @nowak2011fused, we compare the models for different values of $p$ through their percentage of variance explained (PVE). 
+For each candidate number of subclones $p$ in `r candP`, `c3co()` only retains the combination of the penalization coefficients $(\lambda_1, \lambda_2)$ which minimizes the Bayesian Information Criterion (BIC) of the model. The next step is to choose the best $p$ (number of subclones). Following @nowak2011fused, we compare the models for different values of $p$ through their percentage of variance explained (PVE). 
 
 ```{r}
-pvePlot2(fit$config$best, ylim=c(0.8, 1))
+pvePlot2(fit$config$best, ylim = c(0.8, 1))
 ```
 
-Here we arbitrarily choose 5 subclones (because we know it's the true number of subclones).
+Here we arbitrarily choose five subclones (because we know it's the true number of subclones).
 
 We can compare the true and the estimated weight matrices:
 ```{r}
@@ -102,7 +104,7 @@ best <- 4
 ```
 
 ```{r heatmap, fig.width=7, fig.height=5}
-res.clustTRUE <- hclust(dist(cbind(W, 1-rowSums(as.matrix(W)))),method="ward.D")
+res.clustTRUE <- hclust(dist(cbind(W, 1-rowSums(as.matrix(W)))), method = "ward.D")
 col <-  grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
 
 cfit <- new("c3coFit")  ## terrible hack to bypass lacking plot methods
@@ -112,16 +114,19 @@ Wplot(cfit, idxBest = best, cexCol = 0.4)
 
 
 ```{r heatmap_TRUE, fig.width=7, fig.height=5}
-heatmap.3(W, dendrogram="row", main="TRUE", Rowv=as.dendrogram(res.clustTRUE), col=col,scale="none")
+heatmap.3(W, dendrogram = "row", main = "TRUE",
+          Rowv = as.dendrogram(res.clustTRUE), col = col, scale = "none")
 ```
 
 ## Further analysis
-### Performance  of clustering
+
+### Performance of clustering
 In this section, we show the ablility of the method to recover the simulated clustering of patients.
 
-```{r,clust}
+```{r, clust}
 fitW <- cfit@fit[[best]]@W
-adjustedRandIndex(cutree(hclust(dist(W), method="ward.D2"),4), cutree(hclust(dist(fitW), method="ward.D2"),4))
+adjustedRandIndex(cutree(hclust(dist(W), method = "ward.D2"), k = 4),
+                  cutree(hclust(dist(fitW), method = "ward.D2"), k = 4))
 ```
 
 
@@ -134,3 +139,5 @@ sessionInfo()
 ## References
 
 
+[FLLat]: https://cran.r-project.org/package=FLLat
+[PyCGH]: http://slipguru.disi.unige.it/Software/PyCGH/

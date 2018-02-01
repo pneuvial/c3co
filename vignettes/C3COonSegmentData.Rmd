@@ -1,21 +1,21 @@
 ---
-title: "Run c3co from segmented data"
+title: "c3co from Segmented Data"
 author: "Morgane Pierre-Jean, Julien Chiquet, Henrik Bengtsson and Pierre Neuvial"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{c3co from Segmented Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette aims to help users to run C3CO on segmented data. 
+This vignette aims to help users to run c3co on segmented data. 
 
-This example is based on segmented data from GSE47077 data sets. This data set is in \code'c3co.data' package. It is also possible to use c3co algorithm from a \code'.rds' file containing segmentation.
+This example is based on segmented data from [GSE47077] data sets. This data set is in the [c3co.data] package. It is also possible to use c3co algorithm from an RDS file containing segmentation.
 
-Note that the file or the data must be a \code'list',  the following 
+Note that the file or the data must be a list with elements as follows
 ```{r}
-data("segDat", package="c3co.data")
+data("segDat", package = "c3co.data")
 names(segDat)
 ```
 
@@ -25,8 +25,11 @@ str(segDat)
 
 ```{r, eval=FALSE}
 library("c3co")
-lambda.grid <- 10^(-seq(from = 3, to = 5, by = 1)) ## penalty
+lambda.grid <- 10^-(3:5) ## penalty
 p.list <- 2:5 ## candidate number of subclones
 parameters.grid <- list(lambda = lambda.grid, nb.arch = p.list)
-resC3CO <- c3co(NULL, segDat = segDat, parameters.grid = parameters.grid)
+resc3co <- c3co(NULL, segDat = segDat, parameters.grid = parameters.grid)
 ```
+
+[c3co.data]: https://github.com/pneuvial/c3co-data
+[GSE47077]: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47077
