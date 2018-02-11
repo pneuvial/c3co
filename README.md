@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-devtools::install_github("pneuvial/c3co")
+devtools::install_github("pneuvial/c3co", build_vignettes = TRUE)
 ```
 
 ## Model 
