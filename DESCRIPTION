@@ -12,12 +12,12 @@ Description: Inference of subclones from tumor DNA copy number profiles of
 License: LGPL (>= 2.1)
 LazyData: TRUE
 Imports:
-    acnr (>= 0.3.2),
+    acnr (>= 1.0.0),
     ggplot2,
     glmnet,
     graphics,
     grDevices,
-    jointseg,
+    jointseg (>= 1.0.1),
     limSolve,
     methods,
     Matrix,
@@ -39,8 +39,7 @@ Suggests:
     mclust,
     reshape
 VignetteBuilder: knitr
-Remotes: mpierrejean/acnr,
-    mpierrejean/jointseg,
+Remotes:
     pneuvial/c3co-data,
     mskcc/facets
 URL: https://github.com/pneuvial/c3co
