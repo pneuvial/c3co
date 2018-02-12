@@ -1,97 +1,121 @@
 Package: c3co
 =============
 
-Version: 0.2.6-9000 [2017-15-09]
+Version: 0.2.6-9000 [2018-02-11]
 
-o Force normal component in Z
-o Check rank of W
-o Added test scripts
-o segmentData() asserts that all input data use the same set of loci
+ o Force normal component in Z.
+ 
+ o Check rank of W.
+ 
+ o Added test scripts.
+ 
+ o segmentData() asserts that all input data use the same set of loci.
+
 
 Version: 0.2.5-9000 [2017-07-30]
 
-o Added method 'modelFitStats' for objects of class 'posFused'.
-o Added simple test scripts to inst/testScripts.
-o Cleanups in 'fitC3co' (definition of BIC, consistency with log-likelihood).
- analysis. Added corresponding test script.
+ o Added method modelFitStats() for objects of class 'posFused'.
+ 
+ o Added simple test scripts to inst/testScripts.
+ 
+ o Cleanups in fitC3co() (definition of BIC, consistency with log-likelihood).
+   analysis. Added corresponding test script.
+   
  o Added several flavors for the initialization of Z: svd, NMF, and archetypal 
- analysis. Added corresponding test script.
- o Added function 'getToyData' (and corresponding test script) to generate toy 
- locus-level and segment-level data.
+   analysis. Added corresponding test script.
+   
+ o Added function getToyData() (and corresponding test script) to generate toy 
+   locus-level and segment-level data.
+
 
 Version: 0.2.4-9000 [2017-07-24]
 
- o In 'fitC3co': the model is now applied on centered data
- o 'buildSubclone' can now also generate purely simulated data if no real data are given as input
+ o In fitC3co(): the model is now applied on centered data.
+ 
+ o buildSubclone() can now also generate purely simulated data if no real data
+   are given as input.
+   
 
 Version: 0.2.3-9000 [2017-06-28]
 
- o Force Z1<=Z2
- o Bugs fixed for W set type=2 in lsei
+ o Force Z1 <= Z2.
+ 
+ o Bugs fixed for W set type=2 in limSolve::lsei().
+
 
 Version: 0.2.2-9000 [2017-05-17]
 
- o Changed structure of c3co object by adding 'config' slot
- o Bugs fixed for Z inferrence when (WtW)^-1 is non-inversible
+ o Changed structure of c3co object by adding 'config' slot.
+ 
+ o Bugs fixed for Z inference when (WtW)^-1 is non-inversible.
+ 
 
 Version: 0.2.1-9000 [2017-04-20]
 
- o Removed conditions c1 and c2 in fitc3co
- o Changed generation of weight matrix (new function rSparseWeightMatrix)
- o Set lambda1=lambda2 for Minor and Major inference by default
+ o Removed conditions c1 and c2 in fitC3co().
+ 
+ o Changed generation of weight matrix (new function rSparseWeightMatrix()).
+ 
+ o Set lambda1=lambda2 for Minor and Major inference by default.
 
 
 Version: 0.2.0-9000 [2017-04-12]
 
  o Changed default grid of values for penalization parameters: now ranges
    uniformly *on the log scale* over the interval.
- o More code cleanups
+   
+ o More code cleanups.
 
 
 Version: 0.2.0 [2017-03-31]
 
 CODE REFACTORING:
 
- o More code cleanups
- o Added minimal sanity checks for some function arguments
- o Added function 'initializeZ' so that the initialization is
-   performed only once per candidate number of subclones in 'c3co'
+ o More code cleanups.
+ 
+ o Added minimal sanity checks for some function arguments.
+ 
+ o Added function initializeZ() so that the initialization is
+   performed only once per candidate number of subclones in 'c3co'.
+   
  o In class 'posFused', ddded slot 'S0' to store initial estimates of Z
- o Moved function 'get.Z.new' into 'get.Z'
- o Added function 'fitC3co' that performs the actual fitting
-   from segment-level data. This function is called by the
-   main function 'c3co'
+ 
+ o Moved function get.Z.new() into get.Z()
+ 
+ o Added function fitC3co() that performs the actual fitting from segment-level
+   data. This function is called by the main function c3co().
+
 
 Version: 0.1.15 [2017-03-21]
 
 NEW FEATURES:
 
- o 'createZdf' now handles multiple chromosomes and statistics
+ o createZdf() now handles multiple chromosomes and statistics.
 
- o 'plotZ' now handles multiple chromosomes and statistics
+ o plotZ() now handles multiple chromosomes and statistics.
 
 CODE REFACTORING:
 
- o Some code cleanups
+ o Some code cleanups.
 
 
 Version: 0.1.14 [2017-03-17]
 
 NEW FEATURES:
 
- o The genotypes of the subclones produced by 'buildSubclones' now have the
+ o The genotypes of the subclones produced by buildSubclones() now have the
    same distribution as the input data (before, it was 1/3,1/3,1/3 regardless
-   of the input data)
+   of the input data).
 
 SOFTWARE QUALITY:
 
- o Added tests of consistency of the output of 'buildSubclones'
+ o Added tests of consistency of the output of buildSubclones().
 
 CODE REFACTORING:
 
- o Back to using 'base::Reduce' instead of 'purrr::map_df'
+ o Back to using base::Reduce() instead of purrr::map_df().
 
- o Some code cleanups
+ o Some code cleanups.
 
 
 
@@ -99,127 +123,127 @@ Version: 0.1.13 [2017-03-13]
 
 CODE REFACTORING:
 
- o Removed 'facets' vignette and moved 'facets' to 'Suggests'
+ o Removed 'facets' vignette and moved 'facets' to 'Suggests'.
 
 
 Version: 0.1.12 [2017-03-13]
 
 SIGNIFICANT CHANGES:
 
- o Repo made public
+ o Repo made public.
 
 NEW FEATURES:
 
- o Updated vignette c3co.Rmd
+ o Updated vignette c3co.Rmd.
 
 SOFTWARE QUALITY:
 
- o Added Travis CI and appveyor support
+ o Added Travis CI and appveyor support.
 
 
 Version: 0.1.11 [2017-02-01]
 
 CODE REFACTORING:
 
- o Modification on classes
+ o Modification on classes.
 
- o Clean up and comments Simulation scripts
+ o Clean up and comments Simulation scripts.
 
 
 Version: 0.1.10 [2017-01-25]
 
 CODE REFACTORING:
 
- o Create classes S4
+ o Create classes S4.
 
- o Clean up and comments Simulation scripts
+ o Clean up and comments Simulation scripts.
 
 
 Version: 0.1.9 [2017-01-09]
 
 SIGNIFICANT CHANGES:
 
- o Rename from InCaSCN to c3co
+ o Rename from InCaSCN to c3co.
 
 NEW FEATURES:
 
- o Clean up (remove NOTE for plot functions)
+ o Clean up (remove NOTE for plot functions).
 
 
 Version: 0.1.8 [2016-11-30]
 
 PERFORMANCE:
 
- o Parallelism for Z1 and Z2 inferrence
+ o Parallelism for Z1 and Z2 inferrence.
 
 
 Version: 0.1.7 [2016-11-25]
 
 CODE REFACTORING:
 
- o Move PSCBS data into another package named "incas.extdata"
+ o Move PSCBS data into another package named "incas.extdata".
 
 BUG FIXES:
 
- o B fixed
+ o B fixed.
 
 
 Version: 0.1.6 [2016-11-18]
 
 NEW FEATURES:
 
- o Add plot functions, PSCBS wrapper
+ o Add plot functions, PSCBS wrapper.
 
- o Add new example on real data set
+ o Add new example on real data set.
 
 CODE REFACTORING:
 
- o Remove Depends
+ o Remove Depends.
 
 
 Version: 0.1.5 [2016-11-16]
 
 NEW FEATURES:
 
- o Updated vignette
+ o Updated vignette.
 
 SOFTWARE QUALITY:
 
- o Added a minimal test script (from main function example)
+ o Added a minimal test script (from main function example).
 
 
 Version: 0.1.4 [2016-08-16]
 
 BUG FIXES:
 
- o Bug fixed to initialize algorithm with random rows of Y
+ o Bug fixed to initialize algorithm with random rows of Y.
 
- o Bug correction if dat is not provided but only the segment data
+ o Bug correction if dat is not provided but only the segment data.
 
 
 Version: 0.1.3 [2016-06-07]
 
 NEW FEATURES:
 
- o Add parameter segment if user doesn't want to segment data befor inferrence
+ o Add parameter segment if user doesn't want to segment data befor inferrence.
 
 BUG FIXES:
 
- o Minor correction : lamda2 -> lambda2
+ o Minor correction : lamda2 -> lambda2.
 
 
 Version: 0.1.2 [2016-06-07]
 
 SIGNIFICANT CHANGES:
 
- o Change Z initialization in 'positiveFusedLasso' ('hclust' instead of
-   'PCA+HCPC')
+ o Change Z initialization in positiveFusedLasso() ('hclust' instead of
+   'PCA+HCPC').
 
 CODE REFACTORING:
 
- o Save intermediate files
+ o Save intermediate files.
 
 
 Version: 0.1.1 [2016-04-25]
 
- o Created
+ o Created.
