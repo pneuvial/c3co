@@ -5,12 +5,10 @@
 \title{Function to transform Facets data, perfom the segmentation and save it into
 output.dir}
 \usage{
-Facetswrapper(pathFacets, output.dir, stat)
+Facetswrapper(pathFacets, stat)
 }
 \arguments{
 \item{pathFacets}{The path to load Facets data.}
-
-\item{output.dir}{Directory to save segmentation}
 
 \item{stat}{"TCN or "C1C2" paramater to segment the data.
 If \code{stat == TCN}, the segmentation will be done on TCN only.}
@@ -26,10 +24,9 @@ output.dir
 \examples{
 if (require("facets", quietly=TRUE)) {
 pathFacets <- system.file("extdata", package="facets")
-output.dir <- R.utils::Arguments$getWritablePath("output")
-Facetswrapper(pathFacets, output.dir=output.dir, stat="TCN")
+segDat <- Facetswrapper(pathFacets, stat="TCN")
 \dontrun{
-resc3co <- c3co(NULL, pathSeg=output.dir)
+resc3co <- c3co(NULL, segDat=segDat)
 }
 }
 

@@ -26,8 +26,6 @@ loadFacetsdata <- function(pathFacets) {
 #'
 #' @param pathFacets The path to load Facets data.
 #'
-#' @param output.dir Directory to save segmentation
-#'
 #' @param stat "TCN or "C1C2" paramater to segment the data.
 #' If \code{stat == TCN}, the segmentation will be done on TCN only.
 #'
@@ -37,15 +35,14 @@ loadFacetsdata <- function(pathFacets) {
 #' @examples
 #' if (require("facets", quietly=TRUE)) {
 #' pathFacets <- system.file("extdata", package="facets")
-#' output.dir <- R.utils::Arguments$getWritablePath("output")
-#' Facetswrapper(pathFacets, output.dir=output.dir, stat="TCN")
+#' segDat <- Facetswrapper(pathFacets, stat="TCN")
 #' \dontrun{
-#' resc3co <- c3co(NULL, pathSeg=output.dir)
+#' resc3co <- c3co(NULL, segDat=segDat)
 #' }
 #' }
 #'
 #' @export
-Facetswrapper <- function(pathFacets, output.dir, stat) {
+Facetswrapper <- function(pathFacets, stat) {
     if (!requireNamespace("facets", quietly=TRUE)) {
       stop("Package 'facets' needed. Please install it from github/mskcc",
            call. = FALSE)
@@ -54,7 +51,5 @@ Facetswrapper <- function(pathFacets, output.dir, stat) {
     dat <- loadFacetsdata(pathFacets)
     ### Joint segmentation of all samples
     resSeg <-  segmentData(dat, stat=stat)
-    ### Perform the c3co method
-    saveRDS(resSeg, file=file.path(output.dir, "segDat.rds"))
-    mprintf("segment data has been saved to %s in segDat.rds file", output.dir)
+    return(resSeg)
 }
