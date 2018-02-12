@@ -6,6 +6,7 @@ Version: 0.2.6-9000 [2017-15-09]
 o Force normal component in Z
 o Check rank of W
 o Added test scripts
+o segmentData() asserts that all input data use the same set of loci
 
 Version: 0.2.5-9000 [2017-07-30]
 

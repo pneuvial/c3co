@@ -59,6 +59,26 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         }
     })
 
+    ## Assert that all samples are for the same set of loci, which is assumed below
+    if (length(dat) > 1) {
+      chr1 <- dat[[1]]$chromosome
+      x1 <- dat[[1]]$x
+      for (ii in 2:length(dat)) {
+        chr <- dat[[ii]]$chromosome
+        if (length(chr) != length(chr1)) {
+          stop(sprintf("Sample #%d is for different number of loci than Sample #1: %d != %d",
+                       ii, length(chr), length(chr1)))
+        }
+        if (!all(chr == chr1)) {
+          stop(sprintf("Sample #%d is for a different set of chromosomes than Sample #1", ii))
+        }
+        x <- dat[[ii]]$x
+        if (!all(x == x1)) {
+          stop(sprintf("Sample #%d is for a different set of positions than Sample #1", ii))
+        }
+      }
+    }
+    
     tcn <- lapply(dat, FUN = function(x) x$tcn)
     tcn <- Reduce(cbind, tcn)
     if (stat == "C1C2") {
