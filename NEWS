@@ -1,15 +1,19 @@
 Package: c3co
 =============
 
-Version: 0.2.6-9000 [2018-02-11]
+Version: 0.2.6-9000 [2018-02-27]
 
+ o Using message() everywhere (instead of print()).
+ 
  o Force normal component in Z.
  
  o Check rank of W.
  
  o Added test scripts.
  
- o segmentData() asserts that all input data use the same set of loci.
+ o segmentData() asserts that all input data use the same set of loci,
+   there are no "missing" chromosomes, and that there are at least three
+   data points per chromosome.
 
 
 Version: 0.2.5-9000 [2017-07-30]

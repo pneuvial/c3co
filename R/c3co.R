@@ -92,8 +92,8 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     if (!is.null(segDat)) {
       if(class(segDat)=="character"){
         if (verbose) {
-            print("Reading segmentation results from file: ")
-            print(segDat)
+            message("Reading segmentation results from file: ")
+            mprint(segDat)
         }
         seg <- readRDS(segDat)
       }else{
@@ -106,7 +106,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
             stop("Argument 'parameters.grid' should contain ", str)
           }
         })
-        print("Segmented data is provided, skip segment step")
+        message("Segmented data is provided, skip segment step")
         seg <- segDat
       }
     } else {

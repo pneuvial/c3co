@@ -3,6 +3,7 @@
 export(Facetswrapper)
 export(PSCBSwrapper)
 export(Zplot)
+export(alignLoci)
 export(buildSubclones)
 export(c3co)
 export(fitC3co)

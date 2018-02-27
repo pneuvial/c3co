@@ -150,7 +150,7 @@ setMethod(
 
         dfList <- list()
         configs <- expand.grid(var=var, chr=chromosomes)
-        if (verbose) print(configs)
+        if (verbose) mprint(configs)
         for (kk in 1:nrow(configs)) {
             vv <- as.character(configs[kk, "var"])
             cc <- configs[kk, "chr"]
