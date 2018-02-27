@@ -2,8 +2,7 @@
 #'
 #' @param PSCBSdata A list that contains PSCBS data.
 #'
-#'
-#' @return A data frame under PSCBS format
+#' @return A data frame under PSCBS format.
 #'
 #' @export
 loadPSCBSdata <- function(PSCBSdata) {
@@ -46,12 +45,17 @@ loadPSCBSdata <- function(PSCBSdata) {
 #' If \code{stat == TCN}, the segmentation will be done on TCN only.
 #'
 #' @return A list which contains the breakpoints by chromosome and also the
-#' binning of TCN, C1 and C2.
+#' binning of TCN, C1, and C2.
 #'
 #' @export
 PSCBSwrapper <- function(PSCBSdata, stat) {
-    dat <- loadPSCBSdata(PSCBSdata)
-    ### Joint segmentation of all samples
-    resSeg <- segmentData(dat, stat = stat)
-    return(resSeg)
-  }
+  stopifnot(is.list(PSCBSdata))
+
+  ## Joint segmentation of all samples
+  dat <- loadPSCBSdata(PSCBSdata)
+  resSeg <- segmentData(dat, stat = stat)
+  
+  ## Sanity checks
+  stopifnot(ncol(resSeg$Y) == length(dat))
+  resSeg
+}

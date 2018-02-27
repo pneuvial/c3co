@@ -10,7 +10,7 @@ loadPSCBSdata(PSCBSdata)
 \item{PSCBSdata}{A list that contains PSCBS data.}
 }
 \value{
-A data frame under PSCBS format
+A data frame under PSCBS format.
 }
 \description{
 Function to load PSCBS data and transform them into c3co format

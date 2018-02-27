@@ -41,7 +41,7 @@
 #' dat <- mixSubclones(subClones=datSubClone, M)
 #' res <- segmentData(dat)
 #' res2 <- segmentData(dat, stat="TCN")
-#' 
+#'
 #' @importFrom matrixStats binMeans
 #' @importFrom matrixStats rowAnyNAs
 #' @importFrom jointseg jointSeg

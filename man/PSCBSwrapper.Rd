@@ -15,7 +15,7 @@ If \code{stat == TCN}, the segmentation will be done on TCN only.}
 }
 \value{
 A list which contains the breakpoints by chromosome and also the
-binning of TCN, C1 and C2.
+binning of TCN, C1, and C2.
 }
 \description{
 Function to transform PSCBS data, perfom the segmentation and save it

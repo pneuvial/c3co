@@ -7,7 +7,7 @@ if (requireNamespace("c3co.data")) {
     segDat <- PSCBSwrapper(PSCBSdata, stat = "C1C2")
     stopifnot(is.list(segDat),
               all(c("Y1", "Y2", "Y", "bkp") %in% names(segDat)))
-  }
+  })
   
   set.seed(7)
   lambda.grid <- seq(from = 1e-4, to = 1e-3, length.out = 10)
