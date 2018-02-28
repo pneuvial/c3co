@@ -64,8 +64,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   M <- length(Y)
   p <- ncol(Z[[1]])  ## number of subclones/archetypes/latent features
 
-  stopifnot(length(lambda) == M)
-  stopifnot(length(Z)      == M)
+  stopifnot(length(lambda) == M, length(Z) == M)
   if (p > nrow(Y[[1]])) {
     warning("Under-identified problem: more latent features than samples")
   }

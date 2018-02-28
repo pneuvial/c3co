@@ -22,7 +22,8 @@ getToyData(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1,
 \code{weightSparsity} are set to 0. This parameter controls the sparsity of
 the weight matrix.}
 
-\item{intercept}{A logical value indicating whether an intercept should be added (this corresponds to the presence of o normal subclone)}
+\item{intercept}{A logical value indicating whether an intercept should be
+added (this corresponds to the presence of o normal subclone)}
 }
 \value{
 A list with three elements: \code{W}, a \code{n} x \code{nbClones}

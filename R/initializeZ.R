@@ -96,8 +96,8 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
     if (is.null(Y2)) {
         Y <- Y1
     } else {
-        stopifnot(nrow(Y2) == n)  ## sanity check
-        stopifnot(ncol(Y2) == L)  ## sanity check
+        ## sanity checks
+        stopifnot(nrow(Y2) == n, ncol(Y2) == L)
         Y <- switch(stat,
                     "C1+C2" = Y1 + Y2,
                     "C1" = Y1,
@@ -111,7 +111,7 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
             t(sapply(split(as.data.frame(Y), f=cluster), FUN=colMeans))
         }
     } else if (flavor=="subsampling") {
-        idxs <- sample(1:n, replace=FALSE)
+        idxs <- sample(1:n, replace = FALSE)
         initSub <- function(Y, p) {
             Y[idxs[1:p], , drop=FALSE]
         }

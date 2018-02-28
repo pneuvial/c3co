@@ -84,9 +84,12 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
 
     tcn <- lapply(dat, FUN = function(x) x$tcn)
     tcn <- Reduce(cbind, tcn)
+    tcn <- as.matrix(tcn)
+
     if (stat == "C1C2") {
         dh <- lapply(dat, FUN = function(x) x$dh)
         dh <- Reduce(cbind, dh)
+        dh <- as.matrix(dh)
         dataToSeg <- cbind(tcn, dh)
     } else if (stat == "TCN") {
         dataToSeg <- cbind(tcn)
@@ -111,10 +114,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         xOut <- c(min(pos), bkpPos, max(pos))
         xOut <- sort(unique(xOut))
 
-        tcn <- as.matrix(tcn)
-
         if (stat == "C1C2") {
-            dh <- as.matrix(dh)
             binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
             for (bb in seq_len(ncol(tcn))) {
                 means <- binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)

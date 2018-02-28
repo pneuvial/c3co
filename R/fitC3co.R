@@ -2,9 +2,8 @@
 #' 
 #' Estimate c3co model parameters from segment-level copy number data
 #' 
-#' 
-#' @param Y1 A numeric n x S matrix, segment-level minor copy numbers. n is the
-#'   number of samples and S the number of segments
+#' @param Y1 A numeric n x S matrix, segment-level minor copy numbers, where n
+#'   is the number of samples and S the number of segments
 #'   
 #' @param Y2 An optional numeric n x S matrix, segment-level major copy numbers.
 #'   If \code{NULL}, the model is estimated on Y1 only
@@ -19,7 +18,7 @@
 #'   number of subclones? Defaults to TRUE
 #'   
 #' @param \dots Further arguments to be passed to 
-#'   \code{\link{positiveFusedLasso}}
+#'   \code{\link{positiveFusedLasso}()}
 #'   
 #' @param verbose A logical value indicating whether to print extra information.
 #'   Defaults to FALSE

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Facetswrapper.R
 \name{Facetswrapper}
 \alias{Facetswrapper}
-\title{Transform Facets data and performs a joint segmentation}
+\title{Transforms Facets data and performs a joint segmentation}
 \usage{
 Facetswrapper(pathFacets, stat)
 }
@@ -17,7 +17,7 @@ A list which contains the breakpoints by chromosome and also the
 binning of TCN, C1, and C2.
 }
 \description{
-Transform Facets data and performs a joint segmentation
+Transforms Facets data and performs a joint segmentation
 }
 \examples{
 if (require("facets", quietly=TRUE)) {

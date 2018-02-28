@@ -30,6 +30,8 @@ matrix:
       r: devel
     - os: osx
       r: oldrel
+      r_github_packages:
+      - HenrikBengtsson/matrixStats
     - os: osx
       r: release
 

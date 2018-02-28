@@ -47,13 +47,13 @@ rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff = max(nb.samp, nb
 #' @importFrom Matrix spMatrix 
 #' @export
 rSpMatrix <- function(nrow, ncol, sparse.coeff) {
+  rand.x <- function(n) runif(n, min = 0, max = 1)
   nnz <- ceiling(sparse.coeff*nrow*ncol)
-  rand.x = function(n) runif(n, min = 0, max = 1)
-  stopifnot((nnz <- as.integer(nnz)) >= 0,
-            nrow >= 0, ncol >= 0, nnz >= max(nrow, ncol))
+  nnz <- as.integer(nnz)
+  stopifnot(nnz >= 0, nrow >= 0, ncol >= 0, nnz >= max(nrow, ncol))
   spMatrix(nrow, ncol,
            i = c(sample(nrow, size = nrow, replace = FALSE),
-                 sample(nrow, size = nnz-nrow, replace=TRUE)),
+                 sample(nrow, size = nnz-nrow, replace = TRUE)),
            j = c(sample(ncol, size = nnz-ncol, replace = TRUE),
                  sample(ncol, size = ncol, replace = FALSE)),
            x = rand.x(nnz))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Facetswrapper.R
 \name{loadFacetsdata}
 \alias{loadFacetsdata}
-\title{Load Facets data and transforms them to c3co format}
+\title{Loads Facets data and transforms them to c3co format}
 \usage{
 loadFacetsdata(pathFacets)
 }
@@ -13,5 +13,5 @@ loadFacetsdata(pathFacets)
 A data frame under PSCBS format
 }
 \description{
-Load Facets data and transforms them to c3co format
+Loads Facets data and transforms them to c3co format
 }

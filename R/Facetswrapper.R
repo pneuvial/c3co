@@ -1,4 +1,4 @@
-#' Load Facets data and transforms them to c3co format
+#' Loads Facets data and transforms them to c3co format
 #'
 #' @param pathFacets The path to load Facets data csv.gz format.
 #'
@@ -21,7 +21,7 @@ loadFacetsdata <- function(pathFacets) {
     dat
 }
 
-#' Transform Facets data and performs a joint segmentation
+#' Transforms Facets data and performs a joint segmentation
 #'
 #' @param pathFacets The path to load Facets data.
 #'
@@ -43,7 +43,7 @@ loadFacetsdata <- function(pathFacets) {
 #' @export
 Facetswrapper <- function(pathFacets, stat) {
     if (!requireNamespace("facets", quietly=TRUE)) {
-      stop("Package 'facets' needed. Please install it from github/mskcc",
+      stop("Package 'facets' needed. See https://github.com/mskcc/facets",
            call. = FALSE)
     }
     ### To do may be cut this function into several function

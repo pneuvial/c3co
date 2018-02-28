@@ -29,6 +29,7 @@ mixSubclones <- function(subClones, W) {
         genoI <- subClones[[i]]$genotype
         for(j in (i+1):length(subClones)) {
             genoJ <- subClones[[j]]$genotype
+            ## Why try() + stop() here? /HB 2018-02-27
             try({
               if (sum(genoI == genoJ) != length(genoI))
                   stop(sprintf("genotypes are not the same for sublones %s and %s", i, j))
@@ -55,13 +56,14 @@ mixSubclones <- function(subClones, W) {
         c <- ss$cn*(1+dh)/2
     })
 
-    if (is.vector(W)) {W <- matrix(W, nrow = 1)}
+    if (is.vector(W)) {
+      W <- matrix(W, nrow = 1L)
+    }
     df.res <- apply(W, MARGIN=1L, FUN=function(weights) {
-
-        if (sum(weights) > 1) {
+        fracN <- 1 - sum(weights)
+        if (fracN < 0) {
             stop("Tumor fraction larger than 1, please check weight vector")
         }
-        fracN <- 1-sum(weights)
         c1 <- rowSums(cbind(sapply(seq_along(subClones), FUN=function(ii) {
             weights[ii]*c1t[, ii]
         }), fracN*rowMeans(c1n)))

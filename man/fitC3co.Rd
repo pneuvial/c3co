@@ -8,8 +8,8 @@ fitC3co(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, ...,
   verbose = FALSE)
 }
 \arguments{
-\item{Y1}{A numeric n x S matrix, segment-level minor copy numbers. n is the
-number of samples and S the number of segments}
+\item{Y1}{A numeric n x S matrix, segment-level minor copy numbers, where n
+is the number of samples and S the number of segments}
 
 \item{Y2}{An optional numeric n x S matrix, segment-level major copy numbers.
 If \code{NULL}, the model is estimated on Y1 only}
@@ -24,7 +24,7 @@ model}
 number of subclones? Defaults to TRUE}
 
 \item{\dots}{Further arguments to be passed to 
-\code{\link{positiveFusedLasso}}}
+\code{\link{positiveFusedLasso}()}}
 
 \item{verbose}{A logical value indicating whether to print extra information.
 Defaults to FALSE}
