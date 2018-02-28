@@ -108,7 +108,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
-    if (iter > 1) {delta <- sqrt(sum((W - W.old)^2))}
+    if (iter > 1) { delta <- sqrt(sum((W - W.old)^2)) }
     cond <- (iter > max.iter || delta < eps)
     if (verbose) message("delta:", round(delta, digits=4))
     W.old <- W

@@ -62,8 +62,8 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
             ecn <- c("tcn", "dh", "pos", "chr") ## expected
             mm <- match(ecn, coln)
             if (anyNA(mm)) {
-                str <- sprintf("(%s)", paste(sQuote(ecn), collapse=", "))
-                stop("Argument 'dat' should contain columns named", str)
+                stop("Argument 'dat' should contain columns named ",
+                     comma(sQuote(ecn)))
             }
         })
         expectedL <- nrow(dat[[1]])
@@ -84,8 +84,8 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         ecn <- c("lambda", "lambda1", "lambda2", "nb.arch") ## expected
         mm <- match(na, ecn)
         if (anyNA(mm)) {
-            str <- sprintf("(%s)", paste(sQuote(ecn), collapse=", "))
-            stop("Argument 'parameters.grid' should contain ", str)
+            stop("Argument 'parameters.grid' should contain ",
+                 comma(sQuote(ecn)))
         }
     })
 
@@ -102,8 +102,8 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
           ecn <- c("bkp", "Y1", "Y2", "Y") ## expected
           mm <- match(na, ecn)
           if (anyNA(mm)) {
-            str <- sprintf("(%s)", paste(sQuote(ecn), collapse=", "))
-            stop("Argument 'parameters.grid' should contain ", str)
+              stop("Argument 'parameters.grid' should contain ",
+                   comma(sQuote(ecn)))
           }
         })
         message("Segmented data is provided, skip segment step")

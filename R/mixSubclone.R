@@ -27,7 +27,7 @@ mixSubclones <- function(subClones, W) {
     sc <- sapply(seq_len(length(subClones)-1), FUN = function(i) {
         # Test if genotype of i is equal to genotype of j
         genoI <- subClones[[i]]$genotype
-        for(j in (i+1):length(subClones)) {
+        for (j in (i+1):length(subClones)) {
             genoJ <- subClones[[j]]$genotype
             ## Why try() + stop() here? /HB 2018-02-27
             try({

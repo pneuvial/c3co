@@ -54,8 +54,8 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         ecn <- c("tcn", "dh", "pos", "chr") ## expected
         mm <- match(ecn, coln)
         if (anyNA(mm)) {
-            str <- sprintf("(%s)", paste(sQuote(ecn), collapse=", "))
-            stop("Argument 'data' should contain columns named ", str)
+            stop("Argument 'data' should contain columns named ",
+                 comma(sQuote(ecn)))
         }
     })
 
@@ -129,7 +129,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
             idxNAC1 <- which(rowAnyNAs(binDatTCN))
             idxNAC2 <- which(rowAnyNAs(binDatDH))
             idxNA <- unique(c(idxNAC1, idxNAC2))
-            if (length(idxNA)) {
+            if (length(idxNA) > 0) {
                 binDatTCNwithoutNA <- binDatTCN[-idxNA, ]
                 binDatDHwithoutNA <- binDatDH[-idxNA, ]
                 bkpPosByCHR[[cc]] <- bkpPos[-idxNA]

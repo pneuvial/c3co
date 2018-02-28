@@ -10,3 +10,7 @@ mprint <- function(...) {
 mprintf <- function(..., appendLF = FALSE) {
   message(sprintf(...), appendLF = appendLF)
 }
+
+comma <- function(..., collapse = ", ") {
+  paste(..., collapse = collapse)
+}

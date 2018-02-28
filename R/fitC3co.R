@@ -101,7 +101,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         Z0 <- initializeZ(Yc$Y1, Yc$Y2, p=pp, ...)
         if (verbose) {
             mprintf("Parameter configuration: (%s)\n",
-                    paste(colnames(configs), collapse=", "))
+                    comma(colnames(configs)))
         }
         allRes[[pp]] <- list()
         allLoss[[pp]] <- list()
@@ -110,7 +110,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             if (verbose) {
               mprintf(" - configuration #%d (%s) of %d: ",
                   cc, 
-                  paste(sprintf("%s = %g", names(cfg), cfg), collapse=", "),
+                  comma(sprintf("%s = %g", names(cfg), cfg)),
                   nrow(configs))
             }
 
