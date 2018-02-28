@@ -5,6 +5,8 @@
 #' @param What Inferred weight matrix
 #' @param Zhat Inferred subclones matrix
 #' @return The main statistics of the inferred model.
+#'
+#' @importFrom matrixStats colDiffs
 modelFitStatistics <- function(Y, Yhat, What, Zhat) {
     n <- nrow(Y)
     nseg <- ncol(Y)
@@ -22,10 +24,10 @@ modelFitStatistics <- function(Y, Yhat, What, Zhat) {
     ## why *1+*?
     
     ## BIC penalty    
-    kZ <- sum(apply(Zhat, MARGIN=2L, FUN=diff) != 0)  ## number of breakpoints
-    kW <- sum(What != 0)                              ## non null coefs in W
-    BIC.Z <- logLik - 1/2*kZ*log(nnS)                 ## the one in the manuscript as of July 2017
-    BIC.WZ <- logLik - 1/2*(kZ+kW)*log(nnS)           ## the one I (PN) believe we should use
+    kZ <- sum(colDiffs(Zhat) != 0)          ## number of breakpoints
+    kW <- sum(What != 0)                    ## non null coefs in W
+    BIC.Z <- logLik - 1/2*kZ*log(nnS)       ## the one in the manuscript as of July 2017
+    BIC.WZ <- logLik - 1/2*(kZ+kW)*log(nnS) ## the one I (PN) believe we should use
     
     c(BIC=BIC.WZ, PVE=PVE, logLik=logLik, loss=loss)
 }

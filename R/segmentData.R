@@ -150,7 +150,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
                 binDatTCN[, bb] <- means
             }
             idxNA <- which(rowAnyNAs(binDatTCN))
-            if (length(idxNA)) {
+            if (length(idxNA) > 0) {
                 binDatTCNwithoutNA <- binDatTCN[-idxNA, ]
                 bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
             } else {

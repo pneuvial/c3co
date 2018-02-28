@@ -2,8 +2,7 @@
 % Please edit documentation in R/Facetswrapper.R
 \name{Facetswrapper}
 \alias{Facetswrapper}
-\title{Function to transform Facets data, perfom the segmentation and save it into
-output.dir}
+\title{Transform Facets data and performs a joint segmentation}
 \usage{
 Facetswrapper(pathFacets, stat)
 }
@@ -15,11 +14,10 @@ If \code{stat == TCN}, the segmentation will be done on TCN only.}
 }
 \value{
 A list which contains the breakpoints by chromosome and also the
-binning of TCN, C1 and C2.
+binning of TCN, C1, and C2.
 }
 \description{
-Function to transform Facets data, perfom the segmentation and save it into
-output.dir
+Transform Facets data and performs a joint segmentation
 }
 \examples{
 if (require("facets", quietly=TRUE)) {

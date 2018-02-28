@@ -21,7 +21,7 @@ Imports:
     limSolve,
     methods,
     Matrix,
-    matrixStats (>= 0.52.0),
+    matrixStats (>= 0.53.1),
     R.utils,
     RColorBrewer,
     stats,

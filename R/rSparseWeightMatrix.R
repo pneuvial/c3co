@@ -52,7 +52,9 @@ rSpMatrix <- function(nrow, ncol, sparse.coeff) {
   stopifnot((nnz <- as.integer(nnz)) >= 0,
             nrow >= 0, ncol >= 0, nnz >= max(nrow, ncol))
   spMatrix(nrow, ncol,
-           i = c(sample(nrow, size = nrow, replace = FALSE), sample(nrow, size = nnz-nrow, replace=TRUE)),
-           j = c(sample(ncol, size = (nnz-ncol), replace = TRUE), sample(ncol, size = ncol, replace = FALSE)),
+           i = c(sample(nrow, size = nrow, replace = FALSE),
+                 sample(nrow, size = nnz-nrow, replace=TRUE)),
+           j = c(sample(ncol, size = nnz-ncol, replace = TRUE),
+                 sample(ncol, size = ncol, replace = FALSE)),
            x = rand.x(nnz))
 }

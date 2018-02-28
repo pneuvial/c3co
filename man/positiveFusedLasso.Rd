@@ -47,10 +47,10 @@ regions <- list(
     c("(0,1)", "(1,1)", "(1,2)", "(1,1)"))
 
 datSubClone <- buildSubclones(len, nbClones, bkps, regions, eps=0.2)
-W <-  rSparseWeightMatrix(5, nbClones, 0.7)
+W <- rSparseWeightMatrix(5, nbClones, 0.7)
 datList <- mixSubclones(subClones=datSubClone, W)
 
-segData.TCN  <- segmentData(datList,"TCN")
+segData.TCN <- segmentData(datList,"TCN")
 Y1 <- t(segData.TCN$Y)
 Y <- list(Y1 = Y1)
 Z0.TCN <- initializeZ(Y1, p = 2, flavor = "nmf")

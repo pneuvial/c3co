@@ -1,5 +1,6 @@
 #' @importFrom glmnet glmnet
 #' @importFrom Matrix bandSparse
+#' @importFrom matrixStats colCumsums
 #' @importFrom methods as
 get.Z <- function(Y, lambda, W, WtWm1) {
   L <- ncol(Y)
@@ -16,7 +17,7 @@ get.Z <- function(Y, lambda, W, WtWm1) {
   
   ## Go back to Z 
   Z <- matrix(z.tilde, nrow=(L-1), ncol=p, byrow=TRUE)
-  X1.Z <- rbind(0, apply(Z, MARGIN = 2L, FUN = cumsum))
+  X1.Z <- rbind(0, colCumsums(Z))
   
   sweep(X1.Z, MARGIN = 2L, STATS = colMeans(t(Y) %*% W.WtWm1 - X1.Z), FUN = `+`)
 }
