@@ -11,7 +11,7 @@ modelFitStatistics <- function(Y, Yhat, What, Zhat) {
     nnS <- n*nseg
     
     ## PVE
-    totSS <- sum(sweep(Y, 1, rowMeans(Y), "-")^2)
+    totSS <- sum(sweep(Y, MARGIN = 1L, STATS = rowMeans(Y), FUN = `-`)^2)
     resSS <- sum((Y - Yhat)^2)
     PVE <- 1 - resSS / totSS
 

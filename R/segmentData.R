@@ -53,8 +53,8 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         coln <- colnames(dd)
         ecn <- c("tcn", "dh", "pos", "chr") ## expected
         mm <- match(ecn, coln)
-        if (any(is.na(mm))) {
-            str <- sprintf("('%s')", paste(ecn, collapse="', '"))
+        if (anyNA(mm)) {
+            str <- sprintf("(%s)", paste(sQuote(ecn), collapse=", "))
             stop("Argument 'data' should contain columns named ", str)
         }
     })
@@ -100,9 +100,8 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
             mprintf("chr %s", cc)
         }
         ww <- which(dat[[1]]$chr == cc)
-        if (verbose) {
-            message("Joint segmentation")
-        }
+        if (verbose) message("Joint segmentation")
+
         stopifnot(length(ww) > 0, length(ww) >= 3L)
         resSeg <- jointSeg(Y=dataToSeg[ww, ], method="RBS", K=100,
                            modelSelectionMethod="Birge")
@@ -165,5 +164,5 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         }
         bkpPosByCHR[[cc]] <- c(min(pos), bkpPosByCHR[[cc]], max(pos))
     }
-    return(list(Y1=Y1, Y2=Y2, Y=Y, bkp=bkpPosByCHR))
+    list(Y1=Y1, Y2=Y2, Y=Y, bkp=bkpPosByCHR)
 }

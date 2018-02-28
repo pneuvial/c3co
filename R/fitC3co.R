@@ -66,17 +66,20 @@
 fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=FALSE) {
 
     ## preparing data
-    Y <- list(Y1=Y1);  if(!is.null(Y2)) {Y$Y2 <- Y2}
+    Y <- list(Y1=Y1)
+    if(!is.null(Y2)) Y$Y2 <- Y2
     ## Sanity checks
-    stopifnot(length(unique(lapply(Y, dim))) == 1) # are all the dimension equal ?
+    stopifnot(length(unique(lapply(Y, FUN = dim))) == 1) # are all the dimension equal ?
     ## problem dimension
     n <- nrow(Y1)
     nseg <- ncol(Y1)
 
     ## centered version of the data
-    Yc   <- lapply(Y, function(y) sweep(y, 1, rowMeans(y), "-"))
+    Yc <- lapply(Y, FUN = function(y) {
+      sweep(y, MARGIN = 1L, STATS = rowMeans(y), FUN = `-`)
+    })
     ## Compute total sum of squares
-    totVar <- sum((Reduce("+", Yc))^2)
+    totVar <- sum((Reduce(`+`, Yc))^2)
     
     ### Define grids
     parameters <- checkParams(parameters.grid, length(Y), nseg, verbose)
@@ -106,9 +109,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         allLoss[[pp]] <- list()
         for (cc in seq_len(nrow(configs))) {
             cfg <- configs[cc, , drop=FALSE]
-            if (verbose) {
-                message(paste(cfg, collapse="; "))
-            }
+            if (verbose) message(paste(cfg, collapse="; "))
             l1 <- cfg[, "lambda1"]
             l2 <- NULL
             if (!is.null(Y2)) l2 <- cfg[, "lambda2"]
@@ -116,7 +117,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             ## THIS is the function that costs comme computation 
             res <- positiveFusedLasso(Y, Z0, c(l1,l2))
             
-            stats <- modelFitStatistics(Reduce("+", Y), res@E$Y, res@W, res@S$Z)
+            stats <- modelFitStatistics(Reduce(`+`, Y), res@E$Y, res@W, res@S$Z)
             BIC <- stats[["BIC"]]
             aConf <-  c(pp, cfg, stats[["PVE"]], BIC, stats[["logLik"]], stats[["loss"]])
             ## replace above line by: aConf <- stats
@@ -134,11 +135,11 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         bestConfigp <- rbind(bestConfigp, bestConfig)
         ## sanity check: minor CN < major CN in the best parameter
         ## configurations (not for all configs by default)
-        if (!is.null(Y2) & warn) {
+        if (!is.null(Y2) && warn) {
             Z <- slot(bestRes, "S")
             dZ <- Z$Z2 - Z$Z1
             tol <- 1e-2  ## arbitrary tolerance...
-            if (min(dZ) < - tol) {
+            if (min(dZ) < -tol) {
                 warning("For model with ", pp, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
             }
         }
@@ -159,7 +160,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     colnames (allConfig) <- cns
     rownames(allConfig) <- NULL
     configList <- list(best=bestConfigp, all=allConfig, res=allRes, loss=allLoss)
-    return(list(fit=fitList, config=configList))
+    list(fit=fitList, config=configList)
 }
 
 
@@ -183,7 +184,7 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
     }else{
       ## Case C1-C2
       if (M==2) {
-        if(is.null(lambda1) & is.null(lambda2)){
+        if(is.null(lambda1) && is.null(lambda2)){
           lambda <- 10^(-seq(from=6, to=4, length.out=10))
           if (verbose) {
             message("Regularization parameter lambda is not provided. Using default value: ")
@@ -222,6 +223,6 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
             mstr(nb.arch)
         }
     }
-    return(list(nb.arch = nb.arch, configs = configs))
-
+  
+    list(nb.arch = nb.arch, configs = configs)
 }

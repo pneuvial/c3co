@@ -55,14 +55,14 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     stat <- match.arg(stat)
     if (!is.null(dat)) {
         if (!is.list(dat)) {
-            stop("Argument 'dat' should be a list ")
+            stop("Argument 'dat' should be a list")
         }
         checkCols <- lapply(dat, FUN=function(dd) {
             coln <- colnames(dd)
             ecn <- c("tcn", "dh", "pos", "chr") ## expected
             mm <- match(ecn, coln)
-            if (any(is.na(mm))) {
-                str <- sprintf("('%s')", paste(ecn, collapse="', '"))
+            if (anyNA(mm)) {
+                str <- sprintf("(%s)", paste(sQuote(ecn), collapse=", "))
                 stop("Argument 'dat' should contain columns named", str)
             }
         })
@@ -83,8 +83,8 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     checkGrid <- lapply(names(parameters.grid), FUN=function(na) {
         ecn <- c("lambda", "lambda1", "lambda2", "nb.arch") ## expected
         mm <- match(na, ecn)
-        if (any(is.na(mm))) {
-            str <- sprintf("('%s')", paste(ecn, collapse="', '"))
+        if (anyNA(mm)) {
+            str <- sprintf("(%s)", paste(sQuote(ecn), collapse=", "))
             stop("Argument 'parameters.grid' should contain ", str)
         }
     })
@@ -101,8 +101,8 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         checkGrid <- lapply(names(segDat), FUN=function(na) {
           ecn <- c("bkp", "Y1", "Y2", "Y") ## expected
           mm <- match(na, ecn)
-          if (any(is.na(mm))) {
-            str <- sprintf("('%s')", paste(ecn, collapse="', '"))
+          if (anyNA(mm)) {
+            str <- sprintf("(%s)", paste(sQuote(ecn), collapse=", "))
             stop("Argument 'parameters.grid' should contain ", str)
           }
         })
@@ -131,5 +131,5 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     reslist@fit <- fit$fit
     reslist@config <- fit$config
     
-    return(reslist)
+    reslist
 }

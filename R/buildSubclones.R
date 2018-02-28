@@ -67,7 +67,7 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
             stop("Argument 'dataAnnotN' must be provided if argument 'dataAnnotTP' is")
         }
         ## assume equal repartition of AA, AB, BB for simplicity
-        pct <- rep(1, 3)/3
+        pct <- rep(1, times = 3)/3
     } else {
         if (is.factor(dataAnnotTP$genotype)) {
             dataAnnotTP$genotype <- as.character(dataAnnotTP$genotype)
@@ -92,7 +92,7 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
         pattern <- "\\(([0-9]+),([0-9]+)\\)"
         C1 <- as.numeric(gsub(pattern, "\\1", regs))
         C2 <- as.numeric(gsub(pattern, "\\2", regs))
-        if (any(is.na(C1)) || any(is.na(C2))) {
+        if (anyNA(C1) || anyNA(C2)) {
             stop("Argument 'region' should be of the form '(C1, C2)', where C1 and C2 denote minor and major copy numbers")
         }
 
@@ -103,8 +103,8 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
             mean2 <- rep(C2, each=n)
             
             ntot <- n*length(regs)
-            c1 <- exp(rnorm(ntot, mean=log(1 + mean1), sd=eps) -1)  ## exp(log(1+.)-1) to enforce positivity
-            c2 <- exp(rnorm(ntot, mean=log(1 + mean2), sd=eps) -1)  ## exp(log(1+.)-1) to enforce positivity
+            c1 <- exp(rnorm(ntot, mean=log(1 + mean1), sd=eps) - 1)  ## exp(log(1+.)-1) to enforce positivity
+            c2 <- exp(rnorm(ntot, mean=log(1 + mean2), sd=eps) - 1)  ## exp(log(1+.)-1) to enforce positivity
             c <- c1 + c2
             d <- abs(c2 - c1)/c  ## the absolute value implicitly enforces c1<c2
             b <- 1/2 + (c2 - c1)/c/2
@@ -113,11 +113,11 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
         
         n <- 5e3     ## number of data points to be sampled from
 
-        CN1 <- rep(1, length(C))  ## for hets in the matched normal
-        CN0 <- rep(0, length(C))  ## for homs in the matched normal
-        CN2 <- rep(2, length(C))  ## for homs in the matched normal
-        C0 <- rep(0, length(C))   ## for Homs
-        C <- C1+C2                ## for Homs
+        CN1 <- rep(1, times = length(C))  ## for hets in the matched normal
+        CN0 <- rep(0, times = length(C))  ## for homs in the matched normal
+        CN2 <- rep(2, times = length(C))  ## for homs in the matched normal
+        C0 <- rep(0, times = length(C))   ## for Homs
+        C <- C1+C2                        ## for Homs
         
         ## Hets
         dat <- getDat(C1, C2, n, eps) 
@@ -125,7 +125,7 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
         datN <- getDat(CN1, CN1, n, eps)  ## "matched normal"
         datAB <- data.frame(ct=dat$c, baft=dat$b, genotype=1/2, region=regz,
                        cn=datN$c, bafn=datN$b, stringsAsFactors=FALSE)
-        rm(dat, datN)
+        rm(list = c("dat", "datN"))
         
         ## symmetrization
         nr <- nrow(datAB)
@@ -138,14 +138,14 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
         datN <- getDat(CN2, CN0, n, eps)  ## "matched normal"
         datAA <- data.frame(ct=dat$c, baft=dat$b, genotype=0, region=regz,
                        cn=datN$c, bafn=datN$b, stringsAsFactors=FALSE)
-        rm(dat, datN)
+        rm(list = c("dat", "datN"))
         
         ## Homs BB:  CA=0, CB=C1+C2
         dat <- getDat(C0, C, n, eps) 
         datN <- getDat(CN0, CN2, n, eps)  ## "matched normal"
         datBB <- data.frame(ct=dat$c, baft=dat$b, genotype=1, region=regz,
                        cn=datN$c, bafn=datN$b, stringsAsFactors=FALSE)
-        rm(dat, datN)
+        rm(list = c("dat", "datN"))
     } else {
         keepCols <- c("c", "b", "genotype", "region")
         dataAnnot <- data.frame(dataAnnotTP[, keepCols],
@@ -158,7 +158,7 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
         datBB <- subset(dataAnnot, genotype == 1)
     }
     
-    subClone <- lapply(1:nbClones, FUN=function(ii) {
+    subClone <- lapply(seq_len(nbClones), FUN=function(ii) {
         bkp <- bkps[[ii]]
         reg <- regions[[ii]]
 
@@ -186,5 +186,5 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
         ss[o, , drop=FALSE]
     })
     names(subClone) <- seq_along(subClone)
-    return(subClone)
+    subClone
 }

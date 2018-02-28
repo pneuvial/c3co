@@ -2,22 +2,26 @@
 % Please edit documentation in R/PSCBSwrapper.R
 \name{PSCBSwrapper}
 \alias{PSCBSwrapper}
-\title{Function to transform PSCBS data, perfom the segmentation and save it
+\title{Function to transform PSCBS data, perform the segmentation and save it
 into output.dir}
 \usage{
-PSCBSwrapper(PSCBSdata, stat)
+PSCBSwrapper(PSCBSdata, stat, align = FALSE)
 }
 \arguments{
 \item{PSCBSdata}{A list that contains PSCBS data}
 
 \item{stat}{"TCN or "C1C2" paramater to segment the data.
 If \code{stat == TCN}, the segmentation will be done on TCN only.}
+
+\item{align}{If \code{TRUE}, the PSCBS list elements are expanded before
+segmentation to have the exact same set of (chr, pos) loci, which is the
+union of all elements.}
 }
 \value{
 A list which contains the breakpoints by chromosome and also the
 binning of TCN, C1, and C2.
 }
 \description{
-Function to transform PSCBS data, perfom the segmentation and save it
+Function to transform PSCBS data, perform the segmentation and save it
 into output.dir
 }

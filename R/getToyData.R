@@ -41,12 +41,12 @@
 #' n <- 4
 #' 
 #' dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
-#' matplot(t(dat$locus$Y), t='s')
-#' matplot(t(dat$segment$Y), t='s')
+#' matplot(t(dat$locus$Y), t="s")
+#' matplot(t(dat$segment$Y), t="s")
 #' 
 #' dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
-#' matplot(t(dat$locus$Y), t='l')
-#' matplot(t(dat$segment$Y), t='s')
+#' matplot(t(dat$locus$Y), t="l")
+#' matplot(t(dat$segment$Y), t="s")
 #' 
 #' len <- 1000
 #' nbClones <- 5
@@ -55,12 +55,12 @@
 #' n <- 20
 #' 
 #' dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
-#' matplot(t(dat$locus$Y), t='s')
-#' matplot(t(dat$segment$Y), t='s')
+#' matplot(t(dat$locus$Y), t="s")
+#' matplot(t(dat$segment$Y), t="s")
 #' 
 #' dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
-#' matplot(t(dat$locus$Y), t='l')
-#' matplot(t(dat$segment$Y), t='s')
+#' matplot(t(dat$locus$Y), t="l")
+#' matplot(t(dat$segment$Y), t="s")
 #' 
 #' l1 <- seq(from=1e-6, to=1e-4, length.out=10)
 #' parameters.grid <- list(lambda=l1, nb.arch=2:9)
@@ -90,13 +90,13 @@ getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1, interc
     segLens <- c(segLens, len-sum(segLens))
 
     ## subclones (locus-level)
-    Zl <- t(apply(Zs, 1, rep, times=segLens))
+    Zl <- t(apply(Zs, MARGIN = 1L, FUN = rep, times = segLens))
     
     ## weights
     ru <- runif(n*nbClones)
     ru[ru<weightSparsity] <- 0
     W <- matrix(ru, nrow=n, ncol=nbClones)
-    W <- round(sweep(W, MARGIN=1, STATS=rowSums(W), FUN="/"), 2)
+    W <- round(sweep(W, MARGIN = 1L, STATS = rowSums(W), FUN = '/'), digits = 2L)
     W[, nbClones] <- 1-rowSums(W[, -nbClones, drop=FALSE]) ## make sure rows sum to 1 after rounding
 
     ## segment-level data
@@ -111,5 +111,5 @@ getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1, interc
     Yl <- W %*% Zl + El                ## observations
     loc <- list(Y=Yl, Z=Zl)
     
-    return(list(W=W, locus=loc, segment=seg))
+    list(W=W, locus=loc, segment=seg)
 }

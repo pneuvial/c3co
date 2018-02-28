@@ -72,13 +72,15 @@ setMethod(
     f = "Wplot",
     signature = signature("c3coFit"),
     definition = function(this, idxBest, rownamesW=NULL, col=NULL, margins=c(5, 7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5, ...) {
-        if (is.null(col)) { col <- colorRampPalette(brewer.pal(9, 'GnBu'))(100) }
+        if (is.null(col)) {
+           col <- colorRampPalette(brewer.pal(9, "GnBu"))(100)
+        }
         W <- this@fit[[idxBest]]@W
         rownames(W) <- rownamesW
         colnames(W) <- sprintf("Subclone %s", letters[1:ncol(W)])
         if (!missing(listPheno)) {
             if (ncol(listPheno) != ncol(colsPheno)) {
-                stop("listPheno and colsPheno must have the same number of columns")
+                stop("'listPheno' and 'colsPheno' must have the same number of columns")
             }
         }
         if (!missing(colsPheno)) {
@@ -141,9 +143,9 @@ setMethod(
     signature = signature("c3coFit"),
     definition = function(this, chromosomes, idxBest, var=c("TCN", "Minor", "Major"), verbose=FALSE) {
         var <- match.arg(var, several.ok=TRUE)
-        labs <- list("TCN"="Z", "Minor"="Z1", "Major"="Z2")
+        labs <- list(TCN="Z", Minor="Z1", Major="Z2")
         bkp <- this@bkp
-        lengthCHR <- sapply(bkp, FUN=function(x) length(x)-1) ## '-1' because 'bkp' includes first and last position on chr 
+        lengthCHR <- sapply(bkp, FUN=function(x) length(x)-1) ## '-1' because 'bkp' includes first and last position on chr
         idx <- c(1, cumsum(lengthCHR) + 1)
         fitZ <- this@fit[[idxBest]]@S
         nbarch <- ncol(fitZ$Z)
@@ -171,6 +173,6 @@ setMethod(
             dfList[[kk]] <- datCC
         }
         df.CHR <- do.call(rbind, args=dfList)
-        return(df.CHR)
+        df.CHR
     }
 )

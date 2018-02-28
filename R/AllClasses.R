@@ -31,7 +31,7 @@ setClass(
         W  = "matrix",      ## weights
         mu = "numeric",     ## intercept
         E  = "list",        ## signal reconstruction (aka Yhat)
-        params  = "numeric", 
+        params  = "numeric",
         failure = "logical"
     )
 )

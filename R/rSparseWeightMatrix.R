@@ -16,17 +16,18 @@
 #' @importFrom Matrix Matrix 
 #' @importFrom stats runif
 #' @export
-rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff= max(nb.samp, nb.arch)/(nb.samp*nb.arch)){
+rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff = max(nb.samp, nb.arch)/(nb.samp*nb.arch)) {
   ## Create a sparse matrix for tumor proportions
-  m.tum <- rSpMatrix(nb.samp, nb.arch, sparse.coeff)
+  m.tum <- rSpMatrix(nrow = nb.samp, ncol = nb.arch,
+                     sparse.coeff = sparse.coeff)
   ## Create the vector contamination by normal cell with a uniform distribution between 0.01 and expand contam.max parameter
-  x.contam <- runif(nb.samp, 0.01, 1)
+  x.contam <- runif(nb.samp, min = 0.01, max = 1)
   m <- cbind(m.tum, x.contam)
   ## Compute the sum of rows (tum+contam)
   tot <- rowSums(as.matrix(m))
   ## Round and divide the matrix by the total remove contamination column
-  m.tum.res <- round((m/tot)[,-(nb.arch+1)],2)
-  return(Matrix(m.tum.res, sparse=TRUE))
+  m.tum.res <- round((m/tot)[,-(nb.arch+1)], digits = 2L)
+  Matrix(m.tum.res, sparse=TRUE)
 }
 
 #' Generate sparse matrix with at least one non-zero element by rows and by columns
@@ -45,14 +46,13 @@ rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff= max(nb.samp, nb.
 #' @importFrom stats runif
 #' @importFrom Matrix spMatrix 
 #' @export
-rSpMatrix <- function(nrow, ncol, sparse.coeff)
-{
+rSpMatrix <- function(nrow, ncol, sparse.coeff) {
   nnz <- ceiling(sparse.coeff*nrow*ncol)
-  rand.x = function(n) runif(n, 0, 1)
+  rand.x = function(n) runif(n, min = 0, max = 1)
   stopifnot((nnz <- as.integer(nnz)) >= 0,
-            nrow >= 0, ncol >= 0,nnz >= max(nrow, ncol))
+            nrow >= 0, ncol >= 0, nnz >= max(nrow, ncol))
   spMatrix(nrow, ncol,
-           i = c(sample(nrow, nrow, replace = FALSE),sample(nrow, nnz-nrow, replace=TRUE)),
-           j = c(sample(ncol, (nnz-ncol), replace = TRUE),sample(ncol, ncol, replace = FALSE)),
+           i = c(sample(nrow, size = nrow, replace = FALSE), sample(nrow, size = nnz-nrow, replace=TRUE)),
+           j = c(sample(ncol, size = (nnz-ncol), replace = TRUE), sample(ncol, size = ncol, replace = FALSE)),
            x = rand.x(nnz))
 }

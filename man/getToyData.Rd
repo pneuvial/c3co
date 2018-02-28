@@ -53,12 +53,12 @@ nbBkps <- 5
 n <- 4
 
 dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
-matplot(t(dat$locus$Y), t='s')
-matplot(t(dat$segment$Y), t='s')
+matplot(t(dat$locus$Y), t="s")
+matplot(t(dat$segment$Y), t="s")
 
 dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
-matplot(t(dat$locus$Y), t='l')
-matplot(t(dat$segment$Y), t='s')
+matplot(t(dat$locus$Y), t="l")
+matplot(t(dat$segment$Y), t="s")
 
 len <- 1000
 nbClones <- 5
@@ -67,12 +67,12 @@ eps <- 1
 n <- 20
 
 dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
-matplot(t(dat$locus$Y), t='s')
-matplot(t(dat$segment$Y), t='s')
+matplot(t(dat$locus$Y), t="s")
+matplot(t(dat$segment$Y), t="s")
 
 dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
-matplot(t(dat$locus$Y), t='l')
-matplot(t(dat$segment$Y), t='s')
+matplot(t(dat$locus$Y), t="l")
+matplot(t(dat$segment$Y), t="s")
 
 l1 <- seq(from=1e-6, to=1e-4, length.out=10)
 parameters.grid <- list(lambda=l1, nb.arch=2:9)

@@ -11,7 +11,7 @@ trim.heatmap <- function(data, trim) {
     mini <- min(data, na.rm = TRUE)
     data[!is.na(data) & data > 0] <-  data[!is.na(data) &  data > 0]/maxi
     data[!is.na(data) & data < 0] <- -data[!is.na(data) &  data < 0]/mini
-    return(data)
+    data
 }
 
 #' Heatmap function
@@ -374,7 +374,7 @@ heatmap.3 <- function(x,
         retval$colDendrogram <- ddc
     retval$breaks <- breaks
     retval$col <- col
-    if (!invalid(na.color) & any(is.na(x))) { # load library(gplots)
+    if (!invalid(na.color) && anyNA(x)) { # load library(gplots)
         mmat <- ifelse(is.na(x), 1, NA_real_)
         image(x=1:nc, y=1:nr, z=mmat, axes = FALSE, xlab = "", ylab = "",
                         col = na.color, add = TRUE)

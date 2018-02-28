@@ -4,7 +4,7 @@
 \alias{alignLoci}
 \title{Aligns Multiple Copy-Number Data Objects}
 \usage{
-alignLoci(dat, ...)
+alignLoci(dat)
 }
 \arguments{
 \item{dat}{A list of PSCN data.frame:s with required columns \code{chr} and

@@ -66,9 +66,11 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 
   stopifnot(length(lambda) == M)
   stopifnot(length(Z)      == M)
-  if (p>nrow(Y[[1]])) { warning("Under-identified problem: more latent features than samples")}
+  if (p > nrow(Y[[1]])) {
+    warning("Under-identified problem: more latent features than samples")
+  }
 
-  Yc <- do.call(cbind, Y) # stacked signals
+  Yc <- do.call(cbind, args = Y) # stacked signals
 
   ## __________________________________________________
   ## main loop for alternate optimization
@@ -83,7 +85,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     while (is.null(WtWm1)) {
       
       ## solve in W (here individuals - i.e. rows of Yc - are independent)
-      W <- get.W(do.call(rbind, Z), Yc)
+      W <- get.W(do.call(rbind, args = Z), Yc)
 
       ## Check rank deficiency
       QR.W <- qr(W)
@@ -91,19 +93,19 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
         message("W is rank deficent. Removing a latent feature")
 ### JC: this means that the column of one must be the first column
 ### if other rank defiency occurs, we remove the first one arbitrarily
-        Z <- lapply(Z, function(z) z[,-1])
+        Z <- lapply(Z, FUN = function(z) z[,-1])
         ## Remove matched W.old column
         W.old <- W[,-1] 
-        p <-  p-1
+        p <- p-1
       } else {
         ## use QR decomposition to save time inverting WtW
-        WtWm1  <- tcrossprod(backsolve(qr.R(QR.W),diag(p)))
+        WtWm1 <- tcrossprod(backsolve(qr.R(QR.W), x = diag(p)))
       }
     }    
 
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
-    Z <- mapply(get.Z, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY=FALSE)
+    Z <- mapply(FUN = get.Z, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY = FALSE)
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
@@ -115,8 +117,8 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   if (verbose) message("Stopped after ", iter, " iterations")
   if (verbose) message("delta:", round(delta, digits=4))
 
-  if(length(Y) > 1 & warn) { ## sanity check: minor CN < major CN
-    dZ <- Reduce("-", rev(Z))
+  if(length(Y) > 1 && warn) { ## sanity check: minor CN < major CN
+    dZ <- Reduce(`-`, rev(Z))
     tol <- 1e-2  ## arbitrary tolerance...
     if (min(dZ) < -tol) {
        warning("For model with ", p, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
@@ -128,15 +130,15 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   names(Y) <- paste0("Y", 1:M)
 ### JC: having a list whose first element has the same name is rather ugly
 ### and not helful at all to the user  
-  Y$Y <- Reduce("+",Y)
+  Y$Y <- Reduce(`+`, Y)
 ### JC: should be a method  
-  Yhat <- lapply(Z, function(Z_) W %*% t(Z_))
+  Yhat <- lapply(Z, FUN = function(Z_) W %*% t(Z_))
   names(Yhat) <- paste0("Y", 1:M)
-  Yhat$Y <- Reduce("+",Yhat)
+  Yhat$Y <- Reduce(`+`, Yhat)
 
   names(Z)    <- paste0("Z", 1:M)
 ### JC: same remark than for Y$Y
-  Z$Z    <- Reduce("+",Z)
+  Z$Z    <- Reduce(`+`, Z)
 
 ### JC: Useless ???
   names(lambda) <- paste0("lambda", 1:M)
@@ -145,7 +147,6 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 ### JC: why Z is called S outside of this function
 ### why not calling Y Z and W by their true name like, 
 ### signals, archetypes, weights, when outside of this function?
-  objRes <- new("posFused", Y=Y, S=Z, W=W, E=Yhat, params=params)
-  return(objRes)
+  new("posFused", Y=Y, S=Z, W=W, E=Yhat, params=params)
 }
 

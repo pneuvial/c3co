@@ -62,10 +62,10 @@ mixSubclones <- function(subClones, W) {
             stop("Tumor fraction larger than 1, please check weight vector")
         }
         fracN <- 1-sum(weights)
-        c1 <- rowSums(cbind(sapply(seq(along.with=subClones), FUN=function(ii) {
+        c1 <- rowSums(cbind(sapply(seq_along(subClones), FUN=function(ii) {
             weights[ii]*c1t[, ii]
         }), fracN*rowMeans(c1n)))
-        c2 <- rowSums(cbind(sapply(seq(along.with=subClones), FUN=function(ii) {
+        c2 <- rowSums(cbind(sapply(seq_along(subClones), FUN=function(ii) {
             weights[ii]*c2t[, ii]
         }), fracN*rowMeans(c2n)))
         tcn <- c1+c2
@@ -82,5 +82,5 @@ mixSubclones <- function(subClones, W) {
                    pos=seq_along(c1))
     })
 
-    return(df.res)
+    df.res
 }

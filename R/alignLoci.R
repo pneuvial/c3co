@@ -12,7 +12,7 @@
 #' order).
 #'
 #' @export
-alignLoci <- function(dat, ...) {
+alignLoci <- function(dat) {
   stopifnot(is.list(dat))
   ## Nothing to do
   if (length(dat) <= 1L) return(dat)
@@ -68,4 +68,3 @@ alignLoci <- function(dat, ...) {
   
   res
 }
-

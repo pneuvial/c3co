@@ -83,8 +83,6 @@
 #' resNMF1 <- initializeZ(Y1, p=nbClones, flavor="nmf")
 #'
 #' @importFrom stats dist hclust cutree
-#' @importFrom NMF nmf coef
-#' @importFrom archetypes archetypes
 #' @export
 initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
                         flavor=c("hclust", "nmf", "archetypes", "svd", "subsampling"),
@@ -94,7 +92,7 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
    # stopifnot(p <= n)
     flavor <- match.arg(flavor)
     stat <- match.arg(stat)
-    if(forceNormal) p <- p-1
+    if(forceNormal) p <- p-1L
     if (is.null(Y2)) {
         Y <- Y1
     } else {
@@ -137,20 +135,22 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
         res$Z2 <- cbind(res$Z2, 1)
       }
     }
-    return(res)
+    res
 }
 
+#' @importFrom NMF nmf coef
 initNMF <- function(Y, p) {
-    fit <- nmf(Y, p)
-    Z <- coef(fit)  ## NB: W is 'basis(fit)'
+    fit <- nmf(Y, rank = p)
+    coef(fit)  ## NB: W is 'basis(fit)'
 }
 
 initSVD <- function(Y, p) {
-    fit <- svd(Y, 0, p)
-    Z <- t(fit$v)
+    fit <- svd(Y, nu = 0, nv = p)
+    t(fit$v)
 }
 
+#' @importFrom archetypes archetypes
 initArchetypes <- function(Y, p) {
-    fit <- archetypes(Y, p)
+    fit <- archetypes(Y, k = p)
     fit$archetypes  ## Note: W is 'fit$alphas'
 }

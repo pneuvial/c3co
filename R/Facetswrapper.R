@@ -1,4 +1,4 @@
-#' Function to load Facets data and transform them to c3co format
+#' Load Facets data and transforms them to c3co format
 #'
 #' @param pathFacets The path to load Facets data csv.gz format.
 #'
@@ -16,13 +16,12 @@ loadFacetsdata <- function(pathFacets) {
         df$tcn <- 2*dat$rCountT/dat$rCountN
         df$dh <- 2*abs(dat$vafT-1/2)
         df$dh[dat$het == 0] <- NA_real_
-        return(df)
+        df
     })
-    return(dat)
+    dat
 }
 
-#' Function to transform Facets data, perfom the segmentation and save it into
-#' output.dir
+#' Transform Facets data and performs a joint segmentation
 #'
 #' @param pathFacets The path to load Facets data.
 #'
@@ -30,7 +29,7 @@ loadFacetsdata <- function(pathFacets) {
 #' If \code{stat == TCN}, the segmentation will be done on TCN only.
 #'
 #' @return A list which contains the breakpoints by chromosome and also the
-#' binning of TCN, C1 and C2.
+#' binning of TCN, C1, and C2.
 #'
 #' @examples
 #' if (require("facets", quietly=TRUE)) {
