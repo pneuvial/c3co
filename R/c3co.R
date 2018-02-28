@@ -90,7 +90,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     })
 
     if (!is.null(segDat)) {
-      if(class(segDat)=="character") {
+      if (is.character(segDat)) {
         if (verbose) {
             message("Reading segmentation results from file: ")
             mprint(segDat)
