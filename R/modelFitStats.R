@@ -24,8 +24,8 @@ modelFitStatistics <- function(Y, Yhat, What, Zhat) {
     ## BIC penalty    
     kZ <- sum(apply(Zhat, MARGIN=2L, FUN=diff) != 0)  ## number of breakpoints
     kW <- sum(What != 0)                              ## non null coefs in W
-    BIC.Z <-  logLik - 1/2*kZ*log(nnS)                ## the one in the manuscript as of July 2017
-    BIC.WZ <-  logLik - 1/2*(kZ+kW)*log(nnS)          ## the one I (PN) believe we should use
+    BIC.Z <- logLik - 1/2*kZ*log(nnS)                 ## the one in the manuscript as of July 2017
+    BIC.WZ <- logLik - 1/2*(kZ+kW)*log(nnS)           ## the one I (PN) believe we should use
     
     c(BIC=BIC.WZ, PVE=PVE, logLik=logLik, loss=loss)
 }

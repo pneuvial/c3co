@@ -76,7 +76,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     }
     if (is.null(parameters.grid)) {
         lambda1 <- seq(from=1e-6, to=1e-4, length.out=10)
-        nb.arch  <- 2:(length(dat)-1)
+        nb.arch <- 2:(length(dat)-1)
         parameters.grid <- list(lambda=lambda1, nb.arch=nb.arch)
     }
 
@@ -90,7 +90,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     })
 
     if (!is.null(segDat)) {
-      if(class(segDat)=="character"){
+      if(class(segDat)=="character") {
         if (verbose) {
             message("Reading segmentation results from file: ")
             mprint(segDat)

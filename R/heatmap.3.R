@@ -163,13 +163,13 @@ heatmap.3 <- function(x,
     else if (Colv == "Rowv" && !isTRUE(Rowv))
         Colv <- FALSE
     if (length(di <- dim(x)) != 2 || !is.numeric(x))
-        stop("`x' must be a numeric matrix")
+        stop("'x' must be a numeric matrix")
     nr <- di[1]
     nc <- di[2]
     if (nr <= 1 || nc <= 1)
-        stop("`x' must have at least 2 rows and 2 columns")
+        stop("'x' must have at least 2 rows and 2 columns")
     if (!is.numeric(margins) || length(margins) != 2)
-        stop("`margins' must be a numeric vector of length 2")
+        stop("'margins' must be a numeric vector of length 2")
     if (missing(cellnote))
         cellnote <- matrix("", ncol = ncol(x), nrow = nrow(x))
     if (!inherits(Rowv, "dendrogram")) {
@@ -188,7 +188,7 @@ heatmap.3 <- function(x,
             if (is.logical(Rowv) && (Rowv))
                 dendrogram <- "row"
             else dendrogram <- "none"
-            warning("Discrepancy: Colv is FALSE, while dendrogram is `",
+            warning("Discrepancy: 'Colv' is FALSE, while dendrogram is `",
                     dendrogram, "'. Omitting column dendogram.")
         }
     }
@@ -300,9 +300,9 @@ heatmap.3 <- function(x,
     }
 
     if (length(lhei) != nrow(lmat))
-        stop("lhei must have length = nrow(lmat) = ", nrow(lmat))
+        stop("'lhei' must have length = nrow(lmat) = ", nrow(lmat))
     if (length(lwid) != ncol(lmat))
-        stop("lwid must have length = ncol(lmat) =", ncol(lmat))
+        stop("'lwid' must have length = ncol(lmat) =", ncol(lmat))
     op <- par(no.readonly = TRUE)
     on.exit(par(op))
 

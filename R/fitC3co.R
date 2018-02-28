@@ -119,7 +119,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             
             stats <- modelFitStatistics(Reduce(`+`, Y), res@E$Y, res@W, res@S$Z)
             BIC <- stats[["BIC"]]
-            aConf <-  c(pp, cfg, stats[["PVE"]], BIC, stats[["logLik"]], stats[["loss"]])
+            aConf <- c(pp, cfg, stats[["PVE"]], BIC, stats[["logLik"]], stats[["loss"]])
             ## replace above line by: aConf <- stats
             allConfig <- rbind(allConfig, aConf)
             allRes[[pp]][[cc]] <- res
@@ -147,7 +147,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         it <- it + 1
         pp <- nb.arch[it]
         ## stop if pp has reached the max of its grid
-        cond <-  is.na(pp)
+        cond <- is.na(pp)
     }
     names(fitList) <- nb.arch
     cns <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik", "loss")
@@ -184,7 +184,7 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
     }else{
       ## Case C1-C2
       if (M==2) {
-        if(is.null(lambda1) && is.null(lambda2)){
+        if(is.null(lambda1) && is.null(lambda2)) {
           lambda <- 10^(-seq(from=6, to=4, length.out=10))
           if (verbose) {
             message("Regularization parameter lambda is not provided. Using default value: ")
@@ -198,14 +198,14 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
       ## Case TCN
       } else{
         lambda <- c(lambda1, lambda2)
-        if(!is.null(lambda)){
-          if(verbose){
+        if(!is.null(lambda)) {
+          if(verbose) {
             message("Only regularization parameter lambda[1] or lambda[2] is used")
             mstr(lambda)
           }
         }else{
           lambda <- 10^(-seq(from=6, to=4, length.out=10))
-          if(verbose){
+          if(verbose) {
             message("Regularization parameter lambda or lambda[1] or  lambda[2] is not provided. Using value: ")
             mstr(lambda)
           }
@@ -217,7 +217,7 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
     ## candidate number of subclones
     nb.arch <- parameters.grid$nb.arch
     if (is.null(nb.arch)) {
-        nb.arch  <- seq(from=2, to=nseg-1, by=1)
+        nb.arch <- seq(from=2, to=nseg-1, by=1)
         if (verbose) {
             message("Parameter 'nb.arch' not provided. Using default value: ")
             mstr(nb.arch)

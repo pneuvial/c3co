@@ -49,7 +49,7 @@ Facetswrapper <- function(pathFacets, stat) {
     ### To do may be cut this function into several function
     dat <- loadFacetsdata(pathFacets)
     ### Joint segmentation of all samples
-    resSeg <-  segmentData(dat, stat=stat)
+    resSeg <- segmentData(dat, stat=stat)
     ## Sanity checks
     stopifnot(ncol(resSeg$Y) == length(dat))
     resSeg

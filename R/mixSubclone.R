@@ -42,15 +42,15 @@ mixSubclones <- function(subClones, W) {
         c <- ss$ct*(1-dh)/2
     })
 
-    c1n <-  sapply(subClones, FUN=function(ss) {
+    c1n <- sapply(subClones, FUN=function(ss) {
         dh <- 2*abs(ss$bafn-1/2)
         c <- ss$cn*(1-dh)/2
     })
-    c2t <-  sapply(subClones, FUN=function(ss) {
+    c2t <- sapply(subClones, FUN=function(ss) {
         dh <- 2*abs(ss$baft-1/2)
         c <- ss$ct*(1+dh)/2
     })
-    c2n <-  sapply(subClones, FUN=function(ss) {
+    c2n <- sapply(subClones, FUN=function(ss) {
         dh <- 2*abs(ss$bafn-1/2)
         c <- ss$cn*(1+dh)/2
     })

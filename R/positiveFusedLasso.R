@@ -35,10 +35,10 @@
 #'     c("(0,1)", "(1,1)", "(1,2)", "(1,1)"))
 #' 
 #' datSubClone <- buildSubclones(len, nbClones, bkps, regions, eps=0.2)
-#' W <-  rSparseWeightMatrix(5, nbClones, 0.7)
+#' W <- rSparseWeightMatrix(5, nbClones, 0.7)
 #' datList <- mixSubclones(subClones=datSubClone, W)
 #' 
-#' segData.TCN  <- segmentData(datList,"TCN")
+#' segData.TCN <- segmentData(datList,"TCN")
 #' Y1 <- t(segData.TCN$Y)
 #' Y <- list(Y1 = Y1)
 #' Z0.TCN <- initializeZ(Y1, p = 2, flavor = "nmf")
@@ -136,9 +136,9 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   names(Yhat) <- paste0("Y", 1:M)
   Yhat$Y <- Reduce(`+`, Yhat)
 
-  names(Z)    <- paste0("Z", 1:M)
+  names(Z) <- paste0("Z", 1:M)
 ### JC: same remark than for Y$Y
-  Z$Z    <- Reduce(`+`, Z)
+  Z$Z <- Reduce(`+`, Z)
 
 ### JC: Useless ???
   names(lambda) <- paste0("lambda", 1:M)

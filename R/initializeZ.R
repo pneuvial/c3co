@@ -124,14 +124,14 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
                     "hclust"=initHclust,
                     "subsampling"=initSub)
 
-    if(forceNormal){
+    if(forceNormal) {
       res <- list(Z1=cbind(t(initZ(Y1, p)), 1))
     }else{
       res <- list(Z1=t(initZ(Y1, p)))
     }
     if (!is.null(Y2)) {
       res$Z2 <- t(initZ(Y2, p))
-      if(forceNormal){
+      if(forceNormal) {
         res$Z2 <- cbind(res$Z2, 1)
       }
     }
