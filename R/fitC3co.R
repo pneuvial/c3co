@@ -91,9 +91,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     fitList <- allRes <- allLoss <- list()
     bestConfigp <- allConfig <- NULL
     while (!cond) {
-        if (verbose) {
-            message("Number of latent features: ", pp)
-        }
+        if (verbose) mprintf("Number of latent features: %d\n", pp)
+
         ## Initialization
         bestRes <- NULL
         bestBIC <- -Inf
@@ -101,33 +100,43 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         ## Z0 are initialized with the centered version of the data
         Z0 <- initializeZ(Yc$Y1, Yc$Y2, p=pp, ...)
         if (verbose) {
-            message("Parameter configuration: (",
-                    paste(colnames(configs), collapse="; "), ")")
+            mprintf("Parameter configuration: (%s)\n",
+                    paste(colnames(configs), collapse=", "))
         }
         allRes[[pp]] <- list()
         allLoss[[pp]] <- list()
         for (cc in seq_len(nrow(configs))) {
-            cfg <- configs[cc, , drop=FALSE]
-            if (verbose) message(paste(cfg, collapse="; "))
-            l1 <- cfg[, "lambda1"]
-            l2 <- NULL
-            if (!is.null(Y2)) l2 <- cfg[, "lambda2"]
-            
+            cfg <- configs[cc, , drop = TRUE]
+            if (verbose) {
+              mprintf(" - configuration #%d (%s) of %d: ",
+                  cc, 
+                  paste(sprintf("%s = %g", names(cfg), cfg), collapse=", "),
+                  nrow(configs))
+            }
+
+              
             ## THIS is the function that costs comme computation 
-            res <- positiveFusedLasso(Y, Z0, c(l1,l2))
+            if (verbose) mprintf("fused lasso")
+            if (is.null(Y2)) cfg <- cfg["lambda1"]  ## Should this be an error?
+            res <- positiveFusedLasso(Y = Y, Z = Z0, lambda = cfg)
             
+            if (verbose) mprintf(", BIC = ")
             stats <- modelFitStatistics(Reduce(`+`, Y), res@E$Y, res@W, res@S$Z)
             BIC <- stats[["BIC"]]
+            if (verbose) mprintf("%g", BIC)
             aConf <- c(pp, cfg, stats[["PVE"]], BIC, stats[["logLik"]], stats[["loss"]])
             ## replace above line by: aConf <- stats
             allConfig <- rbind(allConfig, aConf)
             allRes[[pp]][[cc]] <- res
             allLoss[[pp]][[cc]] <- stats[["loss"]]
+            
             if (BIC > bestBIC) { ## BIC has improved: update best model
                 bestRes <- res
                 bestBIC <- BIC
                 bestConfig <- aConf
+                if (verbose) mprintf("*")
             }
+            if (verbose) mprintf("\n")
         }
 
         fitList[[it]] <- bestRes
@@ -152,11 +161,11 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     cns <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik", "loss")
     
     bestConfigp <- as.data.frame(bestConfigp)
-    colnames (bestConfigp) <- cns
+    colnames(bestConfigp) <- cns
     rownames(bestConfigp) <- NULL
     
     allConfig <- as.data.frame(allConfig)
-    colnames (allConfig) <- cns
+    colnames(allConfig) <- cns
     rownames(allConfig) <- NULL
     configList <- list(best=bestConfigp, all=allConfig, res=allRes, loss=allLoss)
     list(fit=fitList, config=configList)

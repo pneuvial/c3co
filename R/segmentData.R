@@ -100,7 +100,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
     Y <- DH <- NULL
     for (cc in chrs) {
         if (verbose) {
-            mprintf("chr %s", cc)
+            mprintf("chr %s\n", cc)
         }
         ww <- which(dat[[1]]$chr == cc)
         if (verbose) message("Joint segmentation")

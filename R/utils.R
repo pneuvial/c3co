@@ -7,6 +7,6 @@ mprint <- function(...) {
   message(paste(capture.output(print(...)), collapse = "\n"))
 }
 
-mprintf <- function(...) {
-  message(sprintf(...))
+mprintf <- function(..., appendLF = FALSE) {
+  message(sprintf(...), appendLF = appendLF)
 }
