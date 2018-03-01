@@ -85,12 +85,10 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     configs <- parameters$configs
     nb.arch <- parameters$nb.arch
     
-    it <- 1
-    pp <- nb.arch[it]
-    cond <- FALSE  ## condition for (early) stopping
     fitList <- allRes <- allLoss <- list()
     bestConfigp <- allConfig <- NULL
-    while (!cond) {
+    for (it in seq_along(nb.arch)) {
+        pp <- nb.arch[it]
         if (verbose) mprintf("Number of latent features: %d\n", pp)
 
         ## Initialization
@@ -151,11 +149,6 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
                 warning("For model with ", pp, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
             }
         }
-        
-        it <- it + 1
-        pp <- nb.arch[it]
-        ## stop if pp has reached the max of its grid
-        cond <- is.na(pp)
     }
     names(fitList) <- nb.arch
     cns <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik", "loss")
