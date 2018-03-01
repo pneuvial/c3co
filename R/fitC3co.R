@@ -68,7 +68,10 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     Y <- list(Y1=Y1)
     if(!is.null(Y2)) Y$Y2 <- Y2
     ## Sanity checks
-    stopifnot(length(unique(lapply(Y, FUN = dim))) == 1) # are all the dimension equal ?
+    stopifnot(length(unique(lapply(Y, FUN = dim))) == 1) # are all the dimension equal?
+
+    if (verbose) mprintf("fitC3co() ...\n")
+  
     ## problem dimension
     n <- nrow(Y1)
     nseg <- ncol(Y1)
@@ -89,7 +92,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     bestConfigp <- allConfig <- NULL
     for (it in seq_along(nb.arch)) {
         pp <- nb.arch[it]
-        if (verbose) mprintf("Number of latent features: %d\n", pp)
+        if (verbose) mprintf(" - Iteration #%d (%d latent features) of %d ...\n", it, pp, length(nb.arch))
 
         ## Initialization
         bestRes <- NULL
@@ -98,7 +101,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         ## Z0 are initialized with the centered version of the data
         Z0 <- initializeZ(Yc$Y1, Yc$Y2, p=pp, ...)
         if (verbose) {
-            mprintf("Parameter configuration: (%s)\n",
+            mprintf("   + Parameter configuration: (%s)\n",
                     comma(colnames(configs)))
         }
         allRes[[pp]] <- list()
@@ -106,7 +109,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         for (cc in seq_len(nrow(configs))) {
             cfg <- configs[cc, , drop = TRUE]
             if (verbose) {
-              mprintf(" - configuration #%d (%s) of %d: ",
+              mprintf("   + configuration #%d (%s) of %d: ",
                   cc, 
                   comma(sprintf("%s = %g", names(cfg), cfg)),
                   nrow(configs))
@@ -149,7 +152,10 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
                 warning("For model with ", pp, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
             }
         }
-    }
+	
+        if (verbose) mprintf(" - Iteration #%d (%d latent features) of %d ... DONE\n", it, pp, length(nb.arch))
+    } ## for (it ...)
+    
     names(fitList) <- nb.arch
     cns <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik", "loss")
     
@@ -161,7 +167,12 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     colnames(allConfig) <- cns
     rownames(allConfig) <- NULL
     configList <- list(best=bestConfigp, all=allConfig, res=allRes, loss=allLoss)
-    list(fit=fitList, config=configList)
+
+    res <- list(fit=fitList, config=configList)
+  
+    if (verbose) mprintf("fitC3co() ... DONE\n")
+    
+    res
 }
 
 
@@ -175,40 +186,37 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
       if (M > 1) {
           lambda2 <- lambda
           if (verbose) {
-            message("Only one regularization parameter is provided. Using the same value for lambda[1] and lambda[2] : ")
-            mstr(lambda)
+            message(" - Only one regularization parameter is provided. Using the same value for lambda[1] and lambda[2]: ", comma(lambda))
           }
           configs <- cbind(lambda1 = lambda1, lambda2 = lambda2)
-      }else{
+      } else {
         configs <- cbind(lambda1 = lambda1)
       }
-    }else{
+    } else {
       ## Case C1-C2
-      if (M==2) {
-        if(is.null(lambda1) && is.null(lambda2)) {
+      if (M == 2) {
+        if (is.null(lambda1) && is.null(lambda2)) {
           lambda <- 10^(-seq(from=6, to=4, length.out=10))
           if (verbose) {
             message("Regularization parameter lambda is not provided. Using default value: ")
             mstr(lambda)
           }
           configs <- cbind(lambda1 = lambda, lambda2 = lambda)
-        }else {
+        } else {
           configs <- expand.grid(lambda1 = lambda1, lambda2 = lambda2) 
         }
         
       ## Case TCN
-      } else{
+      } else {
         lambda <- c(lambda1, lambda2)
-        if(!is.null(lambda)) {
-          if(verbose) {
-            message("Only regularization parameter lambda[1] or lambda[2] is used")
-            mstr(lambda)
+        if (!is.null(lambda)) {
+          if (verbose) {
+            message("Only regularization parameter lambda[1] or lambda[2] is used: ", comma(lambda))
           }
-        }else{
+        } else {
           lambda <- 10^(-seq(from=6, to=4, length.out=10))
           if(verbose) {
-            message("Regularization parameter lambda or lambda[1] or  lambda[2] is not provided. Using value: ")
-            mstr(lambda)
+            message("Regularization parameter lambda or lambda[1] or lambda[2] is not provided. Using value: ", comma(lambda))
           }
         }
         configs <- cbind(lambda1 = lambda)
@@ -220,8 +228,7 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
     if (is.null(nb.arch)) {
         nb.arch <- seq(from=2, to=nseg-1, by=1)
         if (verbose) {
-            message("Parameter 'nb.arch' not provided. Using default value: ")
-            mstr(nb.arch)
+            message("Parameter 'nb.arch' not provided. Using default value: ", comma(nb.arch))
         }
     }
   
