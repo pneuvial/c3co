@@ -1,33 +1,34 @@
 #' Cancer subclone inference
 #'
-#' @param dat A list of data frames for each patient, each of them of the form
+#' @param dat A list of data frames for each patient, each of them of the form:
 #' \describe{
-#'   \item{tcn}{Total copy number}
-#'   \item{dh}{Mirrored B allele fraction}
-#'   \item{pos}{Position on the genome}
-#'   \item{chr}{Chromosome}
+#'   \item{`tcn`}{Total copy number}
+#'   \item{`dh`}{Mirrored B allele fraction}
+#'   \item{`pos`}{Position on the genome}
+#'   \item{`chr`}{Chromosome}
 #' }
 #'
-#' @param parameters.grid is a list composed of : the penalty coefficients named either
-#' \code{lambda}, \code{lambda1} and \code{lambda2}. For the model on minor and major cn, 
-#' it is possible to give two grids (one for minor cn and one for major cn), and all
-#' combination is tested. If only one grid is given the consider 
-#' that \code{lambda1}=\code{lambda2}.
-#' and composed of : a vector named \code{nb.arch} of integers which is the number of 
-#' features in the model
+## FIXME: What does ".. list composed of : the ..." mean? /HB 2018-03-04
+#' @param parameters.grid Is a list composed of : the penalty coefficients
+#' named either `lambda`, `lambda1` and `lambda2`. For the model on minor and
+#' major CN, it is possible to give two grids (one for minor CN and one for
+#' major CN), and all combination is tested. If only one grid is given the
+#' consider  that `lambda1` = `lambda2`.
+#' and composed of : a vector named `nb.arch` of integers which is the number
+#' of features in the model.
 #'
-#' @param stat TCN or C1C2
+#' @param stat `"TCN"` or `"C1C2"`.
 #'
-#' @param segDat Either a path to the file that contains segmentation (.rds file), 
-#' by default \code{NULL} or a file that contains segmentation 
-#' (for example use segmentData function in the package)
+#' @param segDat Either a path to the file that contains segmentation
+#' (\file{*.rds} file), by default `NULL`, or a file that contains segmentation 
+#' (e.g. from [segmentData()]).
 #'
-#' @param \dots Further arguments to be passed to \code{\link{fitC3co}}
+#' @param \dots Further arguments to be passed to [fitC3co()].
 #'
 #' @param verbose A logical value indicating whether to print extra
-#' information. Defaults to FALSE
+#' information. Defaults to `FALSE`.
 #'
-#' @return An object of class [\code{\linkS4class{c3coFit}}]
+#' @return An object of class [c3coFit][c3coFit-class].
 #'
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)

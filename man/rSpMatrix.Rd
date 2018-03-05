@@ -7,15 +7,17 @@
 rSpMatrix(nrow, ncol, sparse.coeff)
 }
 \arguments{
-\item{nrow}{An interger that is the number of rows}
+\item{nrow}{An interger that is the number of rows.}
 
-\item{ncol}{An interger that is the number of columns}
+\item{ncol}{An interger that is the number of columns.}
 
-\item{sparse.coeff}{A numeric in  [0, 1] that control the sparsity by
-rows (the proportion of non-zero entries among all matrix entries). Non zero entries is define by  \code{nnz}=\code{sparse.coeff*nrow*ncol} and need to be larger than \code{nrow} and \code{ncol}}
+\item{sparse.coeff}{A numeric in \eqn{[0,1]} that control the sparsity by
+rows (the proportion of non-zero entries among all matrix entries).
+Non-zero entries is define by \code{nnz = sparse.coeff * nrow * ncol} and
+need to be larger than \code{nrow} and \code{ncol}.}
 }
 \value{
-A matrix of weights (the sum of rows is equal to 1)
+A matrix of weights (the sum of rows is equal to 1).
 }
 \description{
 Generate sparse matrix with at least one non-zero element by rows and by columns

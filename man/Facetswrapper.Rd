@@ -2,22 +2,23 @@
 % Please edit documentation in R/Facetswrapper.R
 \name{Facetswrapper}
 \alias{Facetswrapper}
-\title{Transforms Facets data and performs a joint segmentation}
+\title{Transforms FACETS data and performs a joint segmentation}
 \usage{
 Facetswrapper(pathFacets, stat)
 }
 \arguments{
-\item{pathFacets}{The path to load Facets data.}
+\item{pathFacets}{The path to a directory containing FACETS data files
+(\file{*.csv.gz}) produced by the \pkg{facets} package.}
 
-\item{stat}{"TCN or "C1C2" paramater to segment the data.
-If \code{stat == TCN}, the segmentation will be done on TCN only.}
+\item{stat}{\code{"TCN"} or \code{"C1C2"} paramater to segment the data.
+If \code{stat == "TCN"}, the segmentation will be done on TCN only.}
 }
 \value{
 A list which contains the breakpoints by chromosome and also the
 binning of TCN, C1, and C2.
 }
 \description{
-Transforms Facets data and performs a joint segmentation
+Transforms FACETS data and performs a joint segmentation
 }
 \examples{
 if (require("facets", quietly=TRUE)) {

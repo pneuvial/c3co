@@ -8,14 +8,14 @@ pvePlot2(dat, bestNbLatent = NULL, ylim = c(0, 1))
 }
 \arguments{
 \item{dat}{A data frame, typically the element \code{best} of the
-\code{config} slot from \code{c3co} or \code{fitC3co}}
+\code{config} slot from \code{\link[=c3co]{c3co()}} or \code{\link[=fitC3co]{fitC3co()}}.}
 
-\item{bestNbLatent}{best number of latent profiles.}
+\item{bestNbLatent}{Best number of latent profiles.}
 
-\item{ylim}{a vector that define min and max of y-axis}
+\item{ylim}{A vector that define min and max of y-axis.}
 }
 \value{
-PVE curve
+PVE curve.
 }
 \description{
 Function to plot PVE (low-level)

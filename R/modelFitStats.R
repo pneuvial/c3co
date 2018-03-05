@@ -1,9 +1,13 @@
 #' Print statistics of a c3co model
 #' 
-#' @param Y Original matrix of data
-#' @param Yhat Estimates 
-#' @param What Inferred weight matrix
-#' @param Zhat Inferred subclones matrix
+#' @param Y Original matrix of data.
+#' 
+#' @param Yhat Estimates.
+#' 
+#' @param What Inferred weight matrix.
+#' 
+#' @param Zhat Inferred subclones matrix.
+#' 
 #' @return The main statistics of the inferred model.
 #'
 #' @importFrom matrixStats colDiffs

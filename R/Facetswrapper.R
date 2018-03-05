@@ -1,12 +1,12 @@
-#' Loads Facets data and transforms them to c3co format
+#' Loads FACETS data and transforms them to c3co format
 #'
-#' @param pathFacets The path to load Facets data csv.gz format.
+#' @param pathFacets The path to a directory containing FACETS data files
+#' (\file{*.csv.gz}) produced by the \pkg{facets} package.
 #'
-#' @return A data frame under PSCBS format
+#' @return A data frame under PSCBS format.
 #'
 #' @export
 loadFacetsdata <- function(pathFacets) {
-    ### Load Facets data
     dat <- lapply(list.files(pathFacets), FUN=function(ff) {
         df <- facets::readSnpMatrix(file.path(pathFacets, ff))
         xx <- facets::preProcSample(df)
@@ -21,12 +21,13 @@ loadFacetsdata <- function(pathFacets) {
     dat
 }
 
-#' Transforms Facets data and performs a joint segmentation
+#' Transforms FACETS data and performs a joint segmentation
 #'
-#' @param pathFacets The path to load Facets data.
+#' @param pathFacets The path to a directory containing FACETS data files
+#' (\file{*.csv.gz}) produced by the \pkg{facets} package.
 #'
-#' @param stat "TCN or "C1C2" paramater to segment the data.
-#' If \code{stat == TCN}, the segmentation will be done on TCN only.
+#' @param stat `"TCN"` or `"C1C2"` paramater to segment the data.
+#' If `stat == "TCN"`, the segmentation will be done on TCN only.
 #'
 #' @return A list which contains the breakpoints by chromosome and also the
 #' binning of TCN, C1, and C2.

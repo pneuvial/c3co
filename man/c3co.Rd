@@ -8,35 +8,35 @@ c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"), segDat = NULL,
   ..., verbose = FALSE)
 }
 \arguments{
-\item{dat}{A list of data frames for each patient, each of them of the form
+\item{dat}{A list of data frames for each patient, each of them of the form:
 \describe{
-  \item{tcn}{Total copy number}
-  \item{dh}{Mirrored B allele fraction}
-  \item{pos}{Position on the genome}
-  \item{chr}{Chromosome}
+\item{\code{tcn}}{Total copy number}
+\item{\code{dh}}{Mirrored B allele fraction}
+\item{\code{pos}}{Position on the genome}
+\item{\code{chr}}{Chromosome}
 }}
 
-\item{parameters.grid}{is a list composed of : the penalty coefficients named either
-\code{lambda}, \code{lambda1} and \code{lambda2}. For the model on minor and major cn, 
-it is possible to give two grids (one for minor cn and one for major cn), and all
-combination is tested. If only one grid is given the consider 
-that \code{lambda1}=\code{lambda2}.
-and composed of : a vector named \code{nb.arch} of integers which is the number of 
-features in the model}
+\item{parameters.grid}{Is a list composed of : the penalty coefficients
+named either \code{lambda}, \code{lambda1} and \code{lambda2}. For the model on minor and
+major CN, it is possible to give two grids (one for minor CN and one for
+major CN), and all combination is tested. If only one grid is given the
+consider  that \code{lambda1} = \code{lambda2}.
+and composed of : a vector named \code{nb.arch} of integers which is the number
+of features in the model.}
 
-\item{stat}{TCN or C1C2}
+\item{stat}{\code{"TCN"} or \code{"C1C2"}.}
 
-\item{segDat}{Either a path to the file that contains segmentation (.rds file), 
-by default \code{NULL} or a file that contains segmentation 
-(for example use segmentData function in the package)}
+\item{segDat}{Either a path to the file that contains segmentation
+(\file{*.rds} file), by default \code{NULL}, or a file that contains segmentation
+(e.g. from \code{\link[=segmentData]{segmentData()}}).}
 
-\item{\dots}{Further arguments to be passed to \code{\link{fitC3co}}}
+\item{\dots}{Further arguments to be passed to \code{\link[=fitC3co]{fitC3co()}}.}
 
 \item{verbose}{A logical value indicating whether to print extra
-information. Defaults to FALSE}
+information. Defaults to \code{FALSE}.}
 }
 \value{
-An object of class [\code{\linkS4class{c3coFit}}]
+An object of class \link[=c3coFit-class]{c3coFit}.
 }
 \description{
 Cancer subclone inference

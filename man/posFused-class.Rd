@@ -3,9 +3,9 @@
 \docType{class}
 \name{posFused-class}
 \alias{posFused-class}
-\title{Class for the object returned by \code{positiveFusedLasso} function}
+\title{Class for the object returned by \code{\link[=positiveFusedLasso]{positiveFusedLasso()}}}
 \description{
-Class for the object returned by \code{positiveFusedLasso} function
+Class for the object returned by \code{\link[=positiveFusedLasso]{positiveFusedLasso()}}
 }
 \section{Slots}{
 
@@ -13,22 +13,23 @@ Class for the object returned by \code{positiveFusedLasso} function
 \item{\code{Y}}{A list containing the original minor, major and total copy number
 signals.}
 
-\item{\code{S}}{A list containing the (final) minor, major and total copy number 
-estimates for the latent features, as inferred by 
-\code{\link{positiveFusedLasso}}.}
+\item{\code{S}}{A list containing the (final) minor, major and total copy number
+estimates for the latent features, as inferred by
+\code{\link[=positiveFusedLasso]{positiveFusedLasso()}}.}
 
 \item{\code{S0}}{idem for the initial estimates.}
 
-\item{\code{W}}{A matrix containing weights inferred by \code{positiveFusedLasso}.}
+\item{\code{W}}{A matrix containing weights inferred by \code{\link[=positiveFusedLasso]{positiveFusedLasso()}}.}
 
 \item{\code{mu}}{A numeric containing the intercept terms inferred by
-\code{positiveFusedLasso}.}
+\code{\link[=positiveFusedLasso]{positiveFusedLasso()}}.}
 
-\item{\code{E}}{A list containing estimates of minor copy number and major copy 
-number inferred by \code{positiveFusedLasso}.}
+\item{\code{E}}{A list containing estimates of minor copy number and major copy
+number inferred by \code{\link[=positiveFusedLasso]{positiveFusedLasso()}}.}
 
-\item{\code{failure}}{A logical value indicating whether the estimation worked or failed (because of the non-invertibility of \eqn{W^tW})s}
+\item{\code{failure}}{A logical value indicating whether the estimation worked or
+failed (because of the non-invertibility of \eqn{W^tW}).}
 
-\item{\code{params}}{A numeric vector, the input parameters}
+\item{\code{params}}{A numeric vector, the input parameters.}
 }}
 

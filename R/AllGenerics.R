@@ -19,7 +19,7 @@ setMethod(
 
 #' Compute statistics of a c3co model
 #'
-#' @param object An object of class \code{\linkS4class{posFused}}
+#' @param object An object of class [posFused][posFused-class].
 #' @rdname modelFitStats
 #' @exportMethod modelFitStats
 setGeneric("modelFitStats", function(object) {
@@ -28,33 +28,33 @@ setGeneric("modelFitStats", function(object) {
 
 #' Plot the weight matrix
 #'
-#' @param this An object of class \code{\linkS4class{c3coFit}}
+#' @param this An object of class [c3coFit][c3coFit-class].
 #'
-#' @param idxBest A integer, the number of latent features
+#' @param idxBest A integer, the number of latent features.
 #'
-#' @param rownamesW A vector that contains identification of patients
+#' @param rownamesW A vector that contains identification of patients.
 #'
-#' @param col A vector that contains colors for the heatmap
+#' @param col A vector that contains colors for the heatmap.
 #'
-#' @param margins A vector margins
+#' @param margins A vector margins.
 #'
-#' @param posLegend position of the legend to be passed to \code{plot}
+#' @param posLegend Position of the legend to be passed to [graphics::plot()].
 #'
 #' @param listPheno A matrix that contains details on phenotype for each
-#'        patient. Could be location or time point of tumors for example
+#'        patient. Could be location or time point of tumors for example.
 #'
 #' @param colsPheno Matrix that containts colors for each type of variable
-#'        in phenotype
+#'        in phenotype.
 #'
-#' @param colLegend colors for clinical data
+#' @param colLegend Colors for clinical data.
 #'
-#' @param labelLegend labels for clinical data
+#' @param labelLegend Labels for clinical data.
 #'
-#' @param cexCol size of labels of columns by (default 1.5)
+#' @param cexCol Size of labels of columns by (default 1.5).
 #'
-#' @param ... other paramaters to personalize heatmap (see \code{heatmap.3})
+#' @param ... Other parameters to personalize heatmap (see [heatmap.3()]).
 #'
-#' @return a heatmap of W
+#' @return A heatmap of `W`.
 #'
 #' @rdname Wplot
 #' @exportMethod Wplot
@@ -114,20 +114,20 @@ setMethod(
     }
 )
 
-#' Create a data frame to plot Subclones
+#' Create a data frame to plot subclones
 #'
-#' @param this An object of class \code{\linkS4class{c3coFit}}
+#' @param this An object of class [c3coFit][c3coFit-class].
 
-#' @param chromosomes A vector that contains the focused chromosomes
+#' @param chromosomes A vector that contains the focused chromosomes.
 
-#' @param var TCN, Minor or Major
+#' @param var `"TCN"`, `"Minor"` or `"Major"`.
 
-#' @param idxBest a integer that is the best fitting of the data
+#' @param idxBest A integer that is the best fitting of the data.
 
 #' @param verbose A logical value indicating whether to print extra information.
-#'   Defaults to FALSE
+#'   Defaults to `FALSE`.
 
-#' @return A data frame to plot Latent profiles with ggplot
+#' @return A data frame to plot Latent profiles with \pkg{ggplot2}.
 
 #' @rdname createZdf
 #' @exportMethod createZdf

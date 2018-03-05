@@ -1,12 +1,12 @@
 #' Create a mixture of subclones
 #'
-#' @param subClones The subclones used to create the mixture ideally from
-#' the function \code{buildSubClones}.
+#' @param subClones The subclones used to create the mixture ideally by
+#' [buildSubclones()].
 #'
-#' @param W A matrix of weights in percentage [0,100] (without fraction of
-#' normal cells)
+#' @param W A matrix of weights in percentage \eqn{[0,100]}
+#' (without fraction of normal cells).
 #'
-#' @return The mixture
+#' @return The mixture.
 #'
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)

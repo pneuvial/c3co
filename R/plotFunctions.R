@@ -1,12 +1,12 @@
 #' Function to plot PVE
 #'
-#' @param res result from [\code{c3co}]
+#' @param res Result from [c3co()].
 #'
-#' @param bestNbLatent best number of latent profiles.
+#' @param bestNbLatent Best number of latent profiles.
 #'
-#' @param ylim a vector that define min and max of y-axis
+#' @param ylim A vector that define min and max of y-axis.
 #'
-#' @return PVE curve
+#' @return PVE curve.
 #'
 #' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab ylim
 #' @export
@@ -16,14 +16,14 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
 
 #' Function to plot PVE (low-level)
 #' 
-#' @param dat A data frame, typically the element \code{best} of the
-#'   \code{config} slot from \code{c3co} or \code{fitC3co}
+#' @param dat A data frame, typically the element `best` of the
+#'   `config` slot from [c3co()] or [fitC3co()].
 #'   
-#' @param bestNbLatent best number of latent profiles.
+#' @param bestNbLatent Best number of latent profiles.
 #'   
-#' @param ylim a vector that define min and max of y-axis
+#' @param ylim A vector that define min and max of y-axis.
 #'   
-#' @return PVE curve
+#' @return PVE curve.
 #'   
 #' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab
 #'   ylim
@@ -43,12 +43,12 @@ pvePlot2 <- function(dat, bestNbLatent=NULL, ylim=c(0, 1)) {
 
 #' Plot latent profiles along chromosomes
 #' 
-#' @param df data.frame object output from \code{createZdf}
+#' @param df data.frame Object output from [createZdf()].
 #'   
-#' @param scalePosToMb a logical value, should 'x' positions be scaled to
-#'   MegaBases? Defaults to FALSE
+#' @param scalePosToMb A logical, should 'x' positions be scaled to
+#'   megabases? Defaults to `FALSE`.
 #'   
-#' @return plot latent profiles along chromosomes
+#' @return plot Latent profiles along chromosomes.
 #'   
 #' @importFrom ggplot2 ggplot geom_step geom_segment aes facet_grid labeller
 #'   label_both theme_bw scale_x_continuous labs scale_y_continuous

@@ -2,16 +2,17 @@
 % Please edit documentation in R/Facetswrapper.R
 \name{loadFacetsdata}
 \alias{loadFacetsdata}
-\title{Loads Facets data and transforms them to c3co format}
+\title{Loads FACETS data and transforms them to c3co format}
 \usage{
 loadFacetsdata(pathFacets)
 }
 \arguments{
-\item{pathFacets}{The path to load Facets data csv.gz format.}
+\item{pathFacets}{The path to a directory containing FACETS data files
+(\file{*.csv.gz}) produced by the \pkg{facets} package.}
 }
 \value{
-A data frame under PSCBS format
+A data frame under PSCBS format.
 }
 \description{
-Loads Facets data and transforms them to c3co format
+Loads FACETS data and transforms them to c3co format
 }

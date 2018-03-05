@@ -4,7 +4,7 @@
 \name{createZdf}
 \alias{createZdf}
 \alias{createZdf,c3coFit-method}
-\title{Create a data frame to plot Subclones}
+\title{Create a data frame to plot subclones}
 \usage{
 createZdf(this, chromosomes, idxBest, var = "TCN", verbose = FALSE)
 
@@ -12,20 +12,20 @@ createZdf(this, chromosomes, idxBest, var = "TCN", verbose = FALSE)
   "Minor", "Major"), verbose = FALSE)
 }
 \arguments{
-\item{this}{An object of class \code{\linkS4class{c3coFit}}}
+\item{this}{An object of class \link[=c3coFit-class]{c3coFit}.}
 
-\item{chromosomes}{A vector that contains the focused chromosomes}
+\item{chromosomes}{A vector that contains the focused chromosomes.}
 
-\item{idxBest}{a integer that is the best fitting of the data}
+\item{idxBest}{A integer that is the best fitting of the data.}
 
-\item{var}{TCN, Minor or Major}
+\item{var}{\code{"TCN"}, \code{"Minor"} or \code{"Major"}.}
 
 \item{verbose}{A logical value indicating whether to print extra information.
-Defaults to FALSE}
+Defaults to \code{FALSE}.}
 }
 \value{
-A data frame to plot Latent profiles with ggplot
+A data frame to plot Latent profiles with \pkg{ggplot2}.
 }
 \description{
-Create a data frame to plot Subclones
+Create a data frame to plot subclones
 }

@@ -7,26 +7,30 @@
 segmentData(dat, stat = c("C1C2", "TCN"), verbose = FALSE)
 }
 \arguments{
-\item{dat}{A list of \code{data.frame} containing \describe{ \item{tcn}{Total
-copy number} \item{dh}{Mirrored B allele fraction} \item{pos}{Position on 
-the genome} \item{chr}{Chromosome} }}
+\item{dat}{A list of data frames containing columns:
+\describe{
+\item{\code{tcn}}{Total copy number}
+\item{\code{dh}}{Mirrored B allele fraction}
+\item{\code{pos}}{Position on the genome}
+\item{\code{chr}}{Chromosome}
+}}
 
-\item{stat}{"TCN or "C1C2" parameter to segment the data. If \code{stat == 
-TCN}, the segmentation will be done on TCN only.}
+\item{stat}{\code{"TCN"} or \code{"C1C2"} parameter to segment the data.
+If \code{stat ==}"TCN"`, the segmentation will be done on TCN only.}
 
-\item{verbose}{A logical value indicating whether to print extra information.
-Defaults to FALSE}
+\item{verbose}{A logical value indicating whether to print extra
+information. Defaults to \code{FALSE}.}
 }
 \value{
-Binned Minor and Major copy number with list of breakpoints
+Binned minor and major copy numbers with list of breakpoints.
 }
 \description{
-Joint segmentation by Recursive Binary Segmentation followed by Dynamic 
+Joint segmentation by Recursive Binary Segmentation followed by Dynamic
 Programming
 }
 \details{
-This function is a wrapper around the \code{jointSeg} function in
-  the \code{jointseg} package.
+This function is a wrapper around the \code{\link[jointseg:jointSeg]{jointseg::jointSeg()}} of
+the \pkg{jointseg} package.
 }
 \examples{
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -44,14 +48,11 @@ res2 <- segmentData(dat, stat="TCN")
 
 }
 \references{
-Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple 
-  Change Points in the Mean for Large Sample. 
-  http://hal.archives-ouvertes.fr/hal-00327146/
+Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple
+Change Points in the Mean for Large Sample.
+http://hal.archives-ouvertes.fr/hal-00327146/
 
-Pierre-Jean, M., Rigaill, G. & Neuvial, P. (2015). Performance 
-  evaluation of DNA copy number segmentation methods.  Briefings in 
-  Bioinformatics 16 (4): 600-615
-}
-\seealso{
-\code{\link[jointseg]{jointSeg}}
+Pierre-Jean, M., Rigaill, G. & Neuvial, P. (2015). Performance
+evaluation of DNA copy number segmentation methods.  Briefings in
+Bioinformatics 16 (4): 600-615
 }

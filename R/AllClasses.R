@@ -1,25 +1,26 @@
-#' Class for the object returned by \code{positiveFusedLasso} function
+#' Class for the object returned by [positiveFusedLasso()]
 #' 
 #' @slot Y A list containing the original minor, major and total copy number
 #'   signals.
 #'   
 #' @slot S A list containing the (final) minor, major and total copy number 
 #'   estimates for the latent features, as inferred by 
-#'   \code{\link{positiveFusedLasso}}.
+#'   [positiveFusedLasso()].
 #'   
 #' @slot S0 idem for the initial estimates.
 #'   
-#' @slot W A matrix containing weights inferred by \code{positiveFusedLasso}.
+#' @slot W A matrix containing weights inferred by [positiveFusedLasso()].
 #'   
 #' @slot mu A numeric containing the intercept terms inferred by
-#'   \code{positiveFusedLasso}.
+#'   [positiveFusedLasso()].
 #'   
 #' @slot E A list containing estimates of minor copy number and major copy 
-#'   number inferred by \code{positiveFusedLasso}.
+#'   number inferred by [positiveFusedLasso()].
 #' 
-#' @slot failure A logical value indicating whether the estimation worked or failed (because of the non-invertibility of \eqn{W^tW})s
+#' @slot failure A logical value indicating whether the estimation worked or
+#'   failed (because of the non-invertibility of \eqn{W^tW}).
 #' 
-#' @slot params A numeric vector, the input parameters
+#' @slot params A numeric vector, the input parameters.
 #'   
 #' @exportClass posFused
 setClass(
@@ -37,16 +38,16 @@ setClass(
 )
 
 
-#' Class for the object create by \code{c3coFit} function
+#' Class for the object create by [fitC3co()]
 #'
 #' @slot bkp A list of breakpoints for each chromosome.
 #'
 #' @slot segDat A list that contains segmented data.
 #' 
-#' @slot config A list containing PVE, BIC and parameters for all tested models 
-#'                and for the best model
+#' @slot config A list containing PVE, BIC and parameters for all tested
+#'              models and for the best model.
 #'
-#' @slot fit A List of [\code{\linkS4class{posFused}}] objects.
+#' @slot fit A list of [posFused][posFused-class] objects.
 #'
 #' @exportClass c3coFit
 setClass(

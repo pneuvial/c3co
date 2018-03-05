@@ -7,14 +7,14 @@
 pvePlot(res, bestNbLatent = NULL, ylim = c(0, 1))
 }
 \arguments{
-\item{res}{result from [\code{c3co}]}
+\item{res}{Result from \code{\link[=c3co]{c3co()}}.}
 
-\item{bestNbLatent}{best number of latent profiles.}
+\item{bestNbLatent}{Best number of latent profiles.}
 
-\item{ylim}{a vector that define min and max of y-axis}
+\item{ylim}{A vector that define min and max of y-axis.}
 }
 \value{
-PVE curve
+PVE curve.
 }
 \description{
 Function to plot PVE

@@ -1,6 +1,7 @@
 #' Loads PSCBS data and transforms them into c3co format
 #'
-#' @param PSCBSdata A list that contains PSCBS data.
+#' @param PSCBSdata A list that contains PSCBS data as produced by
+#' the \pkg{PSCBS} package.
 #'
 #' @return A data frame under PSCBS format.
 #'
@@ -40,12 +41,12 @@ loadPSCBSdata <- function(PSCBSdata) {
 #'
 #' @param PSCBSdata A list that contains PSCBS data
 #'
-#' @param stat "TCN or "C1C2" paramater to segment the data.
-#' If \code{stat == TCN}, the segmentation will be done on TCN only.
+#' @param stat `"TCN"` or `"C1C2"` parameter to segment the data.
+#' If `stat == "TCN"`, the segmentation will be done on TCN only.
 #'
-#' @param align If \code{TRUE}, the PSCBS list elements are expanded before
+#' @param align If `TRUE`, the PSCBS list elements are expanded before
 #' segmentation to have the exact same set of (chr, pos) loci, which is the
-#' union of all elements. See \code{\link{alignLoci}()} for details.
+#' union of all elements. See [alignLoci()] for details.
 #' 
 #' @return A list which contains the breakpoints by chromosome and also the
 #' binning of TCN, C1, and C2.

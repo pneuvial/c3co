@@ -1,13 +1,14 @@
 #' Generate weight matrix
-#' @param nb.samp An interger that is the number of samples (number of rows)
+#' 
+#' @param nb.samp An integer that is the number of samples (number of rows).
 #'
-#' @param nb.arch  An interger that is the number of archetypes
-#' (number of columns)
+#' @param nb.arch An interger that is the number of archetypes
+#' (number of columns).
 #'
-#' @param sparse.coeff A numeric in  [0, 1] that control the sparsity by
-#' rows (the proportion of non-zero entries among all matrix entries)
+#' @param sparse.coeff A numeric in \eqn{[0,1]} that control the sparsity by
+#' rows (the proportion of non-zero entries among all matrix entries).
 #'
-#' @return A matrix of weights (the sum of rows is equal to 1)
+#' @return A matrix of weights (the sum of rows is equal to 1).
 #' 
 #' @examples
 #' M <- rSparseWeightMatrix(nb.samp=10, nb.arch=7, sparse.coeff=0.5)
@@ -31,14 +32,16 @@ rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff = max(nb.samp, nb
 }
 
 #' Generate sparse matrix with at least one non-zero element by rows and by columns
-#' @param nrow An interger that is the number of rows
+#' @param nrow An interger that is the number of rows.
 #'
-#' @param ncol  An interger that is the number of columns
+#' @param ncol An interger that is the number of columns.
 #'
-#' @param sparse.coeff A numeric in  [0, 1] that control the sparsity by
-#' rows (the proportion of non-zero entries among all matrix entries). Non zero entries is define by  \code{nnz}=\code{sparse.coeff*nrow*ncol} and need to be larger than \code{nrow} and \code{ncol}
+#' @param sparse.coeff A numeric in \eqn{[0,1]} that control the sparsity by
+#' rows (the proportion of non-zero entries among all matrix entries).
+#' Non-zero entries is define by `nnz = sparse.coeff * nrow * ncol` and
+#' need to be larger than `nrow` and `ncol`.
 #'
-#' @return A matrix of weights (the sum of rows is equal to 1)
+#' @return A matrix of weights (the sum of rows is equal to 1).
 #' 
 #' @examples
 #' M <- rSpMatrix(10, 7, 0.5)

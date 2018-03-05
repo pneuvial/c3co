@@ -2,38 +2,38 @@
 % Please edit documentation in R/positiveFusedLasso.R
 \name{positiveFusedLasso}
 \alias{positiveFusedLasso}
-\title{Positive fused lasso function}
+\title{Positive fused Lasso function}
 \usage{
 positiveFusedLasso(Y, Z, lambda, eps = 0.1, max.iter = 50, warn = FALSE,
   verbose = FALSE)
 }
 \arguments{
-\item{Y}{A list of one or two matrices named Y1 and Y2 containing the segmented minor 
-(and possibly the major) copy number 
-(\code{n} patients in row and \code{L} segments in columns)}
+\item{Y}{A list of one or two matrices named \code{Y1} and \code{Y2} containing the
+segmented minor (and possibly the major) copy numbers
+(n patients in rows and L segments in columns).}
 
-\item{Z}{A list of one or two \code{L} x \code{p} matrices names Z1 and Z2 containing the \code{L}
-minor (and possibly the major) copy numbers of the \code{p} initial 
-latent feature estimates}
+\item{Z}{A list of one or two L-by-p matrices names \code{Z1} and \code{Z2}
+containing the L minor (and possibly the major) copy numbers of the
+p initial latent feature estimates.}
 
-\item{lambda}{A numeric with one or two real numbers, the coefficients for the fused penalty
-for minor (and possibly the major) copy numbers}
+\item{lambda}{A numeric with one or two real numbers, the coefficients
+for the fused penalty for minor (and possibly the major) copy numbers.}
 
-\item{eps}{criterion to stop algorithm (when W do not change
-sqrt(sum((W-W.old)^2) < eps)}
+\item{eps}{Criterion to stop algorithm
+(when W do not change sqrt(sum((W-W.old)^2) < eps).}
 
-\item{max.iter}{maximum number of iterations of the algorithm}
+\item{max.iter}{Maximum number of iterations of the algorithm.}
 
-\item{warn}{issue a warning if Z1 <= Z2 is not always satisfied?
-Defaults to FALSE}
+\item{warn}{Issue a warning if \code{all(Z1 <= Z2)} is not always satisfied?
+Defaults to \code{FALSE}.}
 
-\item{verbose}{if you want to print some information during running}
+\item{verbose}{If you want to print some information during running.}
 }
 \value{
-An object of class [\code{\linkS4class{posFused}}]
+An object of class \link[=posFused-class]{posFused}.
 }
 \description{
-Positive fused lasso function
+Positive fused Lasso function
 }
 \examples{
 set.seed(7)

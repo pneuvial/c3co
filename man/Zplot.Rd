@@ -7,13 +7,13 @@
 Zplot(df, scalePosToMb = FALSE)
 }
 \arguments{
-\item{df}{data.frame object output from \code{createZdf}}
+\item{df}{data.frame Object output from \code{\link[=createZdf]{createZdf()}}.}
 
-\item{scalePosToMb}{a logical value, should 'x' positions be scaled to
-MegaBases? Defaults to FALSE}
+\item{scalePosToMb}{A logical, should 'x' positions be scaled to
+megabases? Defaults to \code{FALSE}.}
 }
 \value{
-plot latent profiles along chromosomes
+plot Latent profiles along chromosomes.
 }
 \description{
 Plot latent profiles along chromosomes

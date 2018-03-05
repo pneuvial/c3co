@@ -7,14 +7,14 @@
 mixSubclones(subClones, W)
 }
 \arguments{
-\item{subClones}{The subclones used to create the mixture ideally from
-the function \code{buildSubClones}.}
+\item{subClones}{The subclones used to create the mixture ideally by
+\code{\link[=buildSubclones]{buildSubclones()}}.}
 
-\item{W}{A matrix of weights in percentage [0,100] (without fraction of
-normal cells)}
+\item{W}{A matrix of weights in percentage \eqn{[0,100]}
+(without fraction of normal cells).}
 }
 \value{
-The mixture
+The mixture.
 }
 \description{
 Create a mixture of subclones

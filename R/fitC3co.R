@@ -2,29 +2,28 @@
 #' 
 #' Estimate c3co model parameters from segment-level copy number data
 #' 
-#' @param Y1 A numeric n x S matrix, segment-level minor copy numbers, where n
-#'   is the number of samples and S the number of segments
+#' @param Y1 A numeric n-by-S matrix, segment-level minor copy numbers, where n
+#'   is the number of samples and S the number of segments.
 #'   
-#' @param Y2 An optional numeric n x S matrix, segment-level major copy numbers.
-#'   If \code{NULL}, the model is estimated on Y1 only
+#' @param Y2 An optional numeric n-by-S matrix, segment-level major copy numbers.
+#'   If `NULL`, the model is estimated on `Y1` only.
 #'   
-#' @param parameters.grid A list composed of two vectors named \code{lambda1} 
-#'   and \code{lambda2} of real numbers which are the penalty coefficients for 
+#' @param parameters.grid A list composed of two vectors named `lambda1`
+#'   and `lambda2` of real numbers which are the penalty coefficients for 
 #'   the fused lasso on the minor and major copy number dimension and a vector 
-#'   named \code{nb.arch} of integers which is the number of archetypes in the 
-#'   model
+#'   named `nb.arch` of integers which is the number of archetypes in the 
+#'   model.
 #'   
-#' @param warn issue a warning if Z1 <= Z2 is not satisfied for a candidate 
-#'   number of subclones? Defaults to TRUE
+#' @param warn Issue a warning if \eqn{Z1 <= Z2} is not satisfied for a
+#'   candidate number of subclones.  Defaults to `TRUE`.
 #'   
-#' @param \dots Further arguments to be passed to 
-#'   \code{\link{positiveFusedLasso}()}
+#' @param \dots Further arguments to be passed to [positiveFusedLasso()].
 #'   
-#' @param verbose A logical value indicating whether to print extra information.
-#'   Defaults to FALSE
+#' @param verbose A logical indicating whether to print extra information.
+#'   Defaults to `FALSE`.
 #'   
-#' @return A list of \code{k} objects of class [\code{\linkS4class{c3coFit}}],
-#'   where \code{k} is the number of candidate number of subclones
+#' @return A list of k objects of class [c3coFit][c3coFit-class],
+#'   where k is the number of candidate number of subclones.
 #'   
 #' @examples
 #' set.seed(7)

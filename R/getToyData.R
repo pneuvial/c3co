@@ -1,33 +1,30 @@
 #' Create a toy subclone and mixture data set
 #' 
-#' @param n The number of observations
+#' @param n The number of observations.
 #'   
-#' @param len The number of loci in each subclone
+#' @param len The number of loci in each subclone.
 #'   
-#' @param nbClones The number of subclones
+#' @param nbClones The number of subclones.
 #'   
-#' @param nbBkps The total number of breakpoints
+#' @param nbBkps The total number of breakpoints.
 #'   
 #' @param eps A numeric value, the signal to noise ratio for simulated data.
 #'   
-#' @param weightSparsity A numeric value in \code{[0,1]}: weights under 
-#'   \code{weightSparsity} are set to 0. This parameter controls the sparsity of
+#' @param weightSparsity A numeric value in \eqn{[0,1]}: weights under 
+#'   `weightSparsity` are set to 0. This parameter controls the sparsity of
 #'   the weight matrix.
 #'   
 #' @param intercept A logical value indicating whether an intercept should be
-#'   added (this corresponds to the presence of o normal subclone)
+#'   added (this corresponds to the presence of a normal subclone).
 #' 
-#' @return A list with three elements: \code{W}, a \code{n} x \code{nbClones}
-#'   matrix of weights, and  \code{locus} and \code{segment}, which contain
+#' @return A list with three elements: `W`, a `n`-by-`nbClones`
+#'   matrix of weights, and `locus` and `segment`, which contain
 #'   locus-level and segment-level data. Each of them is a list of two
-#'   elements: \describe{
-#'   
-#'   \item{Y}{A \code{n} x \code{len} (or \code{nbBkp+1}) matrix of noisy 
-#'   observations}
-#'   
-#'   \item{Z}{A \code{nbClones} x \code{len}  (or \code{nbBkp+1}) matrix of 
-#'   latent features (subclones)}
-#'   
+#'   elements:
+#'   \describe{
+#'     \item{Y}{An `n`-by-`len` (or `nbBkp+1`) matrix of observed CN signals}
+#'     \item{Z}{An `nbClones`-by-`len` (or `nbBkp+1`) matrix of latent features
+#'              (subclones)}  
 #'   }
 #'   
 #' @details For simplicity, the breakpoints positions are drawn uniformly from 

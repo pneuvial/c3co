@@ -8,16 +8,16 @@ rSparseWeightMatrix(nb.samp, nb.arch, sparse.coeff = max(nb.samp,
   nb.arch)/(nb.samp * nb.arch))
 }
 \arguments{
-\item{nb.samp}{An interger that is the number of samples (number of rows)}
+\item{nb.samp}{An integer that is the number of samples (number of rows).}
 
 \item{nb.arch}{An interger that is the number of archetypes
-(number of columns)}
+(number of columns).}
 
-\item{sparse.coeff}{A numeric in  [0, 1] that control the sparsity by
-rows (the proportion of non-zero entries among all matrix entries)}
+\item{sparse.coeff}{A numeric in \eqn{[0,1]} that control the sparsity by
+rows (the proportion of non-zero entries among all matrix entries).}
 }
 \value{
-A matrix of weights (the sum of rows is equal to 1)
+A matrix of weights (the sum of rows is equal to 1).
 }
 \description{
 Generate weight matrix

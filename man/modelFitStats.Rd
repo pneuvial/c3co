@@ -11,7 +11,7 @@ modelFitStats(object)
 \S4method{modelFitStats}{posFused}(object)
 }
 \arguments{
-\item{object}{An object of class \code{\linkS4class{posFused}}}
+\item{object}{An object of class \link[=posFused-class]{posFused}.}
 }
 \description{
 Compute statistics of a c3co model

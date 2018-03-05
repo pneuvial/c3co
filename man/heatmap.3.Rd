@@ -130,7 +130,7 @@ heatmap.3(x, Rowv = TRUE, Colv = if (symm) "Rowv" else TRUE,
 
 \item{KeyValueName}{= "", name of key}
 
-\item{...}{additional parameters of \code{image}}
+\item{...}{additional parameters of \code{\link[graphics:image]{graphics::image()}}.}
 }
 \value{
 A Heatmap

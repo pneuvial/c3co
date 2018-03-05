@@ -15,34 +15,34 @@ Wplot(this, idxBest, rownamesW = NULL, col = NULL, margins = c(5, 7),
   labelLegend, cexCol = 1.5, ...)
 }
 \arguments{
-\item{this}{An object of class \code{\linkS4class{c3coFit}}}
+\item{this}{An object of class \link[=c3coFit-class]{c3coFit}.}
 
-\item{idxBest}{A integer, the number of latent features}
+\item{idxBest}{A integer, the number of latent features.}
 
-\item{rownamesW}{A vector that contains identification of patients}
+\item{rownamesW}{A vector that contains identification of patients.}
 
-\item{col}{A vector that contains colors for the heatmap}
+\item{col}{A vector that contains colors for the heatmap.}
 
-\item{margins}{A vector margins}
+\item{margins}{A vector margins.}
 
-\item{posLegend}{position of the legend to be passed to \code{plot}}
+\item{posLegend}{Position of the legend to be passed to \code{\link[graphics:plot]{graphics::plot()}}.}
 
 \item{listPheno}{A matrix that contains details on phenotype for each
-patient. Could be location or time point of tumors for example}
+patient. Could be location or time point of tumors for example.}
 
 \item{colsPheno}{Matrix that containts colors for each type of variable
-in phenotype}
+in phenotype.}
 
-\item{colLegend}{colors for clinical data}
+\item{colLegend}{Colors for clinical data.}
 
-\item{labelLegend}{labels for clinical data}
+\item{labelLegend}{Labels for clinical data.}
 
-\item{cexCol}{size of labels of columns by (default 1.5)}
+\item{cexCol}{Size of labels of columns by (default 1.5).}
 
-\item{...}{other paramaters to personalize heatmap (see \code{heatmap.3})}
+\item{...}{Other parameters to personalize heatmap (see \code{\link[=heatmap.3]{heatmap.3()}}).}
 }
 \value{
-a heatmap of W
+A heatmap of \code{W}.
 }
 \description{
 Plot the weight matrix

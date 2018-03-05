@@ -1,27 +1,27 @@
-#' Positive fused lasso function
+#' Positive fused Lasso function
 #'
-#' @param Y A list of one or two matrices named Y1 and Y2 containing the segmented minor 
-#' (and possibly the major) copy number 
-#' (\code{n} patients in row and \code{L} segments in columns)
+#' @param Y A list of one or two matrices named `Y1` and `Y2` containing the
+#' segmented minor (and possibly the major) copy numbers 
+#' (n patients in rows and L segments in columns).
 #'
-#' @param Z A list of one or two \code{L} x \code{p} matrices names Z1 and Z2 containing the \code{L}
-#' minor (and possibly the major) copy numbers of the \code{p} initial 
-#' latent feature estimates
+#' @param Z A list of one or two L-by-p matrices names `Z1` and `Z2`
+#' containing the L minor (and possibly the major) copy numbers of the
+#' p initial latent feature estimates.
 #'
-#' @param lambda A numeric with one or two real numbers, the coefficients for the fused penalty
-#' for minor (and possibly the major) copy numbers
+#' @param lambda A numeric with one or two real numbers, the coefficients
+#' for the fused penalty for minor (and possibly the major) copy numbers.
 #'
-#' @param eps criterion to stop algorithm (when W do not change
-#' sqrt(sum((W-W.old)^2) < eps)
+#' @param eps Criterion to stop algorithm
+#' (when W do not change sqrt(sum((W-W.old)^2) < eps).
 #'
-#' @param max.iter maximum number of iterations of the algorithm
+#' @param max.iter Maximum number of iterations of the algorithm.
 #'
-#' @param warn issue a warning if Z1 <= Z2 is not always satisfied?
-#' Defaults to FALSE
+#' @param warn Issue a warning if `all(Z1 <= Z2)` is not always satisfied?
+#' Defaults to `FALSE`.
 #'
-#' @param verbose if you want to print some information during running
+#' @param verbose If you want to print some information during running.
 #'
-#' @return An object of class [\code{\linkS4class{posFused}}]
+#' @return An object of class [posFused][posFused-class].
 #'
 #' @examples
 #' set.seed(7)

@@ -3,9 +3,9 @@
 \docType{class}
 \name{c3coFit-class}
 \alias{c3coFit-class}
-\title{Class for the object create by \code{c3coFit} function}
+\title{Class for the object create by \code{\link[=fitC3co]{fitC3co()}}}
 \description{
-Class for the object create by \code{c3coFit} function
+Class for the object create by \code{\link[=fitC3co]{fitC3co()}}
 }
 \section{Slots}{
 
@@ -14,9 +14,9 @@ Class for the object create by \code{c3coFit} function
 
 \item{\code{segDat}}{A list that contains segmented data.}
 
-\item{\code{config}}{A list containing PVE, BIC and parameters for all tested models 
-and for the best model}
+\item{\code{config}}{A list containing PVE, BIC and parameters for all tested
+models and for the best model.}
 
-\item{\code{fit}}{A List of [\code{\linkS4class{posFused}}] objects.}
+\item{\code{fit}}{A list of \link[=posFused-class]{posFused} objects.}
 }}
 

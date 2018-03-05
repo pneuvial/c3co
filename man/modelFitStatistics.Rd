@@ -7,13 +7,13 @@
 modelFitStatistics(Y, Yhat, What, Zhat)
 }
 \arguments{
-\item{Y}{Original matrix of data}
+\item{Y}{Original matrix of data.}
 
-\item{Yhat}{Estimates}
+\item{Yhat}{Estimates.}
 
-\item{What}{Inferred weight matrix}
+\item{What}{Inferred weight matrix.}
 
-\item{Zhat}{Inferred subclones matrix}
+\item{Zhat}{Inferred subclones matrix.}
 }
 \value{
 The main statistics of the inferred model.

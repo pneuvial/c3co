@@ -9,59 +9,61 @@ initializeZ(Y1, Y2 = NULL, p = min(dim(Y1)), flavor = c("hclust", "nmf",
   forceNormal = FALSE, verbose = FALSE)
 }
 \arguments{
-\item{Y1}{A matrix containing the segmented minor copy number (\code{n}
-patients in row and \code{L} segments in columns)}
+\item{Y1}{A matrix containing the segmented minor copy number
+(n patients in rows and L segments in columns).}
 
-\item{Y2}{A matrix containing the segmented major copy number (\code{n}
-patients in row and \code{L} segments in columns)}
+\item{Y2}{A matrix containing the segmented major copy number
+(n patients in rows and L segments in columns).}
 
 \item{p}{An integer value, the number of latent features in the model.
-Defaults to \code{min(dim(Y1))}}
+Defaults to \code{min(dim(Y1))}.}
 
 \item{flavor}{A character value specifying how initialization is perfomed.
-Defaults to \code{"hclust"}. See Details}
+Defaults to \link[stats:hclust]{stats::hclust}. See Details.}
 
 \item{stat}{Statistic used to perform initialization. Should be either
-"C1+C2", "C1", or "C2"}
+\code{"C1+C2"}, \code{"C1"}, or \code{"C2"}.}
 
-\item{forceNormal}{A logical value indicating whether a normal component is forced in initialization
-Defaults to FALSE}
+\item{forceNormal}{A logical value indicating whether a normal component
+is forced in initialization.  Defaults to \code{FALSE}.}
 
 \item{verbose}{A logical value indicating whether to print extra information.
-Defaults to FALSE}
+Defaults to \code{FALSE}.}
 }
 \value{
-A list with two components: \describe{ \item{Z1}{A \code{L} x
-  \code{p} matrix, the initial value for the \code{L} minor copy numbers of
-  the \code{p} latent features} \item{Z2}{A \code{L} x \code{p} matrix, the
-  initial value for the \code{L} major copy numbers of the \code{p} latent
-  features} }
+A list with two components:
+\describe{
+\item{\code{Z1}}{An L-by-\code{p} matrix, the initial value for the L minor
+copy numbers of the \code{p} latent features}
+\item{\code{Z2}}{An L-by-\code{p} matrix, the initial value for the L major
+copy numbers of the \code{p} latent features}
+}
 }
 \description{
 Initialization of the latent features of the c3co model
 }
 \details{
-The latent features (LF) are inferred as follows according to the
-  value of argument 'flavor':
+The latent features are inferred as follows according to the
+value of argument \code{flavor}:
 
-  If \code{flavor=="hclust"} (the default), the LF are centers of clusters
-  derived by hierarchical agglomerative clustering on the Euclidean distance
-  between the input copy number profiles, and using Ward linkage
-  (\code{\link[stats]{hclust}}).
+If \code{flavor == "hclust"} (default), the latent features are centers of clusters
+derived by hierarchical agglomerative clustering on the Euclidean distance
+between the input copy number profiles, and using Ward linkage
+(\code{\link[stats:hclust]{stats::hclust()}}).
 
-  If \code{flavor=="nmf"}, the LF are the _coefficients_ of the non-negative
-  matrix factorization in \code{p} of the input copy number profiles.
+If \code{flavor == "nmf"}, the latent features are the \emph{coefficients} of the non-negative
+matrix factorization in \code{p} of the input copy number profiles.
 
-  If \code{flavor=="svd"}, the LF are the first \code{p} right singular
-  vectors of the singular value decomposition of the input copy number
-  profiles. The flavor is not recommended as it may produce matrices
-  with non-positive entries
+If \code{flavor == "svd"}, the latent features are the first \code{p} right singular
+vectors of the singular value decomposition of the input copy number
+profiles. The flavor is not recommended as it may produce matrices
+with non-positive entries
 
-  If  \code{flavor=="archetypes"}, the LF are defined using archetypal
-  analysis.
+If  \code{flavor == "archetypes"}, the latent features are defined using archetypal
+analysis.
 
-  If  \code{flavor=="subsampling"}, the LF are chosen at random among existing
-  profiles.
+If  \code{flavor == "subsampling"}, the latent features are chosen at random among existing
+profiles.
 }
 \examples{
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -93,8 +95,8 @@ resNMF1 <- initializeZ(Y1, p=nbClones, flavor="nmf")
 }
 \references{
 Gaujoux R and Seoighe C (2010). A flexible R package for
-  nonnegative matrix factorization. BMC Bioinformatics, 11(1), pp. 367.
+nonnegative matrix factorization. BMC Bioinformatics, 11(1), pp. 367.
 
 Cutler A and Breiman L. (1994) Archetypal analysis.
-  Technometrics, 36(4):338-3474.
+Technometrics, 36(4):338-3474.
 }

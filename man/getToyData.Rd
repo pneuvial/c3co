@@ -8,43 +8,40 @@ getToyData(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1,
   intercept = TRUE)
 }
 \arguments{
-\item{n}{The number of observations}
+\item{n}{The number of observations.}
 
-\item{len}{The number of loci in each subclone}
+\item{len}{The number of loci in each subclone.}
 
-\item{nbClones}{The number of subclones}
+\item{nbClones}{The number of subclones.}
 
-\item{nbBkps}{The total number of breakpoints}
+\item{nbBkps}{The total number of breakpoints.}
 
 \item{eps}{A numeric value, the signal to noise ratio for simulated data.}
 
-\item{weightSparsity}{A numeric value in \code{[0,1]}: weights under 
+\item{weightSparsity}{A numeric value in \eqn{[0,1]}: weights under
 \code{weightSparsity} are set to 0. This parameter controls the sparsity of
 the weight matrix.}
 
 \item{intercept}{A logical value indicating whether an intercept should be
-added (this corresponds to the presence of o normal subclone)}
+added (this corresponds to the presence of a normal subclone).}
 }
 \value{
-A list with three elements: \code{W}, a \code{n} x \code{nbClones}
-  matrix of weights, and  \code{locus} and \code{segment}, which contain
-  locus-level and segment-level data. Each of them is a list of two
-  elements: \describe{
-  
-  \item{Y}{A \code{n} x \code{len} (or \code{nbBkp+1}) matrix of noisy 
-  observations}
-  
-  \item{Z}{A \code{nbClones} x \code{len}  (or \code{nbBkp+1}) matrix of 
-  latent features (subclones)}
-  
-  }
+A list with three elements: \code{W}, a \code{n}-by-\code{nbClones}
+matrix of weights, and \code{locus} and \code{segment}, which contain
+locus-level and segment-level data. Each of them is a list of two
+elements:
+\describe{
+\item{Y}{An \code{n}-by-\code{len} (or \code{nbBkp+1}) matrix of observed CN signals}
+\item{Z}{An \code{nbClones}-by-\code{len} (or \code{nbBkp+1}) matrix of latent features
+(subclones)}
+}
 }
 \description{
 Create a toy subclone and mixture data set
 }
 \details{
-For simplicity, the breakpoints positions are drawn uniformly from 
-  the set of all possible positions.
+For simplicity, the breakpoints positions are drawn uniformly from
+the set of all possible positions.
 }
 \examples{
 

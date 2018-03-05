@@ -1,46 +1,46 @@
 #' Initialization of the latent features of the c3co model
 #'
-#' @param Y1 A matrix containing the segmented minor copy number (\code{n}
-#'   patients in row and \code{L} segments in columns)
+#' @param Y1 A matrix containing the segmented minor copy number
+#'   (n patients in rows and L segments in columns).
 #'
-#' @param Y2 A matrix containing the segmented major copy number (\code{n}
-#'   patients in row and \code{L} segments in columns)
+#' @param Y2 A matrix containing the segmented major copy number
+#'   (n patients in rows and L segments in columns).
 #'
 #' @param p An integer value, the number of latent features in the model.
-#'   Defaults to \code{min(dim(Y1))}
+#'   Defaults to `min(dim(Y1))`.
 #'
 #' @param flavor A character value specifying how initialization is perfomed.
-#'   Defaults to \code{"hclust"}. See Details
+#'   Defaults to [stats::hclust]. See Details.
 #'
 #' @param stat Statistic used to perform initialization. Should be either
-#'   "C1+C2", "C1", or "C2"
+#'   `"C1+C2"`, `"C1"`, or `"C2"`.
 #'   
-#' @param forceNormal A logical value indicating whether a normal component is forced in initialization
-#'   Defaults to FALSE
+#' @param forceNormal A logical value indicating whether a normal component
+#'   is forced in initialization.  Defaults to `FALSE`.
 #'   
 #' @param verbose A logical value indicating whether to print extra information.
-#'   Defaults to FALSE
+#'   Defaults to `FALSE`.
 #'
-#' @details The latent features (LF) are inferred as follows according to the
-#'   value of argument 'flavor':
+#' @details The latent features are inferred as follows according to the
+#'   value of argument `flavor`:
 #'
-#'   If \code{flavor=="hclust"} (the default), the LF are centers of clusters
+#'   If `flavor == "hclust"` (default), the latent features are centers of clusters
 #'   derived by hierarchical agglomerative clustering on the Euclidean distance
 #'   between the input copy number profiles, and using Ward linkage
-#'   (\code{\link[stats]{hclust}}).
+#'   ([stats::hclust()]).
 #'
-#'   If \code{flavor=="nmf"}, the LF are the _coefficients_ of the non-negative
-#'   matrix factorization in \code{p} of the input copy number profiles.
+#'   If `flavor == "nmf"`, the latent features are the _coefficients_ of the non-negative
+#'   matrix factorization in `p` of the input copy number profiles.
 #'
-#'   If \code{flavor=="svd"}, the LF are the first \code{p} right singular
+#'   If `flavor == "svd"`, the latent features are the first `p` right singular
 #'   vectors of the singular value decomposition of the input copy number
 #'   profiles. The flavor is not recommended as it may produce matrices
 #'   with non-positive entries
 #'
-#'   If  \code{flavor=="archetypes"}, the LF are defined using archetypal
+#'   If  `flavor == "archetypes"`, the latent features are defined using archetypal
 #'   analysis.
 #'
-#'   If  \code{flavor=="subsampling"}, the LF are chosen at random among existing
+#'   If  `flavor == "subsampling"`, the latent features are chosen at random among existing
 #'   profiles.
 #'
 #' @references Gaujoux R and Seoighe C (2010). A flexible R package for
@@ -49,11 +49,13 @@
 #' @references Cutler A and Breiman L. (1994) Archetypal analysis.
 #'   Technometrics, 36(4):338-3474.
 #'
-#' @return A list with two components: \describe{ \item{Z1}{A \code{L} x
-#'   \code{p} matrix, the initial value for the \code{L} minor copy numbers of
-#'   the \code{p} latent features} \item{Z2}{A \code{L} x \code{p} matrix, the
-#'   initial value for the \code{L} major copy numbers of the \code{p} latent
-#'   features} }
+#' @return A list with two components:
+#' \describe{
+#'   \item{`Z1`}{An L-by-`p` matrix, the initial value for the L minor
+#'    copy numbers of the `p` latent features}
+#'   \item{`Z2`}{An L-by-`p` matrix, the initial value for the L major
+#'    copy numbers of the `p` latent features}
+#' }
 #'
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)

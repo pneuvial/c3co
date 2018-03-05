@@ -3,17 +3,21 @@
 #' Joint segmentation by Recursive Binary Segmentation followed by Dynamic 
 #' Programming
 #' 
-#' @param dat A list of \code{data.frame} containing \describe{ \item{tcn}{Total
-#'   copy number} \item{dh}{Mirrored B allele fraction} \item{pos}{Position on 
-#'   the genome} \item{chr}{Chromosome} }
+#' @param dat A list of data frames containing columns:
+#' \describe{
+#'   \item{`tcn`}{Total copy number}
+#'   \item{`dh`}{Mirrored B allele fraction}
+#'   \item{`pos`}{Position on the genome}
+#'   \item{`chr`}{Chromosome}
+#' }
 #'   
-#' @param stat "TCN or "C1C2" parameter to segment the data. If \code{stat == 
-#'   TCN}, the segmentation will be done on TCN only.
+#' @param stat `"TCN"` or `"C1C2"` parameter to segment the data.
+#' If `stat == `"TCN"`, the segmentation will be done on TCN only.
 #'   
-#' @param verbose A logical value indicating whether to print extra information.
-#'   Defaults to FALSE
+#' @param verbose A logical value indicating whether to print extra
+#' information. Defaults to `FALSE`.
 #'   
-#' @return Binned Minor and Major copy number with list of breakpoints
+#' @return Binned minor and major copy numbers with list of breakpoints.
 #'   
 #' @references Gey, S., & Lebarbier, E. (2008). Using CART to Detect Multiple 
 #'   Change Points in the Mean for Large Sample. 
@@ -23,10 +27,8 @@
 #'   evaluation of DNA copy number segmentation methods.  Briefings in 
 #'   Bioinformatics 16 (4): 600-615
 #'   
-#' @seealso \code{\link[jointseg]{jointSeg}}
-#'   
-#' @details This function is a wrapper around the \code{jointSeg} function in
-#'   the \code{jointseg} package.
+#' @details This function is a wrapper around the [jointseg::jointSeg()] of
+#' the \pkg{jointseg} package.
 #'   
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)

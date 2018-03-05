@@ -7,7 +7,8 @@
 loadPSCBSdata(PSCBSdata)
 }
 \arguments{
-\item{PSCBSdata}{A list that contains PSCBS data.}
+\item{PSCBSdata}{A list that contains PSCBS data as produced by
+the \pkg{PSCBS} package.}
 }
 \value{
 A data frame under PSCBS format.

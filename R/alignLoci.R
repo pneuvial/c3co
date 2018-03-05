@@ -4,11 +4,11 @@
 #' (chr, pos) loci.  If new rows are injected, the other non-(chr, pos) fields
 #' are populated with missing values.
 #'
-#' @param dat A list of PSCN data.frame:s with required columns \code{chr} and
-#' \code{pos}.
+#' @param dat A list of PSCN data.frame:s with required columns `chr` and
+#' `pos`.
 #'
-#' @return A list of the same length as \code{dat} where all data.frame:s have
-#' the exact same set of fields \code{chr} and \code{pos} (and in the same
+#' @return A list of the same length as `dat` where all data.frame:s have
+#' the exact same set of fields `chr` and `pos` (and in the same
 #' order).
 #'
 #' @export

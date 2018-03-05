@@ -69,7 +69,7 @@ trim.heatmap <- function(data, trim) {
 #' @param ColSideColorsSize = 1,
 #' @param RowSideColorsSize = 1,
 #' @param KeyValueName = "", name of key
-#' @param ... additional parameters of \code{image}
+#' @param ... additional parameters of [graphics::image()].
 #' @return A Heatmap
 #'
 #' @importFrom graphics abline axis hist image layout lines mtext par plot plot.new rect text title
