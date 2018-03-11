@@ -166,5 +166,62 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         }
         bkpPosByCHR[[cc]] <- c(min(pos), bkpPosByCHR[[cc]], max(pos))
     }
-    list(Y1=Y1, Y2=Y2, Y=Y, bkp=bkpPosByCHR)
+    
+    structure(list(
+      Y1=Y1,
+      Y2=Y2,
+      Y=Y,
+      bkp=bkpPosByCHR
+    ), class = c("C3coSegmentation"))
+}
+
+
+#' @export
+nbrOfSegments <- function(x, ...) UseMethod("nbrOfSegments")
+
+#' @export
+nbrOfSegments.C3coSegmentation <- function(x, ...) {
+  nrow(x$Y)
+}
+
+
+#' @export
+nbrOfSamples <- function(x, ...) UseMethod("nbrOfSamples")
+
+#' @export
+nbrOfSamples.C3coSegmentation <- function(x, ...) {
+  ncol(x$Y)
+}
+
+
+#' @export
+nbrOfChromosomes <- function(x, ...) UseMethod("nbrOfChromosomes")
+
+#' @export
+nbrOfChromosomes.C3coSegmentation <- function(x, ...) {
+  length(x$bkp)
+}
+
+
+#' @export
+trackNames <- function(x) NextMethod("trackNames")
+
+#' @export
+trackNames.C3coSegmentation <- function(x) {
+  ## FIXME: Unsafe /HB 2018-03-11
+  grep("^Y[0-9]*$", names(x), value = TRUE)
+}
+
+
+#' @export
+print.C3coSegmentation <- function(x, ...) {
+  s <- sprintf("%s: ", class(x)[1])
+  s <- c(s, sprintf(" Method: jointseg::jointSeg"))
+  s <- c(s, sprintf(" Number samples: %d", nbrOfSamples(x)))
+  s <- c(s, sprintf(" Number chromosomes: %d", nbrOfChromosomes(x)))
+  s <- c(s, sprintf(" Number segments: %d", nbrOfSegments(x)))
+  t <- trackNames(x)
+  s <- c(s, sprintf(" Dimensions: [%d] %s", length(t), comma(sQuote(t))))
+  s <- paste(s, collapse = "\n")
+  cat(s, "\n", sep = "")
 }

@@ -1,7 +1,9 @@
 Package: c3co
 =============
 
-Version: 0.2.6-9000 [2018-02-27]
+Version: 0.2.6-9000 [2018-03-11]
+
+ o Add C3coSegmentation class.
 
  o Using message() everywhere (instead of print()).
  
