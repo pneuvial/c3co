@@ -94,7 +94,7 @@ getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1, interc
     ru <- runif(n*nbClones)
     ru[ru < weightSparsity] <- 0
     W <- matrix(ru, nrow=n, ncol=nbClones)
-    W <- round(sweep(W, MARGIN = 1L, STATS = rowSums(W), FUN = '/'), digits = 2L)
+    W <- round(sweep(W, MARGIN = 1L, STATS = rowSums(W), FUN = `/`), digits = 2L)
     W[, nbClones] <- 1-rowSums(W[, -nbClones, drop=FALSE]) ## make sure rows sum to 1 after rounding
 
     ## segment-level data

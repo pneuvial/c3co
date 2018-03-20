@@ -240,13 +240,13 @@ heatmap.3 <- function(x,
         retval$rowMeans <- rm <- rowMeans(x, na.rm = na.rm)
         x <- sweep(x, MARGIN=1L, STATS=rm)
         retval$rowSDs <- sx <- rowSds(x, na.rm = na.rm)
-        x <- sweep(x, MARGIN=1L, STATS=sx, FUN="/")
+        x <- sweep(x, MARGIN=1L, STATS=sx, FUN=`/`)
     }
     else if (scale == "column") {
         retval$colMeans <- rm <- colMeans(x, na.rm = na.rm)
         x <- sweep(x, MARGIN=2L, STATS=rm)
         retval$colSDs <- sx <- colSds(x, na.rm = na.rm)
-        x <- sweep(x, MARGIN=2L, STATS=sx, FUN="/")
+        x <- sweep(x, MARGIN=2L, STATS=sx, FUN=`/`)
     }
     if (missing(breaks) || is.null(breaks) || length(breaks) < 1) {
         if (missing(col) || is.function(col))
