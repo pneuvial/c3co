@@ -97,7 +97,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
             mprint(segDat)
         }
         seg <- readRDS(segDat)
-      }else{
+      } else {
         ## Sanity check
         checkGrid <- lapply(names(segDat), FUN=function(na) {
           ecn <- c("bkp", "Y1", "Y2", "Y") ## expected
