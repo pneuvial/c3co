@@ -96,6 +96,8 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
     } else if (stat == "TCN") {
         dataToSeg <- cbind(tcn)
     }
+
+    names <- names(dat)
     
     bkpPosByCHR <- list()
     Y1 <- Y2 <- NULL
@@ -142,6 +144,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
             }
             ## Define Y1 and Y2
             Y <- rbind(Y, binDatTCNwithoutNA)
+            colnames(Y) <- names
             DH <- rbind(DH, binDatDHwithoutNA)
             Y1 <- Y*(1-DH)/2
             Y2 <- Y*(1+DH)/2
@@ -161,12 +164,13 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
             }
             ## Define Y1 and Y2
             Y <- rbind(Y, binDatTCNwithoutNA)
+            colnames(Y) <- names
             Y1 <- NA_real_
             Y2 <- NA_real_
         }
         bkpPosByCHR[[cc]] <- c(min(pos), bkpPosByCHR[[cc]], max(pos))
     }
-    
+
     structure(list(
       Y1=Y1,
       Y2=Y2,
@@ -195,6 +199,15 @@ nbrOfSamples.C3coSegmentation <- function(x, ...) {
 
 
 #' @export
+sampleNames <- function(x) NextMethod("sampleNames")
+
+#' @export
+sampleNames.C3coSegmentation <- function(x) {
+  colnames(x$Y)
+}
+
+
+#' @export
 nbrOfChromosomes <- function(x, ...) UseMethod("nbrOfChromosomes")
 
 #' @export
@@ -216,10 +229,17 @@ trackNames.C3coSegmentation <- function(x) {
 #' @export
 print.C3coSegmentation <- function(x, ...) {
   s <- sprintf("%s: ", class(x)[1])
-  s <- c(s, sprintf(" Method: jointseg::jointSeg"))
-  s <- c(s, sprintf(" Number samples: %d", nbrOfSamples(x)))
+  n <- nbrOfSamples(x)
+  names <- sampleNames(x)
+  if (is.null(names)) {
+    names <- seq_len(n)
+  } else {
+    names <- sQuote(names)
+  }
+  s <- c(s, sprintf(" Samples: [%d] %s", n, hpaste(names)))
   s <- c(s, sprintf(" Number chromosomes: %d", nbrOfChromosomes(x)))
   s <- c(s, sprintf(" Number segments: %d", nbrOfSegments(x)))
+  s <- c(s, sprintf(" Method: jointseg::jointSeg"))
   t <- trackNames(x)
   s <- c(s, sprintf(" Dimensions: [%d] %s", length(t), comma(sQuote(t))))
   s <- paste(s, collapse = "\n")
