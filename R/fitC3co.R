@@ -65,7 +65,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
 
     ## preparing data
     Y <- list(Y1=Y1)
-    if(!is.null(Y2)) Y$Y2 <- Y2
+    if (!is.null(Y2)) Y$Y2 <- Y2
     ## Sanity checks
     stopifnot(length(unique(lapply(Y, FUN = dim))) == 1) # are all the dimension equal?
 
@@ -214,7 +214,7 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
           }
         } else {
           lambda <- 10^(-seq(from=6, to=4, length.out=10))
-          if(verbose) {
+          if (verbose) {
             message("Regularization parameter lambda or lambda[1] or lambda[2] is not provided. Using value: ", comma(lambda))
           }
         }

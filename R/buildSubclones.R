@@ -110,7 +110,7 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
             c1 <- exp(rnorm(ntot, mean=log(1 + mean1), sd=eps) - 1)  ## exp(log(1+.)-1) to enforce positivity
             c2 <- exp(rnorm(ntot, mean=log(1 + mean2), sd=eps) - 1)  ## exp(log(1+.)-1) to enforce positivity
             c <- c1 + c2
-            d <- abs(c2 - c1)/c  ## the absolute value implicitly enforces c1<c2
+            d <- abs(c2 - c1)/c  ## absolute value implicitly enforces c1 < c2
             b <- 1/2 + (c2 - c1)/c/2
             dat <- data.frame(c=c, b=b, region=regz, stringsAsFactors=FALSE)
         }

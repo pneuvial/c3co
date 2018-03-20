@@ -116,7 +116,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   if (verbose) message("Stopped after ", iter, " iterations")
   if (verbose) message("delta:", round(delta, digits=4))
 
-  if(length(Y) > 1 && warn) { ## sanity check: minor CN < major CN
+  if (length(Y) > 1 && warn) { ## sanity check: minor CN < major CN
     dZ <- Reduce(`-`, rev(Z))
     tol <- 1e-2  ## arbitrary tolerance...
     if (min(dZ) < -tol) {

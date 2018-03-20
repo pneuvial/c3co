@@ -94,7 +94,7 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
    # stopifnot(p <= n)
     flavor <- match.arg(flavor)
     stat <- match.arg(stat)
-    if(forceNormal) p <- p-1L
+    if (forceNormal) p <- p-1L
     if (is.null(Y2)) {
         Y <- Y1
     } else {
@@ -105,14 +105,14 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
                     "C1" = Y1,
                     "C2" = Y2)
     }
-    if (flavor=="hclust") {
+    if (flavor == "hclust") {
         dd <- dist(Y)
         hc <- hclust(dd, method="ward.D")
         initHclust <- function(Y, p) {
             cluster <- cutree(hc, k=p)
             t(sapply(split(as.data.frame(Y), f=cluster), FUN=colMeans))
         }
-    } else if (flavor=="subsampling") {
+    } else if (flavor == "subsampling") {
         idxs <- sample(1:n, replace = FALSE)
         initSub <- function(Y, p) {
             Y[idxs[1:p], , drop=FALSE]
@@ -126,14 +126,14 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
                     "hclust"=initHclust,
                     "subsampling"=initSub)
 
-    if(forceNormal) {
+    if (forceNormal) {
       res <- list(Z1=cbind(t(initZ(Y1, p)), 1))
-    }else{
+    } else {
       res <- list(Z1=t(initZ(Y1, p)))
     }
     if (!is.null(Y2)) {
       res$Z2 <- t(initZ(Y2, p))
-      if(forceNormal) {
+      if (forceNormal) {
         res$Z2 <- cbind(res$Z2, 1)
       }
     }
