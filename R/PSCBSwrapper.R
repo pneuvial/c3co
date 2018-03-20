@@ -7,6 +7,11 @@
 #'
 #' @export
 loadPSCBSdata <- function(PSCBSdata) {
+    names <- names(PSCBSdata)
+    if (is.null(names)) {
+      names <- sapply(PSCBSdata, FUN = PSCBS::sampleName)
+    }
+    
     ### Load PSCBS data
     dat <- lapply(PSCBSdata, FUN=function(ff) {
         df <- ff$data
@@ -29,11 +34,14 @@ loadPSCBSdata <- function(PSCBSdata) {
     dat <- lapply(dat, FUN=function(ff) {
         df <- do.call(rbind, args=lapply(chr, function(cc) {
             d <- subset(ff, chr == cc)
-            pos <- NULL; rm(list = "pos");
+            pos <- NULL; rm(list = "pos")
             d <- subset(d, pos %in% posFull[[cc]])
         }))
         as.data.frame(df)
     })
+
+    names(dat) <- names
+
     dat
 }
 

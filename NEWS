@@ -1,8 +1,11 @@
 Package: c3co
 =============
 
-Version: 0.2.6-9000 [2018-03-11]
+Version: 0.2.6-9000 [2018-03-19]
 
+ o Now loadPSCBSdata() sets the element names to the input element names,
+   or if those are not set, to the sampleName() of each PSCBS element.
+   
  o Add C3coSegmentation class.
 
  o Using message() everywhere (instead of print()).
