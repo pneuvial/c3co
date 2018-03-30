@@ -25,25 +25,37 @@ datSubClone <- buildSubclones(len = len,
                               regions = regions,
                               dataAnnotTP = dataAnnotTP,
                               dataAnnotN = dataAnnotN)
+stopifnot(is.list(datSubClone), length(datSubClone) == 3L)
 
-M <- rSparseWeightMatrix(15, 3)
+M <- rSparseWeightMatrix(nb.samp = 15L, nb.arch = 3L)
+stopifnot(all.equal(dim(M), c(15, 3)))
 
 dat <- mixSubclones(subClones = datSubClone, W = M)
+stopifnot(is.list(dat), length(dat) == nrow(M))
 
 l1 <- 10^(-seq(from = 2, to = 8, by = 1))
-
 parameters.grid <- list(lambda = l1, nb.arch = 2:6)
 
 test_that("c3co terminates on C1,C2", {
   res <- c3co(dat, parameters.grid = parameters.grid)
-  df <- createZdf(res, chromosomes=1, idxBest=3)
+  stopifnot(inherits(res, "c3coFit"),
+            is.list(res@segDat),
+            all(c("Y1", "Y2", "Y") %in% names(res@segDat)))
+              
+  df <- createZdf(res, chromosomes = 1L, idxBest = 3L)
+  stopifnot(is.data.frame(df))
+            
   pvePlot(res)
   Zplot(df)
 })
 
 test_that("c3co terminates on TCN", {
   resC <- c3co(dat, parameters.grid = parameters.grid, stat = "TCN")
-  df <- createZdf(resC, chromosomes=1, idxBest=3)
+  stopifnot(inherits(resC, "c3coFit"))
+            
+  df <- createZdf(resC, chromosomes = 1L, idxBest = 3L)
+  stopifnot(is.data.frame(df))
+  
   pvePlot(resC)
   Zplot(df)
 })
