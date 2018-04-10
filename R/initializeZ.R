@@ -91,7 +91,7 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
                         stat=c("C1+C2", "C1", "C2"), forceNormal=FALSE, verbose=FALSE) {
     n <- nrow(Y1) # number of samples
     L <- ncol(Y1) # number of loci/segments
-   # stopifnot(p <= n)
+   # stop_if_not(p <= n)
     flavor <- match.arg(flavor)
     stat <- match.arg(stat)
     if (forceNormal) p <- p-1L
@@ -99,7 +99,7 @@ initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
         Y <- Y1
     } else {
         ## sanity checks
-        stopifnot(nrow(Y2) == n, ncol(Y2) == L)
+        stop_if_not(nrow(Y2) == n, ncol(Y2) == L)
         Y <- switch(stat,
                     "C1+C2" = Y1 + Y2,
                     "C1" = Y1,

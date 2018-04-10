@@ -53,7 +53,7 @@ rSpMatrix <- function(nrow, ncol, sparse.coeff) {
   rand.x <- function(n) runif(n, min = 0, max = 1)
   nnz <- ceiling(sparse.coeff*nrow*ncol)
   nnz <- as.integer(nnz)
-  stopifnot(nnz >= 0, nrow >= 0, ncol >= 0, nnz >= max(nrow, ncol))
+  stop_if_not(nnz >= 0, nrow >= 0, ncol >= 0, nnz >= max(nrow, ncol))
   spMatrix(nrow, ncol,
            i = c(sample(nrow, size = nrow, replace = FALSE),
                  sample(nrow, size = nnz-nrow, replace = TRUE)),

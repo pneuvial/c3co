@@ -13,35 +13,35 @@
 #'
 #' @export
 alignLoci <- function(dat) {
-  stopifnot(is.list(dat))
+  stop_if_not(is.list(dat))
   ## Nothing to do
   if (length(dat) <= 1L) return(dat)
 
   ## Expand to union of all (chr, pos):s
   chromosomes <- lapply(dat, FUN = function(df) unique(df$chr))
   chromosomes <- sort(unique(unlist(chromosomes, use.names = FALSE)), na.last = TRUE) 
-  stopifnot(!anyNA(chromosomes))
+  stop_if_not(!anyNA(chromosomes))
   
   res <- vector("list", length = length(dat))
   for (cc in seq_along(chromosomes)) {
     chr <- chromosomes[cc]
-    stopifnot(!is.na(chr))
+    stop_if_not(!is.na(chr))
     dat_cc <- lapply(dat, FUN = function(df) df[df$chr == chr, ])
     pos <- lapply(dat_cc, FUN = function(df) unique(df$pos))
     pos <- sort(unique(unlist(pos, use.names = FALSE)))
 
     dat_cc <- lapply(dat_cc, FUN = function(df) {
       idxs <- match(pos, table = df$pos)
-      stopifnot(length(idxs) == length(pos))
+      stop_if_not(length(idxs) == length(pos))
       df <- df[idxs, ]
-      stopifnot(nrow(df) == length(pos),
+      stop_if_not(nrow(df) == length(pos),
                 all(df$chr == chr, na.rm = TRUE),
                 all(df$pos == pos, na.rm = TRUE))
       ## Make sure to populate with non-missing (chromosome, x) loci
       df$chr <- chr
       df$pos <- pos
-      stopifnot(!anyNA(df$chr), !anyNA(df$pos))
-      stopifnot(nrow(df) == length(pos),
+      stop_if_not(!anyNA(df$chr), !anyNA(df$pos))
+      stop_if_not(nrow(df) == length(pos),
                 all(df$chr == chr, na.rm = FALSE),
                 all(df$pos == pos, na.rm = FALSE))
       df
@@ -58,11 +58,11 @@ alignLoci <- function(dat) {
 
   ## Sanity checks
   ns <- unlist(lapply(res, FUN = nrow))
-  stopifnot(all(ns == ns[1]))
+  stop_if_not(all(ns == ns[1]))
   lapply(res, FUN = function(df) {
-    stopifnot(!anyNA(df$chr), !anyNA(df$pos))
+    stop_if_not(!anyNA(df$chr), !anyNA(df$pos))
     chrs <- sort(unique(df$chr), na.last = TRUE)
-    stopifnot(!anyNA(chrs), length(chrs) == length(chromosomes),
+    stop_if_not(!anyNA(chrs), length(chrs) == length(chromosomes),
               all(chrs == chromosomes), !anyNA(df$pos))
   })
   

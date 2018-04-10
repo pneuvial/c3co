@@ -62,7 +62,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
     })
 
     chrs <- unique(dat[[1]]$chr)
-    stopifnot(!anyNA(chrs))
+    stop_if_not(!anyNA(chrs))
     
     ## Assert that all samples are for the same set of loci, which is assumed below
     if (length(dat) > 1) {
@@ -109,7 +109,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         ww <- which(dat[[1]]$chr == cc)
         if (verbose) message("Joint segmentation")
 
-        stopifnot(length(ww) > 0, length(ww) >= 3L)
+        stop_if_not(length(ww) > 0, length(ww) >= 3L)
         resSeg <- jointSeg(Y=dataToSeg[ww, ], method="RBS", K=100,
                            modelSelectionMethod="Birge")
         bkp <- resSeg$bestBkp

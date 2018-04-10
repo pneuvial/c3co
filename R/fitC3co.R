@@ -67,7 +67,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     Y <- list(Y1=Y1)
     if (!is.null(Y2)) Y$Y2 <- Y2
     ## Sanity checks
-    stopifnot(length(unique(lapply(Y, FUN = dim))) == 1) # are all the dimension equal?
+    stop_if_not(length(unique(lapply(Y, FUN = dim))) == 1) # are all the dimension equal?
 
     if (verbose) mprintf("fitC3co() ...\n")
   

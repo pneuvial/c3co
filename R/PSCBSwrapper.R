@@ -61,7 +61,7 @@ loadPSCBSdata <- function(PSCBSdata) {
 #'
 #' @export
 PSCBSwrapper <- function(PSCBSdata, stat, align = FALSE) {
-  stopifnot(is.list(PSCBSdata))
+  stop_if_not(is.list(PSCBSdata))
 
   ## Joint segmentation of all samples
   dat <- loadPSCBSdata(PSCBSdata)
@@ -75,7 +75,7 @@ PSCBSwrapper <- function(PSCBSdata, stat, align = FALSE) {
   resSeg <- segmentData(dat, stat = stat)
   
   ## Sanity checks
-  stopifnot(ncol(resSeg$Y) == length(dat))
+  stop_if_not(ncol(resSeg$Y) == length(dat))
   
   resSeg
 }
