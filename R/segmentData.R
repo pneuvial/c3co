@@ -199,7 +199,7 @@ nbrOfSamples.C3coSegmentation <- function(x, ...) {
 
 
 #' @export
-sampleNames <- function(x) NextMethod("sampleNames")
+sampleNames <- function(x) UseMethod("sampleNames")
 
 #' @export
 sampleNames.C3coSegmentation <- function(x) {
