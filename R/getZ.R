@@ -1,3 +1,30 @@
+#' Get the matrix of subclones Z for fixed values of the weights W
+#' 
+#' Optimisation is done by solving a l1-penalized least-square problem thanks to the glmnet package
+#' 
+#' @param Y a matrix with n rows (number of samples) and J columns (number of segments) 
+#'
+#' @param lambda a positive scalar tuning the penalty level for fusion
+#' 
+#' @param W a matrix with n rows (number of samples) and K columns (number of subclones)
+#' 
+#' @param WtWm1 a K x K square matrix (with K the number of subclones), precomputed to save time
+#' 
+#' @examples
+#' nbSegments <- 11
+#' nbClones   <- 4
+#'
+#' Z <- matrix(1, nrow = nbClones, ncol = nbSegments)
+#' Z[2, 2] <- 2
+#' Z[3, 5:6] <- 2
+#' Z[4, 9:10] <- 2
+#' 
+#' W <- diag(rep(1, nrow(Z)))
+#' WtWm1 <- diag(rep(1, nrow(Z)))
+#' Y <- W %*% Z + E
+#' 
+#' c3co:::get.Z(Y, lambda = 0.01, W, WtWm1)
+#' 
 #' @importFrom glmnet glmnet
 #' @importFrom Matrix bandSparse
 #' @importFrom matrixStats colCumsums
