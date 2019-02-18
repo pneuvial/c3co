@@ -31,7 +31,7 @@ environment:
 init:
   ps: |
         $ErrorActionPreference = "Stop"
-        Invoke-WebRequest http://raw.github.com/HenrikBengtsson/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+        Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
         Import-Module '..\appveyor-tool.ps1'
 install:
   ps: |
@@ -39,12 +39,16 @@ install:
     InstallRtools
 
 # Adapt as necessary starting from here
+cache:
+  - C:\RLibrary -> appveyor.yml
 
 build_script:
   - echo Current directory=%CD%
-  - travis-tool.sh install_r R.utils knitr PSCBS aroma.light ggplot2 glmnet limSolve RColorBrewer
+  - travis-tool.sh install_r R.utils knitr PSCBS aroma.light ggplot2 glmnet limSolve RColorBrewer acnr jointseg
   - travis-tool.sh install_bioc BiocStyle aroma.light DNAcopy
-  - travis-tool.sh install_github mpierrejean/acnr mpierrejean/jointseg pneuvial/c3co-data
+  - travis-tool.sh install_github pneuvial/c3co-data
+  - travis-tool.sh install_github veseshan/pctGCdata
+  - travis-tool.sh install_github mskcc/facets
 
 test_script:
   - travis-tool.sh run_tests
