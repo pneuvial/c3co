@@ -10,7 +10,7 @@ Facetswrapper(pathFacets, stat)
 \item{pathFacets}{The path to a directory containing FACETS data files
 (\file{*.csv.gz}) produced by the \pkg{facets} package.}
 
-\item{stat}{\code{"TCN"} or \code{"C1C2"} paramater to segment the data.
+\item{stat}{\code{"TCN"} or \code{"C1C2"} parameter to segment the data.
 If \code{stat == "TCN"}, the segmentation will be done on TCN only.}
 }
 \value{

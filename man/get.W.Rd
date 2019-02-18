@@ -15,7 +15,7 @@ get.W(Z, Y)
 a matrix with n rows (number of samples) and K columns (number of subclones)
 }
 \description{
-Optimisation is done by solving a least square problem with inequality constaint thanks to \pkg{lsei} package
+Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 }
 \examples{
 nbSegments <- 11

@@ -121,7 +121,7 @@ heatmap.3(W, dendrogram = "row", main = "TRUE",
 ## Further analysis
 
 ### Performance of clustering
-In this section, we show the ablility of the method to recover the simulated clustering of patients.
+In this section, we show the ability of the method to recover the simulated clustering of patients.
 
 ```{r, clust}
 fitW <- cfit@fit[[best]]@W

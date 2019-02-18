@@ -26,7 +26,7 @@ loadFacetsdata <- function(pathFacets) {
 #' @param pathFacets The path to a directory containing FACETS data files
 #' (\file{*.csv.gz}) produced by the \pkg{facets} package.
 #'
-#' @param stat `"TCN"` or `"C1C2"` paramater to segment the data.
+#' @param stat `"TCN"` or `"C1C2"` parameter to segment the data.
 #' If `stat == "TCN"`, the segmentation will be done on TCN only.
 #'
 #' @return A list which contains the breakpoints by chromosome and also the

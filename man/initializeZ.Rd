@@ -18,7 +18,7 @@ initializeZ(Y1, Y2 = NULL, p = min(dim(Y1)), flavor = c("hclust",
 \item{p}{An integer value, the number of latent features in the model.
 Defaults to \code{min(dim(Y1))}.}
 
-\item{flavor}{A character value specifying how initialization is perfomed.
+\item{flavor}{A character value specifying how initialization is performed.
 Defaults to \link[stats:hclust]{stats::hclust}. See Details.}
 
 \item{stat}{Statistic used to perform initialization. Should be either

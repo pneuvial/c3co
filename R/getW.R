@@ -1,6 +1,6 @@
 #' Get the matrix of weights W for fixed values of the subclones Z and data Y
 #' 
-#' Optimisation is done by solving a least square problem with inequality constaint thanks to \pkg{lsei} package
+#' Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 #' 
 #' @param Y a matrix with n rows (number of samples) and J columns (number of segments) 
 #'

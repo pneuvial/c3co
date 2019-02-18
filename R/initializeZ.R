@@ -9,7 +9,7 @@
 #' @param p An integer value, the number of latent features in the model.
 #'   Defaults to `min(dim(Y1))`.
 #'
-#' @param flavor A character value specifying how initialization is perfomed.
+#' @param flavor A character value specifying how initialization is performed.
 #'   Defaults to [stats::hclust]. See Details.
 #'
 #' @param stat Statistic used to perform initialization. Should be either
