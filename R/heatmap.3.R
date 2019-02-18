@@ -156,9 +156,9 @@ heatmap.3 <- function(x,
     if (!missing(breaks) && (scale != "none"))
         warning("Using scale=\"row\" or scale=\"column\" when breaks are",
                 "specified can produce unpredictable results.", "Please consider using only one or the other.")
-    if (is.null(Rowv) || is.na(Rowv))
+    if (is.null(Rowv) || (!inherits(Rowv, "dendrogram") && is.na(Rowv)))
         Rowv <- FALSE
-    if (is.null(Colv) || is.na(Colv))
+    if (is.null(Colv) || (!inherits(Colv, "dendrogram") && is.na(Colv)))
         Colv <- FALSE
     else if (Colv == "Rowv" && !isTRUE(Rowv))
         Colv <- FALSE

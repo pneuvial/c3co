@@ -1,6 +1,15 @@
 Package: c3co
 =============
 
+Version: 0.2.6-9001 [2019-02-17]
+
+BUG FIXES:
+
+ o Passing argument 'Rowv' to heatmap.3() that is of class of 'dendrogram'
+   would produce error 'length(x) = 2 > 1' in coercion to 'logical(1)' in
+   R-devel with _R_CHECK_LENGTH_1_LOGIC2_=true.
+ 
+
 Version: 0.2.6-9000 [2018-03-19]
 
  o Now loadPSCBSdata() and segmentData() preserve any sample names.
