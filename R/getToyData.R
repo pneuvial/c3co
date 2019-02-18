@@ -67,17 +67,10 @@
 #' fit <- fitC3co(Y, parameters.grid=parameters.grid)
 #' pvePlot2(fit$config$best)
 #' 
-getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1, intercept=TRUE) {
-    ## number of segments
-    nbSegs <- nbBkps+1 
+getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1, intercept = TRUE) {
     
-    ## subclones (segment-level)
-    z <- rnorm(nbSegs*nbClones)
-    Zs <- round(matrix(z, nrow=nbClones, ncol=nbSegs))
-    if (intercept) {  ## <=> adding a 'normal' clone
-        nbClones <- nbClones+1
-        Zs <- rbind(Zs, 1)
-    }
+    ## number of segments
+    nbSegs <- nbBkps + 1 
     
     ## breakpoint positions
     bkp <- sample(len, size=nbBkps, replace=FALSE)
@@ -86,9 +79,6 @@ getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1, interc
     ## segment lengths
     segLens <- diff(c(0, bkp))
     segLens <- c(segLens, len-sum(segLens))
-
-    ## subclones (locus-level)
-    Zl <- t(apply(Zs, MARGIN = 1L, FUN = rep, times = segLens))
     
     ## weights
     ru <- runif(n*nbClones)
@@ -96,6 +86,18 @@ getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1, interc
     W <- matrix(ru, nrow=n, ncol=nbClones)
     W <- round(sweep(W, MARGIN = 1L, STATS = rowSums(W), FUN = `/`), digits = 2L)
     W[, nbClones] <- 1-rowSums(W[, -nbClones, drop=FALSE]) ## make sure rows sum to 1 after rounding
+    
+    Zlist <- list()
+    ## subclones (segment-level)
+    z <- rnorm(nbSegs*nbClones)
+    Zs <- round(matrix(z, nrow = nbClones, ncol = nbSegs))
+    if (intercept) {  ## <=> adding a 'normal' clone
+        nbClones <- nbClones+1
+        Zs <- rbind(Zs, 1)
+    }
+    
+    ## subclones (locus-level)
+    Zl <- t(apply(Zs, MARGIN = 1L, FUN = rep, times = segLens))
 
     ## segment-level data
     e <- rnorm(n*nbSegs, sd=eps)
@@ -108,6 +110,6 @@ getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity=0.1, interc
     El <- matrix(e, nrow=n, ncol=len)  ## noise
     Yl <- W %*% Zl + El                ## observations
     loc <- list(Y=Yl, Z=Zl)
-    
-    list(W=W, locus=loc, segment=seg)
+        
+    list(W = W, locus = loc, segment = seg)
 }
