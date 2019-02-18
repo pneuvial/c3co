@@ -27,6 +27,7 @@ Z[3, 5:6] <- 2
 Z[4, 9:10] <- 2
 
 W <- diag(rep(1, nrow(Z)))
+E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0), nrow=nrow(W), ncol=ncol(Z))
 Y <- W \%*\% Z + E
 c3co:::get.W(t(Z), Y)
 
