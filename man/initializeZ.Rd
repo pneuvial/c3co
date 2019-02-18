@@ -4,9 +4,9 @@
 \alias{initializeZ}
 \title{Initialization of the latent features of the c3co model}
 \usage{
-initializeZ(Y1, Y2 = NULL, p = min(dim(Y1)), flavor = c("hclust", "nmf",
-  "archetypes", "svd", "subsampling"), stat = c("C1+C2", "C1", "C2"),
-  forceNormal = FALSE, verbose = FALSE)
+initializeZ(Y1, Y2 = NULL, p = min(dim(Y1)), flavor = c("hclust",
+  "nmf", "archetypes", "svd", "subsampling"), stat = c("C1+C2", "C1",
+  "C2"), forceNormal = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{Y1}{A matrix containing the segmented minor copy number

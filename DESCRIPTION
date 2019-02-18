@@ -44,5 +44,5 @@ Remotes:
     mskcc/facets
 URL: https://github.com/pneuvial/c3co
 BugReports: https://github.com/pneuvial/c3co/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)

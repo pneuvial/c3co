@@ -16,7 +16,7 @@ segmentData(dat, stat = c("C1C2", "TCN"), verbose = FALSE)
 }}
 
 \item{stat}{\code{"TCN"} or \code{"C1C2"} parameter to segment the data.
-If \code{stat ==}"TCN"`, the segmentation will be done on TCN only.}
+If \code{stat == }"TCN"`, the segmentation will be done on TCN only.}
 
 \item{verbose}{A logical value indicating whether to print extra
 information. Defaults to \code{FALSE}.}
