@@ -1,6 +1,6 @@
 #' Get the matrix of subclones Z for fixed values of the weights W
 #' 
-#' Optimisation is done by solving a l1-penalized least-square problem thanks to the glmnet package
+#' Optimisation is done by solving a L1-penalized least-square problem thanks to the \pkg{glmnet} package
 #' 
 #' @param Y a matrix with n rows (number of samples) and J columns (number of segments) 
 #'
@@ -19,9 +19,9 @@
 #' Z[3, 5:6] <- 2
 #' Z[4, 9:10] <- 2
 #' 
-#' W <- diag(rep(1, nrow(Z)))
-#' E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0), nrow=nrow(W), ncol=ncol(Z))
-#' WtWm1 <- diag(rep(1, nrow(Z)))
+#' W <- diag(rep(1, times = nrow(Z)))
+#' E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0), nrow = nrow(W), ncol = ncol(Z))
+#' WtWm1 <- diag(rep(1, times = nrow(Z)))
 #' Y <- W %*% Z + E
 #' 
 #' c3co:::get.Z(Y, lambda = 0.01, W, WtWm1)
@@ -42,7 +42,7 @@ get.Z <- function(Y, lambda, W, WtWm1) {
   X.tilde <- kronecker(scale(X1, center = TRUE, scale = FALSE), as(W, "sparseMatrix"))
   ## Why as.numeric() below? Is it of a different type? /HB 2018-02-27
   y.tilde <- as.numeric(sweep(Y, MARGIN = 1L, STATS = rowMeans(Pw %*% Y), FUN = `-`)) 
-  z.tilde <- glmnet(X.tilde, y.tilde, lambda=lambda, intercept=FALSE, standardize=FALSE)$beta
+  z.tilde <- glmnet(X.tilde, y.tilde, lambda = lambda, intercept = FALSE, standardize = FALSE)$beta
   
   ## Go back to Z 
   Z <- matrix(z.tilde, nrow=L-1, ncol=p, byrow=TRUE)

@@ -16,7 +16,7 @@ get.Z(Y, lambda, W, WtWm1)
 \item{WtWm1}{a K x K square matrix (with K the number of subclones), precomputed to save time}
 }
 \description{
-Optimisation is done by solving a l1-penalized least-square problem thanks to the glmnet package
+Optimisation is done by solving a L1-penalized least-square problem thanks to the \pkg{glmnet} package
 }
 \examples{
 nbSegments <- 11
@@ -27,9 +27,9 @@ Z[2, 2] <- 2
 Z[3, 5:6] <- 2
 Z[4, 9:10] <- 2
 
-W <- diag(rep(1, nrow(Z)))
-E <- matrix(rnorm(nrow(W)*ncol(Z), sd=0), nrow=nrow(W), ncol=ncol(Z))
-WtWm1 <- diag(rep(1, nrow(Z)))
+W <- diag(rep(1, times = nrow(Z)))
+E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0), nrow = nrow(W), ncol = ncol(Z))
+WtWm1 <- diag(rep(1, times = nrow(Z)))
 Y <- W \%*\% Z + E
 
 c3co:::get.Z(Y, lambda = 0.01, W, WtWm1)
