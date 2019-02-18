@@ -1,6 +1,6 @@
 Package: c3co
 Type: Package
-Title: Cancer Cell Clonality using Copy-number
+Title: Cancer Cell Clonality using Copy-Number
 Version: 0.2.6-9001
 Authors@R: c(person("Morgane", "Pierre-Jean", role = c("aut", "cre"),
                      email = "morgane.pierrejean@genopole.cnrs.fr"),
