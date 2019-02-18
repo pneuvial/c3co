@@ -3,6 +3,10 @@ Package: c3co
 
 Version: 0.2.6-9001 [2019-02-17]
 
+NEW FEATURES:
+
+ * loadFacetsdata() gained argument 'pattern'.
+ 
 BUG FIXES:
 
  * Passing argument 'Rowv' to heatmap.3() that is of class of 'dendrogram'

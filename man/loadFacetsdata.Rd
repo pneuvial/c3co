@@ -4,11 +4,13 @@
 \alias{loadFacetsdata}
 \title{Loads FACETS data and transforms them to c3co format}
 \usage{
-loadFacetsdata(pathFacets)
+loadFacetsdata(path, pattern = "[.]csv[.]gz$")
 }
 \arguments{
-\item{pathFacets}{The path to a directory containing FACETS data files
+\item{path}{The path to a directory containing FACETS data files
 (\file{*.csv.gz}) produced by the \pkg{facets} package.}
+
+\item{pattern}{The filename pattern of files to load.}
 }
 \value{
 A data frame under PSCBS format.
