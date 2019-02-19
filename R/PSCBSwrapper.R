@@ -9,7 +9,7 @@
 loadPSCBSdata <- function(PSCBSdata) {
     names <- names(PSCBSdata)
     if (is.null(names)) {
-      names <- sapply(PSCBSdata, FUN = PSCBS::sampleName)
+      names <- sapply(PSCBSdata, FUN=PSCBS::sampleName)
     }
     
     ### Load PSCBS data
@@ -32,7 +32,7 @@ loadPSCBSdata <- function(PSCBSdata) {
     })
     ### Reduce data
     dat <- lapply(dat, FUN=function(ff) {
-        df <- do.call(rbind, args=lapply(chr, function(cc) {
+        df <- do.call(rbind, args=lapply(chr, FUN=function(cc) {
             d <- subset(ff, chr == cc)
             pos <- NULL; rm(list = "pos")
             d <- subset(d, pos %in% posFull[[cc]])

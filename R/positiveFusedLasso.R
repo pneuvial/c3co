@@ -94,6 +94,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
         message("W is rank deficent. Removing a latent feature")
 ### JC: this means that the column of one must be the first column
 ### if other rank defiency occurs, we remove the first one arbitrarily
+##  FIXME: /HB 2019-02-19
         Zt <- lapply(Zt, FUN = function(z) z[,-1])
         ## Remove matched W.old column
         W.old <- W[,-1] 
@@ -106,7 +107,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
 
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
-    Zt <- mapply(FUN = get.Zt, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY = FALSE)
+    Zt <- mapply(FUN = get.Zt, Y = Y, lambda = lambda, MoreArgs = list(W = W, WtWm1 = WtWm1), SIMPLIFY = FALSE)
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
