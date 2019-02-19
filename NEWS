@@ -35,6 +35,8 @@ BUG FIXES:
  
 SOFTWARE QUALITY:
 
+ * Add first tests for get.W().
+
  * Add help pages with examples to internal get.W() and get.Z() functions.
  
  * Add sanity checks and tests for getLocusData(). 
