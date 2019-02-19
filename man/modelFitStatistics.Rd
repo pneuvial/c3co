@@ -4,7 +4,7 @@
 \alias{modelFitStatistics}
 \title{Print statistics of a c3co model}
 \usage{
-modelFitStatistics(Y, Yhat, What, Zhat)
+modelFitStatistics(Y, Yhat, What, Zhatt)
 }
 \arguments{
 \item{Y}{Original n-by-J matrix of data.}
@@ -13,7 +13,8 @@ modelFitStatistics(Y, Yhat, What, Zhat)
 
 \item{What}{Inferred n-by-K weight matrix.}
 
-\item{Zhat}{Inferred n-by-J subclones matrix.}
+\item{Zhatt}{The transposed version of the inferred n-by-J subclones
+matrix Zhat.}
 }
 \value{
 The main statistics of the inferred model.

@@ -7,6 +7,7 @@ SIGNIFICANT CHANGES:
 
  * Renamed argument 'Z' of positiveFusedLasso() to 'Zt' to clarify that the
    input is the transpose of matrix 'Z'. Same for internal internal get.W().
+   Analogously, argument 'Zhat' of modelFitStatistics() was renamed to 'Zhatt'.
 
  * Renamed initializeZ() to initializeZt() to clarify that it returns the
    transpose of matrix 'Z'.  Same for internal get.Z() renamed to get.Zt().

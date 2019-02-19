@@ -131,7 +131,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             
             if (verbose) mprintf(", BIC = ")
             stats <- modelFitStatistics(Y = Reduce(`+`, Y), Yhat = res@E$Y,
-	                                What = res@W, Zhat = res@S$Z)
+	                                What = res@W, Zhatt = res@S$Z)
             BIC <- stats[["BIC"]]
             if (verbose) mprintf("%g", BIC)
             aConf <- c(K_ii, cfg, stats[["PVE"]], BIC, stats[["logLik"]], stats[["loss"]])
