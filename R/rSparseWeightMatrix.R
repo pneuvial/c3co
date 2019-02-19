@@ -23,7 +23,7 @@ rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff = max(nb.samp, nb
                      sparse.coeff = sparse.coeff)
   ## Create the vector contamination by normal cell with a uniform distribution between 0.01 and expand contam.max parameter
   x.contam <- runif(nb.samp, min = 0.01, max = 1)
-  m <- cbind(m.tum, x.contam)
+  m <- cbind(m.tum, x.contam)  ## A sparse matrix
   ## Compute the sum of rows (tum+contam)
   tot <- rowSums(as.matrix(m))
   ## Round and divide the matrix by the total remove contamination column

@@ -88,12 +88,12 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
 
     tcn <- lapply(dat, FUN = function(x) x$tcn)
     tcn <- Reduce(cbind, tcn)
-    tcn <- as.matrix(tcn)
+    tcn <- as.matrix(tcn)  ## FIXME: Needed?
 
     if (stat == "C1C2") {
         dh <- lapply(dat, FUN = function(x) x$dh)
         dh <- Reduce(cbind, dh)
-        dh <- as.matrix(dh)
+        dh <- as.matrix(dh)  ## FIXME: Needed?
         dataToSeg <- cbind(tcn, dh)
     } else if (stat == "TCN") {
         dataToSeg <- cbind(tcn)

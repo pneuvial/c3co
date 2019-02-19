@@ -55,8 +55,10 @@ set.seed(147)
 We start by defining the characteristics of the subclone profiles: profile length, number of subclones, breakpoint positions, and copy number states:
 
 ```{r}
-len <- 500*10
-nbClones <- 3
+len <- 500*10    ## Number of loci
+K <- 3L          ## Number of subclones
+n <- 15L         ## Number of samples
+
 bkps <- list(c(100,250)*10, c(150,400)*10, c(150,400)*10)
 regions <- list(c("(1,2)", "(0,2)", "(1,2)"),
                 c("(1,1)", "(0,1)", "(1,1)"),
@@ -68,7 +70,8 @@ Then, we load an annotated data set from the [acnr] package.  The `buildSubclone
 ```{r}
 dataAnnotTP <- acnr::loadCnRegionData(dataSet = "GSE13372_HCC1143", tumorFraction = 1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet = "GSE13372_HCC1143", tumorFraction = 0)
-datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
+datSubClone <- buildSubclones(len = len, nbClones = K, bkps = bkps,
+       regions = regions, dataAnnotTP = dataAnnotTP, dataAnnotN = dataAnnotN)
 ```
  
 Note that the same can be done using another data set from the acnr package, see
@@ -94,7 +97,7 @@ plot(datSubClone[[1]]$baft, col = cols[factor(datSubClone[[1]]$genotype)],
 Once the subclones are created, we can generate a weight matrix $W$ in order to build mixtures.
 
 ```{r, warning=FALSE, cache=FALSE}
-W <- rSparseWeightMatrix(nb.samp = 15, nb.arch = nbClones, sparse.coeff = 0.7)
+W <- rSparseWeightMatrix(nb.samp = n, nb.arch = K, sparse.coeff = 0.7)
 datList <- mixSubclones(datSubClone, W = W)
 str(datList[[1]])
 ```
@@ -106,12 +109,12 @@ Note that `datList` is a list of data frames with the following required columns
 Then the c3co method can be applied to the mixture data set. Let us choose the same grid for $\lambda_1$ and $\lambda_2$ and a grid from 2 to 6 for the number of subclones.
 
 ```{r c3co, warning=FALSE, message=FALSE}
-l1 <- seq(from = 1e-8, to = 1e-5, length.out = 10)
+l1 <- seq(from = 1e-8, to = 1e-5, length.out = 10L)
 nb.arch <- 2:6
 parameters.grid <- list(lambda1 = l1, nb.arch = nb.arch) 
 res <- c3co(datList, parameters.grid, verbose = FALSE, warn = FALSE)
 
-l2 <- seq(from = 1e-6, to = 1e-3, length.out = 5)
+l2 <- seq(from = 1e-6, to = 1e-3, length.out = 5L)
 parameters.grid <- list(lambda = l2, nb.arch = nb.arch) 
 resC <- c3co(datList, parameters.grid, stat = "TCN", verbose = FALSE)
 ```
@@ -130,7 +133,7 @@ We can compare the true and the estimated weight matrices. We can easily recover
 
 ```{r heatmap_C1C2, fig.width=7, fig.height=5}
 best <- 2
-res.clustTRUE <- hclust(dist(cbind(W, 1-rowSums(as.matrix(W)))), method = "ward.D")
+res.clustTRUE <- hclust(dist(cbind(W, 1-Matrix::rowSums(W))), method = "ward.D")
 col = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
 Wplot(res, idxBest = best, cexCol = 0.4)
 ```
@@ -140,7 +143,7 @@ Wplot(resC, idxBest = best, cexCol = 0.4)
 ```
 
 ```{r heatmap_TRUE, fig.width=7, fig.height=5}
-heatmap.3(cbind(W, 1-rowSums(as.matrix(W))), dendrogram = "row", main = "TRUE",
+heatmap.3(cbind(W, 1-Matrix::rowSums(W)), dendrogram = "row", main = "TRUE",
           Rowv = as.dendrogram(res.clustTRUE), col = col, scale = "none")
 ```
 
@@ -158,7 +161,7 @@ In this section, we show the ability of the method to recover the simulated clus
 ```{r, clust}
 WC1C2 <- res@fit[[best]]@W
 WTCN <- resC@fit[[best]]@W
-Wtrue <- cbind(W, 1-rowSums(as.matrix(W)))
+Wtrue <- cbind(W, 1-Matrix::rowSums(W))
 adjustedRandIndex(cutree(hclust(dist(WC1C2), method="ward.D2"), k = 4),
                   cutree(hclust(dist(Wtrue), method="ward.D2"), k = 4))
 adjustedRandIndex(cutree(hclust(dist(WTCN), method="ward.D2"), k = 4),
@@ -172,7 +175,7 @@ getAlteredSegments <- function(tol, zz1, zz2, c1Mean, c2Mean){
   loss <- ((c1Mean - zz1) >= tol) | ((c2Mean - zz2) >= tol)
   gain <- ((zz2 - c2Mean) >= tol) | ((zz1 - c1Mean) >= tol)
   ## coding gains as 3
-  gain <- apply(gain, MARGIN = 2, FUN = function(gg) {
+  gain <- apply(gain, MARGIN = 2L, FUN = function(gg) {
     idx <- which(gg)
     gg[idx] <- 3
     gg

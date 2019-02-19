@@ -51,17 +51,17 @@ library("reshape")
 ## Creating a synthetic data set
 
 ```{r}
-len <- 1000
-nbClones <- 5
-nbBkps <- 10
-eps <- 1
-n <- 20
+len <- 1000L   ## Number of loci
+K <- 5L        ## Number of subclones
+J <- 11L       ## Number of segments
+n <- 20L       ## Number of samples
+eps <- 1.0
 ```
 
 ### Noiseless profiles
 
 ```{r}
-dat <- getToyData(n, len, nbClones, nbBkps, eps = 0)  
+dat <- getToyData(n, len = len, nbClones = K, nbSegs = J, eps = 0.0)
 matplot(t(dat$locus$Y), t = "s")
 matplot(t(dat$segment$Y), t = "s")
 ```
@@ -69,7 +69,7 @@ matplot(t(dat$segment$Y), t = "s")
 ### Noisy profiles
 
 ```{r}
-dat <- getToyData(n, len, nbClones, nbBkps, eps = 0.2)  ## noisy
+dat <- getToyData(n, len = len, nbClones = K, nbSegs = J, eps = 0.2)  ## noisy
 matplot(t(dat$locus$Y), t = "l")
 matplot(t(dat$segment$Y), t = "s")
 W <- dat$W
@@ -79,7 +79,7 @@ W <- dat$W
 ## Fitting the c3co model
 
 ```{r}
-l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10)
+l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10L)
 candP <- 2:10
 parameters.grid <- list(lambda = l1, nb.arch = candP)
 ```
@@ -104,7 +104,7 @@ best <- 4
 ```
 
 ```{r heatmap, fig.width=7, fig.height=5}
-res.clustTRUE <- hclust(dist(cbind(W, 1-rowSums(as.matrix(W)))), method = "ward.D")
+res.clustTRUE <- hclust(dist(cbind(W, 1-rowSums(W))), method = "ward.D")
 col <-  grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, 'GnBu'))(100)
 
 cfit <- new("c3coFit")  ## terrible hack to bypass lacking plot methods

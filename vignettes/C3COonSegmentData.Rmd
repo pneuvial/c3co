@@ -26,8 +26,8 @@ str(segDat)
 ```{r, eval=FALSE}
 library("c3co")
 lambda.grid <- 10^-(3:5) ## penalty
-p.list <- 2:5 ## candidate number of subclones
-parameters.grid <- list(lambda = lambda.grid, nb.arch = p.list)
+K.list <- 2:5 ## candidate number of subclones
+parameters.grid <- list(lambda = lambda.grid, nb.arch = K.list)
 resc3co <- c3co(NULL, segDat = segDat, parameters.grid = parameters.grid)
 ```
 
