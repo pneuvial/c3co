@@ -19,7 +19,7 @@ test_that("fitC3co terminates on C1C2", {
   lambda <- 0.01
   Y <- list(Y1=t(seg$Y1), Y2=t(seg$Y2))
   Z0 <- initializeZ(Y$Y1, Y$Y2, p=3)
-  Z <- Z0[c("Z1", "Z2")]
-  res <- positiveFusedLasso(Y, Z, lambda=rep(lambda, 2), verbose=TRUE)
+  Zt <- Z0[c("Z1", "Z2")]
+  res <- positiveFusedLasso(Y, Zt, lambda=rep(lambda, 2), verbose=TRUE)
 })
 

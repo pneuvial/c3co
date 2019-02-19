@@ -4,7 +4,7 @@
 \alias{positiveFusedLasso}
 \title{Positive fused Lasso function}
 \usage{
-positiveFusedLasso(Y, Z, lambda, eps = 0.1, max.iter = 50,
+positiveFusedLasso(Y, Zt, lambda, eps = 0.1, max.iter = 50,
   warn = FALSE, verbose = FALSE)
 }
 \arguments{
@@ -12,9 +12,11 @@ positiveFusedLasso(Y, Z, lambda, eps = 0.1, max.iter = 50,
 segmented minor (and possibly the major) copy numbers
 (n patients in rows and L segments in columns).}
 
-\item{Z}{A list of one or two L-by-p matrices names \code{Z1} and \code{Z2}
+\item{Zt}{A list of one or two L-by-p matrices names \code{Z1} and \code{Z2}
 containing the L minor (and possibly the major) copy numbers of the
-p initial latent feature estimates.}
+p initial latent feature estimates.
+\emph{Warning}: These matrices are actually the transpose of Z1 and Z2,
+which is a notation mistake that will be fixed in a future release.}
 
 \item{lambda}{A numeric with one or two real numbers, the coefficients
 for the fused penalty for minor (and possibly the major) copy numbers.}
@@ -54,8 +56,8 @@ segData.TCN <- segmentData(datList,"TCN")
 Y1 <- t(segData.TCN$Y)
 Y <- list(Y1 = Y1)
 Z0.TCN <- initializeZ(Y1, p = 2, flavor = "nmf")
-Z <- list(Z1 = Z0.TCN$Z1)
-posFused <- positiveFusedLasso(Y, Z, 1e-3, verbose=TRUE)
+Zt <- list(Z1 = Z0.TCN$Z1)
+posFused <- positiveFusedLasso(Y, Zt, lambda=1e-3, verbose=TRUE)
 modelFitStats(posFused)
 
 segData.C1C2 <- segmentData(datList,"C1C2")
@@ -63,8 +65,8 @@ Y1 <- t(segData.C1C2$Y1)
 Y2 <- t(segData.C1C2$Y2)
 Y <- list(Y1 = Y1, Y2 = Y2)
 Z0.C1C2 <- initializeZ(Y1, Y2, p=2, flavor = "nmf")
-Z <- list(Z1 = Z0.C1C2$Z1, Z2 = Z0.C1C2$Z2)
-posFusedC <- positiveFusedLasso(Y, Z, lambda = c(1e-3, 1e-3), verbose=TRUE)
+Zt <- list(Z1 = Z0.C1C2$Z1, Z2 = Z0.C1C2$Z2)
+posFusedC <- positiveFusedLasso(Y, Zt, lambda=c(1e-3, 1e-3), verbose=TRUE)
 modelFitStats(posFusedC)
 
 }
