@@ -98,7 +98,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         bestBIC <- -Inf
         bestConfig <- aConf <- NULL
         ## Z0 are initialized with the centered version of the data
-        Z0 <- initializeZ(Yc$Y1, Yc$Y2, p=pp, ...)
+        Z0t <- initializeZt(Yc$Y1, Yc$Y2, p=pp, ...)
         if (verbose) {
             mprintf("   + Parameter configuration: (%s)\n",
                     comma(colnames(configs)))
@@ -118,7 +118,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             ## THIS is the function that costs comme computation 
             if (verbose) mprintf("fused lasso")
             if (is.null(Y2)) cfg <- cfg["lambda1"]  ## Should this be an error?
-            res <- positiveFusedLasso(Y = Y, Zt = Z0, lambda = cfg)
+            res <- positiveFusedLasso(Y = Y, Zt = Z0t, lambda = cfg)
             
             if (verbose) mprintf(", BIC = ")
             stats <- modelFitStatistics(Reduce(`+`, Y), res@E$Y, res@W, res@S$Z)

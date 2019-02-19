@@ -23,19 +23,19 @@ nS <- ncol(Y1)
 p <- 3
 
 for (ff in flavors) {
-    test_that("output of initializeZ() has correct dimensions and contents", {
-        res <- initializeZ(Y1, Y2, p=p, flavor=ff)
-        expect_equal(nS, nrow(res$Z1))
-        expect_equal(nS, nrow(res$Z2))
+    test_that("output of initializeZt() has correct dimensions and contents", {
+        Zt <- initializeZt(Y1, Y2, p=p, flavor=ff)
+        expect_equal(nS, nrow(Zt$Z1))
+        expect_equal(nS, nrow(Zt$Z2))
         
-        expect_equal(p, ncol(res$Z1))
-        expect_equal(p, ncol(res$Z2))
+        expect_equal(p, ncol(Zt$Z1))
+        expect_equal(p, ncol(Zt$Z2))
         
-        res <- initializeZ(Y1, p=nbClones, flavor=ff)
-        expect_null(res$Z2)
-##        expect_equal(res$Z1, res$Z)  ## There is no 'Z' /HB 2018-02-27
+        Zt <- initializeZt(Y1, p=nbClones, flavor=ff)
+        expect_null(Zt$Z2)
+##        expect_equal(Zt$Z1, Zt$Z)  ## There is no 'Z' /HB 2018-02-27
         
-        expect_equal(nS, nrow(res$Z1))
-        expect_equal(p, ncol(res$Z1))
+        expect_equal(nS, nrow(Zt$Z1))
+        expect_equal(p, ncol(Zt$Z1))
     })
 }
