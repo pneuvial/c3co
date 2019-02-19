@@ -1,6 +1,6 @@
-context("test-consistency_getw")
+context("Consistency of the optimization algorithm")
 
-test_that("Consistency of optimization in get W", {
+test_that("Consistency of get.W", {
 
    ## some random data  
    n <- 10
