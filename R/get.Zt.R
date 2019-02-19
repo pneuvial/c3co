@@ -18,6 +18,9 @@
 #' K <- 4L   ## Number of subclones
 #' n <- 4L   ## Number of samples
 #' 
+#' W <- diag(rep(1, times = nrow(Z)))
+#' E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0.1), nrow = nrow(W), ncol = ncol(Z))
+#' WtWm1 <- diag(rep(1, times = nrow(Z)))
 #' Z <- matrix(1, nrow = K, ncol = J)
 #' Z[2,    2] <- 2
 #' Z[3,  5:6] <- 2
@@ -50,6 +53,10 @@ get.Zt <- function(Y, lambda, W, WtWm1) {
   X1 <- bandSparse(L, L-1L, k=-(1:(L-1)))
   W.WtWm1 <- W %*% WtWm1
   Pw <- W.WtWm1 %*% t(W)
+  
+  ## FIXME: include the penalty factor in get.Zt
+  ## FIXME to be consistent with what is written,
+  ## FIXME lambda should be lambda / (2*n*J) when calling glmnet
   
   ## Lasso regression 
   X.tilde <- kronecker(scale(X1, center = TRUE, scale = FALSE), as(W, "sparseMatrix"))
