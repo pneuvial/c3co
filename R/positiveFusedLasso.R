@@ -104,7 +104,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
-    Z <- mapply(FUN = get.Z, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY = FALSE)
+    Z <- mapply(FUN = get.Zt, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY = FALSE)
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
