@@ -185,6 +185,16 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
     stop_if_not(ncol(Zt[[mm]]) == K, nrow(Zt[[mm]]) == J)
   }
   
+#  ## Sanity checks of estimated values (Issue #49)
+#  tol <- sqrt(.Machine$double.eps)
+#  stop_if_not(all(is.finite(W)), all(W >= 0 - tol), all(W <= 1 + tol))
+#  for (mm in 1:(M+1L)) {
+#    stop_if_not(
+#      all(is.finite(Zt[[mm]])),
+#      all(Zt[[mm]] >= 0 - tol)   ## Does not always look to be true
+#    )
+#  }
+  
 ### JC: why Z is called S outside of this function
 ### why not calling Y Z and W by their true name like, 
 ### signals, archetypes, weights, when outside of this function?
