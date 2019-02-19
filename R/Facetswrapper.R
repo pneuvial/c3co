@@ -37,11 +37,11 @@ loadFacetsdata <- function(path, pattern = "[.]csv[.]gz$") {
 #'
 #' @examples
 #' if (require("facets", quietly=TRUE)) {
-#' path <- system.file("extdata", package="facets")
-#' segDat <- Facetswrapper(path, stat="TCN")
-#' print(segDat)
 #' \dontrun{
-#' resc3co <- c3co(NULL, segDat=segDat)
+#' path <- system.file("extdata", package = "facets")
+#' segDat <- Facetswrapper(path, stat = "TCN")
+#' print(segDat)
+#' resc3co <- c3co(NULL, segDat = segDat)
 #' }
 #' }
 #'
@@ -57,7 +57,7 @@ Facetswrapper <- function(path, stat) {
         stop("Found no FACETS data file in folder: ", sQuote(path))
     }
     ### Joint segmentation of all samples
-    resSeg <- segmentData(dat, stat=stat)
+    resSeg <- segmentData(dat, stat = stat)
     ## Sanity checks
     stop_if_not(ncol(resSeg$Y) == length(dat))
     resSeg
