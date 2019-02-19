@@ -4,7 +4,7 @@
 \alias{positiveFusedLasso}
 \title{Positive fused Lasso function}
 \usage{
-positiveFusedLasso(Y, Zt, lambda, eps = 0.1, max.iter = 50,
+positiveFusedLasso(Y, Zt, lambda, eps = 0.1, max.iter = 50L,
   warn = FALSE, verbose = FALSE)
 }
 \arguments{
@@ -40,7 +40,7 @@ Positive fused Lasso function
 \examples{
 set.seed(7)
 len <- 700*10
-nbClones <- 2
+nbClones <- 2L
 bkps <- list(
     c(20, 30, 50, 60)*100, 
     c(10, 40, 60)*100)
@@ -49,13 +49,13 @@ regions <- list(
     c("(0,1)", "(1,1)", "(1,2)", "(1,1)"))
 
 datSubClone <- buildSubclones(len, nbClones, bkps, regions, eps=0.2)
-W <- rSparseWeightMatrix(5, nbClones, 0.7)
-datList <- mixSubclones(subClones=datSubClone, W)
+W <- rSparseWeightMatrix(nb.samp=5L, nb.arch=nbClones, sparse.coeff=0.7)
+datList <- mixSubclones(subClones=datSubClone, W=W)
 
 segData.TCN <- segmentData(datList,"TCN")
 Y1 <- t(segData.TCN$Y)
 Y <- list(Y1 = Y1)
-Z0t.TCN <- initializeZt(Y1, p = 2, flavor = "nmf")
+Z0t.TCN <- initializeZt(Y1, p=2L, flavor="nmf")
 Zt <- list(Z1 = Z0t.TCN$Z1)
 posFused <- positiveFusedLasso(Y, Zt, lambda=1e-3, verbose=TRUE)
 modelFitStats(posFused)
@@ -64,7 +64,7 @@ segData.C1C2 <- segmentData(datList,"C1C2")
 Y1 <- t(segData.C1C2$Y1)
 Y2 <- t(segData.C1C2$Y2)
 Y <- list(Y1 = Y1, Y2 = Y2)
-Z0t.C1C2 <- initializeZt(Y1, Y2, p=2, flavor = "nmf")
+Z0t.C1C2 <- initializeZt(Y1, Y2, p=2L, flavor="nmf")
 Zt <- list(Z1 = Z0t.C1C2$Z1, Z2 = Z0t.C1C2$Z2)
 posFusedC <- positiveFusedLasso(Y, Zt, lambda=c(1e-3, 1e-3), verbose=TRUE)
 modelFitStats(posFusedC)

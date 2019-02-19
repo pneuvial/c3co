@@ -23,6 +23,6 @@ A matrix of weights (the sum of rows is equal to 1).
 Generate sparse matrix with at least one non-zero element by rows and by columns
 }
 \examples{
-M <- rSpMatrix(10, 7, 0.5)
+M <- rSpMatrix(nrow=10L, ncol=7L, sparse.coeff=0.5)
 
 }

@@ -38,7 +38,7 @@
 #'   
 #' @examples
 #' len <- 500*10
-#' nbClones <- 2
+#' nbClones <- 2L
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
 #' 
@@ -71,7 +71,7 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
             stop("Argument 'dataAnnotN' must be provided if argument 'dataAnnotTP' is")
         }
         ## assume equal repartition of AA, AB, BB for simplicity
-        pct <- rep(1, times = 3)/3
+        pct <- rep(1, times = 3L)/3
     } else {
         if (is.factor(dataAnnotTP$genotype)) {
             dataAnnotTP$genotype <- as.character(dataAnnotTP$genotype)

@@ -11,7 +11,7 @@
 #' @return A matrix of weights (the sum of rows is equal to 1).
 #' 
 #' @examples
-#' M <- rSparseWeightMatrix(nb.samp=10, nb.arch=7, sparse.coeff=0.5)
+#' M <- rSparseWeightMatrix(nb.samp=10L, nb.arch=7L, sparse.coeff=0.5)
 #'
 #' @importFrom Matrix rsparsematrix 
 #' @importFrom Matrix Matrix 
@@ -44,7 +44,7 @@ rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff = max(nb.samp, nb
 #' @return A matrix of weights (the sum of rows is equal to 1).
 #' 
 #' @examples
-#' M <- rSpMatrix(10, 7, 0.5)
+#' M <- rSpMatrix(nrow=10L, ncol=7L, sparse.coeff=0.5)
 #'
 #' @importFrom stats runif
 #' @importFrom Matrix spMatrix 

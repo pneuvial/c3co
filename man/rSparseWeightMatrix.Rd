@@ -23,6 +23,6 @@ A matrix of weights (the sum of rows is equal to 1).
 Generate weight matrix
 }
 \examples{
-M <- rSparseWeightMatrix(nb.samp=10, nb.arch=7, sparse.coeff=0.5)
+M <- rSparseWeightMatrix(nb.samp=10L, nb.arch=7L, sparse.coeff=0.5)
 
 }

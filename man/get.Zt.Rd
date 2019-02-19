@@ -23,8 +23,8 @@ J columns (number of segments)
 Optimisation is done by solving a L1-penalized least-square problem thanks to the \pkg{glmnet} package
 }
 \examples{
-nbSegments <- 11
-nbClones   <- 4
+nbSegments <- 11L
+nbClones   <- 4L
 
 Z <- matrix(1, nrow = nbClones, ncol = nbSegments)
 Z[2, 2] <- 2

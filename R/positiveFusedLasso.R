@@ -28,7 +28,7 @@
 #' @examples
 #' set.seed(7)
 #' len <- 700*10
-#' nbClones <- 2
+#' nbClones <- 2L
 #' bkps <- list(
 #'     c(20, 30, 50, 60)*100, 
 #'     c(10, 40, 60)*100)
@@ -37,13 +37,13 @@
 #'     c("(0,1)", "(1,1)", "(1,2)", "(1,1)"))
 #' 
 #' datSubClone <- buildSubclones(len, nbClones, bkps, regions, eps=0.2)
-#' W <- rSparseWeightMatrix(5, nbClones, 0.7)
-#' datList <- mixSubclones(subClones=datSubClone, W)
+#' W <- rSparseWeightMatrix(nb.samp=5L, nb.arch=nbClones, sparse.coeff=0.7)
+#' datList <- mixSubclones(subClones=datSubClone, W=W)
 #' 
 #' segData.TCN <- segmentData(datList,"TCN")
 #' Y1 <- t(segData.TCN$Y)
 #' Y <- list(Y1 = Y1)
-#' Z0t.TCN <- initializeZt(Y1, p = 2, flavor = "nmf")
+#' Z0t.TCN <- initializeZt(Y1, p=2L, flavor="nmf")
 #' Zt <- list(Z1 = Z0t.TCN$Z1)
 #' posFused <- positiveFusedLasso(Y, Zt, lambda=1e-3, verbose=TRUE)
 #' modelFitStats(posFused)
@@ -52,7 +52,7 @@
 #' Y1 <- t(segData.C1C2$Y1)
 #' Y2 <- t(segData.C1C2$Y2)
 #' Y <- list(Y1 = Y1, Y2 = Y2)
-#' Z0t.C1C2 <- initializeZt(Y1, Y2, p=2, flavor = "nmf")
+#' Z0t.C1C2 <- initializeZt(Y1, Y2, p=2L, flavor="nmf")
 #' Zt <- list(Z1 = Z0t.C1C2$Z1, Z2 = Z0t.C1C2$Z2)
 #' posFusedC <- positiveFusedLasso(Y, Zt, lambda=c(1e-3, 1e-3), verbose=TRUE)
 #' modelFitStats(posFusedC)
@@ -60,7 +60,7 @@
 #' @importFrom methods new
 #' @export
 positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
-                               max.iter=50, warn=FALSE, verbose=FALSE) {
+                               max.iter=50L, warn=FALSE, verbose=FALSE) {
   ## Argument 'Y':
   stop_if_not(is.list(Y))
   M <- length(Y)
@@ -75,7 +75,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
     warning("Under-identified problem: more latent features than samples")
   }
 
-  if (M >= 2) {
+  if (M >= 2L) {
     for (mm in 2:M) {
       stop_if_not(nrow(Y[[mm]]) == n, ncol(Y[[mm]]) == L,
                   ncol(Zt[[mm]]) == p, nrow(Zt[[mm]]) == L)
@@ -98,9 +98,9 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
 
   ## __________________________________________________
   ## main loop for alternate optimization
-  iter <- 0; cond <- FALSE; delta <- Inf
+  iter <- 0L; cond <- FALSE; delta <- Inf
   while (!cond) {
-    iter <- iter + 1
+    iter <- iter + 1L
     
     ## __________________________________________________
     ## STEP 1: optimize w.r.t. W (fixed Z)
@@ -121,7 +121,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
         Zt <- lapply(Zt, FUN = function(z) z[,-1])
         ## Remove matched W.old column
         W.old <- W[,-1] 
-        p <- p-1
+        p <- p-1L
       } else {
         ## use QR decomposition to save time inverting WtW
         WtWm1 <- tcrossprod(backsolve(qr.R(QR.W), x = diag(p)))
@@ -134,7 +134,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
-    if (iter > 1) { delta <- sqrt(sum((W - W.old)^2)) }
+    if (iter > 1L) { delta <- sqrt(sum((W - W.old)^2)) }
     cond <- (iter > max.iter || delta < eps)
     if (verbose) message("delta:", round(delta, digits=4))
     W.old <- W
@@ -142,7 +142,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
   if (verbose) message("Stopped after ", iter, " iterations")
   if (verbose) message("delta:", round(delta, digits=4))
 
-  if (length(Y) > 1 && warn) { ## sanity check: minor CN < major CN
+  if (length(Y) > 1L && warn) { ## sanity check: minor CN < major CN
     dZt <- Reduce(`-`, rev(Zt))
     tol <- 1e-2  ## arbitrary tolerance...
     if (min(dZt) < -tol) {

@@ -53,7 +53,7 @@ Facetswrapper <- function(path, stat) {
     }
     ### To do may be cut this function into several function
     dat <- loadFacetsdata(path)
-    if (length(dat) == 0) {
+    if (length(dat) == 0L) {
         stop("Found no FACETS data file in folder: ", sQuote(path))
     }
     ### Joint segmentation of all samples
