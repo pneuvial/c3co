@@ -13,8 +13,8 @@
 #' @importFrom matrixStats colDiffs
 modelFitStatistics <- function(Y, Yhat, What, Zhat) {
     n <- nrow(Y)
-    nseg <- ncol(Y)
-    nnS <- n*nseg
+    J <- ncol(Y)
+    nnS <- n*J
     
     ## PVE
     totSS <- sum(sweep(Y, MARGIN = 1L, STATS = rowMeans(Y), FUN = `-`)^2)

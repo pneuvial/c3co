@@ -69,31 +69,38 @@ If  \code{flavor == "subsampling"}, the latent features are chosen at random amo
 profiles.
 }
 \examples{
+## Simulate locus-level (C1,C2) copy-number data
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
-len <- 500*10
-nbClones <- 3L
+len <- 500*10  ## Number of loci
+K <- 3L        ## Number of subclones
+n <- 12        ## Number of samples
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
                 c("(1,1)", "(0,1)", "(1,1)"),
                 c("(0,2)", "(0,1)", "(1,1)"))
-datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-M <- rSparseWeightMatrix(nb.samp=12L, nb.arch=nbClones, sparse.coeff=0.90)
-simu <- mixSubclones(subClones=datSubClone, W=M)
+datSubClone <- buildSubclones(len=len, nbClones=K, bkps=bkps, regions=regions,
+                              dataAnnotTP=dataAnnotTP, dataAnnotN=dataAnnotN)
+W <- rSparseWeightMatrix(nb.samp=n, nb.arch=K, sparse.coeff=0.90)
+simu <- mixSubclones(subClones=datSubClone, W=W)
+
+## Segment the copy-number data
 seg <- segmentData(simu)
+
+## Initialize C3CO model
 Y1 <- t(seg$Y1)
 Y2 <- t(seg$Y2)
 
-resH <- initializeZt(Y1, Y2, p=nbClones)  ## corresponds to flavor "hclust")
-resNMF <- initializeZt(Y1, Y2, p=nbClones, flavor="nmf")
+resH <- initializeZt(Y1, Y2, p=K)  ## corresponds to flavor "hclust")
+resNMF <- initializeZt(Y1, Y2, p=K, flavor="nmf")
 \dontrun{
 ## often fails because of singularities:
-resArch <- initializeZt(Y1, Y2, p=nbClones, flavor="archetypes")
+resArch <- initializeZt(Y1, Y2, p=K, flavor="archetypes")
 }
-resSVD <- initializeZt(Y1, Y2, p=nbClones, flavor="svd")
-resC <- initializeZt(Y1, Y2, p=nbClones, flavor="subsampling")
+resSVD <- initializeZt(Y1, Y2, p=K, flavor="svd")
+resC <- initializeZt(Y1, Y2, p=K, flavor="subsampling")
 
-resNMF1 <- initializeZt(Y1, p=nbClones, flavor="nmf")
+resNMF1 <- initializeZt(Y1, p=K, flavor="nmf")
 
 }
 \references{

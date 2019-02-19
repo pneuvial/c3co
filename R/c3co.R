@@ -33,21 +33,23 @@
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
-#' len <- 500*10
-#' nbClones <- 3L
+#' len <- 500*10   ## Number of loci
+#' K <- 3L         ## Number of subclones
+#' n <- 15L        ## Number of samples
 #' set.seed(88)
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(1,2)", "(0,2)", "(1,2)"),
 #' c("(0,3)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-#' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-#' M <- rSparseWeightMatrix(nb.samp=15L, nb.arch=3L, sparse.coeff=0.7)
-#' dat <- mixSubclones(subClones=datSubClone, W=M)
+#' datSubClone <- buildSubclones(len=len, nbClones=K, bkps=bkps, regions=regions,
+#'                               dataAnnotTP=dataAnnotTP, dataAnnotN=dataAnnotN)
+#' W <- rSparseWeightMatrix(nb.samp=n, nb.arch=K, sparse.coeff=0.7)
+#' dat <- mixSubclones(subClones=datSubClone, W=W)
 #' l1 <- seq(from=1e-6, to=1e-4, length.out=10L)
 #' parameters.grid <- list(lambda=l1, nb.arch=2:6)
-#' res <- c3co(dat, parameters.grid)
+#' res <- c3co(dat, parameters.grid=parameters.grid)
 #' l2 <- seq(from=1e-6, to=1e-5, length.out=10L)
 #' parameters.grid.2 <- list(lambda=l2, nb.arch=2:6)
-#' resC <- c3co(dat, stat="TCN", parameters.grid.2)
+#' resC <- c3co(dat, stat="TCN", parameters.grid =parameters.grid.2)
 #' @importFrom methods new
 #' @export
 c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
@@ -61,7 +63,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         checkCols <- lapply(dat, FUN=function(dd) {
             coln <- colnames(dd)
             ecn <- c("tcn", "dh", "pos", "chr") ## expected
-            mm <- match(ecn, coln)
+            mm <- match(ecn, table=coln)
             if (anyNA(mm)) {
                 stop("Argument 'dat' should contain columns named ",
                      comma(sQuote(ecn)))
@@ -83,7 +85,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
 
     checkGrid <- lapply(names(parameters.grid), FUN=function(na) {
         ecn <- c("lambda", "lambda1", "lambda2", "nb.arch") ## expected
-        mm <- match(na, ecn)
+        mm <- match(na, table=ecn)
         if (anyNA(mm)) {
             stop("Argument 'parameters.grid' should contain ",
                  comma(sQuote(ecn)))
@@ -101,7 +103,7 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         ## Sanity check
         checkGrid <- lapply(names(segDat), FUN=function(na) {
           ecn <- c("bkp", "Y1", "Y2", "Y") ## expected
-          mm <- match(na, ecn)
+          mm <- match(na, table=ecn)
           if (anyNA(mm)) {
               stop("Argument 'parameters.grid' should contain ",
                    comma(sQuote(ecn)))

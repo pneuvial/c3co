@@ -43,7 +43,7 @@
 #' W <- rSparseWeightMatrix(nb.samp=n, nb.arch=K, sparse.coeff=0.7)
 #' datList <- mixSubclones(subClones=datSubClone, W=W)
 #' 
-#' segData.TCN <- segmentData(datList,"TCN")
+#' segData.TCN <- segmentData(datList, "TCN")
 #' Y1 <- t(segData.TCN$Y)
 #' Y <- list(Y1 = Y1)
 #' Z0t.TCN <- initializeZt(Y1, p=K, flavor="nmf")
