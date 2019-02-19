@@ -97,9 +97,9 @@ round(t(resForceNorm@S$Z), 2)  ## Z is equal to Y
 round(resForceNorm@E$Y, 2)
 round(resForceNorm@mu, 2) ##  0 where the wild things are
 modelFitStats(resForceNorm)
-### When we force a compoenent to be normal, it is possible to solve the model with p>n
+### When we force a compoenent to be normal, it is possible to solve the model with K>n
 
-### Doesn't work very well, due to  number n = p so the trivial solution for W is 1 for each archetype which corresponds to each profile (non indentifiable problem)
+### Doesn't work very well, due to  number n = K so the trivial solution for W is 1 for each archetype which corresponds to each profile (non indentifiable problem)
 
 ###
 list.pv <- do.call(rbind, lapply(1:10, function(tt){

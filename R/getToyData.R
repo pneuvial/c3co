@@ -23,21 +23,21 @@
 #'   added (this corresponds to the presence of a normal subclone).
 #'   
 #' @param returnLocus A logical value indicating whether the locus-level data
-#'   should be returned. Defaults to TRUE
+#'   should be returned. Defaults to `TRUE`.
 #'   
 #' @return 
 #'  \item{W}{A `n`-by-`nbClones` matrix of weights}
 #'  \item{segment}{A list of two elements:
 #'   \describe{
-#'     \item{Y}{An `n`-by-`nbSegs` matrix of observed CN signals if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+#'     \item{Y}{An `n`-by-`nbSegs` matrix of observed CN signals if `dimension==1`, or a list of two such matrices if `dimension==2`}
 #'     \item{Z}{An `nbClones`-by-`nbSegs` matrix of latent features
-#'              (subclones)} if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+#'              (subclones)} if `dimension==1`, or a list of two such matrices if `dimension==2`}
 #'  }
-#'  \item{locus}{only returned if \code{returnLocus} is TRUE: A list of two elements:
+#'  \item{locus}{only returned if `returnLocus` is `TRUE`: A list of two elements:
 #'   \describe{
-#'     \item{Y}{An `n`-by-`len` matrix of observed CN signals, if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+#'     \item{Y}{An `n`-by-`len` matrix of observed CN signals, if `dimension==1`, or a list of two such matrices if `dimension==2`}
 #'     \item{Z}{An `nbClones`-by-`len` matrix of latent features
-#'              (subclones)}, if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+#'              (subclones)}, if `dimension==1`, or a list of two such matrices if `dimension==2`}
 #'  }
 #'   
 #' @details For simplicity, the breakpoints positions are drawn uniformly from 
@@ -45,13 +45,12 @@
 #'   
 #' @export
 #' @examples
+#' len <- 100L     ## Number of loci
+#' nbClones <- 3L  ## Number of subclones
+#' nbSegs <- 6L    ## Number of segments
+#' n <- 10L        ## Number of samples
 #' 
-#' len <- 100L
-#' nbClones <- 3L
-#' nbSegs <- 6L
-#' n <- 10L
-#' 
-#' dat <- getToyData(n, len, nbClones, nbSegs, eps = 0)  ## noiseless
+#' dat <- getToyData(n, len, nbClones, nbSegs, eps = 0.0)  ## noiseless
 #' matplot(t(dat$locus$Y), t = "s")
 #' matplot(t(dat$segment$Y), t = "s")
 #' 

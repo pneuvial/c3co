@@ -30,7 +30,7 @@ numbers)}
 added (this corresponds to the presence of a normal subclone).}
 
 \item{returnLocus}{A logical value indicating whether the locus-level data
-should be returned. Defaults to TRUE}
+should be returned. Defaults to \code{TRUE}.}
 }
 \value{
 \item{W}{A \code{n}-by-\code{nbClones} matrix of weights}
@@ -40,7 +40,7 @@ should be returned. Defaults to TRUE}
 \item{Z}{An \code{nbClones}-by-\code{nbSegs} matrix of latent features
 (subclones)} if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
 }
-\item{locus}{only returned if \code{returnLocus} is TRUE: A list of two elements:
+\item{locus}{only returned if \code{returnLocus} is \code{TRUE}: A list of two elements:
 \describe{
 \item{Y}{An \code{n}-by-\code{len} matrix of observed CN signals, if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
 \item{Z}{An \code{nbClones}-by-\code{len} matrix of latent features
@@ -55,13 +55,12 @@ For simplicity, the breakpoints positions are drawn uniformly from
 the set of all possible positions.
 }
 \examples{
+len <- 100L     ## Number of loci
+nbClones <- 3L  ## Number of subclones
+nbSegs <- 6L    ## Number of segments
+n <- 10L        ## Number of samples
 
-len <- 100L
-nbClones <- 3L
-nbSegs <- 6L
-n <- 10L
-
-dat <- getToyData(n, len, nbClones, nbSegs, eps = 0)  ## noiseless
+dat <- getToyData(n, len, nbClones, nbSegs, eps = 0.0)  ## noiseless
 matplot(t(dat$locus$Y), t = "s")
 matplot(t(dat$segment$Y), t = "s")
 

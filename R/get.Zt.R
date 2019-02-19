@@ -38,16 +38,16 @@
 #' @importFrom matrixStats colCumsums
 #' @importFrom methods as
 get.Zt <- function(Y, lambda, W, WtWm1) {
-  L <- ncol(Y)  ## FIXME: Renamed 'L' to 'J'
-  p <- ncol(W)  ## FIXME: Renamed 'p' to 'K'
+  J <- ncol(Y)
+  K <- ncol(W)
 
   ## Sanity checks
   stop_if_not(length(lambda) == 1L)  
   stop_if_not(nrow(Y) == nrow(W))
-  stop_if_not(nrow(WtWm1) == p, ncol(WtWm1) == p)
+  stop_if_not(nrow(WtWm1) == K, ncol(WtWm1) == K)
 
   ## temp variables
-  X1 <- bandSparse(L, L-1L, k=-(1:(L-1)))
+  X1 <- bandSparse(J, J-1L, k=-(1:(J-1)))
   W.WtWm1 <- W %*% WtWm1
   Pw <- W.WtWm1 %*% t(W)
   
@@ -62,13 +62,13 @@ get.Zt <- function(Y, lambda, W, WtWm1) {
   z.tilde <- glmnet(X.tilde, y.tilde, lambda = lambda, intercept = FALSE, standardize = FALSE)$beta
   
   ## Go back to Z 
-  Z <- matrix(z.tilde, nrow=L-1L, ncol=p, byrow=TRUE)
+  Z <- matrix(z.tilde, nrow=J-1L, ncol=K, byrow=TRUE)
   X1.Z <- rbind(0, colCumsums(Z))
   
   Zt <- sweep(X1.Z, MARGIN = 2L, STATS = colMeans(t(Y) %*% W.WtWm1 - X1.Z), FUN = `+`)
 
   ## Sanity checks
-  stop_if_not(nrow(Zt) == L, ncol(Zt) == p)
+  stop_if_not(nrow(Zt) == J, ncol(Zt) == K)
 
   Zt
 }

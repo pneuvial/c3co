@@ -102,7 +102,7 @@ initializeZt <- function(Y1, Y2=NULL, K=min(dim(Y1)),
     n <- nrow(Y1) # number of samples
     J <- ncol(Y1) # number of loci/segments
     stop_if_not(is.numeric(K), length(K) == 1L, is.finite(K), K > 0L)
-   # stop_if_not(K <= n)
+    ## stop_if_not(K <= n)
     flavor <- match.arg(flavor)
     stat <- match.arg(stat)
     if (forceNormal) K <- K-1L

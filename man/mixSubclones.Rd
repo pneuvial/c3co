@@ -29,7 +29,7 @@ bkps <- list(c(100, 250)*10, c(150, 400)*10)
 regions <- list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
 datSubClone <- buildSubclones(len=len, nbClones=K, bkps=bkps, regions=regions,
                               dataAnnotTP=dataAnnotTP, dataAnnotN=dataAnnotN)
-W <- rSparseWeightMatrix(nb.samp=n, nb.arch=5L)               
+W <- rSparseWeightMatrix(nb.samp=n, nb.arch=5L)
 mixture <- mixSubclones(datSubClone, W=W)
 
 }
