@@ -182,6 +182,12 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
 }
 
 
+#' Get number of segments
+#'
+#' @param x A segmentation.
+#'
+#' @param \ldots Optional arguments.
+#'
 #' @export
 nbrOfSegments <- function(x, ...) UseMethod("nbrOfSegments")
 
@@ -191,6 +197,12 @@ nbrOfSegments.C3coSegmentation <- function(x, ...) {
 }
 
 
+#' Get number of samples
+#'
+#' @param x A segmentation.
+#'
+#' @param \ldots Optional arguments.
+#'
 #' @export
 nbrOfSamples <- function(x, ...) UseMethod("nbrOfSamples")
 
@@ -200,6 +212,10 @@ nbrOfSamples.C3coSegmentation <- function(x, ...) {
 }
 
 
+#' Get sample names
+#'
+#' @param x A segmentation.
+#'
 #' @export
 sampleNames <- function(x) UseMethod("sampleNames")
 
@@ -209,6 +225,12 @@ sampleNames.C3coSegmentation <- function(x) {
 }
 
 
+#' Get number of chromosomes
+#'
+#' @param x A segmentation.
+#'
+#' @param \ldots Optional arguments.
+#'
 #' @export
 nbrOfChromosomes <- function(x, ...) UseMethod("nbrOfChromosomes")
 
@@ -218,6 +240,10 @@ nbrOfChromosomes.C3coSegmentation <- function(x, ...) {
 }
 
 
+#' Get track names
+#'
+#' @param x A segmentation.
+#'
 #' @export
 trackNames <- function(x) UseMethod("trackNames")
 
