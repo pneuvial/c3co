@@ -14,20 +14,24 @@
 #' J columns (number of segments) 
 #' 
 #' @examples
-#' nbSegments <- 11L
-#' nbClones   <- 4L
-#'
-#' Z <- matrix(1, nrow = nbClones, ncol = nbSegments)
-#' Z[2, 2] <- 2
-#' Z[3, 5:6] <- 2
-#' Z[4, 9:10] <- 2
+#' J <- 11L  ## Number of segments
+#' K <- 4L   ## Number of subclones
+#' n <- 4L   ## Number of samples
 #' 
-#' W <- diag(rep(1, times = nrow(Z)))
-#' E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0), nrow = nrow(W), ncol = ncol(Z))
-#' WtWm1 <- diag(rep(1, times = nrow(Z)))
+#' Z <- matrix(1, nrow = K, ncol = J)
+#' Z[2,    2] <- 2
+#' Z[3,  5:6] <- 2
+#' Z[4, 9:10] <- 2
+#'
+#' W <- matrix(0, nrow = n, ncol = K)
+#' W[1,1] <- W[2,2] <- W[3,3] <- W[4,4] <- 1
+#' WtWm1 <- tcrossprod(backsolve(qr.R(qr(W)), x=diag(K)))
+#'
+#' E <- matrix(rnorm(n*J, sd = 0), nrow = n, ncol = J)
+#'
 #' Y <- W %*% Z + E
 #' 
-#' Zt <- c3co:::get.Zt(Y, lambda = 0.01, W, WtWm1)
+#' Zthat <- c3co:::get.Zt(Y, lambda = 0.01, W = W, WtWm1 = WtWm1)
 #' 
 #' @importFrom glmnet glmnet
 #' @importFrom Matrix bandSparse
