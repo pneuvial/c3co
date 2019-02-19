@@ -3,9 +3,9 @@ context("Consistency of the optimization algorithm")
 test_that("Consistency of get.Z", {
 
   ## some random data  
-  n <- 10
-  J <- 11
-  K <- 4
+  n <- 10L        ## Number of samples
+  J <- 11L        ## Number of segments
+  K <- 4L         ## Number of subclones
   lambda <- 0.01
   
   # Z <- matrix(1, nrow = K, ncol = J)
@@ -13,7 +13,7 @@ test_that("Consistency of get.Z", {
   # Z[3, 5:6]  <- 2
   # Z[4, 9:10] <- 2
   # 
-  # W <- t(rmultinom(n, K, c(1/8,1/8,1/4,1/2))/4)
+  # W <- t(rmultinom(n, size=K, prob=c(1/8,1/8,1/4,1/2))/4)
   # E <- matrix(rnorm(n*J, sd = 0.1), nrow = n, ncol = J)
   # Y <- W %*% Z + E
 
@@ -55,12 +55,12 @@ c(0.98897145056092261584, 0.94889904941933578275, 0.90888045833701891496,
 1.01690264137661756649, 1.06731663069476789829, 0.99737236235514736826,
 0.98086078314439761883, 0.92180933533001230273, 1.20581619877634915738, 
 1.07505014531558318325, 1.18242083023782895701),
-  n, J)
+  nrow=n, ncol=J)
   
   W <- matrix(c(0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25,
 0.0, 0.25, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.25, 0.0, 0.5, 0.25, 0.5,
 0.5, 0.0, 0.0, 0.5, 0.0, 0.25, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0, 0.5,
-1.0, 0.5, 0.5), n, K)
+1.0, 0.5, 0.5), nrow=n, ncol=K)
   
   # require(CVXR)
   # 
@@ -99,11 +99,11 @@ c(0.98897145056092261584, 0.94889904941933578275, 0.90888045833701891496,
                   1.04161306097664763115, 0.97181807004325870825,
                   1.04419536585372552118, 1.89511746962100202651,
                   1.82794335933250851056, 1.13534935026193650742),
-                  J, K)
+                  nrow=J, ncol=K)
   ## solving with c3co (glmnet)
   WtWm1 <- tcrossprod(backsolve(qr.R(qr(W)), x = diag(K)))
   ## FIXME: include the penalty factor in get.Zt
-  Zt_c3co <- c3co:::get.Zt(Y, lambda / (2*n*J) , W, WtWm1) 
+  Zt_c3co <- c3co:::get.Zt(Y, lambda=lambda/(2*n*J), W=W, WtWm1=WtWm1)
 
   expect_lt(sum((Zt_star - Zt_c3co)^2), 1e-4)
 })

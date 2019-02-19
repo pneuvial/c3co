@@ -4,8 +4,9 @@ set.seed(7)
 dataAnnotTP <- acnr::loadCnRegionData(dataSet = "GSE11976", tumorFraction = 1.0)
 dataAnnotN <- acnr::loadCnRegionData(dataSet = "GSE11976", tumorFraction = 0.0)
 
-len <- 500 * 10
-nbClones <- 3
+len <- 500 * 10  ## Number of loci
+K <- 3L          ## Number of subclones
+n <- 15L         ## Number of samples
 
 bkps <- list(
   c(100, 250) * 10,
@@ -20,20 +21,20 @@ regions <- list(
 )
 
 datSubClone <- buildSubclones(len = len,
-                              nbClones = nbClones,
+                              nbClones = K,
                               bkps = bkps,
                               regions = regions,
                               dataAnnotTP = dataAnnotTP,
                               dataAnnotN = dataAnnotN)
-stopifnot(is.list(datSubClone), length(datSubClone) == 3L)
+stopifnot(is.list(datSubClone), length(datSubClone) == K)
 
-M <- rSparseWeightMatrix(nb.samp = 15L, nb.arch = 3L)
-stopifnot(all.equal(dim(M), c(15, 3)))
+W <- rSparseWeightMatrix(nb.samp = n, nb.arch = K)
+stopifnot(identical(dim(W), c(n, K)))
 
-dat <- mixSubclones(subClones = datSubClone, W = M)
-stopifnot(is.list(dat), length(dat) == nrow(M))
+dat <- mixSubclones(subClones = datSubClone, W = W)
+stopifnot(is.list(dat), length(dat) == nrow(W))
 
-l1 <- 10^(-seq(from = 2, to = 8, by = 1))
+l1 <- 10^(-seq(from = 2, to = 8, by = 1L))
 parameters.grid <- list(lambda = l1, nb.arch = 2:6)
 
 test_that("c3co terminates on C1,C2", {
