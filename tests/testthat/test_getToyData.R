@@ -6,7 +6,7 @@ context("Toy data generation")
 test_that("output of getToyData has correct dimensions and contents", {
     len <- 100
     nbClones <- 2
-    nbBkps <- 5
+    nbSegs <- 6
     eps <- 1
     n <- 4
 
@@ -19,31 +19,31 @@ test_that("output of getToyData has correct dimensions and contents", {
         intercept <- config[["intercept"]]
         returnLocus <- config[["returnLocus"]]
         dimension <- config[["dimension"]]
-        dat <- getToyData(n, len, nbClones, nbBkps, eps = 0, 
+        dat <- getToyData(n, len, nbClones, nbSegs, eps = 0, 
                           dimension = dimension,
                           intercept = intercept,
                           returnLocus = returnLocus) 
         
         ## weights
         expect_equal(nrow(dat$W), n)
-        expect_equal(ncol(dat$W), nbClones + intercept)
+        expect_equal(ncol(dat$W), nbClones)
         
         ## segment-level data
         sdat <- dat$segment
         if (dimension == 1) {
             expect_equal(nrow(sdat$Y), n)
             expect_equal(ncol(sdat$Y), nbBkps+1)
-            expect_equal(nrow(sdat$Z), nbClones + intercept)
+            expect_equal(nrow(sdat$Z), nbClones)
             expect_equal(ncol(sdat$Z), nbBkps+1)
         } else {
             expect_equal(nrow(sdat$Y[[1]]), n)
             expect_equal(ncol(sdat$Y[[1]]), nbBkps+1)
-            expect_equal(nrow(sdat$Z[[1]]), nbClones + intercept)
+            expect_equal(nrow(sdat$Z[[1]]), nbClones)
             expect_equal(ncol(sdat$Z[[1]]), nbBkps+1)
             
             expect_equal(nrow(sdat$Y[[2]]), n)
             expect_equal(ncol(sdat$Y[[2]]), nbBkps+1)
-            expect_equal(nrow(sdat$Z[[2]]), nbClones + intercept)
+            expect_equal(nrow(sdat$Z[[2]]), nbClones)
             expect_equal(ncol(sdat$Z[[2]]), nbBkps+1)
         }    
         ## locus-level data
@@ -52,21 +52,29 @@ test_that("output of getToyData has correct dimensions and contents", {
             if (dimension == 1) {
                 expect_equal(nrow(ldat$Y), n)
                 expect_equal(ncol(ldat$Y), len)
-                expect_equal(nrow(ldat$Z), nbClones + intercept)
+                expect_equal(nrow(ldat$Z), nbClones)
                 expect_equal(ncol(ldat$Z), len)
             } else {
                 expect_equal(nrow(ldat$Y[[1]]), n)
                 expect_equal(ncol(ldat$Y[[1]]), len)
-                expect_equal(nrow(ldat$Z[[1]]), nbClones + intercept)
+                expect_equal(nrow(ldat$Z[[1]]), nbClones)
                 expect_equal(ncol(ldat$Z[[1]]), len)
 
                 expect_equal(nrow(ldat$Y[[2]]), n)
                 expect_equal(ncol(ldat$Y[[2]]), len)
-                expect_equal(nrow(ldat$Z[[2]]), nbClones + intercept)
+                expect_equal(nrow(ldat$Z[[2]]), nbClones)
                 expect_equal(ncol(ldat$Z[[2]]), len)
             }
         } else {
             expect_null(ldat)
         }        
     }    
+})
+
+
+test_that("getToyData throws errors as appropriate", {
+    # less samples than clones:
+    expect_error(getToyData(n = 5, len = 10, nbClones = 6, nbSegs = 5, eps = 0))
+    # less segments than clones:
+    expect_error(getToyData(n = 10, len = 10, nbClones = 5, nbSegs = 3, eps = 0))
 })
