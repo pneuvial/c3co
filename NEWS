@@ -11,15 +11,14 @@ SIGNIFICANT CHANGES:
  * Renamed initializeZ() to initializeZt() to clarify that it returns the
    transpose of matrix 'Z'.  Same for internal get.Z() renamed to get.Zt().
 
+ * In getToyData(), replaced argument 'nbBkps' by 'nbSegs' (= nbBkps+1)
+   for notation consistency.
+
 NEW FEATURES:
 
  * loadFacetsdata() gained argument 'pattern'.
 
  * getToyData() gained arguments 'dimension' and 'returnLocus'.
- 
- * In 'getToyData', replaced argument 'nbBkps' by 'nbSegs' (= nbBkps+1)
-   for notation consistency.
-
  
 BUG FIXES:
 
@@ -29,14 +28,17 @@ BUG FIXES:
 
  * Generic trackNames() called NextMethod() instead of UseMethod().
  
- * In  'getToyData', robustified the creation of Z so that it is full rank
- * In 'getToyData', robustified the creation of W so all row sum to 1 and all
+ * In getToyData(), robustified the creation of Z so that it is full rank.
+ 
+ * In getToyData(), robustified the creation of W so all row sum to 1 and all
    items are in [0,1].
  
 SOFTWARE QUALITY:
 
  * Add help pages with examples to internal get.W() and get.Z() functions.
+ 
  * Add sanity checks and tests for getLocusData(). 
+
 
 Version: 0.2.6-9000 [2018-03-19]
 
