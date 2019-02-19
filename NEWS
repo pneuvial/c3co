@@ -146,7 +146,7 @@ CODE REFACTORING:
  * Added function initializeZ() so that the initialization is
    performed only once per candidate number of subclones in 'c3co'.
    
- * In class 'posFused', ddded slot 'S0' to store initial estimates of Z
+ * In class 'posFused', added slot 'S0' to store initial estimates of Z
  
  * Moved function get.Z.new() into get.Z()
  
@@ -248,14 +248,14 @@ Version: 0.1.8 [2016-11-30]
 
 PERFORMANCE:
 
- * Parallelism for Z1 and Z2 inferrence.
+ * Parallelism for Z1 and Z2 inference.
 
 
 Version: 0.1.7 [2016-11-25]
 
 CODE REFACTORING:
 
- * Move PSCBS data into another package named "incas.extdata".
+ * Move PSCBS data into another package named 'incas.extdata'.
 
 BUG FIXES:
 
@@ -299,7 +299,7 @@ Version: 0.1.3 [2016-06-07]
 
 NEW FEATURES:
 
- * Add parameter segment if user doesn't want to segment data befor inferrence.
+ * Add parameter segment if user doesn't want to segment data before inference.
 
 BUG FIXES:
 

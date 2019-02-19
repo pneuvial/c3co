@@ -15,7 +15,7 @@
 #'   the weight matrix.
 #'   
 #' @param dimension An integer value in {1,2}, the dimension of the signals to
-#'   be generated (eg 1 for total copy numbers and 2 for minor and major copy
+#'   be generated (e.g. 1 for total copy numbers and 2 for minor and major copy
 #'   numbers)
 #' 
 #'   
