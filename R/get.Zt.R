@@ -27,13 +27,13 @@
 #' WtWm1 <- diag(rep(1, times = nrow(Z)))
 #' Y <- W %*% Z + E
 #' 
-#' Zt <- c3co:::get.Z(Y, lambda = 0.01, W, WtWm1)
+#' Zt <- c3co:::get.Zt(Y, lambda = 0.01, W, WtWm1)
 #' 
 #' @importFrom glmnet glmnet
 #' @importFrom Matrix bandSparse
 #' @importFrom matrixStats colCumsums
 #' @importFrom methods as
-get.Z <- function(Y, lambda, W, WtWm1) {
+get.Zt <- function(Y, lambda, W, WtWm1) {
   L <- ncol(Y)  ## FIXME: Renamed 'L' to 'J'
   p <- ncol(W)  ## FIXME: Renamed 'p' to 'K'
 

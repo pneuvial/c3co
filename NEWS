@@ -3,6 +3,14 @@ Package: c3co
 
 Version: 0.2.6-9001 [2019-02-18]
 
+SIGNIFICANT CHANGES:
+
+ * Renamed argument 'Z' of internal get.W() to 'Zt' to clarify that the
+   input is the transpose of matrix 'Z'.
+
+ * Renamed internal get.Z() to get.Zt() to clarify that it returns the
+   transpose of matrix 'Z'.
+
 NEW FEATURES:
 
  * loadFacetsdata() gained argument 'pattern'.

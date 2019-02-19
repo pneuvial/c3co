@@ -4,10 +4,10 @@
 \alias{get.W}
 \title{Get the matrix of weights W for fixed values of the subclones Z and data Y}
 \usage{
-get.W(Z, Y)
+get.W(Zt, Y)
 }
 \arguments{
-\item{Z}{a matrix with K rows (number of subclones) and J columns (number of segments)}
+\item{Zt}{The transpose of Z where Z is a matrix with K rows (number of subclones) and J columns (number of segments)}
 
 \item{Y}{a matrix with n rows (number of samples) and J columns (number of segments)}
 }
@@ -29,6 +29,6 @@ Z[4, 9:10] <- 2
 W <- diag(rep(1, times = nrow(Z)))
 E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0), nrow = nrow(W), ncol = ncol(Z))
 Y <- W \%*\% Z + E
-c3co:::get.W(t(Z), Y)
+W <- c3co:::get.W(t(Z), Y)
 
 }

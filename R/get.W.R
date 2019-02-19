@@ -2,7 +2,7 @@
 #' 
 #' Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 #' 
-#' @param Z a matrix with K rows (number of subclones) and J columns (number of segments) 
+#' @param Zt The transpose of Z where Z is a matrix with K rows (number of subclones) and J columns (number of segments) 
 #' 
 #' @param Y a matrix with n rows (number of samples) and J columns (number of segments) 
 #'
@@ -20,12 +20,11 @@
 #' W <- diag(rep(1, times = nrow(Z)))
 #' E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0), nrow = nrow(W), ncol = ncol(Z))
 #' Y <- W %*% Z + E
-#' c3co:::get.W(t(Z), Y)
+#' W <- c3co:::get.W(t(Z), Y)
 #' 
 #' @importFrom limSolve lsei
-get.W <- function(Z, Y) {
-  Zt <- Z        ## FIXME: Input is actually t(Z)
-  J <- ncol(Zt)  ## FIXME: Rename 'J' to 'K'
+get.W <- function(Zt, Y) {
+  K <- ncol(Zt)
 
   ## Sanity checks
   stop_if_not(ncol(Y) == nrow(Zt))
@@ -34,15 +33,15 @@ get.W <- function(Z, Y) {
     lsei(
       A = Zt,
       B = y,
-      E = matrix(rep(1, times = J), nrow = 1L),
+      E = matrix(rep(1, times = K), nrow = 1L),
       F = 1,
-      H = rep(0, times = J),
-      G = diag(J),
+      H = rep(0, times = K),
+      G = diag(K),
       type = 2L)$X
   }))
 
   ## Sanity checks
-  stop_if_not(nrow(W) == nrow(Y), ncol(W) == J)
+  stop_if_not(nrow(W) == nrow(Y), ncol(W) == K)
 
   W
 }

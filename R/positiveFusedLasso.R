@@ -51,8 +51,8 @@
 #' Y2 <- t(segData.C1C2$Y2)
 #' Y <- list(Y1 = Y1, Y2 = Y2)
 #' Z0.C1C2 <- initializeZ(Y1, Y2, p=2, flavor = "nmf")
-#' Z <- list(Z1 = Z0.C1C2$Z1,Z2 = Z0.C1C2$Z2)
-#' posFusedC <- positiveFusedLasso(Y, Z, c(1e-3, 1e-3), verbose=TRUE)
+#' Z <- list(Z1 = Z0.C1C2$Z1, Z2 = Z0.C1C2$Z2)
+#' posFusedC <- positiveFusedLasso(Y, Z, lambda = c(1e-3, 1e-3), verbose=TRUE)
 #' modelFitStats(posFusedC)
 #' 
 #' @importFrom methods new
@@ -84,7 +84,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     while (is.null(WtWm1)) {
       
       ## solve in W (here individuals - i.e. rows of Yc - are independent)
-      W <- get.W(do.call(rbind, args = Z), Yc)
+      W <- get.W(Zt = do.call(rbind, args = Z), Y = Yc)
 
       ## Check rank deficiency
       QR.W <- qr(W)
@@ -104,7 +104,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
-    Z <- mapply(FUN = get.Z, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY = FALSE)
+    Z <- mapply(FUN = get.Zt, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY = FALSE)
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
