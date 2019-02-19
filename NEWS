@@ -14,6 +14,7 @@ SIGNIFICANT CHANGES:
 NEW FEATURES:
 
  * loadFacetsdata() gained argument 'pattern'.
+ * getToyData() gained arguments 'dimension' and 'returnLocus'.
  
 BUG FIXES:
 
@@ -26,7 +27,7 @@ BUG FIXES:
 SOFTWARE QUALITY:
 
  * Add help pages with examples to internal get.W() and get.Z() functions.
- 
+ * Add sanity checks and tests for getLocusData(). 
 
 Version: 0.2.6-9000 [2018-03-19]
 
