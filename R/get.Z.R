@@ -9,6 +9,9 @@
 #' @param W a matrix with n rows (number of samples) and K columns (number of subclones)
 #' 
 #' @param WtWm1 a K x K square matrix (with K the number of subclones), precomputed to save time
+#'
+#' @return The transpose of Z, where Z a matrix with K rows (number of subclones) and
+#' J columns (number of segments) 
 #' 
 #' @examples
 #' nbSegments <- 11
@@ -24,15 +27,21 @@
 #' WtWm1 <- diag(rep(1, times = nrow(Z)))
 #' Y <- W %*% Z + E
 #' 
-#' c3co:::get.Z(Y, lambda = 0.01, W, WtWm1)
+#' Zt <- c3co:::get.Z(Y, lambda = 0.01, W, WtWm1)
 #' 
 #' @importFrom glmnet glmnet
 #' @importFrom Matrix bandSparse
 #' @importFrom matrixStats colCumsums
 #' @importFrom methods as
 get.Z <- function(Y, lambda, W, WtWm1) {
-  L <- ncol(Y)
-  p <- ncol(W)
+  L <- ncol(Y)  ## FIXME: Renamed 'L' to 'J'
+  p <- ncol(W)  ## FIXME: Renamed 'p' to 'K'
+
+  ## Sanity checks
+  stop_if_not(length(lambda) == 1L)  
+  stop_if_not(nrow(Y) == nrow(W))
+  stop_if_not(nrow(WtWm1) == p, ncol(WtWm1) == p)
+
   ## temp variables
   X1 <- bandSparse(L, L-1, k=-(1:(L-1)))
   W.WtWm1 <- W %*% WtWm1
@@ -48,5 +57,10 @@ get.Z <- function(Y, lambda, W, WtWm1) {
   Z <- matrix(z.tilde, nrow=L-1, ncol=p, byrow=TRUE)
   X1.Z <- rbind(0, colCumsums(Z))
   
-  sweep(X1.Z, MARGIN = 2L, STATS = colMeans(t(Y) %*% W.WtWm1 - X1.Z), FUN = `+`)
+  Zt <- sweep(X1.Z, MARGIN = 2L, STATS = colMeans(t(Y) %*% W.WtWm1 - X1.Z), FUN = `+`)
+
+  ## Sanity checks
+  stop_if_not(nrow(Zt) == L, ncol(Zt) == p)
+
+  Zt
 }

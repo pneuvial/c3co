@@ -217,7 +217,7 @@ nbrOfChromosomes.C3coSegmentation <- function(x, ...) {
 
 
 #' @export
-trackNames <- function(x) NextMethod("trackNames")
+trackNames <- function(x) UseMethod("trackNames")
 
 #' @export
 trackNames.C3coSegmentation <- function(x) {

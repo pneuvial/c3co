@@ -2,10 +2,10 @@
 #' 
 #' Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 #' 
-#' @param Y a matrix with n rows (number of samples) and J columns (number of segments) 
-#'
 #' @param Z a matrix with K rows (number of subclones) and J columns (number of segments) 
 #' 
+#' @param Y a matrix with n rows (number of samples) and J columns (number of segments) 
+#'
 #' @return a matrix with n rows (number of samples) and K columns (number of subclones)
 #' 
 #' @examples 
@@ -24,10 +24,15 @@
 #' 
 #' @importFrom limSolve lsei
 get.W <- function(Z, Y) {
-  J <- ncol(Z)
-  t(apply(Y, MARGIN = 1L, FUN = function(y) {
+  Zt <- Z        ## FIXME: Input is actually t(Z)
+  J <- ncol(Zt)  ## FIXME: Rename 'J' to 'K'
+
+  ## Sanity checks
+  stop_if_not(ncol(Y) == nrow(Zt))
+
+  W <- t(apply(Y, MARGIN = 1L, FUN = function(y) {
     lsei(
-      A = Z,
+      A = Zt,
       B = y,
       E = matrix(rep(1, times = J), nrow = 1L),
       F = 1,
@@ -35,4 +40,9 @@ get.W <- function(Z, Y) {
       G = diag(J),
       type = 2L)$X
   }))
+
+  ## Sanity checks
+  stop_if_not(nrow(W) == nrow(Y), ncol(W) == J)
+
+  W
 }
