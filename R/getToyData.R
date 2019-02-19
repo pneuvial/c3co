@@ -71,9 +71,9 @@ getToyData <- function(n, len, nbClones, nbBkps, eps,
                        weightSparsity = 0.1, dimension = 1,
                        intercept = TRUE, returnLocus = TRUE) {
     ## sanity check
-    stopifnot(dimension %in% c(1,2))
-    stopifnot(weightSparsity >= 0)
-    stopifnot(weightSparsity <= 1)
+    stop_if_not(dimension %in% c(1,2))
+    stop_if_not(weightSparsity >= 0)
+    stop_if_not(weightSparsity <= 1)
     
     ## number of segments
     nbSegs <- nbBkps + 1 
@@ -133,14 +133,14 @@ getToyData <- function(n, len, nbClones, nbBkps, eps,
     loc <- list(Y = YlocList, Z = ZlocList)
     
     ## more sanity checks
-    stopifnot(length(YsegList) == dimension)
-    nrows <- sapply(seg$Y, nrow); stopifnot(all(nrows == n))
-    nrows <- sapply(seg$Z, nrow); stopifnot(all(nrows == nbClones))
+    stop_if_not(length(YsegList) == dimension)
+    nrows <- sapply(seg$Y, nrow); stop_if_not(all(nrows == n))
+    nrows <- sapply(seg$Z, nrow); stop_if_not(all(nrows == nbClones))
 
     if (returnLocus) {
-        stopifnot(length(YlocList) == dimension)
-        nrows <- sapply(loc$Y, nrow); stopifnot(all(nrows == n))
-        nrows <- sapply(loc$Z, nrow); stopifnot(all(nrows == nbClones))
+        stop_if_not(length(YlocList) == dimension)
+        nrows <- sapply(loc$Y, nrow); stop_if_not(all(nrows == n))
+        nrows <- sapply(loc$Z, nrow); stop_if_not(all(nrows == nbClones))
     }
     ## /more sanity checks
     

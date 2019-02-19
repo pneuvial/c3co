@@ -1,3 +1,7 @@
+[![Travis Build Status](https://travis-ci.org/pneuvial/c3co.svg?branch=master)](https://travis-ci.org/pneuvial/c3co)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/pneuvial/c3co?branch=master&svg=true)](https://ci.appveyor.com/project/pneuvial/c3co)
+[![Coverage Status](https://img.shields.io/codecov/c/github/pneuvial/c3co/master.svg)](https://codecov.io/github/pneuvial/c3co?branch=master)
+
 # c3co: Inferring cancer cell clonality from copy number data
 
 ## Installation
