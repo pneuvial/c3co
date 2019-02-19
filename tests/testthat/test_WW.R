@@ -23,7 +23,7 @@ seg <- segmentData(dat)
 test_that("fitC3co terminates on C1C2", {
   lambda <- 0.01
   Y <- list(Y1=t(seg$Y1), Y2=t(seg$Y2))
-  Z0t <- initializeZt(Y$Y1, Y$Y2, p=3)
+  Z0t <- initializeZt(Y$Y1, Y$Y2, K=K)
   Zt <- Z0t[c("Z1", "Z2")]
   res <- positiveFusedLasso(Y, Zt, lambda=rep(lambda, times=2L), verbose=TRUE)
 })

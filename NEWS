@@ -11,6 +11,8 @@ SIGNIFICANT CHANGES:
  * Renamed initializeZ() to initializeZt() to clarify that it returns the
    transpose of matrix 'Z'.  Same for internal get.Z() renamed to get.Zt().
 
+ * Renamed argument 'p' of initializeZt() to 'K'.
+
  * In getToyData(), replaced argument 'nbBkps' by 'nbSegs' (= nbBkps+1)
    for notation consistency.
 

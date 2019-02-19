@@ -4,18 +4,18 @@
 \alias{initializeZt}
 \title{Initialization of the latent features of the c3co model}
 \usage{
-initializeZt(Y1, Y2 = NULL, p = min(dim(Y1)), flavor = c("hclust",
+initializeZt(Y1, Y2 = NULL, K = min(dim(Y1)), flavor = c("hclust",
   "nmf", "archetypes", "svd", "subsampling"), stat = c("C1+C2", "C1",
   "C2"), forceNormal = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{Y1}{A matrix containing the segmented minor copy number
-(n patients in rows and L segments in columns).}
+(n patients in rows and J segments in columns).}
 
 \item{Y2}{A matrix containing the segmented major copy number
-(n patients in rows and L segments in columns).}
+(n patients in rows and J segments in columns).}
 
-\item{p}{An integer value, the number of latent features in the model.
+\item{K}{An integer value, the number of latent features in the model.
 Defaults to \code{min(dim(Y1))}.}
 
 \item{flavor}{A character value specifying how initialization is performed.
@@ -33,10 +33,10 @@ Defaults to \code{FALSE}.}
 \value{
 A list with two components:
 \describe{
-\item{\code{Z1}}{An L-by-\code{p} matrix, the initial value for the L minor
-copy numbers of the \code{p} latent features}
-\item{\code{Z2}}{An L-by-\code{p} matrix, the initial value for the L major
-copy numbers of the \code{p} latent features}
+\item{\code{Z1}}{An J-by-\code{K} matrix, the initial value for the J minor
+copy numbers of the \code{K} latent features}
+\item{\code{Z2}}{An J-by-\code{K} matrix, the initial value for the J major
+copy numbers of the \code{K} latent features}
 }
 \emph{Warning}: Note that the \code{Z1} and \code{Z2} components are actually the
 transposed version of those matrices.  This notation mistake will be
@@ -55,9 +55,9 @@ between the input copy number profiles, and using Ward linkage
 (\code{\link[stats:hclust]{stats::hclust()}}).
 
 If \code{flavor == "nmf"}, the latent features are the \emph{coefficients} of the non-negative
-matrix factorization in \code{p} of the input copy number profiles.
+matrix factorization in \code{K} of the input copy number profiles.
 
-If \code{flavor == "svd"}, the latent features are the first \code{p} right singular
+If \code{flavor == "svd"}, the latent features are the first \code{K} right singular
 vectors of the singular value decomposition of the input copy number
 profiles. The flavor is not recommended as it may produce matrices
 with non-positive entries
@@ -74,7 +74,7 @@ dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10  ## Number of loci
 K <- 3L        ## Number of subclones
-n <- 12        ## Number of samples
+n <- 12L       ## Number of samples
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
                 c("(1,1)", "(0,1)", "(1,1)"),
@@ -91,16 +91,16 @@ seg <- segmentData(simu)
 Y1 <- t(seg$Y1)
 Y2 <- t(seg$Y2)
 
-resH <- initializeZt(Y1, Y2, p=K)  ## corresponds to flavor "hclust")
-resNMF <- initializeZt(Y1, Y2, p=K, flavor="nmf")
+resH <- initializeZt(Y1, Y2, K=K)  ## corresponds to flavor "hclust")
+resNMF <- initializeZt(Y1, Y2, K=K, flavor="nmf")
 \dontrun{
 ## often fails because of singularities:
-resArch <- initializeZt(Y1, Y2, p=K, flavor="archetypes")
+resArch <- initializeZt(Y1, Y2, K=K, flavor="archetypes")
 }
-resSVD <- initializeZt(Y1, Y2, p=K, flavor="svd")
-resC <- initializeZt(Y1, Y2, p=K, flavor="subsampling")
+resSVD <- initializeZt(Y1, Y2, K=K, flavor="svd")
+resC <- initializeZt(Y1, Y2, K=K, flavor="subsampling")
 
-resNMF1 <- initializeZt(Y1, p=K, flavor="nmf")
+resNMF1 <- initializeZt(Y1, K=K, flavor="nmf")
 
 }
 \references{

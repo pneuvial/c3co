@@ -29,14 +29,14 @@ flavors <- c("hclust", "nmf", "svd", "subsampling")
 
 for (ff in flavors) {
     test_that("output of initializeZt() has correct dimensions and contents", {
-        Zt <- initializeZt(Y1, Y2, p=K, flavor=ff)
+        Zt <- initializeZt(Y1, Y2, K=K, flavor=ff)
         expect_equal(nrow(Zt$Z1), J)
         expect_equal(nrow(Zt$Z2), J)
         
         expect_equal(ncol(Zt$Z1), K)
         expect_equal(ncol(Zt$Z2), K)
         
-        Zt <- initializeZt(Y1, p=K, flavor=ff)
+        Zt <- initializeZt(Y1, K=K, flavor=ff)
         expect_null(Zt$Z2)
 ##        expect_equal(Zt$Z1, Zt$Z)  ## There is no 'Z' /HB 2018-02-27
         

@@ -106,7 +106,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         bestBIC <- -Inf
         bestConfig <- aConf <- NULL
         ## Z0 are initialized with the centered version of the data
-        Z0t <- initializeZt(Yc$Y1, Yc$Y2, p=K_ii, ...)
+        Z0t <- initializeZt(Yc$Y1, Yc$Y2, K=K_ii, ...)
         if (verbose) {
             mprintf("   + Parameter configuration: (%s)\n",
                     comma(colnames(configs)))
