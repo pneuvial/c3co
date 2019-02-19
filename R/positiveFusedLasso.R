@@ -61,15 +61,38 @@
 #' @export
 positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
                                max.iter=50, warn=FALSE, verbose=FALSE) {
-
-  ## problem dimensions
+  ## Argument 'Y':
+  stop_if_not(is.list(Y))
   M <- length(Y)
+  stop_if_not(M >= 1L)
+  n <- nrow(Y[[1]])   ## number of samples
+  L <- ncol(Y[[1]])   ## number of segments
+  
+  ## Argument 'Zt':
+  stop_if_not(is.list(Zt), length(Zt) == M, nrow(Zt[[1]]) == L)
   p <- ncol(Zt[[1]])  ## number of subclones/archetypes/latent features
-
-  stop_if_not(is.numeric(lambda), length(lambda) == M, length(Zt) == M)
-  if (p > nrow(Y[[1]])) {
+  if (p > n) {
     warning("Under-identified problem: more latent features than samples")
   }
+
+  if (M >= 2) {
+    for (mm in 2:M) {
+      stop_if_not(nrow(Y[[mm]]) == n, ncol(Y[[mm]]) == L,
+                  ncol(Zt[[mm]]) == p, nrow(Zt[[mm]]) == L)
+    }
+  }
+
+  ## Argument 'lambda':
+  stop_if_not(is.numeric(lambda), length(lambda) == M, !anyNA(lambda),
+              all(lambda >= 0))
+
+  ## Argument 'eps':
+  stop_if_not(is.numeric(eps), length(eps) == 1L, !is.na(eps), eps > 0)
+
+  ## Argument 'max.iter':
+  stop_if_not(is.numeric(max.iter), length(max.iter) == 1L,
+              !is.na(max.iter), max.iter > 0L)
+
 
   Yc <- do.call(cbind, args = Y) # stacked signals
 
@@ -146,6 +169,19 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
   names(lambda) <- paste0("lambda", 1:M)
   params <- c(nb.feat=p, lambda)
 
+  ## Sanity checks
+  # FIXME: M + 1L because also Y = Y1 + Y2
+  stop_if_not(is.list(Y), length(Y) == M + 1L)
+  stop_if_not(is.list(Yhat), length(Yhat) == M + 1L)
+  stop_if_not(is.list(Zt), length(Zt) == M + 1L)
+  stop_if_not(is.matrix(W), nrow(W) == n, ncol(W) == p)
+  stop_if_not(is.numeric(params))
+  for (mm in 1:(M+1L)) {
+    stop_if_not(nrow(Y[[mm]]) == n, ncol(Y[[mm]]) == L)
+    stop_if_not(nrow(Yhat[[mm]]) == n, ncol(Yhat[[mm]]) == L)
+    stop_if_not(ncol(Zt[[mm]]) == p, nrow(Zt[[mm]]) == L)
+  }
+  
 ### JC: why Z is called S outside of this function
 ### why not calling Y Z and W by their true name like, 
 ### signals, archetypes, weights, when outside of this function?
