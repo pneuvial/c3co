@@ -23,7 +23,7 @@
 #' Z[4, 9:10] <- 2
 #' 
 #' W <- diag(rep(1, times = nrow(Z)))
-#' E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0), nrow = nrow(W), ncol = ncol(Z))
+#' E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0.1), nrow = nrow(W), ncol = ncol(Z))
 #' WtWm1 <- diag(rep(1, times = nrow(Z)))
 #' Y <- W %*% Z + E
 #' 
