@@ -18,8 +18,8 @@ a matrix with n rows (number of samples) and K columns (number of subclones)
 Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 }
 \examples{
-nbSegments <- 11
-nbClones   <- 4
+nbSegments <- 11L
+nbClones   <- 4L
 
 Z <- matrix(1, nrow = nbClones, ncol = nbSegments)
 Z[2, 2] <- 2

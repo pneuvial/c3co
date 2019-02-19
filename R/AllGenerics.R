@@ -73,7 +73,7 @@ setMethod(
     signature = signature("c3coFit"),
     definition = function(this, idxBest, rownamesW=NULL, col=NULL, margins=c(5, 7), posLegend=NA, listPheno, colsPheno, colLegend, labelLegend, cexCol=1.5, ...) {
         if (is.null(col)) {
-           col <- colorRampPalette(brewer.pal(9, "GnBu"))(100)
+           col <- colorRampPalette(brewer.pal(9, "GnBu"))(100L)
         }
         W <- this@fit[[idxBest]]@W
         rownames(W) <- rownamesW
@@ -145,8 +145,8 @@ setMethod(
         var <- match.arg(var, several.ok=TRUE)
         labs <- list(TCN="Z", Minor="Z1", Major="Z2")
         bkp <- this@bkp
-        lengthCHR <- sapply(bkp, FUN=function(x) length(x)-1) ## '-1' because 'bkp' includes first and last position on chr
-        idx <- c(1, cumsum(lengthCHR) + 1)
+        lengthCHR <- sapply(bkp, FUN=function(x) length(x)-1L) ## '-1' because 'bkp' includes first and last position on chr
+        idx <- c(1L, cumsum(lengthCHR) + 1L)
         fitZ <- this@fit[[idxBest]]@S
         nbarch <- ncol(fitZ$Z)
 
@@ -165,9 +165,9 @@ setMethod(
             dim(Z) <- NULL ## convert matrix to vector
             bb <- bkp[[cc]]
             bb <- as.numeric(bb)
-            nbseg <- length(bb) - 1 ## '-1' because 'bb' includes first and last position on chr 
+            nbseg <- length(bb) - 1L ## '-1' because 'bb' includes first and last position on chr 
             start <- bb[1:nbseg]
-            end <- bb[1:nbseg+1]
+            end <- bb[1:nbseg + 1L]
             arch <- factor(rep(letters[1:nbarch], each=nbseg))
             datCC <- data.frame(chr=cc, start=start, arch=arch, end=end, CopyNumber=Z, stat=vv)
             dfList[[kk]] <- datCC

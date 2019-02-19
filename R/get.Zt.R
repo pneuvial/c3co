@@ -14,8 +14,8 @@
 #' J columns (number of segments) 
 #' 
 #' @examples
-#' nbSegments <- 11
-#' nbClones   <- 4
+#' nbSegments <- 11L
+#' nbClones   <- 4L
 #'
 #' Z <- matrix(1, nrow = nbClones, ncol = nbSegments)
 #' Z[2, 2] <- 2
@@ -43,7 +43,7 @@ get.Zt <- function(Y, lambda, W, WtWm1) {
   stop_if_not(nrow(WtWm1) == p, ncol(WtWm1) == p)
 
   ## temp variables
-  X1 <- bandSparse(L, L-1, k=-(1:(L-1)))
+  X1 <- bandSparse(L, L-1L, k=-(1:(L-1)))
   W.WtWm1 <- W %*% WtWm1
   Pw <- W.WtWm1 %*% t(W)
   
@@ -54,7 +54,7 @@ get.Zt <- function(Y, lambda, W, WtWm1) {
   z.tilde <- glmnet(X.tilde, y.tilde, lambda = lambda, intercept = FALSE, standardize = FALSE)$beta
   
   ## Go back to Z 
-  Z <- matrix(z.tilde, nrow=L-1, ncol=p, byrow=TRUE)
+  Z <- matrix(z.tilde, nrow=L-1L, ncol=p, byrow=TRUE)
   X1.Z <- rbind(0, colCumsums(Z))
   
   Zt <- sweep(X1.Z, MARGIN = 2L, STATS = colMeans(t(Y) %*% W.WtWm1 - X1.Z), FUN = `+`)

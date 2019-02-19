@@ -30,16 +30,16 @@
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
-#' nbClones <- 3
+#' nbClones <- 3L
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-#' M <- rSparseWeightMatrix(14, 3, sparse.coeff=0.7)
-#' dat <- mixSubclones(subClones=datSubClone, M)
+#' M <- rSparseWeightMatrix(nb.samp=14L, nb.arch=3L, sparse.coeff=0.7)
+#' dat <- mixSubclones(subClones=datSubClone, W=M)
 #' seg <- segmentData(dat)
 #' 
-#' l1 <- seq(from=1e-8, to=1e-5, length.out=5)
+#' l1 <- seq(from=1e-8, to=1e-5, length.out=5L)
 #' parameters.grid <- list(lambda1=l1,  nb.arch=2:6)
 #' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
 #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
@@ -50,7 +50,7 @@
 #' candP <- 2:10
 #' parameters.grid <- list(lambda=l1, nb.arch=candP)
 #' 
-#' dat <- getToyData(n=20, len=100, nbClones=2, nbBkps=5, eps=0.2)  ## almost noiseless!
+#' dat <- getToyData(n=20L, len=100L, nbClones=2L, nbBkps=5L, eps=0.2)  ## almost noiseless!
 #' sdat <- dat$segment
 #' 
 #' res <- fitC3co(sdat$Y, parameters.grid=parameters.grid)
@@ -67,7 +67,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     Y <- list(Y1=Y1)
     if (!is.null(Y2)) Y$Y2 <- Y2
     ## Sanity checks
-    stop_if_not(length(unique(lapply(Y, FUN = dim))) == 1) # are all the dimension equal?
+    stop_if_not(length(unique(lapply(Y, FUN = dim))) == 1L) # are all the dimension equal?
 
     if (verbose) mprintf("fitC3co() ...\n")
   
@@ -182,7 +182,7 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
     lambda2 <- parameters.grid$lambda2
     if (!is.null(lambda)) {
       lambda1 <- lambda
-      if (M > 1) {
+      if (M > 1L) {
           lambda2 <- lambda
           if (verbose) {
             message(" - Only one regularization parameter is provided. Using the same value for lambda[1] and lambda[2]: ", comma(lambda))
@@ -193,9 +193,9 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
       }
     } else {
       ## Case C1-C2
-      if (M == 2) {
+      if (M == 2L) {
         if (is.null(lambda1) && is.null(lambda2)) {
-          lambda <- 10^(-seq(from=6, to=4, length.out=10))
+          lambda <- 10^(-seq(from=6, to=4, length.out=10L))
           if (verbose) {
             message("Regularization parameter lambda is not provided. Using default value: ")
             mstr(lambda)
@@ -213,7 +213,7 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
             message("Only regularization parameter lambda[1] or lambda[2] is used: ", comma(lambda))
           }
         } else {
-          lambda <- 10^(-seq(from=6, to=4, length.out=10))
+          lambda <- 10^(-seq(from=6, to=4, length.out=10L))
           if (verbose) {
             message("Regularization parameter lambda or lambda[1] or lambda[2] is not provided. Using value: ", comma(lambda))
           }
@@ -225,7 +225,7 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
     ## candidate number of subclones
     nb.arch <- parameters.grid$nb.arch
     if (is.null(nb.arch)) {
-        nb.arch <- seq(from=2, to=nseg-1, by=1)
+        nb.arch <- seq(from=2L, to=nseg-1L, by=1L)
         if (verbose) {
             message("Parameter 'nb.arch' not provided. Using default value: ", comma(nb.arch))
         }

@@ -34,13 +34,13 @@
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
-#' nbClones <- 3
+#' nbClones <- 3L
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-#' M <- rSparseWeightMatrix(15, 3, sparse.coeff=0.7)
-#' dat <- mixSubclones(subClones=datSubClone, M)
+#' M <- rSparseWeightMatrix(nb.samp=15L, nb.arch=3L, sparse.coeff=0.7)
+#' dat <- mixSubclones(subClones=datSubClone, W=M)
 #' res <- segmentData(dat)
 #' res2 <- segmentData(dat, stat="TCN")
 #'
@@ -65,7 +65,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
     stop_if_not(!anyNA(chrs))
     
     ## Assert that all samples are for the same set of loci, which is assumed below
-    if (length(dat) > 1) {
+    if (length(dat) > 1L) {
       chr1 <- dat[[1]]$chr
       x1 <- dat[[1]]$x
       for (ii in 2:length(dat)) {
@@ -109,22 +109,22 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
         ww <- which(dat[[1]]$chr == cc)
         if (verbose) message("Joint segmentation")
 
-        stop_if_not(length(ww) > 0, length(ww) >= 3L)
-        resSeg <- jointSeg(Y=dataToSeg[ww, ], method="RBS", K=100,
+        stop_if_not(length(ww) > 0L, length(ww) >= 3L)
+        resSeg <- jointSeg(Y=dataToSeg[ww, ], method="RBS", K=100L,
                            modelSelectionMethod="Birge")
         bkp <- resSeg$bestBkp
         pos <- dat[[1]]$pos[ww]
-        bkpPos <- rowMeans(cbind(pos[bkp], pos[bkp+1]))  ## FIXME: work on segments to avoid arbitrary bkp position?
+        bkpPos <- rowMeans(cbind(pos[bkp], pos[bkp+1L]))  ## FIXME: work on segments to avoid arbitrary bkp position?
         xOut <- c(min(pos), bkpPos, max(pos))
         xOut <- sort(unique(xOut))
 
         if (stat == "C1C2") {
-            binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
+            binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1L, ncol=ncol(tcn))
             for (bb in seq_len(ncol(tcn))) {
                 means <- binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatTCN[, bb] <- means
             }
-            binDatDH <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(dh))
+            binDatDH <- matrix(NA_real_, nrow=length(xOut)-1L, ncol=ncol(dh))
             for (bb in seq_len(ncol(dh))) {
                 means <- binMeans(y=dh[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatDH[, bb] <- means
@@ -133,7 +133,7 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
             idxNAC1 <- which(rowAnyNAs(binDatTCN))
             idxNAC2 <- which(rowAnyNAs(binDatDH))
             idxNA <- unique(c(idxNAC1, idxNAC2))
-            if (length(idxNA) > 0) {
+            if (length(idxNA) > 0L) {
                 binDatTCNwithoutNA <- binDatTCN[-idxNA, ]
                 binDatDHwithoutNA <- binDatDH[-idxNA, ]
                 bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
@@ -149,13 +149,13 @@ segmentData <- function(dat, stat=c("C1C2", "TCN"), verbose=FALSE) {
             Y1 <- Y*(1-DH)/2
             Y2 <- Y*(1+DH)/2
         } else {
-            binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1, ncol=ncol(tcn))
+            binDatTCN <- matrix(NA_real_, nrow=length(xOut)-1L, ncol=ncol(tcn))
             for (bb in seq_len(ncol(tcn))) {
                 means <- binMeans(y=tcn[ww, bb], x=pos, bx=xOut, na.rm=TRUE)
                 binDatTCN[, bb] <- means
             }
             idxNA <- which(rowAnyNAs(binDatTCN))
-            if (length(idxNA) > 0) {
+            if (length(idxNA) > 0L) {
                 binDatTCNwithoutNA <- binDatTCN[-idxNA, ]
                 bkpPosByCHR[[cc]] <- bkpPos[-idxNA]
             } else {

@@ -9,8 +9,8 @@
 #' @return a matrix with n rows (number of samples) and K columns (number of subclones)
 #' 
 #' @examples 
-#' nbSegments <- 11
-#' nbClones   <- 4
+#' nbSegments <- 11L
+#' nbClones   <- 4L
 #' 
 #' Z <- matrix(1, nrow = nbClones, ncol = nbSegments)
 #' Z[2, 2] <- 2

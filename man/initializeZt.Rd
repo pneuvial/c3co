@@ -72,14 +72,14 @@ profiles.
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
-nbClones <- 3
+nbClones <- 3L
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 regions <- list(c("(0,3)", "(0,1)", "(1,2)"),
                 c("(1,1)", "(0,1)", "(1,1)"),
                 c("(0,2)", "(0,1)", "(1,1)"))
 datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-M <- rSparseWeightMatrix(12, nbClones, 0.90)
-simu <- mixSubclones(subClones=datSubClone, M)
+M <- rSparseWeightMatrix(nb.samp=12L, nb.arch=nbClones, sparse.coeff=0.90)
+simu <- mixSubclones(subClones=datSubClone, W=M)
 seg <- segmentData(simu)
 Y1 <- t(seg$Y1)
 Y2 <- t(seg$Y2)

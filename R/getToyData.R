@@ -46,10 +46,10 @@
 #' @export
 #' @examples
 #' 
-#' len <- 100
-#' nbClones <- 3
-#' nbBkps <- 5
-#' n <- 10
+#' len <- 100L
+#' nbClones <- 3L
+#' nbBkps <- 5L
+#' n <- 10L
 #' 
 #' dat <- getToyData(n, len, nbClones, nbBkps, eps = 0)  ## noiseless
 #' matplot(t(dat$locus$Y), t = "s")
@@ -61,22 +61,21 @@
 #' 
 #' 
 #' \dontrun{
-#' l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10)
+#' l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10L)
 #' parameters.grid <- list(lambda = l1, nb.arch = 2:6)
 #' Y <- dat$segment$Y
 #' fit <- fitC3co(Y, parameters.grid=parameters.grid)
 #' pvePlot2(fit$config$best)
 #' }
 getToyData <- function(n, len, nbClones, nbBkps, eps, 
-                       weightSparsity = 0.1, dimension = 1,
+                       weightSparsity = 0.1, dimension = 1L,
                        intercept = TRUE, returnLocus = TRUE) {
     ## sanity check
-    stop_if_not(dimension %in% c(1,2))
-    stop_if_not(weightSparsity >= 0)
-    stop_if_not(weightSparsity <= 1)
+    stop_if_not(dimension %in% 1:2)
+    stop_if_not(weightSparsity >= 0, weightSparsity <= 1)
     
     ## number of segments
-    nbSegs <- nbBkps + 1 
+    nbSegs <- nbBkps + 1L
     
     ## breakpoint positions
     bkp <- sample(len, size = nbBkps, replace = FALSE)
@@ -87,7 +86,7 @@ getToyData <- function(n, len, nbClones, nbBkps, eps,
     segLens <- c(segLens, len - sum(segLens))
     
     if (intercept) {    
-        nbClones <- nbClones+1
+        nbClones <- nbClones + 1L
     }
     ## weights
     ru <- runif(n*nbClones)
@@ -144,7 +143,7 @@ getToyData <- function(n, len, nbClones, nbBkps, eps,
     }
     ## /more sanity checks
     
-    if (dimension == 1) { ## for backward compatibility
+    if (dimension == 1L) { ## for backward compatibility
         seg$Y <- seg$Y[[1]]
         seg$Z <- seg$Z[[1]]
         if (returnLocus) {

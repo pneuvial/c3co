@@ -34,18 +34,18 @@
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 #' len <- 500*10
-#' nbClones <- 3
+#' nbClones <- 3L
 #' set.seed(88)
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(1,2)", "(0,2)", "(1,2)"),
 #' c("(0,3)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 #' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-#' M <- rSparseWeightMatrix(15, 3, 0.7)
-#' dat <- mixSubclones(subClones=datSubClone, M)
-#' l1 <- seq(from=1e-6, to=1e-4, length.out=10)
+#' M <- rSparseWeightMatrix(nb.samp=15L, nb.arch=3L, sparse.coeff=0.7)
+#' dat <- mixSubclones(subClones=datSubClone, W=M)
+#' l1 <- seq(from=1e-6, to=1e-4, length.out=10L)
 #' parameters.grid <- list(lambda=l1, nb.arch=2:6)
 #' res <- c3co(dat, parameters.grid)
-#' l2 <- seq(from=1e-6, to=1e-5, length.out=10)
+#' l2 <- seq(from=1e-6, to=1e-5, length.out=10L)
 #' parameters.grid.2 <- list(lambda=l2, nb.arch=2:6)
 #' resC <- c3co(dat, stat="TCN", parameters.grid.2)
 #' @importFrom methods new
@@ -76,8 +76,8 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
         })
     }
     if (is.null(parameters.grid)) {
-        lambda1 <- seq(from=1e-6, to=1e-4, length.out=10)
-        nb.arch <- 2:(length(dat)-1)
+        lambda1 <- seq(from=1e-6, to=1e-4, length.out=10L)
+        nb.arch <- 2:(length(dat)-1L)
         parameters.grid <- list(lambda=lambda1, nb.arch=nb.arch)
     }
 

@@ -40,16 +40,16 @@ set.seed(7)
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
 len <- 500*10
-nbClones <- 3
+nbClones <- 3L
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
 datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-M <- rSparseWeightMatrix(14, 3, sparse.coeff=0.7)
-dat <- mixSubclones(subClones=datSubClone, M)
+M <- rSparseWeightMatrix(nb.samp=14L, nb.arch=3L, sparse.coeff=0.7)
+dat <- mixSubclones(subClones=datSubClone, W=M)
 seg <- segmentData(dat)
 
-l1 <- seq(from=1e-8, to=1e-5, length.out=5)
+l1 <- seq(from=1e-8, to=1e-5, length.out=5L)
 parameters.grid <- list(lambda1=l1,  nb.arch=2:6)
 fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
 fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
@@ -60,7 +60,7 @@ l1 <- 1e-4
 candP <- 2:10
 parameters.grid <- list(lambda=l1, nb.arch=candP)
 
-dat <- getToyData(n=20, len=100, nbClones=2, nbBkps=5, eps=0.2)  ## almost noiseless!
+dat <- getToyData(n=20L, len=100L, nbClones=2L, nbBkps=5L, eps=0.2)  ## almost noiseless!
 sdat <- dat$segment
 
 res <- fitC3co(sdat$Y, parameters.grid=parameters.grid)

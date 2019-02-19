@@ -5,7 +5,7 @@
 \title{Create a toy subclone and mixture data set}
 \usage{
 getToyData(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1,
-  dimension = 1, intercept = TRUE, returnLocus = TRUE)
+  dimension = 1L, intercept = TRUE, returnLocus = TRUE)
 }
 \arguments{
 \item{n}{The number of observations.}
@@ -56,10 +56,10 @@ the set of all possible positions.
 }
 \examples{
 
-len <- 100
-nbClones <- 3
-nbBkps <- 5
-n <- 10
+len <- 100L
+nbClones <- 3L
+nbBkps <- 5L
+n <- 10L
 
 dat <- getToyData(n, len, nbClones, nbBkps, eps = 0)  ## noiseless
 matplot(t(dat$locus$Y), t = "s")
@@ -71,7 +71,7 @@ matplot(t(dat$segment$Y), t="s")
 
 
 \dontrun{
-l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10)
+l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10L)
 parameters.grid <- list(lambda = l1, nb.arch = 2:6)
 Y <- dat$segment$Y
 fit <- fitC3co(Y, parameters.grid=parameters.grid)
