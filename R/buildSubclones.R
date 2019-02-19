@@ -37,8 +37,8 @@
 #'   total copy number and allele B fractions.
 #'   
 #' @examples
-#' len <- 500*10
-#' nbClones <- 2L
+#' len <- 500*10  ## Number of loci
+#' K <- 2L        ## Number of subclones
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,2)", "(1,2)"), c("(1,1)", "(0,1)", "(1,1)"))
 #' 
@@ -46,11 +46,11 @@
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFraction=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFraction=0)
 #' 
-#' datR <- buildSubclones(len, nbClones, bkps, regions,
-#'                               dataAnnotTP, dataAnnotN)
+#' datR <- buildSubclones(len=len, nbClones=K, bkps=bkps, regions=regions,
+#'                        dataAnnotTP=dataAnnotTP, dataAnnotN=dataAnnotN)
 #' 
 #' ## Simulated data
-#' datS <- buildSubclones(len, nbClones, bkps, regions)
+#' datS <- buildSubclones(len=len, nbClones=K, bkps=bkps, regions=regions)
 #' 
 #' @importFrom jointseg getCopyNumberDataByResampling
 #' @importFrom stats rnorm
@@ -65,7 +65,7 @@ buildSubclones <- function(len, nbClones, bkps, regions, dataAnnotTP=NULL, dataA
     if (is.factor(dataAnnotTP$region)) {
         dataAnnotTP$region <- as.character(dataAnnotTP$region)
     }
-    genotype <- NULL; rm(genotype)
+    genotype <- NULL; rm(list = "genotype")
     if (is.null(dataAnnotN)) {
         if (!is.null(dataAnnotTP)) {
             stop("Argument 'dataAnnotN' must be provided if argument 'dataAnnotTP' is")

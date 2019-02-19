@@ -2,11 +2,10 @@
 #' 
 #' Estimate c3co model parameters from segment-level copy number data
 #' 
-#' @param Y1 A numeric n-by-S matrix, segment-level minor copy numbers, where n
-#'   is the number of samples and S the number of segments.
-#'   
-#' @param Y2 An optional numeric n-by-S matrix, segment-level major copy numbers.
-#'   If `NULL`, the model is estimated on `Y1` only.
+#' @param Y1,Y2 Numeric n-by-J matrices containing segment-level copy numbers,
+#' where n is the number of samples and J the number of segments.  If `Y2`,
+#' which is optional, is specific, then (Y1,Y2) corresponds to minor and major
+#' copy numbers, otherwise (Y1) corresponds to total copy numbers.
 #'   
 #' @param parameters.grid A list composed of two vectors named `lambda1`
 #'   and `lambda2` of real numbers which are the penalty coefficients for 
@@ -14,8 +13,8 @@
 #'   named `nb.arch` of integers which is the number of archetypes in the 
 #'   model.
 #'   
-#' @param warn Issue a warning if \eqn{Z1 <= Z2} is not satisfied for a
-#'   candidate number of subclones.  Defaults to `TRUE`.
+#' @param warn If `TRUE` and `Y1` is specified, then a warning is produced
+#'   if \eqn{Z1 <= Z2} is not satisfied for a candidate number of subclones.
 #'   
 #' @param \dots Further arguments to be passed to [positiveFusedLasso()].
 #'   
@@ -26,31 +25,39 @@
 #'   where k is the number of candidate number of subclones.
 #'   
 #' @examples
+#' ## Simulate locus-level (C1,C2) copy-number data
 #' set.seed(7)
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 #' dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
-#' len <- 500*10
-#' nbClones <- 3L
+#' len <- 500*10  ## Number of loci
+#' K <- 3L        ## Number of subclones
 #' bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 #' regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 #' c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-#' datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-#' M <- rSparseWeightMatrix(nb.samp=14L, nb.arch=3L, sparse.coeff=0.7)
-#' dat <- mixSubclones(subClones=datSubClone, W=M)
+#' datSubClone <- buildSubclones(len, K, bkps, regions, dataAnnotTP, dataAnnotN)
+#' W <- rSparseWeightMatrix(nb.samp=14L, nb.arch=3L, sparse.coeff=0.7)
+#' dat <- mixSubclones(subClones=datSubClone, W=W)
+#'
+#' ## Segment the copy-number data
 #' seg <- segmentData(dat)
-#' 
+#'
+#' ## Fit C3CO model
 #' l1 <- seq(from=1e-8, to=1e-5, length.out=5L)
-#' parameters.grid <- list(lambda1=l1,  nb.arch=2:6)
+#' parameters.grid <- list(lambda1=l1, nb.arch=2:6)
 #' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
 #' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 #' 
 #' 
 #' ## A simpler example with toy data
+#' K <- 3L   ## Number of subclones
+#' J <- 6L   ## Number of segments
+#' n <- 20L  ## Number of samples
+#'
 #' l1 <- 1e-4
 #' candP <- 2:10
 #' parameters.grid <- list(lambda=l1, nb.arch=candP)
 #' 
-#' dat <- getToyData(n=20L, len=100L, nbClones=2L, nbSegs=6L, eps=0.2)  ## almost noiseless!
+#' dat <- getToyData(n=n, len=100L, nbClones=K, nbSegs=J, eps=0.2)  ## almost noiseless!
 #' sdat <- dat$segment
 #' 
 #' res <- fitC3co(sdat$Y, parameters.grid=parameters.grid)
@@ -73,8 +80,9 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
   
     ## problem dimension
     n <- nrow(Y1)
-    nseg <- ncol(Y1)
-
+    J <- ncol(Y1)
+    M <- length(Y)
+    
     ## centered version of the data
     Yc <- lapply(Y, FUN = function(y) {
       sweep(y, MARGIN = 1L, STATS = rowMeans(y), FUN = `-`)
@@ -83,28 +91,28 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     totVar <- sum((Reduce(`+`, Yc))^2)
     
     ### Define grids
-    parameters <- checkParams(parameters.grid, length(Y), nseg, verbose)
+    parameters <- checkParams(parameters.grid=parameters.grid, M=M, J=J, verbose=verbose)
     configs <- parameters$configs
-    nb.arch <- parameters$nb.arch
+    Ks <- parameters$nb.arch
     
     fitList <- allRes <- allLoss <- list()
     bestConfigp <- allConfig <- NULL
-    for (it in seq_along(nb.arch)) {
-        pp <- nb.arch[it]
-        if (verbose) mprintf(" - Iteration #%d (%d latent features) of %d ...\n", it, pp, length(nb.arch))
+    for (ii in seq_along(Ks)) {
+        K_ii <- Ks[ii]
+        if (verbose) mprintf(" - Iteration #%d (%d latent features) of %d ...\n", ii, K_ii, length(Ks))
 
         ## Initialization
         bestRes <- NULL
         bestBIC <- -Inf
         bestConfig <- aConf <- NULL
         ## Z0 are initialized with the centered version of the data
-        Z0t <- initializeZt(Yc$Y1, Yc$Y2, p=pp, ...)
+        Z0t <- initializeZt(Yc$Y1, Yc$Y2, p=K_ii, ...)
         if (verbose) {
             mprintf("   + Parameter configuration: (%s)\n",
                     comma(colnames(configs)))
         }
-        allRes[[pp]] <- list()
-        allLoss[[pp]] <- list()
+        allRes[[K_ii]] <- list()
+        allLoss[[K_ii]] <- list()
         for (cc in seq_len(nrow(configs))) {
             cfg <- configs[cc, , drop = TRUE]
             if (verbose) {
@@ -121,14 +129,15 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             res <- positiveFusedLasso(Y = Y, Zt = Z0t, lambda = cfg)
             
             if (verbose) mprintf(", BIC = ")
-            stats <- modelFitStatistics(Reduce(`+`, Y), res@E$Y, res@W, res@S$Z)
+            stats <- modelFitStatistics(Y = Reduce(`+`, Y), Yhat = res@E$Y,
+	                                What = res@W, Zhat = res@S$Z)
             BIC <- stats[["BIC"]]
             if (verbose) mprintf("%g", BIC)
-            aConf <- c(pp, cfg, stats[["PVE"]], BIC, stats[["logLik"]], stats[["loss"]])
+            aConf <- c(K_ii, cfg, stats[["PVE"]], BIC, stats[["logLik"]], stats[["loss"]])
             ## replace above line by: aConf <- stats
             allConfig <- rbind(allConfig, aConf)
-            allRes[[pp]][[cc]] <- res
-            allLoss[[pp]][[cc]] <- stats[["loss"]]
+            allRes[[K_ii]][[cc]] <- res
+            allLoss[[K_ii]][[cc]] <- stats[["loss"]]
             
             if (BIC > bestBIC) { ## BIC has improved: update best model
                 bestRes <- res
@@ -139,7 +148,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             if (verbose) mprintf("\n")
         }
 
-        fitList[[it]] <- bestRes
+        fitList[[ii]] <- bestRes
         bestConfigp <- rbind(bestConfigp, bestConfig)
         ## sanity check: minor CN < major CN in the best parameter
         ## configurations (not for all configs by default)
@@ -148,14 +157,14 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             dZ <- Z$Z2 - Z$Z1
             tol <- 1e-2  ## arbitrary tolerance...
             if (min(dZ) < -tol) {
-                warning("For model with ", pp, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
+                warning("For model with ", K_ii, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
             }
         }
 	
-        if (verbose) mprintf(" - Iteration #%d (%d latent features) of %d ... DONE\n", it, pp, length(nb.arch))
-    } ## for (it ...)
+        if (verbose) mprintf(" - Iteration #%d (%d latent features) of %d ... DONE\n", ii, K_ii, length(Ks))
+    } ## for (ii ...)
     
-    names(fitList) <- nb.arch
+    names(fitList) <- Ks
     cns <- c("nb.feat", colnames(configs), "PVE", "BIC", "logLik", "loss")
     
     bestConfigp <- as.data.frame(bestConfigp)
@@ -175,8 +184,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
 }
 
 
-checkParams <- function(parameters.grid, M, nseg, verbose) {
-  
+checkParams <- function(parameters.grid, M, J, verbose) {
     lambda <-  parameters.grid$lambda
     lambda1 <- parameters.grid$lambda1
     lambda2 <- parameters.grid$lambda2
@@ -225,7 +233,7 @@ checkParams <- function(parameters.grid, M, nseg, verbose) {
     ## candidate number of subclones
     nb.arch <- parameters.grid$nb.arch
     if (is.null(nb.arch)) {
-        nb.arch <- seq(from=2L, to=nseg-1L, by=1L)
+        nb.arch <- seq(from=2L, to=J-1L, by=1L)
         if (verbose) {
             message("Parameter 'nb.arch' not provided. Using default value: ", comma(nb.arch))
         }

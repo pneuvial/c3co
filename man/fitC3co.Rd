@@ -8,11 +8,10 @@ fitC3co(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, ...,
   verbose = FALSE)
 }
 \arguments{
-\item{Y1}{A numeric n-by-S matrix, segment-level minor copy numbers, where n
-is the number of samples and S the number of segments.}
-
-\item{Y2}{An optional numeric n-by-S matrix, segment-level major copy numbers.
-If \code{NULL}, the model is estimated on \code{Y1} only.}
+\item{Y1, Y2}{Numeric n-by-J matrices containing segment-level copy numbers,
+where n is the number of samples and J the number of segments.  If \code{Y2},
+which is optional, is specific, then (Y1,Y2) corresponds to minor and major
+copy numbers, otherwise (Y1) corresponds to total copy numbers.}
 
 \item{parameters.grid}{A list composed of two vectors named \code{lambda1}
 and \code{lambda2} of real numbers which are the penalty coefficients for
@@ -20,8 +19,8 @@ the fused lasso on the minor and major copy number dimension and a vector
 named \code{nb.arch} of integers which is the number of archetypes in the
 model.}
 
-\item{warn}{Issue a warning if \eqn{Z1 <= Z2} is not satisfied for a
-candidate number of subclones.  Defaults to \code{TRUE}.}
+\item{warn}{If \code{TRUE} and \code{Y1} is specified, then a warning is produced
+if \eqn{Z1 <= Z2} is not satisfied for a candidate number of subclones.}
 
 \item{\dots}{Further arguments to be passed to \code{\link[=positiveFusedLasso]{positiveFusedLasso()}}.}
 
@@ -36,31 +35,39 @@ where k is the number of candidate number of subclones.
 Estimate c3co model parameters from segment-level copy number data
 }
 \examples{
+## Simulate locus-level (C1,C2) copy-number data
 set.seed(7)
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)
-len <- 500*10
-nbClones <- 3L
+len <- 500*10  ## Number of loci
+K <- 3L        ## Number of subclones
 bkps <- list(c(100, 250)*10, c(150, 400)*10, c(150, 400)*10)
 regions <- list(c("(0,3)", "(0,2)", "(1,2)"),
 c("(1,1)", "(0,1)", "(1,1)"), c("(0,2)", "(0,1)", "(1,1)"))
-datSubClone <- buildSubclones(len, nbClones, bkps, regions, dataAnnotTP, dataAnnotN)
-M <- rSparseWeightMatrix(nb.samp=14L, nb.arch=3L, sparse.coeff=0.7)
-dat <- mixSubclones(subClones=datSubClone, W=M)
+datSubClone <- buildSubclones(len, K, bkps, regions, dataAnnotTP, dataAnnotN)
+W <- rSparseWeightMatrix(nb.samp=14L, nb.arch=3L, sparse.coeff=0.7)
+dat <- mixSubclones(subClones=datSubClone, W=W)
+
+## Segment the copy-number data
 seg <- segmentData(dat)
 
+## Fit C3CO model
 l1 <- seq(from=1e-8, to=1e-5, length.out=5L)
-parameters.grid <- list(lambda1=l1,  nb.arch=2:6)
+parameters.grid <- list(lambda1=l1, nb.arch=2:6)
 fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
 fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 
 
 ## A simpler example with toy data
+K <- 3L   ## Number of subclones
+J <- 6L   ## Number of segments
+n <- 20L  ## Number of samples
+
 l1 <- 1e-4
 candP <- 2:10
 parameters.grid <- list(lambda=l1, nb.arch=candP)
 
-dat <- getToyData(n=20L, len=100L, nbClones=2L, nbSegs=6L, eps=0.2)  ## almost noiseless!
+dat <- getToyData(n=n, len=100L, nbClones=K, nbSegs=J, eps=0.2)  ## almost noiseless!
 sdat <- dat$segment
 
 res <- fitC3co(sdat$Y, parameters.grid=parameters.grid)

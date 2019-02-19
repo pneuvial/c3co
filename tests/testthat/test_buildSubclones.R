@@ -5,8 +5,8 @@ context("Construction of subclones")
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFraction=1.0)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFraction=0.0)
 
-len <- 500 * 10
-nbClones <- 2
+len <- 500 * 10  ## Number of loci
+K <- 2L          ## Number of subclones
 
 bkps <- list(
   c(100, 250) * 10,
@@ -21,20 +21,20 @@ regions <- list(
 for (what in c("real", "simulated")) {
     if (what=="real") {
         datSubClone <- buildSubclones(len = len,
-                                      nbClones = nbClones,
+                                      nbClones = K,
                                       bkps = bkps,
                                       regions = regions,
                                       dataAnnotTP = dataAnnotTP,
                                       dataAnnotN = dataAnnotN)
     } else if (what=="simulated") {
         datSubClone <- buildSubclones(len = len,
-                                      nbClones = nbClones,
+                                      nbClones = K,
                                       bkps = bkps,
                                       regions = regions)
     }
     
     test_that("built subclones have the expected size and column names", {
-        expect_length(datSubClone, nbClones)
+        expect_length(datSubClone, K)
         enames <- c("ct", "baft", "genotype", "region","cn", "bafn", "pos")
         for (ii in seq_along(datSubClone)) {
             sc <- datSubClone[[ii]]
