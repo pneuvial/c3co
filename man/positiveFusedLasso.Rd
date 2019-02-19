@@ -4,8 +4,8 @@
 \alias{positiveFusedLasso}
 \title{Positive fused Lasso function}
 \usage{
-positiveFusedLasso(Y, Z, lambda, eps = 0.1, max.iter = 50, warn = FALSE,
-  verbose = FALSE)
+positiveFusedLasso(Y, Z, lambda, eps = 0.1, max.iter = 50,
+  warn = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{Y}{A list of one or two matrices named \code{Y1} and \code{Y2} containing the

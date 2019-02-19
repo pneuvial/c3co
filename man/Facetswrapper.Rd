@@ -4,13 +4,13 @@
 \alias{Facetswrapper}
 \title{Transforms FACETS data and performs a joint segmentation}
 \usage{
-Facetswrapper(pathFacets, stat)
+Facetswrapper(path, stat)
 }
 \arguments{
-\item{pathFacets}{The path to a directory containing FACETS data files
+\item{path}{The path to a directory containing FACETS data files
 (\file{*.csv.gz}) produced by the \pkg{facets} package.}
 
-\item{stat}{\code{"TCN"} or \code{"C1C2"} paramater to segment the data.
+\item{stat}{\code{"TCN"} or \code{"C1C2"} parameter to segment the data.
 If \code{stat == "TCN"}, the segmentation will be done on TCN only.}
 }
 \value{
@@ -22,8 +22,9 @@ Transforms FACETS data and performs a joint segmentation
 }
 \examples{
 if (require("facets", quietly=TRUE)) {
-pathFacets <- system.file("extdata", package="facets")
-segDat <- Facetswrapper(pathFacets, stat="TCN")
+path <- system.file("extdata", package="facets")
+segDat <- Facetswrapper(path, stat="TCN")
+print(segDat)
 \dontrun{
 resc3co <- c3co(NULL, segDat=segDat)
 }

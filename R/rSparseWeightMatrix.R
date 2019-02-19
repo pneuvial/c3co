@@ -2,7 +2,7 @@
 #' 
 #' @param nb.samp An integer that is the number of samples (number of rows).
 #'
-#' @param nb.arch An interger that is the number of archetypes
+#' @param nb.arch An integer that is the number of archetypes
 #' (number of columns).
 #'
 #' @param sparse.coeff A numeric in \eqn{[0,1]} that control the sparsity by
@@ -32,9 +32,9 @@ rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff = max(nb.samp, nb
 }
 
 #' Generate sparse matrix with at least one non-zero element by rows and by columns
-#' @param nrow An interger that is the number of rows.
+#' @param nrow An integer that is the number of rows.
 #'
-#' @param ncol An interger that is the number of columns.
+#' @param ncol An integer that is the number of columns.
 #'
 #' @param sparse.coeff A numeric in \eqn{[0,1]} that control the sparsity by
 #' rows (the proportion of non-zero entries among all matrix entries).

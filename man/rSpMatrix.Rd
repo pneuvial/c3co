@@ -7,9 +7,9 @@
 rSpMatrix(nrow, ncol, sparse.coeff)
 }
 \arguments{
-\item{nrow}{An interger that is the number of rows.}
+\item{nrow}{An integer that is the number of rows.}
 
-\item{ncol}{An interger that is the number of columns.}
+\item{ncol}{An integer that is the number of columns.}
 
 \item{sparse.coeff}{A numeric in \eqn{[0,1]} that control the sparsity by
 rows (the proportion of non-zero entries among all matrix entries).

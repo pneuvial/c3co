@@ -43,7 +43,7 @@ setGeneric("modelFitStats", function(object) {
 #' @param listPheno A matrix that contains details on phenotype for each
 #'        patient. Could be location or time point of tumors for example.
 #'
-#' @param colsPheno Matrix that containts colors for each type of variable
+#' @param colsPheno Matrix that contains colors for each type of variable
 #'        in phenotype.
 #'
 #' @param colLegend Colors for clinical data.

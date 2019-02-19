@@ -1,14 +1,17 @@
 #' Loads FACETS data and transforms them to c3co format
 #'
-#' @param pathFacets The path to a directory containing FACETS data files
+#' @param path The path to a directory containing FACETS data files
 #' (\file{*.csv.gz}) produced by the \pkg{facets} package.
+#'
+#' @param pattern The filename pattern of files to load.
 #'
 #' @return A data frame under PSCBS format.
 #'
 #' @export
-loadFacetsdata <- function(pathFacets) {
-    dat <- lapply(list.files(pathFacets), FUN=function(ff) {
-        df <- facets::readSnpMatrix(file.path(pathFacets, ff))
+loadFacetsdata <- function(path, pattern = "[.]csv[.]gz$") {
+    pathnames <- list.files(path, pattern = pattern, full.names = TRUE)
+    dat <- lapply(pathnames, FUN=function(ff) {
+        df <- facets::readSnpMatrix(ff)
         xx <- facets::preProcSample(df)
         dat <- xx$pmat
         ## Rename chromosome, x and CT to segment with c3co
@@ -23,10 +26,10 @@ loadFacetsdata <- function(pathFacets) {
 
 #' Transforms FACETS data and performs a joint segmentation
 #'
-#' @param pathFacets The path to a directory containing FACETS data files
+#' @param path The path to a directory containing FACETS data files
 #' (\file{*.csv.gz}) produced by the \pkg{facets} package.
 #'
-#' @param stat `"TCN"` or `"C1C2"` paramater to segment the data.
+#' @param stat `"TCN"` or `"C1C2"` parameter to segment the data.
 #' If `stat == "TCN"`, the segmentation will be done on TCN only.
 #'
 #' @return A list which contains the breakpoints by chromosome and also the
@@ -34,21 +37,25 @@ loadFacetsdata <- function(pathFacets) {
 #'
 #' @examples
 #' if (require("facets", quietly=TRUE)) {
-#' pathFacets <- system.file("extdata", package="facets")
-#' segDat <- Facetswrapper(pathFacets, stat="TCN")
+#' path <- system.file("extdata", package="facets")
+#' segDat <- Facetswrapper(path, stat="TCN")
+#' print(segDat)
 #' \dontrun{
 #' resc3co <- c3co(NULL, segDat=segDat)
 #' }
 #' }
 #'
 #' @export
-Facetswrapper <- function(pathFacets, stat) {
+Facetswrapper <- function(path, stat) {
     if (!requireNamespace("facets", quietly=TRUE)) {
       stop("Package 'facets' needed. See https://github.com/mskcc/facets",
            call. = FALSE)
     }
     ### To do may be cut this function into several function
-    dat <- loadFacetsdata(pathFacets)
+    dat <- loadFacetsdata(path)
+    if (length(dat) == 0) {
+        stop("Found no FACETS data file in folder: ", sQuote(path))
+    }
     ### Joint segmentation of all samples
     resSeg <- segmentData(dat, stat=stat)
     ## Sanity checks

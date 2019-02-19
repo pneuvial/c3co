@@ -15,7 +15,7 @@ get.W(Z, Y)
 a matrix with n rows (number of samples) and K columns (number of subclones)
 }
 \description{
-Optimisation is done by solving a least square problem with inequality constaint thanks to lsei package
+Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 }
 \examples{
 nbSegments <- 11
@@ -26,7 +26,8 @@ Z[2, 2] <- 2
 Z[3, 5:6] <- 2
 Z[4, 9:10] <- 2
 
-W <- diag(rep(1, nrow(Z)))
+W <- diag(rep(1, times = nrow(Z)))
+E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0), nrow = nrow(W), ncol = ncol(Z))
 Y <- W \%*\% Z + E
 c3co:::get.W(t(Z), Y)
 

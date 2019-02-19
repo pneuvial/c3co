@@ -10,7 +10,7 @@ rSparseWeightMatrix(nb.samp, nb.arch, sparse.coeff = max(nb.samp,
 \arguments{
 \item{nb.samp}{An integer that is the number of samples (number of rows).}
 
-\item{nb.arch}{An interger that is the number of archetypes
+\item{nb.arch}{An integer that is the number of archetypes
 (number of columns).}
 
 \item{sparse.coeff}{A numeric in \eqn{[0,1]} that control the sparsity by
