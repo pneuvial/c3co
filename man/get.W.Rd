@@ -18,17 +18,22 @@ a matrix with n rows (number of samples) and K columns (number of subclones)
 Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 }
 \examples{
-nbSegments <- 11L
-nbClones   <- 4L
+J <- 11L  ## Number of segments
+K <- 4L   ## Number of subclones
+n <- 4L   ## Number of samples
 
-Z <- matrix(1, nrow = nbClones, ncol = nbSegments)
-Z[2, 2] <- 2
-Z[3, 5:6] <- 2
+Z <- matrix(1, nrow = K, ncol = J)
+Z[2,    2] <- 2
+Z[3,  5:6] <- 2
 Z[4, 9:10] <- 2
 
-W <- diag(rep(1, times = nrow(Z)))
-E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0), nrow = nrow(W), ncol = ncol(Z))
+W <- matrix(0, nrow = n, ncol = K)
+W[1,1] <- W[2,2] <- W[3,3] <- W[4,4] <- 1
+
+E <- matrix(rnorm(n*J, sd = 0), nrow = n, ncol = J)
+
 Y <- W \%*\% Z + E
-W <- c3co:::get.W(t(Z), Y)
+
+What <- c3co:::get.W(t(Z), Y)
 
 }

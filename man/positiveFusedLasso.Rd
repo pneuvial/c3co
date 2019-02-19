@@ -10,11 +10,11 @@ positiveFusedLasso(Y, Zt, lambda, eps = 0.1, max.iter = 50L,
 \arguments{
 \item{Y}{A list of one or two matrices named \code{Y1} and \code{Y2} containing the
 segmented minor (and possibly the major) copy numbers
-(n patients in rows and L segments in columns).}
+(n patients in rows and J segments in columns).}
 
-\item{Zt}{A list of one or two L-by-p matrices names \code{Z1} and \code{Z2}
-containing the L minor (and possibly the major) copy numbers of the
-p initial latent feature estimates.
+\item{Zt}{A list of one or two J-by-K matrices names \code{Z1} and \code{Z2}
+containing the J minor (and possibly the major) copy numbers of the
+K initial latent feature estimates.
 \emph{Warning}: These matrices are actually the transpose of Z1 and Z2,
 which is a notation mistake that will be fixed in a future release.}
 
@@ -39,8 +39,11 @@ Positive fused Lasso function
 }
 \examples{
 set.seed(7)
-len <- 700*10
-nbClones <- 2L
+
+len <- 700*10  ## Number of loci
+K <- 2L        ## Number of subclones
+n <- 5L        ## Number of samples
+
 bkps <- list(
     c(20, 30, 50, 60)*100, 
     c(10, 40, 60)*100)
@@ -48,14 +51,14 @@ regions <- list(
     c("(1,1)", "(1,2)", "(1,1)", "(0,1)", "(1,1)"),
     c("(0,1)", "(1,1)", "(1,2)", "(1,1)"))
 
-datSubClone <- buildSubclones(len, nbClones, bkps, regions, eps=0.2)
-W <- rSparseWeightMatrix(nb.samp=5L, nb.arch=nbClones, sparse.coeff=0.7)
+datSubClone <- buildSubclones(len, K, bkps, regions, eps=0.2)
+W <- rSparseWeightMatrix(nb.samp=n, nb.arch=K, sparse.coeff=0.7)
 datList <- mixSubclones(subClones=datSubClone, W=W)
 
 segData.TCN <- segmentData(datList,"TCN")
 Y1 <- t(segData.TCN$Y)
 Y <- list(Y1 = Y1)
-Z0t.TCN <- initializeZt(Y1, p=2L, flavor="nmf")
+Z0t.TCN <- initializeZt(Y1, p=K, flavor="nmf")
 Zt <- list(Z1 = Z0t.TCN$Z1)
 posFused <- positiveFusedLasso(Y, Zt, lambda=1e-3, verbose=TRUE)
 modelFitStats(posFused)
@@ -64,7 +67,7 @@ segData.C1C2 <- segmentData(datList,"C1C2")
 Y1 <- t(segData.C1C2$Y1)
 Y2 <- t(segData.C1C2$Y2)
 Y <- list(Y1 = Y1, Y2 = Y2)
-Z0t.C1C2 <- initializeZt(Y1, Y2, p=2L, flavor="nmf")
+Z0t.C1C2 <- initializeZt(Y1, Y2, p=K, flavor="nmf")
 Zt <- list(Z1 = Z0t.C1C2$Z1, Z2 = Z0t.C1C2$Z2)
 posFusedC <- positiveFusedLasso(Y, Zt, lambda=c(1e-3, 1e-3), verbose=TRUE)
 modelFitStats(posFusedC)
