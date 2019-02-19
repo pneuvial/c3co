@@ -47,6 +47,10 @@ get.Zt <- function(Y, lambda, W, WtWm1) {
   W.WtWm1 <- W %*% WtWm1
   Pw <- W.WtWm1 %*% t(W)
   
+  ## FIXME: include the penalty factor in get.Zt
+  ## FIXME to be consistent with what is written,
+  ## FIXME lambda should be lambda / (2*n*J) when calling glmnet
+  
   ## Lasso regression 
   X.tilde <- kronecker(scale(X1, center = TRUE, scale = FALSE), as(W, "sparseMatrix"))
   ## Why as.numeric() below? Is it of a different type? /HB 2018-02-27
