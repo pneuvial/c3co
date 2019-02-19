@@ -5,7 +5,7 @@
 \title{Create a toy subclone and mixture data set}
 \usage{
 getToyData(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1,
-  intercept = TRUE)
+  dimension = 1, intercept = TRUE, returnLocus = TRUE)
 }
 \arguments{
 \item{n}{The number of observations.}
@@ -22,18 +22,29 @@ getToyData(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1,
 \code{weightSparsity} are set to 0. This parameter controls the sparsity of
 the weight matrix.}
 
+\item{dimension}{An integer value in {1,2}, the dimension of the signals to
+be generated (eg 1 for total copy numbers and 2 for minor and major copy
+numbers)}
+
 \item{intercept}{A logical value indicating whether an intercept should be
 added (this corresponds to the presence of a normal subclone).}
+
+\item{returnLocus}{A logical value indicating whether the locus-level data
+should be returned. Defaults to TRUE}
 }
 \value{
-A list with three elements: \code{W}, a \code{n}-by-\code{nbClones}
-matrix of weights, and \code{locus} and \code{segment}, which contain
-locus-level and segment-level data. Each of them is a list of two
-elements:
+\item{W}{A \code{n}-by-\code{nbClones} matrix of weights}
+\item{segment}{A list of two elements:
 \describe{
-\item{Y}{An \code{n}-by-\code{len} (or \code{nbBkp+1}) matrix of observed CN signals}
-\item{Z}{An \code{nbClones}-by-\code{len} (or \code{nbBkp+1}) matrix of latent features
-(subclones)}
+\item{Y}{An \code{n}-by-\code{nbBkp+1} matrix of observed CN signals if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+\item{Z}{An \code{nbClones}-by-\code{nbBkp+1} matrix of latent features
+(subclones)} if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+}
+\item{locus}{only returned if \code{returnLocus} is TRUE: A list of two elements:
+\describe{
+\item{Y}{An \code{n}-by-\code{len} matrix of observed CN signals, if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+\item{Z}{An \code{nbClones}-by-\code{len} matrix of latent features
+(subclones)}, if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
 }
 }
 \description{
@@ -46,37 +57,24 @@ the set of all possible positions.
 \examples{
 
 len <- 100
-nbClones <- 2
+nbClones <- 3
 nbBkps <- 5
-n <- 4
+n <- 10
 
-dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
+dat <- getToyData(n, len, nbClones, nbBkps, eps = 0)  ## noiseless
+matplot(t(dat$locus$Y), t = "s")
+matplot(t(dat$segment$Y), t = "s")
+
+dat <- getToyData(n, len, nbClones, nbBkps, eps = 0.2)  ## noisy
 matplot(t(dat$locus$Y), t="s")
 matplot(t(dat$segment$Y), t="s")
 
-dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
-matplot(t(dat$locus$Y), t="l")
-matplot(t(dat$segment$Y), t="s")
 
-len <- 1000
-nbClones <- 5
-nbBkps <- 10
-eps <- 1
-n <- 20
-
-dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
-matplot(t(dat$locus$Y), t="s")
-matplot(t(dat$segment$Y), t="s")
-
-dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
-matplot(t(dat$locus$Y), t="l")
-matplot(t(dat$segment$Y), t="s")
-
-l1 <- seq(from=1e-6, to=1e-4, length.out=10)
-parameters.grid <- list(lambda=l1, nb.arch=2:9)
-
+\dontrun{
+l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10)
+parameters.grid <- list(lambda = l1, nb.arch = 2:6)
 Y <- dat$segment$Y
 fit <- fitC3co(Y, parameters.grid=parameters.grid)
 pvePlot2(fit$config$best)
-
+}
 }

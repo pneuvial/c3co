@@ -14,24 +14,30 @@
 #'   `weightSparsity` are set to 0. This parameter controls the sparsity of
 #'   the weight matrix.
 #'   
+#' @param dimension An integer value in {1,2}, the dimension of the signals to
+#'   be generated (eg 1 for total copy numbers and 2 for minor and major copy
+#'   numbers)
+#' 
+#'   
 #' @param intercept A logical value indicating whether an intercept should be
 #'   added (this corresponds to the presence of a normal subclone).
-#' 
-#' @return A list with the following elements: 
-#'  \describe{
+#'   
+#' @param returnLocus A logical value indicating whether the locus-level data
+#'   should be returned. Defaults to TRUE
+#'   
+#' @return 
 #'  \item{W}{A `n`-by-`nbClones` matrix of weights}
 #'  \item{segment}{A list of two elements:
 #'   \describe{
-#'     \item{Y}{An `n`-by-`nbBkp+1` matrix of observed CN signals}
+#'     \item{Y}{An `n`-by-`nbBkp+1` matrix of observed CN signals if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
 #'     \item{Z}{An `nbClones`-by-`nbBkp+1` matrix of latent features
-#'              (subclones)}}
+#'              (subclones)} if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
 #'  }
 #'  \item{locus}{only returned if \code{returnLocus} is TRUE: A list of two elements:
 #'   \describe{
-#'     \item{Y}{An `n`-by-`len` matrix of observed CN signals}
+#'     \item{Y}{An `n`-by-`len` matrix of observed CN signals, if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
 #'     \item{Z}{An `nbClones`-by-`len` matrix of latent features
-#'              (subclones)}}
-#'  }
+#'              (subclones)}, if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
 #'  }
 #'   
 #' @details For simplicity, the breakpoints positions are drawn uniformly from 
@@ -41,40 +47,33 @@
 #' @examples
 #' 
 #' len <- 100
-#' nbClones <- 2
+#' nbClones <- 3
 #' nbBkps <- 5
-#' n <- 4
+#' n <- 10
 #' 
-#' dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
+#' dat <- getToyData(n, len, nbClones, nbBkps, eps = 0)  ## noiseless
+#' matplot(t(dat$locus$Y), t = "s")
+#' matplot(t(dat$segment$Y), t = "s")
+#' 
+#' dat <- getToyData(n, len, nbClones, nbBkps, eps = 0.2)  ## noisy
 #' matplot(t(dat$locus$Y), t="s")
 #' matplot(t(dat$segment$Y), t="s")
 #' 
-#' dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
-#' matplot(t(dat$locus$Y), t="l")
-#' matplot(t(dat$segment$Y), t="s")
 #' 
-#' len <- 1000
-#' nbClones <- 5
-#' nbBkps <- 10
-#' eps <- 1
-#' n <- 20
-#' 
-#' dat <- getToyData(n, len, nbClones, nbBkps, eps=0)  ## noiseless
-#' matplot(t(dat$locus$Y), t="s")
-#' matplot(t(dat$segment$Y), t="s")
-#' 
-#' dat <- getToyData(n, len, nbClones, nbBkps, eps=0.2)  ## noisy
-#' matplot(t(dat$locus$Y), t="l")
-#' matplot(t(dat$segment$Y), t="s")
-#' 
-#' l1 <- seq(from=1e-6, to=1e-4, length.out=10)
-#' parameters.grid <- list(lambda=l1, nb.arch=2:9)
-#' 
+#' \dontrun{
+#' l1 <- seq(from = 1e-6, to = 1e-4, length.out = 10)
+#' parameters.grid <- list(lambda = l1, nb.arch = 2:6)
 #' Y <- dat$segment$Y
 #' fit <- fitC3co(Y, parameters.grid=parameters.grid)
 #' pvePlot2(fit$config$best)
-#' 
-getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1, intercept = TRUE, returnLocus = TRUE) {
+#' }
+getToyData <- function(n, len, nbClones, nbBkps, eps, 
+                       weightSparsity = 0.1, dimension = 1,
+                       intercept = TRUE, returnLocus = TRUE) {
+    ## sanity check
+    stopifnot(dimension %in% c(1,2))
+    stopifnot(weightSparsity >= 0)
+    stopifnot(weightSparsity <= 1)
     
     ## number of segments
     nbSegs <- nbBkps + 1 
@@ -97,33 +96,66 @@ getToyData <- function(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1, inte
     W <- round(sweep(W, MARGIN = 1L, STATS = rowSums(W), FUN = `/`), digits = 2L)
     W[, nbClones] <- 1 - rowSums(W[, -nbClones, drop = FALSE]) ## make sure rows sum to 1 after rounding
     
-    Zlist <- list()
-    ## subclones (segment-level)
-    z <- rnorm(nbSegs*nbClones)
-    Zs <- round(matrix(z, nrow = nbClones, ncol = nbSegs))
-    if (intercept) {  ## last clone should be 'normal'
-        Zs[nbClones, ] <- 1
+    YsegList <- list()
+    YlocList <- list()
+    ZsegList <- list()
+    ZlocList <- list()
+    for (dd in 1:dimension) {
+        ## subclones (segment-level)
+        z <- round(rnorm(nbSegs*nbClones))
+        Zs <- matrix(z, nrow = nbClones, ncol = nbSegs)
+        if (intercept) {  ## last clone should be 'normal'
+            Zs[nbClones, ] <- 1
+        }
+        
+        ## subclones (locus-level)
+        Zl <- t(apply(Zs, MARGIN = 1L, FUN = rep, times = segLens))
+
+        ## segment-level data
+        e <- rnorm(n*nbSegs, sd=eps)
+        Es <- matrix(e, nrow=n, ncol=nbSegs)  ## noise
+        Ys <- W %*% Zs + Es                   ## observations
+        
+        YsegList[[dd]] <- Ys
+        ZsegList[[dd]] <- Zs
+
+        ## locus-level data
+        if (returnLocus) {
+            e <- rnorm(n*len, sd = eps)
+            El <- matrix(e, nrow = n, ncol = len)  ## noise
+            Yl <- W %*% Zl + El                ## observations
+            
+            YlocList[[dd]] <- Yl
+            ZlocList[[dd]] <- Zl
+        }
     }
+    seg <- list(Y = YsegList, Z = ZsegList)
+    loc <- list(Y = YlocList, Z = ZlocList)
     
-    ## subclones (locus-level)
-    Zl <- t(apply(Zs, MARGIN = 1L, FUN = rep, times = segLens))
+    ## more sanity checks
+    stopifnot(length(YsegList) == dimension)
+    nrows <- sapply(seg$Y, nrow); stopifnot(all(nrows == n))
+    nrows <- sapply(seg$Z, nrow); stopifnot(all(nrows == nbClones))
 
-    ## segment-level data
-    e <- rnorm(n*nbSegs, sd=eps)
-    Es <- matrix(e, nrow=n, ncol=nbSegs)  ## noise
-    Ys <- W %*% Zs + Es                   ## observations
-    seg <- list(Y=Ys, Z=Zs)
-    
-    res <- list(W = W, segment = seg)
-
-    ## locus-level data
     if (returnLocus) {
-        e <- rnorm(n*len, sd = eps)
-        El <- matrix(e, nrow = n, ncol = len)  ## noise
-        Yl <- W %*% Zl + El                ## observations
-        loc <- list(Y = Yl, Z = Zl)
+        stopifnot(length(YlocList) == dimension)
+        nrows <- sapply(loc$Y, nrow); stopifnot(all(nrows == n))
+        nrows <- sapply(loc$Z, nrow); stopifnot(all(nrows == nbClones))
+    }
+    ## /more sanity checks
+    
+    if (dimension == 1) { ## for backward compatibility
+        seg$Y <- seg$Y[[1]]
+        seg$Z <- seg$Z[[1]]
+        if (returnLocus) {
+            loc$Y <- loc$Y[[1]]
+            loc$Z <- loc$Z[[1]]
+        }
+    }
+        
+    res <- list(W = W, segment = seg)
+    if (returnLocus) {
         res$locus <- loc
     }
-    
     res
 }
