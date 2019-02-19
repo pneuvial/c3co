@@ -60,14 +60,14 @@ fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
 
 ## A simpler example with toy data
 K <- 3L   ## Number of subclones
-J <- 5L   ## Number of segments
+J <- 6L   ## Number of segments
 n <- 20L  ## Number of samples
 
 l1 <- 1e-4
 candP <- 2:10
 parameters.grid <- list(lambda=l1, nb.arch=candP)
 
-dat <- getToyData(n=n, len=100L, nbClones=K, nbBkps=J, eps=0.2)  ## almost noiseless!
+dat <- getToyData(n=n, len=100L, nbClones=K, nbSegs=J, eps=0.2)  ## almost noiseless!
 sdat <- dat$segment
 
 res <- fitC3co(sdat$Y, parameters.grid=parameters.grid)

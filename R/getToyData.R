@@ -6,7 +6,7 @@
 #'   
 #' @param nbClones The number of subclones.
 #'   
-#' @param nbBkps The total number of breakpoints.
+#' @param nbSegs The total number of segments.
 #'   
 #' @param eps A numeric value, the signal to noise ratio for simulated data.
 #'   
@@ -29,8 +29,8 @@
 #'  \item{W}{A `n`-by-`nbClones` matrix of weights}
 #'  \item{segment}{A list of two elements:
 #'   \describe{
-#'     \item{Y}{An `n`-by-`nbBkp+1` matrix of observed CN signals if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
-#'     \item{Z}{An `nbClones`-by-`nbBkp+1` matrix of latent features
+#'     \item{Y}{An `n`-by-`nbSegs` matrix of observed CN signals if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+#'     \item{Z}{An `nbClones`-by-`nbSegs` matrix of latent features
 #'              (subclones)} if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
 #'  }
 #'  \item{locus}{only returned if \code{returnLocus} is TRUE: A list of two elements:
@@ -48,14 +48,14 @@
 #' 
 #' len <- 100L
 #' nbClones <- 3L
-#' nbBkps <- 5L
+#' nbSegs <- 6L
 #' n <- 10L
 #' 
-#' dat <- getToyData(n, len, nbClones, nbBkps, eps = 0)  ## noiseless
+#' dat <- getToyData(n, len, nbClones, nbSegs, eps = 0)  ## noiseless
 #' matplot(t(dat$locus$Y), t = "s")
 #' matplot(t(dat$segment$Y), t = "s")
 #' 
-#' dat <- getToyData(n, len, nbClones, nbBkps, eps = 0.2)  ## noisy
+#' dat <- getToyData(n, len, nbClones, nbSegs, eps = 0.2)  ## noisy
 #' matplot(t(dat$locus$Y), t="s")
 #' matplot(t(dat$segment$Y), t="s")
 #' 
@@ -67,44 +67,53 @@
 #' fit <- fitC3co(Y, parameters.grid=parameters.grid)
 #' pvePlot2(fit$config$best)
 #' }
-getToyData <- function(n, len, nbClones, nbBkps, eps, 
+getToyData <- function(n, len, nbClones, nbSegs, eps, 
                        weightSparsity = 0.1, dimension = 1L,
                        intercept = TRUE, returnLocus = TRUE) {
-    ## sanity check
+    ## sanity checks
     stop_if_not(dimension %in% 1:2)
     stop_if_not(weightSparsity >= 0, weightSparsity <= 1)
-    
-    ## number of segments
-    nbSegs <- nbBkps + 1L
+    stop_if_not(n >= nbClones)
+    stop_if_not(nbSegs >= nbClones)
     
     ## breakpoint positions
-    bkp <- sample(len, size = nbBkps, replace = FALSE)
+    bkp <- sample(len, size = nbSegs - 1, replace = FALSE)
     bkp <- sort(bkp)
     
     ## segment lengths
     segLens <- diff(c(0, bkp))
     segLens <- c(segLens, len - sum(segLens))
     
-    if (intercept) {    
-        nbClones <- nbClones + 1L
-    }
     ## weights
-    ru <- runif(n*nbClones)
-    ru[ru < weightSparsity] <- 0
-    W <- matrix(ru, nrow = n, ncol = nbClones)
-    W <- round(sweep(W, MARGIN = 1L, STATS = rowSums(W), FUN = `/`), digits = 2L)
-    W[, nbClones] <- 1 - rowSums(W[, -nbClones, drop = FALSE]) ## make sure rows sum to 1 after rounding
+    weightsDone <- FALSE
+    while (!weightsDone) {
+        ru <- runif(n*nbClones)
+        ru[ru < weightSparsity] <- 0
+        W <- matrix(ru, nrow = n, ncol = nbClones)
+        weightsDone <- all(rowSums(W) > 0)  ## to cover the case where all weights in a row are NULL
+    }
+    W <- sweep(W, MARGIN = 1L, STATS = rowSums(W), FUN = `/`)
+    
+    ## sanity checks
+    err <- max(abs(rowSums(W) - 1))
+    stopifnot(err < 1e-8) 
+    stopifnot(all(W >= 0))
+    stopifnot(all(W <= 1))
     
     YsegList <- list()
     YlocList <- list()
     ZsegList <- list()
     ZlocList <- list()
     for (dd in 1:dimension) {
-        ## subclones (segment-level)
-        z <- round(rnorm(nbSegs*nbClones))
-        Zs <- matrix(z, nrow = nbClones, ncol = nbSegs)
-        if (intercept) {  ## last clone should be 'normal'
-            Zs[nbClones, ] <- 1
+        ## subclones (segment-level), making sure Z is full rank
+        rankDef <- TRUE
+        while(rankDef) {
+            z <- rnorm(nbSegs*nbClones)
+            Zs <- matrix(z, nrow = nbClones, ncol = nbSegs)
+            if (intercept) {  ## last clone should be 'normal'
+                Zs[nbClones, ] <- 1
+            }
+            rankDef <- (qr(Zs)$rank < nbClones)
         }
         
         ## subclones (locus-level)

@@ -17,6 +17,10 @@ NEW FEATURES:
 
  * getToyData() gained arguments 'dimension' and 'returnLocus'.
  
+ * In 'getToyData', replaced argument 'nbBkps' by 'nbSegs' (= nbBkps+1)
+   for notation consistency.
+
+ 
 BUG FIXES:
 
  * Passing argument 'Rowv' to heatmap.3() that is of class of 'dendrogram'
@@ -24,6 +28,10 @@ BUG FIXES:
    R-devel with _R_CHECK_LENGTH_1_LOGIC2_=true.
 
  * Generic trackNames() called NextMethod() instead of UseMethod().
+ 
+ * In  'getToyData', robustified the creation of Z so that it is full rank
+ * In 'getToyData', robustified the creation of W so all row sum to 1 and all
+   items are in [0,1].
  
 SOFTWARE QUALITY:
 
