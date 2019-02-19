@@ -22,11 +22,11 @@ Transforms FACETS data and performs a joint segmentation
 }
 \examples{
 if (require("facets", quietly=TRUE)) {
-path <- system.file("extdata", package="facets")
-segDat <- Facetswrapper(path, stat="TCN")
-print(segDat)
 \dontrun{
-resc3co <- c3co(NULL, segDat=segDat)
+path <- system.file("extdata", package = "facets")
+segDat <- Facetswrapper(path, stat = "TCN")
+print(segDat)
+resc3co <- c3co(NULL, segDat = segDat)
 }
 }
 
