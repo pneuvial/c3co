@@ -1,6 +1,7 @@
 library("c3co")
 
 context("Initialization of the latent features")
+skip("Not ready to be tested (and time consuming)")
 
 dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
 dataAnnotN <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=0)

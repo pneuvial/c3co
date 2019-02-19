@@ -50,7 +50,7 @@
 #' candP <- 2:10
 #' parameters.grid <- list(lambda=l1, nb.arch=candP)
 #' 
-#' dat <- getToyData(n=20L, len=100L, nbClones=2L, nbBkps=5L, eps=0.2)  ## almost noiseless!
+#' dat <- getToyData(n=20L, len=100L, nbClones=2L, nbSegs=6L, eps=0.2)  ## almost noiseless!
 #' sdat <- dat$segment
 #' 
 #' res <- fitC3co(sdat$Y, parameters.grid=parameters.grid)

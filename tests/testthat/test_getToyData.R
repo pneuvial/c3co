@@ -32,19 +32,19 @@ test_that("output of getToyData has correct dimensions and contents", {
         sdat <- dat$segment
         if (dimension == 1) {
             expect_equal(nrow(sdat$Y), n)
-            expect_equal(ncol(sdat$Y), nbBkps+1)
+            expect_equal(ncol(sdat$Y), nbSegs)
             expect_equal(nrow(sdat$Z), nbClones)
-            expect_equal(ncol(sdat$Z), nbBkps+1)
+            expect_equal(ncol(sdat$Z), nbSegs)
         } else {
             expect_equal(nrow(sdat$Y[[1]]), n)
-            expect_equal(ncol(sdat$Y[[1]]), nbBkps+1)
+            expect_equal(ncol(sdat$Y[[1]]), nbSegs)
             expect_equal(nrow(sdat$Z[[1]]), nbClones)
-            expect_equal(ncol(sdat$Z[[1]]), nbBkps+1)
+            expect_equal(ncol(sdat$Z[[1]]), nbSegs)
             
             expect_equal(nrow(sdat$Y[[2]]), n)
-            expect_equal(ncol(sdat$Y[[2]]), nbBkps+1)
+            expect_equal(ncol(sdat$Y[[2]]), nbSegs)
             expect_equal(nrow(sdat$Z[[2]]), nbClones)
-            expect_equal(ncol(sdat$Z[[2]]), nbBkps+1)
+            expect_equal(ncol(sdat$Z[[2]]), nbSegs)
         }    
         ## locus-level data
         ldat <- dat$locus

@@ -4,7 +4,7 @@
 \alias{getToyData}
 \title{Create a toy subclone and mixture data set}
 \usage{
-getToyData(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1,
+getToyData(n, len, nbClones, nbSegs, eps, weightSparsity = 0.1,
   dimension = 1L, intercept = TRUE, returnLocus = TRUE)
 }
 \arguments{
@@ -14,7 +14,7 @@ getToyData(n, len, nbClones, nbBkps, eps, weightSparsity = 0.1,
 
 \item{nbClones}{The number of subclones.}
 
-\item{nbBkps}{The total number of breakpoints.}
+\item{nbSegs}{The total number of segments.}
 
 \item{eps}{A numeric value, the signal to noise ratio for simulated data.}
 
@@ -36,8 +36,8 @@ should be returned. Defaults to TRUE}
 \item{W}{A \code{n}-by-\code{nbClones} matrix of weights}
 \item{segment}{A list of two elements:
 \describe{
-\item{Y}{An \code{n}-by-\code{nbBkp+1} matrix of observed CN signals if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
-\item{Z}{An \code{nbClones}-by-\code{nbBkp+1} matrix of latent features
+\item{Y}{An \code{n}-by-\code{nbSegs} matrix of observed CN signals if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+\item{Z}{An \code{nbClones}-by-\code{nbSegs} matrix of latent features
 (subclones)} if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
 }
 \item{locus}{only returned if \code{returnLocus} is TRUE: A list of two elements:
@@ -58,14 +58,14 @@ the set of all possible positions.
 
 len <- 100L
 nbClones <- 3L
-nbBkps <- 5L
+nbSegs <- 6L
 n <- 10L
 
-dat <- getToyData(n, len, nbClones, nbBkps, eps = 0)  ## noiseless
+dat <- getToyData(n, len, nbClones, nbSegs, eps = 0)  ## noiseless
 matplot(t(dat$locus$Y), t = "s")
 matplot(t(dat$segment$Y), t = "s")
 
-dat <- getToyData(n, len, nbClones, nbBkps, eps = 0.2)  ## noisy
+dat <- getToyData(n, len, nbClones, nbSegs, eps = 0.2)  ## noisy
 matplot(t(dat$locus$Y), t="s")
 matplot(t(dat$segment$Y), t="s")
 
