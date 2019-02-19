@@ -6,6 +6,7 @@ test_that("Consistency of get.Z", {
   n <- 10
   J <- 11
   K <- 4
+  lambda <- 0.01
   
   # Z <- matrix(1, nrow = K, ncol = J)
   # Z[2, 2]    <- 2
@@ -99,7 +100,6 @@ c(0.98897145056092261584, 0.94889904941933578275, 0.90888045833701891496,
                   1.04419536585372552118, 1.89511746962100202651,
                   1.82794335933250851056, 1.13534935026193650742),
                   J, K)
-  
   ## solving with c3co (glmnet)
   WtWm1 <- tcrossprod(backsolve(qr.R(qr(W)), x = diag(K)))
   ## FIXME: include the penalty factor in get.Zt
