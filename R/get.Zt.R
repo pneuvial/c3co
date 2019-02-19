@@ -18,7 +18,6 @@
 #' K <- 4L   ## Number of subclones
 #' n <- 4L   ## Number of samples
 #' 
-<<<<<<< HEAD
 #' W <- diag(rep(1, times = nrow(Z)))
 #' E <- matrix(rnorm(nrow(W)*ncol(Z), sd = 0.1), nrow = nrow(W), ncol = ncol(Z))
 #' WtWm1 <- diag(rep(1, times = nrow(Z)))
