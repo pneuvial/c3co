@@ -26,16 +26,16 @@ round(res@mu, 2) ## 0
 ## - - - - - - - - - - - - - - - - - - - - 
 ## what if normal clone not in Z0?
 ## - - - - - - - - - - - - - - - - - - - - 
-Z0 <- initializeZ(Y, p=nrow(Z), forceNormal=FALSE)
-res <- positiveFusedLasso(list(Y), Z0, lambda) ## with the correct Z minus normal subclone
+Z0t <- initializeZt(Y, p=nrow(Z), forceNormal=FALSE)
+res <- positiveFusedLasso(list(Y), Z0t, lambda) ## with the correct Z minus normal subclone
 round(res@W, 2) ## shit already happens
 round(t(res@S$Z), 2)  ## Z is OK (but this is a noiseless setting !!! Should be perfect)
 round(res@E$Y, 2)
 round(res@mu, 2) ## not 0 where the wild things are
 modelFitStats(res)
 
-Z0N <- initializeZ(Y, p=nrow(Z), forceNormal=TRUE)
-resForceNorm <- positiveFusedLasso(list(Y), Z0N, lambda) 
+Z0Nt <- initializeZt(Y, p=nrow(Z), forceNormal=TRUE)
+resForceNorm <- positiveFusedLasso(list(Y), Z0Nt, lambda) 
 round(resForceNorm@W, 2)
 round(t(resForceNorm@S$Z), 2)  ## Z is OK (but this is a noiseless setting !!! Should be perfect)
 round(resForceNorm@E$Y, 2)
@@ -47,8 +47,8 @@ modelFitStats(resForceNorm)
 list.pv <- do.call(rbind, lapply(1:50, function(tt){
   pv=NULL
   for(ff in c("hclust", "nmf", "svd", "subsampling")){
-    Z0 <- initializeZ(Y, p=3, force=TRUE, flavor = ff)
-    res <- positiveFusedLasso(list(Y),Z0, lambda) ## with the correct Z,Y= minus normal subclone,sample
+    Z0t <- initializeZt(Y, p=3, force=TRUE, flavor = ff)
+    res <- positiveFusedLasso(list(Y), Z0t, lambda) ## with the correct Z,Y= minus normal subclone,sample
     pv <- rbind(pv,c(it=tt, flavor= ff, modelFitStats(res) ))
   }
   return(pv)
@@ -72,7 +72,7 @@ E <- matrix(rnorm(nrow(W)*ncol(Z[-1,]), sd=0), nrow=nrow(W), ncol=ncol(Z))
 Y <- W %*% Z[-1,] + E
 
 ## Test with no normal component
-Z0 <- initializeZ(Y, p=nrow(Y), forceNormal=FALSE)
+Z0t <- initializeZt(Y, p=nrow(Y), forceNormal=FALSE)
 res <- positiveFusedLasso(list(Y), Z0, lambda) 
 round(res@W, 2) ## Identity
 round(t(res@S$Z), 2)  ## Y
@@ -81,8 +81,8 @@ round(res@mu, 2)
 modelFitStats(res)
 
 ## Test with  normal component
-Z0N <- initializeZ(Y, p=nrow(Y), forceNormal=TRUE)
-resForceNorm <- positiveFusedLasso(list(Y), Z0N, lambda) 
+Z0Nt <- initializeZt(Y, p=nrow(Y), forceNormal=TRUE)
+resForceNorm <- positiveFusedLasso(list(Y), Z0Nt, lambda) 
 round(resForceNorm@W, 2) ## each profile is each feature
 round(t(resForceNorm@S$Z), 2)  ## last row is completly different of normal, this logical because there is no normal component
 round(resForceNorm@E$Y, 2)
@@ -90,8 +90,8 @@ round(resForceNorm@mu, 2) ## not 0 where the wild things are
 modelFitStats(resForceNorm)
 
 ## Test with  normal component
-Z0N <- initializeZ(Y, p=nrow(Z), forceNormal=TRUE)
-resForceNorm <- positiveFusedLasso(list(Y), Z0N, lambda) ##  WtW is not invertible: no solution for this combinaison of lambda
+Z0Nt <- initializeZt(Y, p=nrow(Z), forceNormal=TRUE)
+resForceNorm <- positiveFusedLasso(list(Y), Z0Nt, lambda) ##  WtW is not invertible: no solution for this combinaison of lambda
 round(resForceNorm@W, 2)## Component normal set to 0 (logical there is no normal component in the model)
 round(t(resForceNorm@S$Z), 2)  ## Z is equal to Y
 round(resForceNorm@E$Y, 2)
@@ -105,8 +105,8 @@ modelFitStats(resForceNorm)
 list.pv <- do.call(rbind, lapply(1:10, function(tt){
   pv=NULL
   for(ff in c("hclust", "nmf", "svd", "subsampling")){
-    Z0 <- initializeZ(Y, p=3, force=TRUE, flavor = ff)
-    res <- positiveFusedLasso(list(Y),Z0, lambda) ## with the correct Z,Y= minus normal subclone,sample
+    Z0t <- initializeZt(Y, p=3, force=TRUE, flavor = ff)
+    res <- positiveFusedLasso(list(Y), Z0t, lambda) ## with the correct Z,Y= minus normal subclone,sample
     pv <- rbind(pv,c(it=tt, flavor= ff, modelFitStats(res) ))
   }
   return(pv)

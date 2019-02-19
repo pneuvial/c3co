@@ -4,9 +4,11 @@
 #' segmented minor (and possibly the major) copy numbers 
 #' (n patients in rows and L segments in columns).
 #'
-#' @param Z A list of one or two L-by-p matrices names `Z1` and `Z2`
+#' @param Zt A list of one or two L-by-p matrices names `Z1` and `Z2`
 #' containing the L minor (and possibly the major) copy numbers of the
 #' p initial latent feature estimates.
+#' _Warning_: These matrices are actually the transpose of Z1 and Z2,
+#' which is a notation mistake that will be fixed in a future release.
 #'
 #' @param lambda A numeric with one or two real numbers, the coefficients
 #' for the fused penalty for minor (and possibly the major) copy numbers.
@@ -41,30 +43,30 @@
 #' segData.TCN <- segmentData(datList,"TCN")
 #' Y1 <- t(segData.TCN$Y)
 #' Y <- list(Y1 = Y1)
-#' Z0.TCN <- initializeZ(Y1, p = 2, flavor = "nmf")
-#' Z <- list(Z1 = Z0.TCN$Z1)
-#' posFused <- positiveFusedLasso(Y, Z, 1e-3, verbose=TRUE)
+#' Z0t.TCN <- initializeZt(Y1, p = 2, flavor = "nmf")
+#' Zt <- list(Z1 = Z0t.TCN$Z1)
+#' posFused <- positiveFusedLasso(Y, Zt, lambda=1e-3, verbose=TRUE)
 #' modelFitStats(posFused)
 #' 
 #' segData.C1C2 <- segmentData(datList,"C1C2")
 #' Y1 <- t(segData.C1C2$Y1)
 #' Y2 <- t(segData.C1C2$Y2)
 #' Y <- list(Y1 = Y1, Y2 = Y2)
-#' Z0.C1C2 <- initializeZ(Y1, Y2, p=2, flavor = "nmf")
-#' Z <- list(Z1 = Z0.C1C2$Z1, Z2 = Z0.C1C2$Z2)
-#' posFusedC <- positiveFusedLasso(Y, Z, lambda = c(1e-3, 1e-3), verbose=TRUE)
+#' Z0t.C1C2 <- initializeZt(Y1, Y2, p=2, flavor = "nmf")
+#' Zt <- list(Z1 = Z0t.C1C2$Z1, Z2 = Z0t.C1C2$Z2)
+#' posFusedC <- positiveFusedLasso(Y, Zt, lambda=c(1e-3, 1e-3), verbose=TRUE)
 #' modelFitStats(posFusedC)
 #' 
 #' @importFrom methods new
 #' @export
-positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
+positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
                                max.iter=50, warn=FALSE, verbose=FALSE) {
 
   ## problem dimensions
   M <- length(Y)
-  p <- ncol(Z[[1]])  ## number of subclones/archetypes/latent features
+  p <- ncol(Zt[[1]])  ## number of subclones/archetypes/latent features
 
-  stop_if_not(is.numeric(lambda), length(lambda) == M, length(Z) == M)
+  stop_if_not(is.numeric(lambda), length(lambda) == M, length(Zt) == M)
   if (p > nrow(Y[[1]])) {
     warning("Under-identified problem: more latent features than samples")
   }
@@ -79,12 +81,12 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
     
     ## __________________________________________________
     ## STEP 1: optimize w.r.t. W (fixed Z)
-    ## if (rank of W) < ncol(Z), there are too many archetypes...
+    ## if (rank of W) < ncol(Zt), there are too many archetypes...
     WtWm1 <- NULL
     while (is.null(WtWm1)) {
       
       ## solve in W (here individuals - i.e. rows of Yc - are independent)
-      W <- get.W(Zt = do.call(rbind, args = Z), Y = Yc)
+      W <- get.W(Zt = do.call(rbind, args = Zt), Y = Yc)
 
       ## Check rank deficiency
       QR.W <- qr(W)
@@ -92,7 +94,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
         message("W is rank deficent. Removing a latent feature")
 ### JC: this means that the column of one must be the first column
 ### if other rank defiency occurs, we remove the first one arbitrarily
-        Z <- lapply(Z, FUN = function(z) z[,-1])
+        Zt <- lapply(Zt, FUN = function(z) z[,-1])
         ## Remove matched W.old column
         W.old <- W[,-1] 
         p <- p-1
@@ -104,7 +106,7 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
-    Z <- mapply(FUN = get.Zt, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY = FALSE)
+    Zt <- mapply(FUN = get.Zt, Y, lambda, MoreArgs = list(W, WtWm1), SIMPLIFY = FALSE)
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
@@ -117,9 +119,9 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
   if (verbose) message("delta:", round(delta, digits=4))
 
   if (length(Y) > 1 && warn) { ## sanity check: minor CN < major CN
-    dZ <- Reduce(`-`, rev(Z))
+    dZt <- Reduce(`-`, rev(Zt))
     tol <- 1e-2  ## arbitrary tolerance...
-    if (min(dZ) < -tol) {
+    if (min(dZt) < -tol) {
        warning("For model with ", p, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
     }
   }
@@ -131,13 +133,13 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 ### and not helful at all to the user  
   Y$Y <- Reduce(`+`, Y)
 ### JC: should be a method  
-  Yhat <- lapply(Z, FUN = function(Z_) W %*% t(Z_))
+  Yhat <- lapply(Zt, FUN = function(Zt_) W %*% t(Zt_))
   names(Yhat) <- paste0("Y", 1:M)
   Yhat$Y <- Reduce(`+`, Yhat)
 
-  names(Z) <- paste0("Z", 1:M)
+  names(Zt) <- paste0("Z", 1:M)
 ### JC: same remark than for Y$Y
-  Z$Z <- Reduce(`+`, Z)
+  Zt$Z <- Reduce(`+`, Zt)
 
 ### JC: Useless ???
   names(lambda) <- paste0("lambda", 1:M)
@@ -146,6 +148,6 @@ positiveFusedLasso <- function(Y, Z, lambda, eps=1e-1,
 ### JC: why Z is called S outside of this function
 ### why not calling Y Z and W by their true name like, 
 ### signals, archetypes, weights, when outside of this function?
-  new("posFused", Y=Y, S=Z, W=W, E=Yhat, params=params)
+  new("posFused", Y=Y, S=Zt, W=W, E=Yhat, params=params)
 }
 

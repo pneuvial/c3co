@@ -56,6 +56,9 @@
 #'   \item{`Z2`}{An L-by-`p` matrix, the initial value for the L major
 #'    copy numbers of the `p` latent features}
 #' }
+#' _Warning_: Note that the `Z1` and `Z2` components are actually the
+#' transposed version of those matrices.  This notation mistake will be
+#' fixed in a future release.
 #'
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -73,20 +76,20 @@
 #' Y1 <- t(seg$Y1)
 #' Y2 <- t(seg$Y2)
 #'
-#' resH <- initializeZ(Y1, Y2, p=nbClones)  ## corresponds to flavor "hclust")
-#' resNMF <- initializeZ(Y1, Y2, p=nbClones, flavor="nmf")
+#' resH <- initializeZt(Y1, Y2, p=nbClones)  ## corresponds to flavor "hclust")
+#' resNMF <- initializeZt(Y1, Y2, p=nbClones, flavor="nmf")
 #' \dontrun{
 #' ## often fails because of singularities:
-#' resArch <- initializeZ(Y1, Y2, p=nbClones, flavor="archetypes")
+#' resArch <- initializeZt(Y1, Y2, p=nbClones, flavor="archetypes")
 #' }
-#' resSVD <- initializeZ(Y1, Y2, p=nbClones, flavor="svd")
-#' resC <- initializeZ(Y1, Y2, p=nbClones, flavor="subsampling")
+#' resSVD <- initializeZt(Y1, Y2, p=nbClones, flavor="svd")
+#' resC <- initializeZt(Y1, Y2, p=nbClones, flavor="subsampling")
 #'
-#' resNMF1 <- initializeZ(Y1, p=nbClones, flavor="nmf")
+#' resNMF1 <- initializeZt(Y1, p=nbClones, flavor="nmf")
 #'
 #' @importFrom stats dist hclust cutree
 #' @export
-initializeZ <- function(Y1, Y2=NULL, p=min(dim(Y1)),
+initializeZt <- function(Y1, Y2=NULL, p=min(dim(Y1)),
                         flavor=c("hclust", "nmf", "archetypes", "svd", "subsampling"),
                         stat=c("C1+C2", "C1", "C2"), forceNormal=FALSE, verbose=FALSE) {
     n <- nrow(Y1) # number of samples
