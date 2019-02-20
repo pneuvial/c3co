@@ -1,6 +1,6 @@
 library("c3co")
 
-context("getZ")
+context("getW")
 
 test_that("get.W recovers W in noiseless situations", {
     configs <- expand.grid(
@@ -13,20 +13,23 @@ test_that("get.W recovers W in noiseless situations", {
     
     for (cc in 1:nrow(configs)) {
         config <- configs[cc, ]
-        dime <- config[["sigDim"]]
-        if ((config[["nbSamples"]] < config[["nbClones"]]) || (config[["nbSegs"]] < config[["nbClones"]])) {
-            expect_error(getToyData(n = config[["nbSamples"]], len = config[["sigSize"]], 
-                                    nbClones = config[["nbClones"]], nbSegs = config[["nbSegs"]], 
-                                    dimension = dime, eps = 0))
+        n <- config[["nbSamples"]]
+        K <- config[["nbClones"]]
+        J <- config[["nbSegs"]]
+        M <- config[["sigDim"]]
+        if ((n < K) || (J < K)) {
+            expect_error(getToyData(n = n, len = config[["sigSize"]], 
+                                    nbClones = K, nbSegs = J, 
+                                    dimension = M, eps = 0))
         } else {
-            dat <- getToyData(n = config[["nbSamples"]], len = config[["sigSize"]], 
-                              nbClones = config[["nbClones"]], nbSegs = config[["nbSegs"]], 
-                              dimension = dime, eps = 0)
+            dat <- getToyData(n = n, len = config[["sigSize"]], 
+                              nbClones = K, nbSegs = J, 
+                              dimension = M, eps = 0)
             W <- dat$W
             Y <- dat$loc$Y
             Z <- dat$loc$Z
             
-            if (dime > 1) {
+            if (M > 1) {
                 ## stack dimensions (if any)
                 Y <- do.call(cbind, args = Y)
                 Z <- do.call(cbind, args = Z)
