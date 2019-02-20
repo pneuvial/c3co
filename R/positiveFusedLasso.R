@@ -119,9 +119,9 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
       ## Check rank deficiency
       QR.W <- qr(W)
       if (QR.W$rank < K) {
-        message("W is rank deficent. Removing a latent feature")
+        message("W is rank deficient. Removing a latent feature")
 ### JC: this means that the column of one must be the first column
-### if other rank defiency occurs, we remove the first one arbitrarily
+### if another rank deficiency occurs, we remove the first one arbitrarily
 ##  FIXME: /HB 2019-02-19
         Zt <- lapply(Zt, FUN = function(z) z[,-1])
         ## Remove matched W.old column
