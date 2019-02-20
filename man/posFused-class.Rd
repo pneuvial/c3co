@@ -27,9 +27,12 @@ estimates for the latent features, as inferred by
 \item{\code{E}}{A list containing estimates of minor copy number and major copy
 number inferred by \code{\link[=positiveFusedLasso]{positiveFusedLasso()}}.}
 
+\item{\code{params}}{A numeric vector, the input parameters.}
+
 \item{\code{failure}}{A logical value indicating whether the estimation worked or
 failed (because of the non-invertibility of \eqn{W^tW}).}
 
-\item{\code{params}}{A numeric vector, the input parameters.}
+\item{\code{converged,iterations}}{Did the model fit converge and how many
+iterations did it run?}
 }}
 

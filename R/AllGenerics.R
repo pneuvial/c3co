@@ -14,6 +14,11 @@ setMethod(
         str(object@Y)
         cat("Copy-number estimates:\n")
         str(object@E)
+	if (object@converged) {
+          cat(sprintf("Model fit: Converged after %d iterations\n", object@iterations))
+	} else {
+          cat(sprintf("Model fit: Did not converge after %d iterations\n", object@iterations))
+	}
     }
 )
 

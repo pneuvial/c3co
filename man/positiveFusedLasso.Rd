@@ -22,7 +22,7 @@ which is a notation mistake that will be fixed in a future release.}
 for the fused penalty for minor (and possibly the major) copy numbers.}
 
 \item{eps}{Criterion to stop algorithm
-(when W do not change sqrt(sum((W-W.old)^2) < eps).}
+(when W do not change sqrt(sum((W-W.old)^2) <= eps).}
 
 \item{max.iter}{Maximum number of iterations of the algorithm.}
 
@@ -70,6 +70,7 @@ Y <- list(Y1 = Y1, Y2 = Y2)
 Z0t.C1C2 <- initializeZt(Y1, Y2, K=K, flavor="nmf")
 Zt <- list(Z1 = Z0t.C1C2$Z1, Z2 = Z0t.C1C2$Z2)
 posFusedC <- positiveFusedLasso(Y, Zt, lambda=c(1e-3, 1e-3), verbose=TRUE)
+print(posFusedC)
 modelFitStats(posFusedC)
 
 }

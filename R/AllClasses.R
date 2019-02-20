@@ -17,23 +17,28 @@
 #' @slot E A list containing estimates of minor copy number and major copy 
 #'   number inferred by [positiveFusedLasso()].
 #' 
+#' @slot params A numeric vector, the input parameters.
+#' 
 #' @slot failure A logical value indicating whether the estimation worked or
 #'   failed (because of the non-invertibility of \eqn{W^tW}).
 #' 
-#' @slot params A numeric vector, the input parameters.
+#' @slot converged,iterations Did the model fit converge and how many
+#'   iterations did it run?
 #'   
 #' @exportClass posFused
 setClass(
     Class = "posFused",
     representation = representation(
-        Y  = "list",        ## original signal
-        S  = "list",        ## subclones (aka Z)
-        S0 = "list",        ## initial estimates of subclones (aka Z0)
-        W  = "matrix",      ## weights
-        mu = "numeric",     ## intercept
-        E  = "list",        ## signal reconstruction (aka Yhat)
+        Y  = "list",            ## original signal
+        S  = "list",            ## subclones (aka Z)
+        S0 = "list",            ## initial estimates of subclones (aka Z0)
+        W  = "matrix",          ## weights
+        mu = "numeric",         ## intercept
+        E  = "list",            ## signal reconstruction (aka Yhat)
         params  = "numeric",
-        failure = "logical"
+        failure = "logical",
+	converged = "logical",  ## Did the model fit converge?
+	iterations = "integer"  ## How many iterations did it run?
     )
 )
 
