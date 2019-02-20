@@ -3,7 +3,7 @@
 #' @slot Y A list containing the original minor, major and total copy number
 #'   signals.
 #'   
-#' @slot Z0 A list containing the (final) minor, major and total copy number 
+#' @slot Zt A list containing the (final) minor, major and total copy number 
 #'   estimates for the latent features, as inferred by 
 #'   [positiveFusedLasso()].
 #'   

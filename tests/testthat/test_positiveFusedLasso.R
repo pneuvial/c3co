@@ -42,9 +42,9 @@ test_that("positiveFusedLasso recovers the truth in (almost) noiseless situation
             for (lambda in lambdas) {
                 pfl <- positiveFusedLasso(Y, Zt = Zt, lambda = rep(lambda, M), 
                                           eps = 1e-1, max.iter = 50L)
-                What <- slot(pfl, "W")
-                Yhat <- slot(pfl, "E")
-                Zhat <- slot(pfl, "S")
+                What <- pfl@W
+                Yhat <- pfl@E
+                Zhat <- pfl@Zt
                 
                 expect_lt(max((What - W)^2), tol)
                 for (mm in 1:M) {
