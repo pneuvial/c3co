@@ -15,7 +15,7 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
 }
 
 
-#' Plot Percentage Variance Explained (PVE) against number of features [low-level]
+#' Plot Percentage Variance Explained (PVE) against number of features (low-level)
 #' 
 #' @param dat A data frame, typically the element `best` of the
 #'   `config` slot from [c3co()] or [fitC3co()].
