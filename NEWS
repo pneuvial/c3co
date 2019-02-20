@@ -22,6 +22,9 @@ SIGNIFICANT CHANGES:
 
 NEW FEATURES:
 
+ * Now positiveFusedLasso() produce an informative error message if attempted
+   on a non-identifiable setup, i.e. more subclones (K) than samples (n).
+   
  * loadFacetsdata() gained argument 'pattern'.
 
  * getToyData() gained arguments 'dimension' and 'returnLocus'.
