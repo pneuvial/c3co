@@ -36,6 +36,9 @@ NEW FEATURES:
  
 BUG FIXES:
 
+ * Argument 'lambda' of internal get.Zt() was neither invariant to the
+   number of samples (n) nor the number of segments (J).
+ 
  * Internal get.W() would return a weight matrix list dimensions lost.
 
  * Passing argument 'Rowv' to heatmap.3() that is of class of 'dendrogram'
