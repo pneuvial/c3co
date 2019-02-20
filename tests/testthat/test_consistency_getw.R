@@ -1,4 +1,4 @@
-context("Consistency of the optimization algorithm")
+context("Consistency of the optimization algorithm: get.W")
 
 reference_data <- readRDS(system.file("extdata", "data4ConsistencyTests.rds", package = "c3co"))
 

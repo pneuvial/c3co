@@ -1,8 +1,8 @@
-context("Consistency of the optimization algorithm")
+context("Consistency of the optimization algorithm: get.Zt")
 
 reference_data <- readRDS(system.file("extdata", "data4ConsistencyTests.rds", package = "c3co"))
 
-test_that("Consistency of get.Z", {
+test_that("Consistency of get.Zt", {
   
   n <- nrow(reference_data$W)
   K <- ncol(reference_data$W)
