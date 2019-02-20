@@ -1,16 +1,15 @@
 Package: c3co
-Type: Package
 Title: Cancer Cell Clonality using Copy-Number
 Version: 0.2.6-9001
 Authors@R: c(person("Morgane", "Pierre-Jean", role = c("aut", "cre"),
                      email = "morgane.pierrejean@genopole.cnrs.fr"),
               person("Pierre", "Neuvial", role = "aut"),
-              person("Julien", "Chiquet", role = "ctb"))
+              person("Julien", "Chiquet", role = "ctb"),
+              person("Henrik", "Bengtsson", role = "ctb"))
 Description: Inference of subclones from tumor DNA copy-number profiles of
     several patients or several temporal and/or spatial samples of a single
     patient.
 License: LGPL (>= 2.1)
-LazyData: TRUE
 Imports:
     acnr (>= 1.0.0),
     ggplot2,
@@ -38,11 +37,13 @@ Suggests:
     pctGCdata,
     mclust,
     reshape
-VignetteBuilder: knitr
+VignetteBuilder:
+    knitr
 Remotes:
     pneuvial/c3co-data,
     mskcc/facets
 URL: https://github.com/pneuvial/c3co
 BugReports: https://github.com/pneuvial/c3co/issues
+LazyData: TRUE
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
