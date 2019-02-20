@@ -17,6 +17,9 @@ SIGNIFICANT CHANGES:
  * In getToyData(), replaced argument 'nbBkps' by 'nbSegs' (= nbBkps+1)
    for notation consistency.
 
+ * mixSubclones() now requires that argument 'W' is matrix like, i.e. it
+   has two dimensions.
+
 NEW FEATURES:
 
  * loadFacetsdata() gained argument 'pattern'.

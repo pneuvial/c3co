@@ -3,8 +3,8 @@
 #' @param subClones The subclones used to create the mixture ideally by
 #' [buildSubclones()].
 #'
-#' @param W A matrix of weights in percentage \eqn{[0,100]}
-#' (without fraction of normal cells).
+#' @param W A matrix of weights in \eqn{[0,1]}
+#'          (without fraction of normal cells).
 #'
 #' @return The mixture.
 #'
@@ -23,7 +23,8 @@
 #'
 #' @export
 mixSubclones <- function(subClones, W) {
-
+    stop_if_not(length(dim(W)) == 2L)
+    
     ## Sanity check
     idxHom <- which(subClones[[1]]$genotype != 0.5)
     sc <- sapply(seq_len(length(subClones)-1), FUN = function(i) {
@@ -58,9 +59,6 @@ mixSubclones <- function(subClones, W) {
         c <- ss$cn*(1+dh)/2
     })
 
-    if (is.vector(W)) {
-      W <- matrix(W, nrow = 1L)
-    }
     df.res <- apply(W, MARGIN=1L, FUN=function(weights) {
         fracN <- 1 - sum(weights)
         if (fracN < 0) {
