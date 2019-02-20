@@ -38,6 +38,8 @@
 #' @importFrom matrixStats colCumsums
 #' @importFrom methods as
 get.Zt <- function(Y, lambda, W, WtWm1) {
+  
+  n <- nrow(Y)
   J <- ncol(Y)
   K <- ncol(W)
 
@@ -51,18 +53,14 @@ get.Zt <- function(Y, lambda, W, WtWm1) {
   W.WtWm1 <- W %*% WtWm1
   Pw <- W.WtWm1 %*% t(W)
   
-  ## FIXME: include the penalty factor in get.Zt
-  ## FIXME to be consistent with what is written,
-  ## FIXME lambda should be lambda / (2*n*J) when calling glmnet
-  
   ## Lasso regression 
   X.tilde <- kronecker(scale(X1, center = TRUE, scale = FALSE), as(W, "sparseMatrix"))
   ## Why as.numeric() below? Is it of a different type? /HB 2018-02-27
   y.tilde <- as.numeric(sweep(Y, MARGIN = 1L, STATS = rowMeans(Pw %*% Y), FUN = `-`)) 
-  z.tilde <- glmnet(X.tilde, y.tilde, lambda = lambda, intercept = FALSE, standardize = FALSE)$beta
+  z.tilde <- glmnet(X.tilde, y.tilde, lambda = lambda / (2*n*J), intercept = FALSE, standardize = FALSE)$beta
   
   ## Go back to Z 
-  Z <- matrix(z.tilde, nrow=J-1L, ncol=K, byrow=TRUE)
+  Z <- matrix(z.tilde, nrow = J-1L, ncol = K, byrow = TRUE)
   X1.Z <- rbind(0, colCumsums(Z))
   
   Zt <- sweep(X1.Z, MARGIN = 2L, STATS = colMeans(t(Y) %*% W.WtWm1 - X1.Z), FUN = `+`)

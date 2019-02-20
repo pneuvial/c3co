@@ -10,9 +10,8 @@ test_that("Consistency of get.Z", {
   
   ## solving with c3co (glmnet)
   WtWm1 <- tcrossprod(backsolve(qr.R(qr(reference_data$W)), x = diag(K)))
-  ## FIXME: include the penalty factor in get.Zt
-  Z_c3co <- t(c3co:::get.Zt(reference_data$Y, lambda = 0.01/(2*n*J), W = reference_data$W, WtWm1 = WtWm1))
+  Z_c3co <- t(c3co:::get.Zt(reference_data$Y, lambda = reference_data$lambda, W = reference_data$W, WtWm1 = WtWm1))
 
-  expect_lt(sum((reference_data$Zt_hat_ref - Z_c3co)^2), 1e-4)
+  expect_lt(sum((reference_data$Z_hat_ref - Z_c3co)^2), 1e-3)
 })
 

@@ -1,5 +1,5 @@
-require(CVXR)
-require(Matrix)
+library(CVXR)
+library(Matrix)
 
 set.seed(784859)
 
@@ -37,8 +37,7 @@ loss    <- CVXR::Minimize(sum((Y - W %*% Z_hat)^2) + lambda * sum(abs(D %*% t(Z_
 problem <- CVXR::Problem(loss)
 Z_ref   <- solve(problem)$getValue(Z_hat)
 
-data4ConsistencyTests <- list(Y = Y, Z = Z, W = W, E = E, Z_hat_ref = Z_ref, W_hat_ref = W_ref)
+data4ConsistencyTests <- list(Y = Y, Z = Z, W = W, E = E, Z_hat_ref = Z_ref, W_hat_ref = W_ref, lambda = lambda)
 
 ## saving results for testing consistency of get.W, get.Zt and eventually positiveFusedLasso
 saveRDS(data4ConsistencyTests, "data4ConsistencyTests.rds")
-
