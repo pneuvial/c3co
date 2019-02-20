@@ -49,7 +49,7 @@ BUG FIXES:
  
 SOFTWARE QUALITY:
 
- * Add first tests for get.W().
+ * Add first tests for get.W() and get.Z().
 
  * Add help pages with examples to internal get.W() and get.Z() functions.
  
