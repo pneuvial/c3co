@@ -13,11 +13,11 @@ Class for the object returned by \code{\link[=positiveFusedLasso]{positiveFusedL
 \item{\code{Y}}{A list containing the original minor, major and total copy number
 signals.}
 
-\item{\code{S}}{A list containing the (final) minor, major and total copy number
+\item{\code{Z0}}{A list containing the (final) minor, major and total copy number
 estimates for the latent features, as inferred by
 \code{\link[=positiveFusedLasso]{positiveFusedLasso()}}.}
 
-\item{\code{S0}}{idem for the initial estimates.}
+\item{\code{Z0t}}{idem for the initial estimates.}
 
 \item{\code{W}}{A matrix containing weights inferred by \code{\link[=positiveFusedLasso]{positiveFusedLasso()}}.}
 

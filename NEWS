@@ -5,6 +5,8 @@ Version: 0.2.6-9001 [2019-02-19]
 
 SIGNIFICANT CHANGES:
 
+ * Slots 'S' and 'S0' of 'posFused' were renamed to 'Zt' and 'Z0t'.
+ 
  * Renamed argument 'Z' of positiveFusedLasso() to 'Zt' to clarify that the
    input is the transpose of matrix 'Z'. Same for internal internal get.W().
    Analogously, argument 'Zhat' of modelFitStatistics() was renamed to 'Zhatt'.

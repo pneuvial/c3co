@@ -15,7 +15,7 @@ Y <- W %*% Z + E
 
 res <- positiveFusedLasso(list(Y), list(t(Z)), lambda) 
 round(res@W, 2)  ## W
-round(t(res@S$Z), 2)  ## Z
+round(t(res@Zt$Z), 2)  ## Z
 
 ## should mu be 0 here??
 round(res@mu, 2) ## 0
@@ -29,7 +29,7 @@ round(res@mu, 2) ## 0
 Z0t <- initializeZt(Y, K=nrow(Z), forceNormal=FALSE)
 res <- positiveFusedLasso(list(Y), Z0t, lambda) ## with the correct Z minus normal subclone
 round(res@W, 2) ## shit already happens
-round(t(res@S$Z), 2)  ## Z is OK (but this is a noiseless setting !!! Should be perfect)
+round(t(res@Zt$Z), 2)  ## Z is OK (but this is a noiseless setting !!! Should be perfect)
 round(res@E$Y, 2)
 round(res@mu, 2) ## not 0 where the wild things are
 modelFitStats(res)
@@ -37,7 +37,7 @@ modelFitStats(res)
 Z0Nt <- initializeZt(Y, K=nrow(Z), forceNormal=TRUE)
 resForceNorm <- positiveFusedLasso(list(Y), Z0Nt, lambda) 
 round(resForceNorm@W, 2)
-round(t(resForceNorm@S$Z), 2)  ## Z is OK (but this is a noiseless setting !!! Should be perfect)
+round(t(resForceNorm@Zt$Z), 2)  ## Z is OK (but this is a noiseless setting !!! Should be perfect)
 round(resForceNorm@E$Y, 2)
 round(resForceNorm@mu, 2) ## not 0 where the wild things are
 modelFitStats(resForceNorm)
@@ -75,7 +75,7 @@ Y <- W %*% Z[-1,] + E
 Z0t <- initializeZt(Y, K=nrow(Y), forceNormal=FALSE)
 res <- positiveFusedLasso(list(Y), Z0, lambda) 
 round(res@W, 2) ## Identity
-round(t(res@S$Z), 2)  ## Y
+round(t(res@Zt$Z), 2)  ## Y
 round(res@E$Y, 2)
 round(res@mu, 2) 
 modelFitStats(res)
@@ -84,7 +84,7 @@ modelFitStats(res)
 Z0Nt <- initializeZt(Y, K=nrow(Y), forceNormal=TRUE)
 resForceNorm <- positiveFusedLasso(list(Y), Z0Nt, lambda) 
 round(resForceNorm@W, 2) ## each profile is each feature
-round(t(resForceNorm@S$Z), 2)  ## last row is completly different of normal, this logical because there is no normal component
+round(t(resForceNorm@Zt$Z), 2)  ## last row is completly different of normal, this logical because there is no normal component
 round(resForceNorm@E$Y, 2)
 round(resForceNorm@mu, 2) ## not 0 where the wild things are
 modelFitStats(resForceNorm)
@@ -93,7 +93,7 @@ modelFitStats(resForceNorm)
 Z0Nt <- initializeZt(Y, K=nrow(Z), forceNormal=TRUE)
 resForceNorm <- positiveFusedLasso(list(Y), Z0Nt, lambda) ##  WtW is not invertible: no solution for this combinaison of lambda
 round(resForceNorm@W, 2)## Component normal set to 0 (logical there is no normal component in the model)
-round(t(resForceNorm@S$Z), 2)  ## Z is equal to Y
+round(t(resForceNorm@Zt$Z), 2)  ## Z is equal to Y
 round(resForceNorm@E$Y, 2)
 round(resForceNorm@mu, 2) ##  0 where the wild things are
 modelFitStats(resForceNorm)

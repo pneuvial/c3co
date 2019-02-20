@@ -5,7 +5,7 @@ setMethod(
     definition = function(object) {
         cat("Object of class 'posFused':\n")
         cat("Subclones:")
-        str(object@S)
+        str(object@Zt)
         cat("Weight matrix:\n")
         str(object@W)
         cat("Intercept vector:\n")
@@ -152,7 +152,7 @@ setMethod(
         bkp <- this@bkp
         lengthCHR <- sapply(bkp, FUN=function(x) length(x)-1L) ## '-1' because 'bkp' includes first and last position on chr
         idx <- c(1L, cumsum(lengthCHR) + 1L)
-        fitZ <- this@fit[[idxBest]]@S
+        fitZ <- this@fit[[idxBest]]@Zt
         nbarch <- ncol(fitZ$Z)
 
         dfList <- list()

@@ -45,7 +45,7 @@ modelFitStatistics <- function(Y, Yhat, What, Zhatt) {
 
 #' @rdname modelFitStats
 setMethod("modelFitStats", signature(object = "posFused"), function(object) {
-    stats <- modelFitStatistics(Y=object@Y$Y, Yhat=object@E$Y, What=object@W, Zhatt=object@S$Z)
+    stats <- modelFitStatistics(Y=object@Y$Y, Yhat=object@E$Y, What=object@W, Zhatt=object@Zt$Z)
     pars <- object@params
     c(pars, stats)
 })

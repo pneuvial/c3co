@@ -1,3 +1,4 @@
+
 #' c3co estimation from segment-level copy number data
 #' 
 #' Estimate c3co model parameters from segment-level copy number data
@@ -66,7 +67,6 @@
 #' mus <- sapply(res$fit, FUN=function(x) x@mu)
 #' ## the mus are all identical??
 #' 
-#' @importFrom methods slot
 #' @importFrom matrixStats colMaxs
 #' @export
 fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=FALSE) {
@@ -131,7 +131,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             
             if (verbose) mprintf(", BIC = ")
             stats <- modelFitStatistics(Y = Reduce(`+`, Y), Yhat = res@E$Y,
-	                                What = res@W, Zhatt = res@S$Z)
+                                        What = res@W, Zhatt = res@Zt$Z)
             BIC <- stats[["BIC"]]
             if (verbose) mprintf("%g", BIC)
             aConf <- c(K_ii, cfg, stats[["PVE"]], BIC, stats[["logLik"]], stats[["loss"]])
@@ -154,14 +154,14 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         ## sanity check: minor CN < major CN in the best parameter
         ## configurations (not for all configs by default)
         if (!is.null(Y2) && warn) {
-            Z <- slot(bestRes, "S")
+            Z <- bestRes@Zt
             dZ <- Z$Z2 - Z$Z1
             tol <- 1e-2  ## arbitrary tolerance...
             if (min(dZ) < -tol) {
                 warning("For model with ", K_ii, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
             }
         }
-	
+
         if (verbose) mprintf(" - Iteration #%d (%d latent features) of %d ... DONE\n", ii, K_ii, length(Ks))
     } ## for (ii ...)
     

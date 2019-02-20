@@ -207,6 +207,6 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
 ### JC: why Z is called S outside of this function
 ### why not calling Y Z and W by their true name like, 
 ### signals, archetypes, weights, when outside of this function?
-  new("posFused", Y=Y, S=Zt, W=W, E=Yhat, params=params,
+  new("posFused", Y=Y, Zt=Zt, W=W, E=Yhat, params=params,
                   converged=converged, iterations=iter)
 }

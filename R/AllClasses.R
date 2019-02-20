@@ -3,11 +3,11 @@
 #' @slot Y A list containing the original minor, major and total copy number
 #'   signals.
 #'   
-#' @slot S A list containing the (final) minor, major and total copy number 
+#' @slot Z0 A list containing the (final) minor, major and total copy number 
 #'   estimates for the latent features, as inferred by 
 #'   [positiveFusedLasso()].
 #'   
-#' @slot S0 idem for the initial estimates.
+#' @slot Z0t idem for the initial estimates.
 #'   
 #' @slot W A matrix containing weights inferred by [positiveFusedLasso()].
 #'   
@@ -29,12 +29,12 @@
 setClass(
     Class = "posFused",
     representation = representation(
-        Y  = "list",            ## original signal
-        S  = "list",            ## subclones (aka Z)
-        S0 = "list",            ## initial estimates of subclones (aka Z0)
-        W  = "matrix",          ## weights
-        mu = "numeric",         ## intercept
-        E  = "list",            ## signal reconstruction (aka Yhat)
+        Y   = "list",           ## original signal
+        Zt  = "list",           ## subclones (was S)
+        Z0t = "list",           ## initial estimates of subclones (was S0)
+        W   = "matrix",         ## weights
+        mu  = "numeric",        ## intercept
+        E   = "list",           ## signal reconstruction (aka Yhat)
         params  = "numeric",
         failure = "logical",
 	converged = "logical",  ## Did the model fit converge?

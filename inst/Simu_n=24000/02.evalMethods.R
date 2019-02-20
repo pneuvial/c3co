@@ -161,7 +161,7 @@ if (!file.exists(file.path(rocDataPath, fileROC)) || forceROC) {
       dataBest <- loadDataBest(mm,stat, framework, b)
       if (!is.null(dataBest)) {
         message(sprintf("Compute ROC and AUC for method %s, var %s and data set %s" ,mm, stat, b))
-        Z <- dataBest@res@S$Z
+        Z <- dataBest@res@Zt$Z
         W <- dataBest@res@W
         eps <- 0.1
         corrBestW <- apply(WT,2,function(zz){
@@ -172,8 +172,8 @@ if (!file.exists(file.path(rocDataPath, fileROC)) || forceROC) {
         ind <- apply(corrBestW, 2, which.max)
       
         if (stat == "C1C2") {
-          Z1 <- dataBest@res@S$Z1
-          Z2 <- dataBest@res@S$Z2
+          Z1 <- dataBest@res@Zt$Z1
+          Z2 <- dataBest@res@Zt$Z2
           bkp <- dataBest@bkp[[1]]
           start <- c(1,ceiling(bkp))
           end <- c(floor(bkp), len)

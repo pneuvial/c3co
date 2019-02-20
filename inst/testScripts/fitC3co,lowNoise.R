@@ -28,9 +28,9 @@ plot(res$config$best$logLik)
 diff(res$config$best$logLik)
 pen <- res$config$best$logLik - res$config$best$BIC
 plot(pen)
-res$fit[[3]]@S$Z %>% round(2) %>% t
+res$fit[[3]]@Zt$Z %>% round(2) %>% t
 par(mfrow=c(2,1), mar=c(2,5,2,5))
-matplot(res$fit[[3]]@S$Z %>% round(2), type="s", ylab="Z")
+matplot(res$fit[[3]]@Zt$Z %>% round(2), type="s", ylab="Z")
 matplot(t(Z), type="s", ylab="Z true")
 par(mfrow=c(2,1))
 matplot(res$fit[[2]]@E$Y %>% t, type="s")
@@ -54,7 +54,7 @@ res$config$best
 
 pvePlot2(res$config$best)
 par(mfrow=c(2,1), mar=c(2,5,2,5))
-matplot(res$fit[[2]]@S$Z %>% round(2), type="s", ylab="Z")
+matplot(res$fit[[2]]@Zt$Z %>% round(2), type="s", ylab="Z")
 matplot(t(Z), type="s", ylab="Z true")
 par(mfrow=c(2,1))
 matplot(res$fit[[2]]@E$Y %>% t, type="s")
@@ -77,7 +77,7 @@ res <- fitC3co(Y, parameters.grid=params)
 res$config$best
 pvePlot2(res$config$best)
 par(mfrow=c(2,1), mar=c(2,5,2,5))
-matplot(res$fit[[2]]@S$Z %>% round(2), type="s", ylab="Z")
+matplot(res$fit[[2]]@Zt$Z %>% round(2), type="s", ylab="Z")
 matplot(t(Z), type="s", ylab="Z true")
 par(mfrow=c(2,1))
 matplot(res$fit[[2]]@E$Y %>% t, type="s")
@@ -103,14 +103,14 @@ lambda <- 1e-4
 params <- list(lambda=lambda, nb.arch=2:6)
 res <- fitC3co(Y, parameters.grid=params )
 pvePlot2(res$config$best)
-res$fit[[3]]@S$Z1 %>% t %>% round(1)
+res$fit[[3]]@Zt$Z1 %>% t %>% round(1)
 res$fit[[3]]@W %>% round(2)
 W %>% round(2) %>% heatmap.3(cellnote=W)
 res$fit[[3]]@W %>% round(2) %>% heatmap.3(cellnote=res$fit[[3]]@W  %>% round(2) )
 
-res$fit[[3]]@S$Z %>% round(2) %>% t
+res$fit[[3]]@Zt$Z %>% round(2) %>% t
 par(mfrow=c(2,1), mar=c(2,5,2,5))
-matplot(res$fit[[3]]@S$Z %>% round(2), type="s", ylab="Z")
+matplot(res$fit[[3]]@Zt$Z %>% round(2), type="s", ylab="Z")
 matplot(t(Z), type="s", ylab="Z true")
 par(mfrow=c(2,1))
 matplot(res$fit[[3]]@E$Y %>% t, type="s")

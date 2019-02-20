@@ -303,7 +303,7 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
       dataBest <- loadDataBest(mm,stat, b, pathRes)
       if (!is.null(dataBest)) {
         message(sprintf("Compute ROC and AUC for method %s, var %s and data set %s" ,mm, stat, b))
-        Z <- dataBest@S$Z
+        Z <- dataBest@Zt$Z
         W <- dataBest@W
         eps <- 0.1
         corrBestW <- apply(WT,2,function(zz){
@@ -314,8 +314,8 @@ computeAUC <- function(nbSimu, meth, stats, tol, subClones, weightsMat, regionsB
         ind <- apply(corrBestW, 2, which.max)
         
         if (stat == "C1C2") {
-          Z1 <- dataBest@S$Z1
-          Z2 <- dataBest@S$Z2
+          Z1 <- dataBest@Zt$Z1
+          Z2 <- dataBest@Zt$Z2
           filename <- sprintf("results_%s_%s.rds", mm, stat)
           print(filename)
           file <- file.path(pathRes,filename)
