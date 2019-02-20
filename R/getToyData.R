@@ -73,7 +73,7 @@ getToyData <- function(n, len, nbClones, nbSegs, eps,
     stop_if_not(dimension %in% 1:2)
     stop_if_not(weightSparsity >= 0, weightSparsity <= 1)
     stop_if_not(n >= nbClones)
-    stop_if_not(nbSegs >= nbClones)
+    stop_if_not(nbSegs >= nbClones)  # otherwise rank of Z < nbClones!
     
     ## breakpoint positions
     bkp <- sample(len, size = nbSegs - 1, replace = FALSE)
@@ -104,8 +104,8 @@ getToyData <- function(n, len, nbClones, nbSegs, eps,
     ZsegList <- list()
     ZlocList <- list()
     for (dd in 1:dimension) {
-        ## subclones (segment-level), making sure Z is full rank
-        rankDef <- TRUE
+        ## subclones (segment-level)
+        rankDef <- TRUE  ## making sure Z is full row rank
         while(rankDef) {
             z <- rnorm(nbSegs*nbClones)
             Zs <- matrix(z, nrow = nbClones, ncol = nbSegs)
