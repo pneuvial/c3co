@@ -34,15 +34,12 @@ get.W <- function(Zt, Y) {
   ## Sanity checks
   stop_if_not(ncol(Y) == nrow(Zt))
 
+  E <- matrix(rep(1, times = K), nrow = 1L, ncol = K)
+  H <- double(K)
+  G <- diag(K)
+
   W <- t(apply(Y, MARGIN = 1L, FUN = function(y) {
-    lsei(
-      A = Zt,
-      B = y,
-      E = matrix(rep(1, times = K), nrow = 1L),
-      F = 1,
-      H = rep(0, times = K),
-      G = diag(K),
-      type = 2L)$X
+    lsei(A = Zt, B = y, E = E, F = 1, H = H, G = G, type = 2L)$X
   }))
 
   ## Sanity checks
