@@ -27,7 +27,7 @@
 #' W[1,1] <- W[2,2] <- W[3,3] <- W[4,4] <- 1
 #' WtWm1 <- tcrossprod(backsolve(qr.R(qr(W)), x=diag(K)))
 #'
-#' E <- matrix(rnorm(n*J, sd = 0), nrow = n, ncol = J)
+#' E <- matrix(rnorm(n*J, sd = 0.1), nrow = n, ncol = J)
 #'
 #' Y <- W %*% Z + E
 #' 
