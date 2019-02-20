@@ -132,7 +132,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
         ## use QR decomposition to save time inverting WtW
         WtWm1 <- tcrossprod(backsolve(qr.R(QR.W), x = diag(K)))
       }
-    }    
+    }
 
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
