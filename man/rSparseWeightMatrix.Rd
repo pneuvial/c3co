@@ -17,7 +17,7 @@ rSparseWeightMatrix(nb.samp, nb.arch, sparse.coeff = max(nb.samp,
 rows (the proportion of non-zero entries among all matrix entries).}
 }
 \value{
-A matrix of weights (the sum of rows is equal to 1).
+A matrix of weights (each row sums to one).
 }
 \description{
 Generate weight matrix

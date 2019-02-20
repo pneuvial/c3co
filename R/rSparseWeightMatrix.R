@@ -8,7 +8,7 @@
 #' @param sparse.coeff A numeric in \eqn{[0,1]} that control the sparsity by
 #' rows (the proportion of non-zero entries among all matrix entries).
 #'
-#' @return A matrix of weights (the sum of rows is equal to 1).
+#' @return A matrix of weights (each row sums to one).
 #' 
 #' @examples
 #' W <- rSparseWeightMatrix(nb.samp=10L, nb.arch=7L, sparse.coeff=0.5)
@@ -41,7 +41,7 @@ rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff = max(nb.samp, nb
 #' Non-zero entries is define by `nnz = sparse.coeff * nrow * ncol` and
 #' need to be larger than `nrow` and `ncol`.
 #'
-#' @return A matrix of weights (the sum of rows is equal to 1).
+#' @return A matrix of weights (each row sums to one).
 #' 
 #' @examples
 #' M <- rSpMatrix(nrow=10L, ncol=7L, sparse.coeff=0.5)

@@ -43,8 +43,8 @@ should be returned. Defaults to \code{TRUE}.}
 \item{locus}{only returned if \code{returnLocus} is \code{TRUE}: A list of two elements:
 \describe{
 \item{Y}{An \code{n}-by-\code{len} matrix of observed CN signals, if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
-\item{Z}{An \code{nbClones}-by-\code{len} matrix of latent features
-(subclones)}, if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+\item{Z}{An \code{nbClones}-by-\code{len} matrix of latent features (subclones), if \code{dimension==1}, or a list of two such matrices if \code{dimension==2}}
+}
 }
 }
 \description{

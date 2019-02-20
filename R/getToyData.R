@@ -36,8 +36,8 @@
 #'  \item{locus}{only returned if `returnLocus` is `TRUE`: A list of two elements:
 #'   \describe{
 #'     \item{Y}{An `n`-by-`len` matrix of observed CN signals, if `dimension==1`, or a list of two such matrices if `dimension==2`}
-#'     \item{Z}{An `nbClones`-by-`len` matrix of latent features
-#'              (subclones)}, if `dimension==1`, or a list of two such matrices if `dimension==2`}
+#'     \item{Z}{An `nbClones`-by-`len` matrix of latent features (subclones), if `dimension==1`, or a list of two such matrices if `dimension==2`}
+#'   }
 #'  }
 #'   
 #' @details For simplicity, the breakpoints positions are drawn uniformly from 

@@ -17,7 +17,7 @@ Non-zero entries is define by \code{nnz = sparse.coeff * nrow * ncol} and
 need to be larger than \code{nrow} and \code{ncol}.}
 }
 \value{
-A matrix of weights (the sum of rows is equal to 1).
+A matrix of weights (each row sums to one).
 }
 \description{
 Generate sparse matrix with at least one non-zero element by rows and by columns
