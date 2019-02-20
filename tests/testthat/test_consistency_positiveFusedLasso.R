@@ -15,7 +15,10 @@ test_that("Consistency of positiveFusedLasso", {
   )
   What  <- slot(pfl, "W")
   expect_lt(sum((What - reference_data$W_hat_ref)^2), tol)
-
+  
+  ## We also expect What to be equal to a direct call to get.W
+  expect_lt(sum((What - c3co:::get.W(t(reference_data$Z), reference_data$Y))^2), tol)
+  
   ## Now we can call get.Zt with the current estimation What and check 
   ## that it is matching the value returned by postitiveFusedLasso
   K      <- ncol(reference_data$Z)
