@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotFunctions.R
 \name{pvePlot2}
 \alias{pvePlot2}
-\title{Function to plot PVE (low-level)}
+\title{Plot Percentage Variance Explained (PVE) against number of features \link{low-level}}
 \usage{
 pvePlot2(dat, bestNbLatent = NULL, ylim = c(0, 1))
 }
@@ -15,8 +15,8 @@ pvePlot2(dat, bestNbLatent = NULL, ylim = c(0, 1))
 \item{ylim}{A vector that define min and max of y-axis.}
 }
 \value{
-PVE curve.
+A \link[ggplot2:ggplot]{ggplot2::ggplot} object.
 }
 \description{
-Function to plot PVE (low-level)
+Plot Percentage Variance Explained (PVE) against number of features \link{low-level}
 }

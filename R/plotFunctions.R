@@ -1,4 +1,4 @@
-#' Function to plot PVE
+#' Plot Percentage Variance Explained (PVE) against number of features 
 #'
 #' @param res Result from [c3co()].
 #'
@@ -6,7 +6,7 @@
 #'
 #' @param ylim A vector that define min and max of y-axis.
 #'
-#' @return PVE curve.
+#' @return A [ggplot2::ggplot] object.
 #'
 #' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab ylim
 #' @export
@@ -14,7 +14,8 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
     pvePlot2(res@config$best, bestNbLatent=bestNbLatent, ylim=ylim)
 }
 
-#' Function to plot PVE (low-level)
+
+#' Plot Percentage Variance Explained (PVE) against number of features [low-level]
 #' 
 #' @param dat A data frame, typically the element `best` of the
 #'   `config` slot from [c3co()] or [fitC3co()].
@@ -23,10 +24,10 @@ pvePlot <- function(res, bestNbLatent=NULL, ylim=c(0, 1)) {
 #'   
 #' @param ylim A vector that define min and max of y-axis.
 #'   
-#' @return PVE curve.
+#' @return A [ggplot2::ggplot] object.
 #'   
-#' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline theme_bw xlab
-#'   ylim
+#' @importFrom ggplot2 aes_ ggplot geom_line geom_point geom_vline
+#                      theme_bw xlab ylim
 #' @export
 pvePlot2 <- function(dat, bestNbLatent=NULL, ylim=c(0, 1)) {
     gg <- ggplot(dat, aes_(x=~nb.feat, y=~PVE))
@@ -40,7 +41,6 @@ pvePlot2 <- function(dat, bestNbLatent=NULL, ylim=c(0, 1)) {
 }
 
 
-
 #' Plot latent profiles along chromosomes
 #' 
 #' @param df data.frame Object output from [createZdf()].
@@ -48,7 +48,7 @@ pvePlot2 <- function(dat, bestNbLatent=NULL, ylim=c(0, 1)) {
 #' @param scalePosToMb A logical, should 'x' positions be scaled to
 #'   megabases? Defaults to `FALSE`.
 #'   
-#' @return plot Latent profiles along chromosomes.
+#' @return A [ggplot2::ggplot] object.
 #'   
 #' @importFrom ggplot2 ggplot geom_step geom_segment aes facet_grid labeller
 #'   label_both theme_bw scale_x_continuous labs scale_y_continuous

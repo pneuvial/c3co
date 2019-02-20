@@ -7,7 +7,7 @@
 #' @param What Inferred n-by-K weight matrix.
 #' 
 #' @param Zhatt The transposed version of the inferred n-by-J subclones
-#' matrix Zhat.
+#' matrix 'Zhat'.
 #' 
 #' @return The main statistics of the inferred model.
 #'

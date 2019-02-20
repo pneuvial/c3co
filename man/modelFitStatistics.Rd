@@ -14,7 +14,7 @@ modelFitStatistics(Y, Yhat, What, Zhatt)
 \item{What}{Inferred n-by-K weight matrix.}
 
 \item{Zhatt}{The transposed version of the inferred n-by-J subclones
-matrix Zhat.}
+matrix 'Zhat'.}
 }
 \value{
 The main statistics of the inferred model.

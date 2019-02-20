@@ -13,7 +13,7 @@ Zplot(df, scalePosToMb = FALSE)
 megabases? Defaults to \code{FALSE}.}
 }
 \value{
-plot Latent profiles along chromosomes.
+A \link[ggplot2:ggplot]{ggplot2::ggplot} object.
 }
 \description{
 Plot latent profiles along chromosomes

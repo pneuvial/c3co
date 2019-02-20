@@ -235,7 +235,7 @@ NEW FEATURES:
 
 SOFTWARE QUALITY:
 
- * Added Travis CI and appveyor support.
+ * Added Travis CI and AppVeyor CI support.
 
 
 Version: 0.1.11 [2017-02-01]
