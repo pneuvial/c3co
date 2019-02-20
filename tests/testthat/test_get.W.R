@@ -8,7 +8,7 @@ test_that("get.W recovers W in noiseless situations", {
         sigDim = 1:2,
         nbClones = 1:3,
         nbSegs = c(1, 2, 8),
-        nbSamples = c(2, 4, 6)  ## cannot test with nbSamples = 1 if nbClones cannot be set to 1!
+        nbSamples = c(1, 2, 6)
     )
     
     for (cc in 1:nrow(configs)) {

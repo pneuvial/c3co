@@ -74,9 +74,6 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
   ## Argument 'Zt':
   stop_if_not(is.list(Zt), length(Zt) == M, nrow(Zt[[1]]) == J)
   K <- ncol(Zt[[1]])  ## number of subclones/archetypes/latent features
-  if (K > n) {
-    warning("Under-identified problem: more latent features than samples")
-  }
 
   if (M >= 2L) {
     for (mm in 2:M) {
@@ -96,6 +93,11 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
   stop_if_not(is.numeric(max.iter), length(max.iter) == 1L,
               !is.na(max.iter), max.iter > 0L)
 
+
+  ## Is the problem identifiable?
+  if (K > n) {
+    stop(sprintf("Under-identified problem: more latent features (K = %d) than samples (n = %d)", K, n))
+  }
 
   Yc <- do.call(cbind, args = Y) # stacked signals
 
@@ -117,9 +119,9 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
       ## Check rank deficiency
       QR.W <- qr(W)
       if (QR.W$rank < K) {
-        message("W is rank deficent. Removing a latent feature")
+        message("W is rank deficient. Removing a latent feature")
 ### JC: this means that the column of one must be the first column
-### if other rank defiency occurs, we remove the first one arbitrarily
+### if another rank deficiency occurs, we remove the first one arbitrarily
 ##  FIXME: /HB 2019-02-19
         Zt <- lapply(Zt, FUN = function(z) z[,-1])
         ## Remove matched W.old column
