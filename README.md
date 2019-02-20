@@ -6,8 +6,8 @@
 
 ## Installation
 
-```
-devtools::install_github("pneuvial/c3co", build_vignettes = TRUE)
+```r
+remotes::install_github("pneuvial/c3co", build_vignettes = TRUE)
 ```
 
 ## Model 
