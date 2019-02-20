@@ -3,7 +3,6 @@ library("c3co")
 context("getZ")
 
 test_that("get.W recovers W for a single normal clone", {
-    skip("'apply(X, margin, FUN)' drops dimensions when FUN returns a scalar; breaks sanify check in 'get.W'")
     dat <- getToyData(n = 10, len = 20, nbClones = 1, 
                       nbSegs = 2, dimension = 1, eps = 0)
     W <- dat$W

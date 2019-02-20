@@ -30,7 +30,8 @@
 #' @importFrom limSolve lsei
 get.W <- function(Zt, Y) {
   K <- ncol(Zt)
-
+  n <- nrow(Y)
+  
   ## Sanity checks
   stop_if_not(ncol(Y) == nrow(Zt))
 
@@ -38,12 +39,19 @@ get.W <- function(Zt, Y) {
   H <- double(K)
   G <- diag(K)
 
-  W <- t(apply(Y, MARGIN = 1L, FUN = function(y) {
+  W <- apply(Y, MARGIN = 1L, FUN = function(y) {
     lsei(A = Zt, B = y, E = E, F = 1, H = H, G = G, type = 2L)$X
-  }))
+  })
+  
+  ## WORKAROUND: https://github.com/pneuvial/c3co/issues/52
+  if (K == 1L) {
+    dim(W) <- c(n, K)
+  } else {
+    W <- t(W)
+  }
 
   ## Sanity checks
-  stop_if_not(nrow(W) == nrow(Y), ncol(W) == K)
+  stop_if_not(nrow(W) == n, ncol(W) == K)
 
   W
 }
