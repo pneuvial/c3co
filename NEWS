@@ -1,7 +1,7 @@
 Package: c3co
 =============
 
-Version: 0.2.6-9001 [2019-02-18]
+Version: 0.2.6-9001 [2019-02-19]
 
 SIGNIFICANT CHANGES:
 
@@ -17,6 +17,9 @@ SIGNIFICANT CHANGES:
  * In getToyData(), replaced argument 'nbBkps' by 'nbSegs' (= nbBkps+1)
    for notation consistency.
 
+ * mixSubclones() now requires that argument 'W' is matrix like, i.e. it
+   has two dimensions.
+
 NEW FEATURES:
 
  * loadFacetsdata() gained argument 'pattern'.
@@ -24,6 +27,8 @@ NEW FEATURES:
  * getToyData() gained arguments 'dimension' and 'returnLocus'.
  
 BUG FIXES:
+
+ * Internal get.W() would return a weight matrix list dimensions lost.
 
  * Passing argument 'Rowv' to heatmap.3() that is of class of 'dendrogram'
    would produce error 'length(x) = 2 > 1' in coercion to 'logical(1)' in

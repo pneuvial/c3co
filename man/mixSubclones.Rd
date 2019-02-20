@@ -10,7 +10,7 @@ mixSubclones(subClones, W)
 \item{subClones}{The subclones used to create the mixture ideally by
 \code{\link[=buildSubclones]{buildSubclones()}}.}
 
-\item{W}{A matrix of weights in percentage \eqn{[0,100]}
+\item{W}{A matrix of weights in \eqn{[0,1]}
 (without fraction of normal cells).}
 }
 \value{
