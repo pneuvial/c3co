@@ -14,7 +14,7 @@
 #' for the fused penalty for minor (and possibly the major) copy numbers.
 #'
 #' @param eps Criterion to stop algorithm
-#' (when W do not change sqrt(sum((W-W.old)^2) < eps).
+#' (when W do not change sqrt(sum((W-W.old)^2) <= eps).
 #'
 #' @param max.iter Maximum number of iterations of the algorithm.
 #'
@@ -58,6 +58,7 @@
 #' Z0t.C1C2 <- initializeZt(Y1, Y2, K=K, flavor="nmf")
 #' Zt <- list(Z1 = Z0t.C1C2$Z1, Z2 = Z0t.C1C2$Z2)
 #' posFusedC <- positiveFusedLasso(Y, Zt, lambda=c(1e-3, 1e-3), verbose=TRUE)
+#' print(posFusedC)
 #' modelFitStats(posFusedC)
 #' 
 #' @importFrom methods new
@@ -103,10 +104,10 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
 
   ## __________________________________________________
   ## main loop for alternate optimization
-  iter <- 0L; cond <- FALSE; delta <- Inf
-  while (!cond) {
-    iter <- iter + 1L
-    
+  iter <- 1L
+  converged <- FALSE
+  delta <- Inf
+  while (!converged && iter <= max.iter) {
     ## __________________________________________________
     ## STEP 1: optimize w.r.t. W (fixed Z)
     ## if (rank of W) < ncol(Zt), there are too many archetypes...
@@ -139,11 +140,17 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
-    if (iter > 1L) { delta <- sqrt(sum((W - W.old)^2)) }
-    cond <- (iter > max.iter || delta < eps)
+    if (iter > 1L) {
+      delta <- sqrt(sum((W - W.old)^2))
+      converged <- (delta <= eps)
+    }
     if (verbose) message("delta:", round(delta, digits=4L))
+
+    ## Next iteration
     W.old <- W
-  }
+    iter <- iter + 1L
+  } ## while (...)
+  
   if (verbose) message("Stopped after ", iter, " iterations")
   if (verbose) message("delta:", round(delta, digits=4L))
 
@@ -200,6 +207,6 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
 ### JC: why Z is called S outside of this function
 ### why not calling Y Z and W by their true name like, 
 ### signals, archetypes, weights, when outside of this function?
-  new("posFused", Y=Y, S=Zt, W=W, E=Yhat, params=params)
+  new("posFused", Y=Y, S=Zt, W=W, E=Yhat, params=params,
+                  converged=converged, iterations=iter)
 }
-
