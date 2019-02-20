@@ -1,6 +1,6 @@
 library("c3co")
 
-context("getW")
+context("get.W")
 
 test_that("get.W recovers W in noiseless situations", {
     configs <- expand.grid(
