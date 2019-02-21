@@ -5,7 +5,11 @@ Version: 0.3.0-9000 [2019-02-20]
 
  * ...
  
+SIGNIFICANT CHANGES:
 
+ * changing the default algorithm from type 2 to type 1 in calls to lsei  
+ * ...
+ 
 Version: 0.3.0 [2019-02-20]
 
 SIGNIFICANT CHANGES:
