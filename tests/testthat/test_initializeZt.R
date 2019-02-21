@@ -29,10 +29,7 @@ datSubClone <- buildSubclones(len = len,
 stopifnot(is.list(datSubClone), length(datSubClone) == K)
 
 W <- rSparseWeightMatrix(nb.samp = n, nb.arch = K)
-stopifnot(identical(dim(W), c(n, K)))
-
 dat <- mixSubclones(subClones = datSubClone, W = W)
-stopifnot(is.list(dat), length(dat) == nrow(W))
 
 seg <- segmentData(dat)
 Y1 <- t(seg$Y1)
@@ -45,6 +42,9 @@ test_that("Outputs of initializeZt have the expected dimensions", {
     flavors <- c("hclust", "nmf", "svd", "subsampling")
     
     for (ff in flavors) {
+        if (ff == "nmf") {
+            next() # 'nmf' takes too much time here
+        }
         test_that("output of initializeZt() has correct dimensions and contents", {
             Zt <- initializeZt(Y1, Y2, K = K, flavor = ff)
             expect_equal(nrow(Zt$Z1), J)
@@ -55,7 +55,6 @@ test_that("Outputs of initializeZt have the expected dimensions", {
             
             Zt <- initializeZt(Y1, K=K, flavor = ff)
             expect_null(Zt$Z2)
-            ##        expect_equal(Zt$Z1, Zt$Z)  ## There is no 'Z' /HB 2018-02-27
             
             expect_equal(nrow(Zt$Z1), J)
             expect_equal(ncol(Zt$Z1), K)
