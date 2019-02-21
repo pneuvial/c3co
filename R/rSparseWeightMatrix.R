@@ -14,6 +14,7 @@
 #' W <- rSparseWeightMatrix(nb.samp=10L, nb.arch=7L, sparse.coeff=0.5)
 #'
 #' @importFrom Matrix rsparsematrix 
+#' @importFrom Matrix rowSums
 #' @importFrom Matrix Matrix 
 #' @importFrom stats runif
 #' @export
@@ -25,10 +26,10 @@ rSparseWeightMatrix <- function(nb.samp, nb.arch, sparse.coeff = max(nb.samp, nb
   x.contam <- runif(nb.samp, min = 0.01, max = 1)
   m <- cbind(m.tum, x.contam)  ## A sparse matrix
   ## Compute the sum of rows (tum+contam)
-  tot <- rowSums(as.matrix(m))
+  tot <- Matrix::rowSums(m)
   ## Round and divide the matrix by the total remove contamination column
-  m.tum.res <- round((m/tot)[,-(nb.arch+1)], digits = 2L)
-  Matrix(m.tum.res, sparse=TRUE)
+  m.tum.res <- round((m/tot)[,-(nb.arch + 1)], digits = 2L)
+  Matrix(m.tum.res, sparse = TRUE)
 }
 
 #' Generate sparse matrix with at least one non-zero element by rows and by columns
@@ -55,9 +56,9 @@ rSpMatrix <- function(nrow, ncol, sparse.coeff) {
   nnz <- as.integer(nnz)
   stop_if_not(nnz >= 0, nrow >= 0, ncol >= 0, nnz >= max(nrow, ncol))
   spMatrix(nrow, ncol,
-           i = c(sample(nrow, size = nrow, replace = FALSE),
-                 sample(nrow, size = nnz-nrow, replace = TRUE)),
-           j = c(sample(ncol, size = nnz-ncol, replace = TRUE),
-                 sample(ncol, size = ncol, replace = FALSE)),
+           i = c(sample(nrow, size = nrow      , replace = FALSE ),
+                 sample(nrow, size = nnz - nrow, replace = TRUE )),
+           j = c(sample(ncol, size = nnz - ncol, replace = TRUE  ),
+                 sample(ncol, size = ncol      , replace = FALSE)),
            x = rand.x(nnz))
 }
