@@ -1,13 +1,13 @@
 #' Print statistics of a c3co model
 #' 
-#' @param Y Original n-by-J matrix of data.
+#' @param Y Original n-by-J matrix of data for n samples and J segments.
 #' 
-#' @param Yhat Estimated n-by-J matrix.
+#' @param Yhat Estimated n-by-J matrix for n samples and J segments.
 #' 
-#' @param What Inferred n-by-K weight matrix.
+#' @param What Inferred n-by-K weight matrix for n samples and K subclones.
 #' 
 #' @param Zhatt The transposed version of the inferred n-by-J subclones
-#' matrix 'Zhat'.
+#' matrix 'Zhat' for n samples and J segments.
 #' 
 #' @return A named numeric vector with the main statistics of the inferred model:
 #'  * `BIC`   : Bayesian Information Criterion
@@ -23,9 +23,9 @@
 #' @importFrom matrixStats colDiffs
 modelFitStatistics <- function(Y, Yhat, What, Zhatt) {
     stop_if_not(is.matrix(Y), is.matrix(Yhat), is.matrix(What), is.matrix(Zhatt))
-    n <- nrow(Y)
-    J <- ncol(Y)
-    K <- ncol(What)
+    n <- nrow(Y)     ## Number of samples
+    J <- ncol(Y)     ## Number of segments
+    K <- ncol(What)  ## Number of subclones
     stop_if_not(nrow(Yhat) == n, ncol(Yhat) == J)
     stop_if_not(nrow(Zhatt) == J, ncol(Zhatt) == K)
     stop_if_not(nrow(What) == n, ncol(What) == K)

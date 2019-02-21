@@ -7,14 +7,14 @@
 modelFitStatistics(Y, Yhat, What, Zhatt)
 }
 \arguments{
-\item{Y}{Original n-by-J matrix of data.}
+\item{Y}{Original n-by-J matrix of data for n samples and J segments.}
 
-\item{Yhat}{Estimated n-by-J matrix.}
+\item{Yhat}{Estimated n-by-J matrix for n samples and J segments.}
 
-\item{What}{Inferred n-by-K weight matrix.}
+\item{What}{Inferred n-by-K weight matrix for n samples and K subclones.}
 
 \item{Zhatt}{The transposed version of the inferred n-by-J subclones
-matrix 'Zhat'.}
+matrix 'Zhat' for n samples and J segments.}
 }
 \value{
 A named numeric vector with the main statistics of the inferred model:
