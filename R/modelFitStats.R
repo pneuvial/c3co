@@ -23,10 +23,20 @@ modelFitStatistics <- function(Y, Yhat, What, Zhatt) {
 
     nJ <- n*J
     
-    ## PVE
-    totSS <- sum(sweep(Y, MARGIN = 1L, STATS = rowMeans(Y), FUN = `-`)^2)
+    ## Percentage of Variation Explained (PVE)
+    ## Comment: We have observed that PVE is sometimes negative [#19].
+    ##          This can only happen if below resSS > totSS.  So, when
+    ##          does that occur? /HB 2019-02-21
+    totSS <- sum((Y - rowMeans(Y))^2)
     resSS <- sum((Y - Yhat)^2)
     PVE <- 1 - resSS / totSS
+
+    ## FIXME: Clarified the calculation of the total sum of squares to
+    ##        rule out a thinko in the usage of sweep().  Keeping both
+    ##        for now and using run-time checks assert they are the same.
+    ##        /HB 2019-02-21
+    totSS_old <- sum(sweep(Y, MARGIN = 1L, STATS = rowMeans(Y), FUN = `-`)^2)
+    stop_if_not(totSS == totSS_old)
 
     loss <- resSS/nJ
     
