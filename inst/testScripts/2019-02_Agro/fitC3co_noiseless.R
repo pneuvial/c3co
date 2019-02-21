@@ -1,15 +1,13 @@
+set.seed(1288769)    
 J <- 5 # segments
 
 # subclones
-z0 <- rep(1L, J)
+z0 <- rep(1L, K)
 z1 <- z0
 z1[2] <- 0
 z2 <- z0
 z2[4] <- 0
 Z <- rbind(z0, z1, z2)
-
-K <- nrow(Z)
-
 nbBkps <- ncol(Z)-1
 
 # weights

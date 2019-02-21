@@ -100,40 +100,37 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
     stop(sprintf("Under-identified problem: more latent features (K = %d) than samples (n = %d)", K, n))
   }
 
-  Yc <- do.call(cbind, args = Y) # stacked signals
-
   ## __________________________________________________
   ## main loop for alternate optimization
   iter <- 1L
-  converged <- FALSE
+  converged      <- FALSE
+  rank_deficient <- FALSE
+  lsei_failure   <- FALSE
   delta <- Inf
-  while (!converged && iter <= max.iter) {
+  while (!converged && iter <= max.iter && !rank_deficient && !lsei_failure) {
     ## __________________________________________________
     ## STEP 1: optimize w.r.t. W (fixed Z)
-    ## if (rank of W) < ncol(Zt), there are too many archetypes...
-    WtWm1 <- NULL
-    while (is.null(WtWm1)) {
-      
-      ## solve in W (here individuals - i.e. rows of Yc - are independent)
-      W <- get.W(Zt = do.call(rbind, args = Zt), Y = Yc)
+    
+    ## solve in W (here individuals - i.e. rows of Yc - are independent)
+    W <- get.W(Zt = do.call(rbind, args = Zt), Y = do.call(cbind, args = Y))
+    if (anyNA(W)) {
+      message("No solution found in constrained least-squared problem.")
+      lsei_failure <- TRUE
+      break
+    } 
 
-      ## Check rank deficiency
-      QR.W <- qr(W)
-      if (QR.W$rank < K) {
-        message("W is rank deficient. Removing a latent feature")
-### JC: this means that the column of one must be the first column
-### if another rank deficiency occurs, we remove the first one arbitrarily
-##  FIXME: /HB 2019-02-19
-        Zt <- lapply(Zt, FUN = function(z) z[,-1])
-        ## Remove matched W.old column
-        W.old <- W[,-1] 
-        K <- K-1L
-      } else {
-        ## use QR decomposition to save time inverting WtW
-        WtWm1 <- tcrossprod(backsolve(qr.R(QR.W), x = diag(K)))
-      }
+    # Check rank deficiency
+    QR.W <- qr(W)
+    if (QR.W$rank < K) {
+      message("W is rank deficient: there are too many archetypes")
+      rank_deficient <- TRUE
+      W <- matrix(NA, n, K)
+      break
+    } else {
+      ## use QR decomposition to save time inverting WtW
+      WtWm1 <- tcrossprod(backsolve(qr.R(QR.W), x = diag(K)))
     }
-
+    
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
     Zt <- mapply(FUN = get.Zt, Y = Y, lambda = lambda, MoreArgs = list(W = W, WtWm1 = WtWm1), SIMPLIFY = FALSE)
@@ -154,6 +151,10 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
   if (verbose) {
     if (converged) {
       message("Converged after ", iter, " iterations")
+    } else if (rank_deficient) {
+      message("Stopped after ", iter, " because of rank deficiency")
+    } else if (lsei_failure) {
+      message("Stopped after ", iter, " because of lsei fails")
     } else {
       message("Stopped after ", iter, " iterations without reaching convergence")
     }
@@ -174,7 +175,6 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
 ### JC: having a list whose first element has the same name is rather ugly
 ### and not helful at all to the user  
   Y$Y <- Reduce(`+`, Y)
-### JC: should be a method  
   Yhat <- lapply(Zt, FUN = function(Zt_) W %*% t(Zt_))
   names(Yhat) <- paste0("Y", 1:M)
   Yhat$Y <- Reduce(`+`, Yhat)
@@ -183,9 +183,8 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
 ### JC: same remark than for Y$Y
   Zt$Z <- Reduce(`+`, Zt)
 
-### JC: Useless ???
   names(lambda) <- paste0("lambda", 1:M)
-  params <- c(nb.feat=K, lambda)
+  params <- c(nb.feat = K, lambda)
 
   ## Sanity checks
   # FIXME: M + 1L because also Y = Y1 + Y2
@@ -210,9 +209,6 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
 #    )
 #  }
   
-### JC: why Z is called S outside of this function
-### why not calling Y Z and W by their true name like, 
-### signals, archetypes, weights, when outside of this function?
   new("posFused", Y=Y, Zt=Zt, W=W, E=Yhat, params=params,
                   converged=converged, iterations=iter)
 }

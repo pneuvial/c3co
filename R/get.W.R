@@ -42,11 +42,14 @@ get.W <- function(Zt, Y, type = 1L) { # partial fix to #58
   H <- double(K)
   G <- diag(K)
 
-  ## PARTIAL WORKAROUND: https://github.com/pneuvial/c3co/issues/58
+  converged <- TRUE # check if the problem is solvable
   W <- apply(Y, MARGIN = 1L, FUN = function(y) {
-    lsei(A = Zt, B = y, E = E, F = 1, H = H, G = G, type = type)$X
+    lsei_out <- lsei(A = Zt, B = y, E = E, F = 1, H = H, G = G, type = type)
+    converged <<- !lsei_out$IsError
+    lsei_out$X
   })
-  
+  if (!converged) return(matrix(NA, n, K))
+    
   ## WORKAROUND: https://github.com/pneuvial/c3co/issues/52
   if (K == 1L) {
     dim(W) <- c(n, K)

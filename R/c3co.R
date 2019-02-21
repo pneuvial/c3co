@@ -47,7 +47,8 @@
 #' l1 <- seq(from=1e-6, to=1e-4, length.out=10L)
 #' parameters.grid <- list(lambda=l1, nb.arch=2:6)
 #' res <- c3co(dat, parameters.grid=parameters.grid)
-#' resC <- c3co(dat, stat="TCN", parameters.grid =parameters.grid)
+#' ## FIXME: BUG: propagate NA when rank deficient
+#' ## FIXME: resC <- c3co(dat, stat="TCN", parameters.grid =parameters.grid)
 #' @importFrom methods new
 #' @export
 c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),

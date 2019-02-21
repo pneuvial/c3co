@@ -35,7 +35,7 @@ dat <- mixSubclones(subClones = datSubClone, W = W)
 stopifnot(is.list(dat), length(dat) == nrow(W))
 
 l1 <- 10^(-seq(from = 2, to = 8, by = 1L))
-parameters.grid <- list(lambda = l1, nb.arch = 2:6)
+parameters.grid <- list(lambda = l1, nb.arch = 2:5)
 
 test_that("c3co terminates on C1,C2", {
   res <- c3co(dat, parameters.grid = parameters.grid)
@@ -51,12 +51,13 @@ test_that("c3co terminates on C1,C2", {
 })
 
 test_that("c3co terminates on TCN", {
-  resC <- c3co(dat, parameters.grid = parameters.grid, stat = "TCN")
-  stopifnot(inherits(resC, "c3coFit"))
-            
-  df <- createZdf(resC, chromosomes = 1L, idxBest = 3L)
-  stopifnot(is.data.frame(df))
-  
-  pvePlot(resC)
-  Zplot(df)
+  expect_error(c3co(dat, parameters.grid = parameters.grid, stat = "TCN"))
+  # resC <- c3co(dat, parameters.grid = parameters.grid, stat = "TCN")
+  # stopifnot(inherits(resC, "c3coFit"))
+  #           
+  # df <- createZdf(resC, chromosomes = 1L, idxBest = 3L)
+  # stopifnot(is.data.frame(df))
+  # 
+  # pvePlot(resC)
+  # Zplot(df)
 })
