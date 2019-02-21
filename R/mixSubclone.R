@@ -18,7 +18,13 @@
 #' @details The mixture is performed at the scale of minor and major copy
 #'   numbers (which is the scale at which copy number events occur). Therefore
 #'   the data is first mapped to this scale, then mixed, then mapped back to the
-#'   original (tcn, dh) scale.
+#'   original (tcn, dh) scale. 
+#'   
+#'   By construction, dh, minor and major CN are only defined for heterozygous
+#'   SNPs. Therefore, in the output data, the corresponding columns are missing
+#'   for homozygous SNPs. Total copy numbers are *not* missing, so it makes
+#'   sense to keep the homozygous SNPs in the output data as they will be
+#'   exploited at the segmentation step.
 #'
 #' @examples
 #' dataAnnotTP <- acnr::loadCnRegionData(dataSet="GSE11976", tumorFrac=1)
@@ -87,10 +93,10 @@ mixSubclones <- function(subClones, W) {
         dh <- 2*abs(ss$bafn-1/2)
         c <- ss$cn*(1+dh)/2
     })
-
+    
     df.res <- apply(W, MARGIN=1L, FUN=function(weights) {
         fracN <- 1 - sum(weights)
-        stop_if_not(fracN >= 0) ## should have been catched by above sanity checks
+        stop_if_not(fracN >= 0) ## should have been caught earlier by above sanity checks
         c1 <- rowSums(cbind(sapply(seq_along(subClones), FUN=function(ii) {
             weights[ii]*c1t[, ii]
         }), fracN*rowMeans(c1n)))
