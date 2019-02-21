@@ -15,9 +15,6 @@
 #' @param stat Statistic used to perform initialization. Should be either
 #'   `"C1+C2"`, `"C1"`, or `"C2"`.
 #'   
-#' @param forceNormal A logical value indicating whether a normal component
-#'   is forced in initialization.  Defaults to `FALSE`.
-#'   
 #' @param verbose A logical value indicating whether to print extra information.
 #'   Defaults to `FALSE`.
 #'
@@ -98,7 +95,7 @@
 #' @export
 initializeZt <- function(Y1, Y2=NULL, K=min(dim(Y1)),
                         flavor=c("hclust", "nmf", "archetypes", "svd", "subsampling"),
-                        stat=c("C1+C2", "C1", "C2"), forceNormal=FALSE, verbose=FALSE) {
+                        stat=c("C1+C2", "C1", "C2"), verbose=FALSE) {
     n <- nrow(Y1) # number of samples
     J <- ncol(Y1) # number of loci/segments
     stop_if_not(is.numeric(K), length(K) == 1L, is.finite(K), K > 0L)   
@@ -108,7 +105,6 @@ initializeZt <- function(Y1, Y2=NULL, K=min(dim(Y1)),
     ## Is problem identifiable?
     stop_if_not(K <= n)
 
-    if (forceNormal) K <- K-1L
     if (is.null(Y2)) {
         Y <- Y1
     } else {
@@ -143,10 +139,6 @@ initializeZt <- function(Y1, Y2=NULL, K=min(dim(Y1)),
     res <- list(Z1 = t(initZ(Y1, K = K)))
     if (!is.null(Y2)) res$Z2 <- t(initZ(Y2, K = K))
 
-    if (forceNormal) {
-      for (name in names(res)) res[[name]] <- cbind(res[[name]], 1)
-    }
-    
     ## Sanity checks
     for (name in names(res)) {
       stop_if_not(nrow(res[[name]]) == J, ncol(res[[name]]) == K)
