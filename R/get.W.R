@@ -28,7 +28,7 @@
 #' What <- c3co:::get.W(t(Z), Y)
 #' 
 #' @importFrom limSolve lsei
-get.W <- function(Zt, Y) {
+get.W <- function(Zt, Y, type = 1L) { # partial fix to #58
   K <- ncol(Zt)
   n <- nrow(Y)
   
@@ -39,8 +39,9 @@ get.W <- function(Zt, Y) {
   H <- double(K)
   G <- diag(K)
 
+  ## PARTIAL WORKAROUND: https://github.com/pneuvial/c3co/issues/58
   W <- apply(Y, MARGIN = 1L, FUN = function(y) {
-    lsei(A = Zt, B = y, E = E, F = 1, H = H, G = G, type = 2L)$X
+    lsei(A = Zt, B = y, E = E, F = 1, H = H, G = G, type = type)$X
   })
   
   ## WORKAROUND: https://github.com/pneuvial/c3co/issues/52
