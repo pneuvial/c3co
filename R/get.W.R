@@ -2,15 +2,16 @@
 #' 
 #' Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 #' 
-#' @param Zt The transpose of Z where Z is a matrix with K rows (number of subclones) and J columns (number of segments) 
+#' @param Zt The transpose of Z where Z is a matrix with K rows (number of subclones) and M x J columns (number of signal x number of segments) 
 #' 
-#' @param Y a matrix with n rows (number of samples) and J columns (number of segments) 
+#' @param Y a matrix with n rows (number of samples) and M x J columns (number of signal x number of segments) 
 #'
 #' @param type integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package quadprog 
 #'
 #' @return a matrix with n rows (number of samples) and K columns (number of subclones)
 #' 
 #' @examples 
+#' ## Example with M = 1 signal
 #' J <- 11L  ## Number of segments
 #' K <- 4L   ## Number of subclones
 #' n <- 4L   ## Number of samples
@@ -33,11 +34,9 @@
 get.W <- function(Zt, Y, type = 1L) { # partial fix to #58
   K <- ncol(Zt)
   n <- nrow(Y)
-  J <- ncol(Y)
   
   ## Sanity checks
   stop_if_not(ncol(Y) == nrow(Zt))
-  stop_if_not(K <= J) # partial fix to #58
 
   E <- matrix(rep(1, times = K), nrow = 1L, ncol = K)
   H <- double(K)

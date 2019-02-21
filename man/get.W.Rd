@@ -7,9 +7,9 @@
 get.W(Zt, Y, type = 1L)
 }
 \arguments{
-\item{Zt}{The transpose of Z where Z is a matrix with K rows (number of subclones) and J columns (number of segments)}
+\item{Zt}{The transpose of Z where Z is a matrix with K rows (number of subclones) and M x J columns (number of signal x number of segments)}
 
-\item{Y}{a matrix with n rows (number of samples) and J columns (number of segments)}
+\item{Y}{a matrix with n rows (number of samples) and M x J columns (number of signal x number of segments)}
 
 \item{type}{integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package quadprog}
 }
@@ -20,6 +20,7 @@ a matrix with n rows (number of samples) and K columns (number of subclones)
 Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 }
 \examples{
+## Example with M = 1 signal
 J <- 11L  ## Number of segments
 K <- 4L   ## Number of subclones
 n <- 4L   ## Number of samples
