@@ -6,6 +6,8 @@
 #' 
 #' @param Y a matrix with n rows (number of samples) and J columns (number of segments) 
 #'
+#' @param type integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package quadprog 
+#'
 #' @return a matrix with n rows (number of samples) and K columns (number of subclones)
 #' 
 #' @examples 
