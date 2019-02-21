@@ -151,10 +151,16 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
     iter <- iter + 1L
   } ## while (...)
   
-  if (verbose) message("Stopped after ", iter, " iterations")
-  if (verbose) message("delta:", round(delta, digits=4L))
+  if (verbose) {
+    if (converged) {
+      message("Converged after ", iter, " iterations")
+    } else {
+      message("Stopped after ", iter, " iterations without reaching convergence")
+    }
+    message("delta:", round(delta, digits=4L))
+  }
 
-  if (length(Y) > 1L && warn) { ## sanity check: minor CN < major CN
+  if (warn && length(Y) > 1L) { ## sanity check: minor CN < major CN
     dZt <- Reduce(`-`, rev(Zt))
     tol <- 1e-2  ## arbitrary tolerance...
     if (min(dZt) < -tol) {
