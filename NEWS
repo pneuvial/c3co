@@ -8,8 +8,9 @@ Version: 0.3.0-9000 [2019-02-20]
 SIGNIFICANT CHANGES:
 
  * changing the default algorithm from type 2 to type 1 in calls to lsei  
- * ...
- 
+ * removing the forceNormal in initializeZt, since normal subClone
+   is not yet explicitly stated in the model
+
 Version: 0.3.0 [2019-02-20]
 
 SIGNIFICANT CHANGES:
