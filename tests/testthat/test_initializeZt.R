@@ -62,23 +62,3 @@ test_that("Outputs of initializeZt have the expected dimensions", {
         })
     }
 })
-
-reference_data <- readRDS(system.file("extdata", "data4ConsistencyTests.rds", package = "c3co"))
-
-# test_that("", {
-# 
-#   n <- nrow(reference_data$W)
-#   K <- ncol(reference_data$W)
-#   J <- ncol(reference_data$Y)
-# 
-#   Z0_uncentered <- initializeZt(reference_data$Y, K = 4)
-#   
-#   Z0_centered   <- initializeZt(scale(reference_data$Y, TRUE, FALSE) , K = 4)
-#  
-# })
-# 
-# par(mfrow = c(4,1))
-# matplot(reference_data$W %*% reference_data$Z, type = "s", main = "ZW")
-# matplot(reference_data$Y, type = "s", main = "Y")
-# matplot(reference_data$W %*% t(Z0_centered$Z1), type = "s", main = "ZhatWhat (centered)")
-# matplot(reference_data$W %*% t(Z0_uncentered$Z1), type = "s", main = "ZhatWhat (uncentered)")
