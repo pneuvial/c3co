@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotFunctions.R
 \name{pvePlot2}
 \alias{pvePlot2}
-\title{Plot Percentage Variance Explained (PVE) against number of features (low-level)}
+\title{Plot Percentage of Variation Explained (PVE) against number of features (low-level)}
 \usage{
 pvePlot2(dat, bestNbLatent = NULL, ylim = c(0, 1))
 }
@@ -18,5 +18,5 @@ pvePlot2(dat, bestNbLatent = NULL, ylim = c(0, 1))
 A \link[ggplot2:ggplot]{ggplot2::ggplot} object.
 }
 \description{
-Plot Percentage Variance Explained (PVE) against number of features (low-level)
+Plot Percentage of Variation Explained (PVE) against number of features (low-level)
 }

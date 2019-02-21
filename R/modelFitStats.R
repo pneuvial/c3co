@@ -9,7 +9,16 @@
 #' @param Zhatt The transposed version of the inferred n-by-J subclones
 #' matrix 'Zhat'.
 #' 
-#' @return The main statistics of the inferred model.
+#' @return A named numeric vector with the main statistics of the inferred model:
+#'  * `BIC`   : Bayesian Information Criterion
+#'  * `PVE`   : Percentage of Variation Explained (Nowak et al., 2011)
+#'  * `logLik`: Log Likelihood
+#'  * `loss`  : Loss, which equals \eqn{RSS / (n * J)},
+#'              where RSS is the residual sum of squares
+#'
+#' @references Nowak, G., Hastie, T., Pollack, J. R., & Tibshirani, R. (2011).
+#'             A fused lasso latent feature model for analyzing multi-sample
+#'             aCGH data. Biostatistics, 12(4), 776-791
 #'
 #' @importFrom matrixStats colDiffs
 modelFitStatistics <- function(Y, Yhat, What, Zhatt) {
