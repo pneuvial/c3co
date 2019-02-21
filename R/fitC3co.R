@@ -84,13 +84,6 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     J <- ncol(Y1)   ## Number of segments
     M <- length(Y)  ## Number of signal dimensions
     
-    ## centered version of the data
-    Yc <- lapply(Y, FUN = function(y) {
-      sweep(y, MARGIN = 1L, STATS = rowMeans(y), FUN = `-`)
-    })
-    ## Compute total sum of squares
-    totVar <- sum((Reduce(`+`, Yc))^2)
-    
     ### Define grids
     parameters <- checkParams(parameters.grid=parameters.grid, M=M, J=J, verbose=verbose)
     configs <- parameters$configs
@@ -106,8 +99,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         bestRes <- NULL
         bestBIC <- -Inf
         bestConfig <- aConf <- NULL
-        ## Z0 are initialized with the centered version of the data
-        Z0t <- initializeZt(Yc$Y1, Yc$Y2, K=K_ii, ...)
+        ## Z0 are now initialized on the uncentered version of the data Issue #65 
+        Z0t <- initializeZt(Y$Y1, Y$Y2, K=K_ii, ...)
         if (verbose) {
             mprintf("   + Parameter configuration: (%s)\n",
                     comma(colnames(configs)))
