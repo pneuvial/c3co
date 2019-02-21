@@ -4,12 +4,14 @@
 \alias{get.W}
 \title{Get the matrix of weights W for fixed values of the subclones Z and data Y}
 \usage{
-get.W(Zt, Y)
+get.W(Zt, Y, type = 1L)
 }
 \arguments{
 \item{Zt}{The transpose of Z where Z is a matrix with K rows (number of subclones) and J columns (number of segments)}
 
 \item{Y}{a matrix with n rows (number of samples) and J columns (number of segments)}
+
+\item{type}{integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package quadprog}
 }
 \value{
 a matrix with n rows (number of samples) and K columns (number of subclones)
