@@ -105,10 +105,12 @@ positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
 
   ## handling intercept terme
   if (intercept) {
-    Y_bar  <- lapply(Y , colMeans)
-    Zt_bar <- lapply(Zt, rowMeans)
-    Y  <- mapply(sweep, x = Y , STATS = Y_bar , MoreArgs = list(MARGIN = 2, FUN  ="-"), SIMPLIFY = FALSE)
-    Zt <- mapply(sweep, x = Zt, STATS = Zt_bar, MoreArgs = list(MARGIN = 1, FUN  ="-"), SIMPLIFY = FALSE)
+    Y_bar  <- lapply(Y , rowMeans)
+    Zt_bar <- lapply(Zt, colMeans)
+    Yc <- mapply(sweep, x = Y , STATS = Y_bar , MoreArgs = list(MARGIN = 1, FUN  = "-"), SIMPLIFY = FALSE)
+    Zt <- mapply(sweep, x = Zt, STATS = Zt_bar, MoreArgs = list(MARGIN = 2, FUN  = "-"), SIMPLIFY = FALSE)
+  } else {
+    Yc <- Y
   }
   
   ## __________________________________________________
@@ -123,7 +125,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
     ## STEP 1: optimize w.r.t. W (fixed Z)
     
     ## solve in W (here individuals - i.e. rows of Yc - are independent)
-    W <- get.W(Zt = do.call(rbind, args = Zt), Y = do.call(cbind, args = Y))
+    W <- get.W(Zt = do.call(rbind, args = Zt), Y = do.call(cbind, args = Yc))
     if (anyNA(W)) {
       message("No solution found in constrained least-squared problem.")
       lsei_failure <- TRUE
@@ -144,10 +146,10 @@ positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
     
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
-    Zt <- mapply(FUN = get.Zt, Y = Y, lambda = lambda, MoreArgs = list(W = W, WtWm1 = WtWm1), SIMPLIFY = FALSE)
+    Zt <- mapply(FUN = get.Zt, Y = Yc, lambda = lambda, MoreArgs = list(W = W, WtWm1 = WtWm1), SIMPLIFY = FALSE)
     if (intercept) { # 
-      Zt_bar <- lapply(Zt, rowMeans)
-      Zt <- mapply(sweep, x = Zt, STATS = Zt_bar, MoreArgs = list(MARGIN = 1, FUN  ="-"), SIMPLIFY = FALSE)
+      Zt_bar <- lapply(Zt, colMeans)
+      Zt <- mapply(sweep, x = Zt, STATS = Zt_bar, MoreArgs = list(MARGIN = 2, FUN  ="-"), SIMPLIFY = FALSE)
     }
     
     ## __________________________________________________
@@ -184,20 +186,25 @@ positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
     }
   }
 
+  browser()
   ## list of Intercept terms
   if (intercept) { 
     mu <- mapply(FUN = function(y_bar, zt_bar) {
-        y_bar - W %*% t(zt_bar)
-      }, y_bar = Y_bar, z_bar = Zt_bar, SIMPLIFY = FALSE
+        as.numeric(y_bar - W %*% zt_bar)
+      }, y_bar = Y_bar, zt_bar = Zt_bar, SIMPLIFY = FALSE
     )
   } else {
     mu <- rep(list(rep(0,n)), M)
   }
   
   ## reshape output
+  
   ## accumulate Y, Yhat and Z to get the sum of the two clones (used by Morgane in her representation)
+  ## JC 2019/02/22: check when this representation is used !!
+  
   names(Y) <- paste0("Y", 1:M)
   Y$Y <- Reduce(`+`, Y)
+  
   Yhat <- mapply(function(mu_, Zt_) {mu_ + W %*% t(Zt_)}, mu_ = mu, Zt_ = Zt, SIMPLIFY = FALSE)
   names(Yhat) <- paste0("Y", 1:M)
   Yhat$Y <- Reduce(`+`, Yhat)
@@ -205,6 +212,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
   names(Zt) <- paste0("Z", 1:M)
   Zt$Z <- Reduce(`+`, Zt)
 
+  ##JC 2019/02/22: do not knwo if accumulated mu is used (should be) when computing repsentation and stats
   names(mu) <- paste0("mu", 1:M)
   mu$mu <- Reduce(`+`, mu)
 
