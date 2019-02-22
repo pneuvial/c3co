@@ -18,7 +18,7 @@ SOFTWARE QUALITY:
 
 * Improved documentation of mixSubClones() and buildSubclone().
 
-* More sanity checks in mixSubClones().
+* More sanity checks in mixSubClones() and get.W().
  
 
 Version: 0.3.0 [2019-02-20]

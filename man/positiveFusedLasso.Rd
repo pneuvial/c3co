@@ -21,7 +21,7 @@ which is a notation mistake that will be fixed in a future release.}
 \item{lambda}{A numeric with one or two real numbers, the coefficients
 for the fused penalty for minor (and possibly the major) copy numbers.}
 
-\item{intercept}{logical: should an intercept be included in the model.
+\item{intercept}{logical: should an intercept be included in the model?
 Defaults to \code{FALSE}.}
 
 \item{eps}{Criterion to stop algorithm

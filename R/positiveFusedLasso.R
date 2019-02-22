@@ -13,7 +13,7 @@
 #' @param lambda A numeric with one or two real numbers, the coefficients
 #' for the fused penalty for minor (and possibly the major) copy numbers.
 #'
-#' @param intercept logical: should an intercept be included in the model.
+#' @param intercept logical: should an intercept be included in the model?
 #' Defaults to `FALSE`.
 #' 
 #' @param eps Criterion to stop algorithm
@@ -78,6 +78,9 @@ positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
   ## Argument 'Zt':
   stop_if_not(is.list(Zt), length(Zt) == M, nrow(Zt[[1]]) == J)
   K <- ncol(Zt[[1]])  ## number of subclones/archetypes/latent features
+  if (K > J) {
+    stop("Will not fit a model where the number of latent features (K=", K, ") is larger than the number of segments (J=", J, ")")
+  }
   
   if (M >= 2L) {
     for (mm in 2:M) {

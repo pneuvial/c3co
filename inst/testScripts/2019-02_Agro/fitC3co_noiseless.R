@@ -1,22 +1,24 @@
-set.seed(1288769)    
+library("c3co")
+
 J <- 5 # segments
 
 # subclones
-z0 <- rep(1L, K)
+z0 <- rep(1L, J)
 z1 <- z0
 z1[2] <- 0
 z2 <- z0
 z2[4] <- 0
 Z <- rbind(z0, z1, z2)
-nbBkps <- ncol(Z)-1
+K <- nrow(Z)
+
 
 # weights
-W <- diag(rep(1, nrow(Z)))  ## identity weights
+W <- diag(rep(1, K))  ## identity weights
 Y <- W %*% Z                ## noiseless
 
 # non-penalized
 params <- list(lambda = 0, nb.arch = 1:3)
-res <- fitC3co(Y, parameters.grid = params)
+res <- fitC3co(Y, parameters.grid = params, intercept=TRUE)
 sapply(res$fit, modelFitStats) # model fit stats
 Zhats <- lapply(res$fit, function(fit) t(fit@Zt$Z))
 

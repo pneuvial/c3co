@@ -53,11 +53,10 @@ test_that("c3co terminates on C1,C2", {
 test_that("c3co terminates on TCN", {
   expect_error(c3co(dat, parameters.grid = parameters.grid, stat = "TCN"))
   # resC <- c3co(dat, parameters.grid = parameters.grid, stat = "TCN")
-  # stopifnot(inherits(resC, "c3coFit"))
-  #           
-  # df <- createZdf(resC, chromosomes = 1L, idxBest = 3L)
-  # stopifnot(is.data.frame(df))
+  # expect_true(inherits(resC, "c3coFit"))
+  # # pvePlot(resC)
   # 
-  # pvePlot(resC)
-  # Zplot(df)
+  # df <- createZdf(resC, chromosomes = 1L, idxBest = 3L)
+  # expect_true(inherits(df, "data.frame"))
+  # # Zplot(df)
 })

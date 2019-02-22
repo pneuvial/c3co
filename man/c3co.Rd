@@ -56,7 +56,7 @@ datSubClone <- buildSubclones(len=len, nbClones=K, bkps=bkps, regions=regions,
 W <- rSparseWeightMatrix(nb.samp=n, nb.arch=K, sparse.coeff=0.7)
 dat <- mixSubclones(subClones=datSubClone, W=W)
 l1 <- seq(from=1e-6, to=1e-4, length.out=10L)
-parameters.grid <- list(lambda=l1, nb.arch=2:6)
+parameters.grid <- list(lambda=l1, nb.arch=2:5)
 res <- c3co(dat, parameters.grid=parameters.grid)
 ## FIXME: BUG: propagate NA when rank deficient
 ## FIXME: resC <- c3co(dat, stat="TCN", parameters.grid =parameters.grid)
