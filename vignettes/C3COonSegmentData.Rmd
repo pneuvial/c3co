@@ -31,5 +31,5 @@ parameters.grid <- list(lambda = lambda.grid, nb.arch = K.list)
 resc3co <- c3co(NULL, segDat = segDat, parameters.grid = parameters.grid)
 ```
 
-[c3co.data]: https://github.com/pneuvial/c3co-data
+[c3co.data]: https://github.com/pneuvial/c3co.data
 [GSE47077]: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE47077

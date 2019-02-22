@@ -15,7 +15,7 @@ latex: false
 r_check_args: --as-cran
 
 r_github_packages:
-  - pneuvial/c3co-data
+  - pneuvial/c3co.data
   - veseshan/pctGCdata
   - mskcc/facets
   
