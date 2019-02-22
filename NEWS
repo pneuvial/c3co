@@ -12,6 +12,8 @@ SIGNIFICANT CHANGES:
  * removing the forceNormal in initializeZt, since normal subClone
    is not yet explicitly stated in the model
 
+ * adding support for itnercept in positiveFusedLasso to model the normal subClone
+
 SOFTWARE QUALITY:
 
 * Improved documentation of mixSubClones() and buildSubclone().
