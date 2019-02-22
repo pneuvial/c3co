@@ -13,6 +13,9 @@
 #' @param lambda A numeric with one or two real numbers, the coefficients
 #' for the fused penalty for minor (and possibly the major) copy numbers.
 #'
+#' @param intercept logical: should an intercept be included in the model.
+#' Defaults to `FALSE`.
+#' 
 #' @param eps Criterion to stop algorithm
 #' (when W do not change sqrt(sum((W-W.old)^2) <= eps).
 #'
@@ -63,8 +66,8 @@
 #' 
 #' @importFrom methods new
 #' @export
-positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
-                               max.iter=50L, warn=FALSE, verbose=FALSE) {
+positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
+                               max.iter = 50L, warn = FALSE, verbose = FALSE) {
   ## Argument 'Y':
   stop_if_not(is.list(Y))
   M <- length(Y)      ## Number of signal dimensions
@@ -75,7 +78,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
   ## Argument 'Zt':
   stop_if_not(is.list(Zt), length(Zt) == M, nrow(Zt[[1]]) == J)
   K <- ncol(Zt[[1]])  ## number of subclones/archetypes/latent features
-
+  
   if (M >= 2L) {
     for (mm in 2:M) {
       stop_if_not(nrow(Y[[mm]]) == n, ncol(Y[[mm]]) == J,
@@ -100,6 +103,14 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
     stop(sprintf("Under-identified problem: more latent features (K = %d) than samples (n = %d)", K, n))
   }
 
+  ## handling intercept terme
+  if (intercept) {
+    Y_bar  <- lapply(Y , colMeans)
+    Zt_bar <- lapply(Zt, rowMeans)
+    Y  <- mapply(sweep, x = Y , STATS = Y_bar , MoreArgs = list(MARGIN = 2, FUN  ="-"), SIMPLIFY = FALSE)
+    Zt <- mapply(sweep, x = Zt, STATS = Zt_bar, MoreArgs = list(MARGIN = 1, FUN  ="-"), SIMPLIFY = FALSE)
+  }
+  
   ## __________________________________________________
   ## main loop for alternate optimization
   iter <- 1L
@@ -134,6 +145,10 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
     ## __________________________________________________
     ## STEP 2: optimize w.r.t. Z (fixed W)
     Zt <- mapply(FUN = get.Zt, Y = Y, lambda = lambda, MoreArgs = list(W = W, WtWm1 = WtWm1), SIMPLIFY = FALSE)
+    if (intercept) { # 
+      Zt_bar <- lapply(Zt, rowMeans)
+      Zt <- mapply(sweep, x = Zt, STATS = Zt_bar, MoreArgs = list(MARGIN = 1, FUN  ="-"), SIMPLIFY = FALSE)
+    }
     
     ## __________________________________________________
     ## STEP 3: check for convergence of the weights
@@ -168,20 +183,30 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
        warning("For model with ", K, " features, some components in minor latent profiles are larger than matched components in major latent profiles")
     }
   }
+
+  ## list of Intercept terms
+  if (intercept) { 
+    mu <- mapply(FUN = function(y_bar, zt_bar) {
+        y_bar - W %*% t(zt_bar)
+      }, y_bar = Y_bar, z_bar = Zt_bar, SIMPLIFY = FALSE
+    )
+  } else {
+    mu <- rep(list(rep(0,n)), M)
+  }
   
   ## reshape output
   ## accumulate Y, Yhat and Z to get the sum of the two clones (used by Morgane in her representation)
   names(Y) <- paste0("Y", 1:M)
-### JC: having a list whose first element has the same name is rather ugly
-### and not helful at all to the user  
   Y$Y <- Reduce(`+`, Y)
-  Yhat <- lapply(Zt, FUN = function(Zt_) W %*% t(Zt_))
+  Yhat <- mapply(function(mu_, Zt_) {mu_ + W %*% t(Zt_)}, mu_ = mu, Zt_ = Zt, SIMPLIFY = FALSE)
   names(Yhat) <- paste0("Y", 1:M)
   Yhat$Y <- Reduce(`+`, Yhat)
 
   names(Zt) <- paste0("Z", 1:M)
-### JC: same remark than for Y$Y
   Zt$Z <- Reduce(`+`, Zt)
+
+  names(mu) <- paste0("mu", 1:M)
+  mu$mu <- Reduce(`+`, mu)
 
   names(lambda) <- paste0("lambda", 1:M)
   params <- c(nb.feat = K, lambda)
@@ -189,11 +214,12 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
   ## Sanity checks
   # FIXME: M + 1L because also Y = Y1 + Y2
   stop_if_not(is.list(Y), length(Y) == M + 1L)
+  stop_if_not(is.list(mu), length(mu) == M + 1L)
   stop_if_not(is.list(Yhat), length(Yhat) == M + 1L)
   stop_if_not(is.list(Zt), length(Zt) == M + 1L)
   stop_if_not(is.matrix(W), nrow(W) == n, ncol(W) == K)
   stop_if_not(is.numeric(params))
-  for (mm in 1:(M+1L)) {
+  for (mm in 1:(M + 1L)) {
     stop_if_not(nrow(Y[[mm]]) == n, ncol(Y[[mm]]) == J)
     stop_if_not(nrow(Yhat[[mm]]) == n, ncol(Yhat[[mm]]) == J)
     stop_if_not(ncol(Zt[[mm]]) == K, nrow(Zt[[mm]]) == J)
@@ -209,6 +235,14 @@ positiveFusedLasso <- function(Y, Zt, lambda, eps=1e-1,
 #    )
 #  }
   
-  new("posFused", Y=Y, Zt=Zt, W=W, E=Yhat, params=params,
-                  converged=converged, iterations=iter)
+  new("posFused",
+      Y          = Y        ,
+      mu         = mu       ,
+      Zt         = Zt       ,
+      W          = W        ,
+      E          = Yhat     ,
+      params     = params   ,
+      converged  = converged,
+      iterations = iter
+    )
 }

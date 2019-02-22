@@ -11,7 +11,7 @@
 #'   
 #' @slot W A matrix containing weights inferred by [positiveFusedLasso()].
 #'   
-#' @slot mu A numeric containing the intercept terms inferred by
+#' @slot mu A list containing the intercept vectors inferred by
 #'   [positiveFusedLasso()].
 #'   
 #' @slot E A list containing estimates of minor copy number and major copy 
@@ -33,7 +33,7 @@ setClass(
         Zt  = "list",           ## subclones (was S)
         Z0t = "list",           ## initial estimates of subclones (was S0)
         W   = "matrix",         ## weights
-        mu  = "numeric",        ## intercept
+        mu  = "list",           ## intercept
         E   = "list",           ## signal reconstruction (aka Yhat)
         params  = "numeric",
         failure = "logical",
