@@ -1,25 +1,30 @@
 Package: c3co
 =============
 
-Version: 0.3.0-9000 [2019-02-20]
+Version: 0.3.0-9000 [2019-02-21]
 
  * ...
  
 SIGNIFICANT CHANGES:
 
- * changing the default algorithm from type 2 to type 1 in calls to lsei  
-
- * removing the forceNormal in initializeZt, since normal subClone
-   is not yet explicitly stated in the model
-
- * adding support for itnercept in positiveFusedLasso to model the normal subClone
+ * Changed the default algorithm for limSolve::lsei() in internal get.W()
+   from "lsei" (type=1) to "quadprog::solve.QP" (type=2).
+   
+ * positiveFusedLasso() gained argument 'intercept' to control whether
+   a normal subclone should be modelled or not.
 
 SOFTWARE QUALITY:
 
 * Improved documentation of mixSubClones() and buildSubclone().
 
 * More sanity checks in mixSubClones().
- 
+
+DEPRECATION & DEFUNCT:
+
+ * Removed argument 'forceNormal' from initializeZt() because it was an ad-hoc
+   approach to model a "normal" subclone, which is now taken care of by
+   positiveFusedLasso(..., intercept = TRUE).
+
 
 Version: 0.3.0 [2019-02-20]
 

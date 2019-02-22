@@ -6,7 +6,7 @@
 #' 
 #' @param Y a matrix with n rows (number of samples) and M x J columns (number of signal x number of segments) 
 #'
-#' @param type integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package quadprog 
+#' @param type integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package \pkg{quadprog}
 #'
 #' @return a matrix with n rows (number of samples) and K columns (number of subclones)
 #' 
