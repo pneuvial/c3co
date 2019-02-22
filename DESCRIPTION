@@ -40,7 +40,7 @@ Suggests:
 VignetteBuilder:
     knitr
 Remotes:
-    pneuvial/c3co-data,
+    pneuvial/c3co.data,
     mskcc/facets
 URL: https://github.com/pneuvial/c3co
 BugReports: https://github.com/pneuvial/c3co/issues
