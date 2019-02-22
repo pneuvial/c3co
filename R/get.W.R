@@ -37,7 +37,8 @@ get.W <- function(Zt, Y, type = 1L) { # partial fix to #58
   
   ## Sanity checks
   stop_if_not(ncol(Y) == nrow(Zt))
-
+  stop_if_not(K <= ncol(Y))
+  
   E <- matrix(rep(1, times = K), nrow = 1L, ncol = K)
   H <- double(K)
   G <- diag(K)

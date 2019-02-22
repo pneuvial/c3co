@@ -5,7 +5,7 @@ context("positiveFusedLasso")
 test_that("positiveFusedLasso recovers the truth in (almost) noiseless situations for small lambda", {
     lambdas = c(0, 1e-5)
     eps <- 1e-8  ## avoids glmnet complaining about 0 variance at standardization
-    tol <- 5e-3
+    tol <- 1e-3
     set.seed(3)  ## randomness in getToyData sometimes gives results out of tolerance band
     
     configs <- expand.grid(
@@ -60,8 +60,8 @@ test_that("positiveFusedLasso recovers the truth in (almost) noiseless situation
 test_that("positiveFusedLasso with intercept recovers the truth in (almost) noiseless situations for small lambda", {
     lambdas = c(0, 1e-5)
     eps <- 1e-8  ## avoids glmnet complaining about 0 variance at standardization
-    tol <- 5e-3
-    set.seed(3)  ## randomness in getToyData sometimes gives results out of tolerance band
+    tol <- 1e-3
+    set.seed(1)  ## randomness in getToyData sometimes gives results out of tolerance band
     
     configs <- expand.grid(
         sigSize = 20,
@@ -105,8 +105,7 @@ test_that("positiveFusedLasso with intercept recovers the truth in (almost) nois
                 expect_lt(max((What - W)^2), tol)
                 for (mm in 1:M) {
                     expect_lt(max((Yhat[[mm]] - Y[[mm]])^2), tol)
-## this fails sometimes too conservative tolerance
-##                     expect_lt(max((Zhat[[mm]] - sweep(Zt[[mm]], 2, colMeans(Zt[[mm]])))^2), tol)
+                    expect_lt(max((Zhat[[mm]] - sweep(Zt[[mm]], 2, colMeans(Zt[[mm]])))^2), tol)
                 }
             }
         }
