@@ -48,3 +48,4 @@ appveyor.yml
 ^fig
 TODO.md
 ^NEWS\.md$
+.local

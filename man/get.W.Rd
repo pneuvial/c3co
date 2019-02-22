@@ -11,7 +11,7 @@ get.W(Zt, Y, type = 1L)
 
 \item{Y}{a matrix with n rows (number of samples) and M x J columns (number of signal x number of segments)}
 
-\item{type}{integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package quadprog}
+\item{type}{integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package \pkg{quadprog}}
 }
 \value{
 a matrix with n rows (number of samples) and K columns (number of subclones)
