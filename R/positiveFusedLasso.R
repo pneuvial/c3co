@@ -186,7 +186,6 @@ positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
     }
   }
 
-  browser()
   ## list of Intercept terms
   if (intercept) { 
     mu <- mapply(FUN = function(y_bar, zt_bar) {
@@ -228,6 +227,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
   stop_if_not(is.matrix(W), nrow(W) == n, ncol(W) == K)
   stop_if_not(is.numeric(params))
   for (mm in 1:(M + 1L)) {
+    stop_if_not(length(mu[[mm]]) == n)
     stop_if_not(nrow(Y[[mm]]) == n, ncol(Y[[mm]]) == J)
     stop_if_not(nrow(Yhat[[mm]]) == n, ncol(Yhat[[mm]]) == J)
     stop_if_not(ncol(Zt[[mm]]) == K, nrow(Zt[[mm]]) == J)
