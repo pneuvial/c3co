@@ -137,7 +137,7 @@ positiveFusedLasso <- function(Y, Zt, lambda, intercept = FALSE, eps = 1e-1,
     if (QR.W$rank < K) {
       message("W is rank deficient: there are too many archetypes")
       rank_deficient <- TRUE
-      W <- matrix(NA, n, K)
+      W <- matrix(NA_real_, n, K)
       break
     } else {
       ## use QR decomposition to save time inverting WtW

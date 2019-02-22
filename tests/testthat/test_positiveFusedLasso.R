@@ -105,7 +105,8 @@ test_that("positiveFusedLasso with intercept recovers the truth in (almost) nois
                 expect_lt(max((What - W)^2), tol)
                 for (mm in 1:M) {
                     expect_lt(max((Yhat[[mm]] - Y[[mm]])^2), tol)
-## this fails sometimes                    expect_lt(max((Zhat[[mm]] - sweep(Zt[[mm]], 2, colMeans(Zt[[mm]])))^2), tol)
+## this fails sometimes too conservative tolerance
+##                     expect_lt(max((Zhat[[mm]] - sweep(Zt[[mm]], 2, colMeans(Zt[[mm]])))^2), tol)
                 }
             }
         }
