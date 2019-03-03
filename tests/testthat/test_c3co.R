@@ -1,6 +1,10 @@
+library("c3co")
+
 context("c3co test")
 
+## randomness in getToyData sometimes gives results out of tolerance band
 set.seed(7)
+
 dataAnnotTP <- acnr::loadCnRegionData(dataSet = "GSE11976", tumorFraction = 1.0)
 dataAnnotN <- acnr::loadCnRegionData(dataSet = "GSE11976", tumorFraction = 0.0)
 
@@ -51,12 +55,12 @@ test_that("c3co terminates on C1,C2", {
 })
 
 test_that("c3co terminates on TCN", {
-  expect_error(c3co(dat, parameters.grid = parameters.grid, stat = "TCN"))
-  # resC <- c3co(dat, parameters.grid = parameters.grid, stat = "TCN")
-  # expect_true(inherits(resC, "c3coFit"))
-  # # pvePlot(resC)
-  # 
-  # df <- createZdf(resC, chromosomes = 1L, idxBest = 3L)
-  # expect_true(inherits(df, "data.frame"))
-  # # Zplot(df)
+  #expect_error(c3co(dat, parameters.grid = parameters.grid, stat = "TCN"))
+   resC <- c3co(dat, parameters.grid = parameters.grid, stat = "TCN")
+   expect_true(inherits(resC, "c3coFit"))
+   # pvePlot(resC)
+   
+   df <- createZdf(resC, chromosomes = 1L, idxBest = 3L)
+   expect_true(inherits(df, "data.frame"))
+   # Zplot(df)
 })

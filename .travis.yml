@@ -37,7 +37,7 @@ matrix:
     - os: linux
       r: devel
       env:
-	- _R_RNG_VERSION_=3.5.2
+        - _R_RNG_VERSION_=3.5.2
 #    - os: osx
 #      r: oldrel
     - os: osx
