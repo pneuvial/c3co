@@ -142,7 +142,7 @@ fitC3co <- function(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, intercep
             allRes[[K_ii]][[cc]] <- res
             allLoss[[K_ii]][[cc]] <- stats[["loss"]]
             
-            if (BIC > bestBIC) { ## BIC has improved: update best model
+            if (is.finite(BIC) && BIC > bestBIC) { ## BIC has improved: update best model
                 bestRes <- res
                 bestBIC <- BIC
                 bestConfig <- aConf
