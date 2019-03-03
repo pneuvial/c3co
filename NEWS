@@ -19,14 +19,12 @@ SOFTWARE QUALITY:
 
 * More sanity checks in mixSubClones() and get.W().
  
-
 DEPRECATION & DEFUNCT:
 
  * Removed argument 'forceNormal' from initializeZt() because it was an ad-hoc
    approach to model a "normal" subclone, which is now taken care of by
    positiveFusedLasso(..., intercept = TRUE).
 
->>>>>>> f87a30c976bc8bd81b15afcc36215beed4b356c0
 
 Version: 0.3.0 [2019-02-20]
 
