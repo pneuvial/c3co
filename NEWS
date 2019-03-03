@@ -1,6 +1,36 @@
 Package: c3co
 =============
 
+Version: 0.4.0 [2019-03-03]
+ 
+SIGNIFICANT CHANGES:
+
+ * Changed the default algorithm for limSolve::lsei() in internal get.W()
+   from "lsei" (type=1) to "quadprog::solve.QP" (type=2).
+   
+ * positiveFusedLasso() now returns an NA model fit when the weight matrix
+   becomes rank deficient in the C3CO algorithm.  Previously, it arbitrarily
+   switched to fit one fewer subclone (K <- K-1).
+   
+ * positiveFusedLasso() and fitC3co() gained argument 'intercept' to control 
+   whether a normal subclone should be modelled or not.
+
+ * Renamed loadFacetsdata() and Facetswrapper() to loadFACETSdata() and
+   FACETSwrapper().
+
+SOFTWARE QUALITY:
+
+* Improved documentation of mixSubClones() and buildSubclone().
+
+* More sanity checks in mixSubClones() and get.W().
+ 
+DEPRECATION & DEFUNCT:
+
+ * Removed argument 'forceNormal' from initializeZt() because it was an ad-hoc
+   approach to model a "normal" subclone, which is now taken care of by
+   positiveFusedLasso(..., intercept = TRUE).
+
+
 Version: 0.3.0 [2019-02-20]
 
 SIGNIFICANT CHANGES:

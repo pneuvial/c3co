@@ -65,7 +65,7 @@ regions <- list(c("(1,2)", "(0,2)", "(1,2)"),
                 c("(0,2)", "(0,1)", "(1,1)"))
 ```
 
-Then, we load an annotated data set from the [acnr] package.  The `buildSubclones()` function can then be used to generate the subclone profiles with the above characteristics, by resampling from the annotated data set.
+Then, we load an annotated data set from the [acnr] package.  The `buildSubclones()` function can then be used to generate the (pure) subclone profiles with the above characteristics, by resampling from the annotated data set.
 
 ```{r}
 dataAnnotTP <- acnr::loadCnRegionData(dataSet = "GSE13372_HCC1143", tumorFraction = 1)
@@ -80,7 +80,8 @@ Note that the same can be done using another data set from the acnr package, see
 acnr::listDataSets()
 ```
 
- 
+Caveat: we actually require both tumor and *normal* data to be available, so only the "GSE13372_HCC1143" (Affymetrix) and "GSE11976_CRL2324" (Illumina) data sets may be used.
+
 ```{r, echo=FALSE}
 cols <- c("#AAAAAA33", "#00000099", "#AAAAAA33")
 cex <- 0.3

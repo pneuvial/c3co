@@ -4,8 +4,8 @@
 \alias{positiveFusedLasso}
 \title{Positive fused Lasso function}
 \usage{
-positiveFusedLasso(Y, Zt, lambda, eps = 0.1, max.iter = 50L,
-  warn = FALSE, verbose = FALSE)
+positiveFusedLasso(Y, Zt, lambda, intercept = FALSE, eps = 0.1,
+  max.iter = 50L, warn = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{Y}{A list of one or two matrices named \code{Y1} and \code{Y2} containing the
@@ -20,6 +20,9 @@ which is a notation mistake that will be fixed in a future release.}
 
 \item{lambda}{A numeric with one or two real numbers, the coefficients
 for the fused penalty for minor (and possibly the major) copy numbers.}
+
+\item{intercept}{logical: should an intercept be included in the model?
+Defaults to \code{FALSE}.}
 
 \item{eps}{Criterion to stop algorithm
 (when W do not change sqrt(sum((W-W.old)^2) <= eps).}

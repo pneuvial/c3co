@@ -4,10 +4,14 @@
 
 # c3co: Inferring cancer cell clonality from copy number data
 
+
+_WARNING 2019-03-03: The **c3co** package is under heavy development._
+
+
 ## Installation
 
-```
-devtools::install_github("pneuvial/c3co", build_vignettes = TRUE)
+```r
+remotes::install_github("pneuvial/c3co", build_vignettes = TRUE)
 ```
 
 ## Model 

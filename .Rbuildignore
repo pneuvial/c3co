@@ -44,7 +44,8 @@ appveyor.yml
 ^data-raw$
 ^data
 ^output
-^c3co-data$
+^c3co.data$
 ^fig
 TODO.md
 ^NEWS\.md$
+.local

@@ -1,3 +1,4 @@
+aCGH
 acnr
 al
 allelic
@@ -15,6 +16,8 @@ Clonality
 CN
 coFit
 Colv
+CRL
+dh
 Ductal
 eps
 et
@@ -25,12 +28,18 @@ germline
 Gey
 GSE
 hal
+Hastie
 HCC
 hclust
+heterozygous
+homozygous
 http
+ie
+Illumina
 interpretable
 intra
 Lebarbier
+lsei
 megabases
 na
 nc
@@ -47,6 +56,8 @@ PSCBS
 PSCN
 PVE
 PyCGH
+QP
+quadprog
 Rigaill
 Rowv
 Seoighe
@@ -55,8 +66,10 @@ subclones
 Subclones
 symbreaks
 symm
+tcn
 TCN
 Technometrics
+Tibshirani
 tracecol
 WGS
 WXS

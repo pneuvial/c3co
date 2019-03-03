@@ -17,7 +17,10 @@
 #' @param warn If `TRUE` and `Y1` is specified, then a warning is produced
 #'   if \eqn{Z1 <= Z2} is not satisfied for a candidate number of subclones.
 #'   
-#' @param \dots Further arguments to be passed to [positiveFusedLasso()].
+#' @param intercept logical: should an intercept be included in the model?
+#' Defaults to `FALSE`.
+#' 
+#' @param \dots Further arguments to be passed to [initializeZt()].
 #'   
 #' @param verbose A logical indicating whether to print extra information.
 #'   Defaults to `FALSE`.
@@ -45,9 +48,10 @@
 #'
 #' ## Fit C3CO model
 #' l1 <- seq(from=1e-8, to=1e-5, length.out=5L)
-#' parameters.grid <- list(lambda1=l1, nb.arch=2:6)
+#' parameters.grid <- list(lambda1=l1, nb.arch=1:3)
 #' fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
-#' fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
+#' ## FIXME (cf Issue #67):
+#' ## fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid) 
 #' 
 #' 
 #' ## A simpler example with toy data
@@ -56,7 +60,7 @@
 #' n <- 20L  ## Number of samples
 #'
 #' l1 <- 1e-4
-#' candP <- 2:10
+#' candP <- 2:J
 #' parameters.grid <- list(lambda=l1, nb.arch=candP)
 #' 
 #' dat <- getToyData(n=n, len=100L, nbClones=K, nbSegs=J, eps=0.2)  ## almost noiseless!
@@ -69,7 +73,7 @@
 #' 
 #' @importFrom matrixStats colMaxs
 #' @export
-fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=FALSE) {
+fitC3co <- function(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, intercept = FALSE, ..., verbose = FALSE) {
 
     ## preparing data
     Y <- list(Y1=Y1)
@@ -84,19 +88,17 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
     J <- ncol(Y1)   ## Number of segments
     M <- length(Y)  ## Number of signal dimensions
     
-    ## centered version of the data
-    Yc <- lapply(Y, FUN = function(y) {
-      sweep(y, MARGIN = 1L, STATS = rowMeans(y), FUN = `-`)
-    })
-    ## Compute total sum of squares
-    totVar <- sum((Reduce(`+`, Yc))^2)
-    
     ### Define grids
     parameters <- checkParams(parameters.grid=parameters.grid, M=M, J=J, verbose=verbose)
     configs <- parameters$configs
     Ks <- parameters$nb.arch
     
-    fitList <- allRes <- allLoss <- list()
+    ## sanity checks
+    if (max(Ks) > J) {
+      stop("Cannot fit model(s) where the number of latent features (K) is larger than the number of segments (J=", J, ")")
+    }
+    
+    fitList <- allRes <- allLoss <- vector("list", length = length(Ks))
     bestConfigp <- allConfig <- NULL
     for (ii in seq_along(Ks)) {
         K_ii <- Ks[ii]
@@ -106,8 +108,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
         bestRes <- NULL
         bestBIC <- -Inf
         bestConfig <- aConf <- NULL
-        ## Z0 are initialized with the centered version of the data
-        Z0t <- initializeZt(Yc$Y1, Yc$Y2, K=K_ii, ...)
+        ## Z0 are now initialized on the uncentered version of the data Issue #65 
+        Z0t <- initializeZt(Y$Y1, Y$Y2, K=K_ii, ...)
         if (verbose) {
             mprintf("   + Parameter configuration: (%s)\n",
                     comma(colnames(configs)))
@@ -127,7 +129,7 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             ## THIS is the function that costs comme computation 
             if (verbose) mprintf("fused lasso")
             if (is.null(Y2)) cfg <- cfg["lambda1"]  ## Should this be an error?
-            res <- positiveFusedLasso(Y = Y, Zt = Z0t, lambda = cfg)
+            res <- positiveFusedLasso(Y = Y, Zt = Z0t, lambda = cfg, intercept = intercept)
             
             if (verbose) mprintf(", BIC = ")
             stats <- modelFitStatistics(Y = Reduce(`+`, Y), Yhat = res@E$Y,
@@ -140,7 +142,8 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             allRes[[K_ii]][[cc]] <- res
             allLoss[[K_ii]][[cc]] <- stats[["loss"]]
             
-            if (BIC > bestBIC) { ## BIC has improved: update best model
+            ## Handle when BIC is NA /HB 2019-03-02
+            if (is.finite(BIC) && BIC > bestBIC) { ## BIC has improved: update best model
                 bestRes <- res
                 bestBIC <- BIC
                 bestConfig <- aConf
@@ -149,8 +152,14 @@ fitC3co <- function(Y1, Y2=NULL, parameters.grid=NULL, warn=TRUE, ..., verbose=F
             if (verbose) mprintf("\n")
         }
 
-        fitList[[ii]] <- bestRes
-        bestConfigp <- rbind(bestConfigp, bestConfig)
+        ## Handle when BIC is NA /HB 2019-03-03
+        if (!is.null(bestRes)) {
+          fitList[[ii]] <- bestRes
+          bestConfigp <- rbind(bestConfigp, bestConfig)
+	} else {
+          bestConfigp <- rbind(bestConfigp, NA)
+	}
+	
         ## sanity check: minor CN < major CN in the best parameter
         ## configurations (not for all configs by default)
         if (!is.null(Y2) && warn) {

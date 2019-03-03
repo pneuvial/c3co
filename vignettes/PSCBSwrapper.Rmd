@@ -64,5 +64,5 @@ sessionInfo()
 ## References
 
 
-[c3co.data]: https://github.com/pneuvial/c3co-data
+[c3co.data]: https://github.com/pneuvial/c3co.data
 [PSCBS]: https://cran.r-project.org/package=PSCBS

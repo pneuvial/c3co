@@ -15,7 +15,7 @@ latex: false
 r_check_args: --as-cran
 
 r_github_packages:
-  - pneuvial/c3co-data
+  - pneuvial/c3co.data
   - veseshan/pctGCdata
   - mskcc/facets
   
@@ -34,6 +34,10 @@ matrix:
         - _R_CHECK_CONNECTIONS_LEFT_OPEN_=true
         - _R_CHECK_LENGTH_1_CONDITION_=true
         - _R_CHECK_LENGTH_1_LOGIC2_=true
+    - os: linux
+      r: devel
+      env:
+        - _R_RNG_VERSION_=3.5.2
 #    - os: osx
 #      r: oldrel
     - os: osx

@@ -4,8 +4,8 @@
 \alias{fitC3co}
 \title{c3co estimation from segment-level copy number data}
 \usage{
-fitC3co(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, ...,
-  verbose = FALSE)
+fitC3co(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE,
+  intercept = FALSE, ..., verbose = FALSE)
 }
 \arguments{
 \item{Y1, Y2}{Numeric n-by-J matrices containing segment-level copy numbers,
@@ -22,7 +22,10 @@ model.}
 \item{warn}{If \code{TRUE} and \code{Y1} is specified, then a warning is produced
 if \eqn{Z1 <= Z2} is not satisfied for a candidate number of subclones.}
 
-\item{\dots}{Further arguments to be passed to \code{\link[=positiveFusedLasso]{positiveFusedLasso()}}.}
+\item{intercept}{logical: should an intercept be included in the model?
+Defaults to \code{FALSE}.}
+
+\item{\dots}{Further arguments to be passed to \code{\link[=initializeZt]{initializeZt()}}.}
 
 \item{verbose}{A logical indicating whether to print extra information.
 Defaults to \code{FALSE}.}
@@ -54,9 +57,10 @@ seg <- segmentData(dat)
 
 ## Fit C3CO model
 l1 <- seq(from=1e-8, to=1e-5, length.out=5L)
-parameters.grid <- list(lambda1=l1, nb.arch=2:6)
+parameters.grid <- list(lambda1=l1, nb.arch=1:3)
 fitList <- fitC3co(t(seg$Y1), t(seg$Y2), parameters.grid=parameters.grid)
-fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid)
+## FIXME (cf Issue #67):
+## fitListC <- fitC3co(t(seg$Y), parameters.grid=parameters.grid) 
 
 
 ## A simpler example with toy data
@@ -65,7 +69,7 @@ J <- 6L   ## Number of segments
 n <- 20L  ## Number of samples
 
 l1 <- 1e-4
-candP <- 2:10
+candP <- 2:J
 parameters.grid <- list(lambda=l1, nb.arch=candP)
 
 dat <- getToyData(n=n, len=100L, nbClones=K, nbSegs=J, eps=0.2)  ## almost noiseless!

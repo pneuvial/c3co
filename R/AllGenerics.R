@@ -8,7 +8,7 @@ setMethod(
         str(object@Zt)
         cat("Weight matrix:\n")
         str(object@W)
-        cat("Intercept vector:\n")
+        cat("Intercept vectors:\n")
         str(object@mu)
         cat("Original signal:")
         str(object@Y)

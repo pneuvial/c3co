@@ -1,6 +1,6 @@
 Package: c3co
 Title: Cancer Cell Clonality using Copy-Number
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: c(person("Morgane", "Pierre-Jean", role = c("aut", "cre"),
                      email = "morgane.pierrejean@genopole.cnrs.fr"),
               person("Pierre", "Neuvial", role = "aut"),
@@ -16,11 +16,11 @@ Imports:
     glmnet,
     graphics,
     grDevices,
-    jointseg (>= 1.0.1),
+    jointseg (>= 1.0.2),
     limSolve,
     methods,
     Matrix,
-    matrixStats (>= 0.53.1),
+    matrixStats (>= 0.54.0),
     R.utils,
     RColorBrewer,
     stats,
@@ -32,7 +32,7 @@ Suggests:
     rmarkdown,
     testthat,
     PSCBS,
-    c3co.data (>= 0.0.2.9000),
+    c3co.data (>= 0.2.0),
     facets,
     pctGCdata,
     mclust,
@@ -40,7 +40,7 @@ Suggests:
 VignetteBuilder:
     knitr
 Remotes:
-    pneuvial/c3co-data,
+    pneuvial/c3co.data,
     mskcc/facets
 URL: https://github.com/pneuvial/c3co
 BugReports: https://github.com/pneuvial/c3co/issues

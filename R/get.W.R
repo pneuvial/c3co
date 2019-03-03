@@ -2,13 +2,16 @@
 #' 
 #' Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
 #' 
-#' @param Zt The transpose of Z where Z is a matrix with K rows (number of subclones) and J columns (number of segments) 
+#' @param Zt The transpose of Z where Z is a matrix with K rows (number of subclones) and M x J columns (number of signal x number of segments) 
 #' 
-#' @param Y a matrix with n rows (number of samples) and J columns (number of segments) 
+#' @param Y a matrix with n rows (number of samples) and M x J columns (number of signal x number of segments) 
+#'
+#' @param type integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package \pkg{quadprog}
 #'
 #' @return a matrix with n rows (number of samples) and K columns (number of subclones)
 #' 
 #' @examples 
+#' ## Example with M = 1 signal
 #' J <- 11L  ## Number of segments
 #' K <- 4L   ## Number of subclones
 #' n <- 4L   ## Number of samples
@@ -28,21 +31,26 @@
 #' What <- c3co:::get.W(t(Z), Y)
 #' 
 #' @importFrom limSolve lsei
-get.W <- function(Zt, Y) {
+get.W <- function(Zt, Y, type = 1L) { # partial fix to #58
   K <- ncol(Zt)
   n <- nrow(Y)
   
   ## Sanity checks
   stop_if_not(ncol(Y) == nrow(Zt))
-
+  stop_if_not(K <= ncol(Y))
+  
   E <- matrix(rep(1, times = K), nrow = 1L, ncol = K)
   H <- double(K)
   G <- diag(K)
 
+  converged <- TRUE # check if the problem is solvable
   W <- apply(Y, MARGIN = 1L, FUN = function(y) {
-    lsei(A = Zt, B = y, E = E, F = 1, H = H, G = G, type = 2L)$X
+    lsei_out <- lsei(A = Zt, B = y, E = E, F = 1, H = H, G = G, type = type)
+    converged <<- !lsei_out$IsError
+    lsei_out$X
   })
-  
+  if (!converged) return(matrix(NA, n, K))
+    
   ## WORKAROUND: https://github.com/pneuvial/c3co/issues/52
   if (K == 1L) {
     dim(W) <- c(n, K)
