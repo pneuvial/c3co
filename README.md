@@ -4,6 +4,10 @@
 
 # c3co: Inferring cancer cell clonality from copy number data
 
+
+_WARNING 2019-03-03: The **c3co** package is under heavy development._
+
+
 ## Installation
 
 ```r

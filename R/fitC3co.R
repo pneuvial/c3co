@@ -98,7 +98,7 @@ fitC3co <- function(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, intercep
       stop("Cannot fit model(s) where the number of latent features (K) is larger than the number of segments (J=", J, ")")
     }
     
-    fitList <- allRes <- allLoss <- list()
+    fitList <- allRes <- allLoss <- vector("list", length = length(Ks))
     bestConfigp <- allConfig <- NULL
     for (ii in seq_along(Ks)) {
         K_ii <- Ks[ii]
@@ -142,6 +142,7 @@ fitC3co <- function(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, intercep
             allRes[[K_ii]][[cc]] <- res
             allLoss[[K_ii]][[cc]] <- stats[["loss"]]
             
+            ## Handle when BIC is NA /HB 2019-03-02
             if (is.finite(BIC) && BIC > bestBIC) { ## BIC has improved: update best model
                 bestRes <- res
                 bestBIC <- BIC
@@ -151,8 +152,14 @@ fitC3co <- function(Y1, Y2 = NULL, parameters.grid = NULL, warn = TRUE, intercep
             if (verbose) mprintf("\n")
         }
 
-        fitList[[ii]] <- bestRes
-        bestConfigp <- rbind(bestConfigp, bestConfig)
+        ## Handle when BIC is NA /HB 2019-03-03
+        if (!is.null(bestRes)) {
+          fitList[[ii]] <- bestRes
+          bestConfigp <- rbind(bestConfigp, bestConfig)
+	} else {
+          bestConfigp <- rbind(bestConfigp, NA)
+	}
+	
         ## sanity check: minor CN < major CN in the best parameter
         ## configurations (not for all configs by default)
         if (!is.null(Y2) && warn) {
