@@ -38,16 +38,16 @@ test_that("get.Z recovers Z in (almost) noiseless situations for small lambda", 
             
             for (lambda in lambdas) {
                 if (M == 1) {
-                    Z1that <- get.Zt(Y, lambda = lambda, W = W, WtWm1 = WtWm1)
+                    Z1that <- c3co:::get.Zt(Y, lambda = lambda, W = W, WtWm1 = WtWm1)
                     Z1hat <- t(Z1that)
                     expect_lt(max((Z - Z1hat)^2), tol)
                 } else {
                     expect_equal(M, 2)
-                    Z1that <- get.Zt(Y[[1]], lambda = lambda, W = W, WtWm1 = WtWm1)
+                    Z1that <- c3co:::get.Zt(Y[[1]], lambda = lambda, W = W, WtWm1 = WtWm1)
                     Z1hat <- t(Z1that)
                     expect_lt(max((Z[[1]] - Z1hat)^2), tol)
                     
-                    Z2that <- get.Zt(Y[[2]], lambda = lambda, W = W, WtWm1 = WtWm1)
+                    Z2that <- c3co:::get.Zt(Y[[2]], lambda = lambda, W = W, WtWm1 = WtWm1)
                     Z2hat <- t(Z2that)
                     expect_lt(max((Z[[2]] - Z2hat)^2), tol)
                 }
