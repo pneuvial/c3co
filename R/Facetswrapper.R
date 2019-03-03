@@ -8,7 +8,7 @@
 #' @return A data frame under PSCBS format.
 #'
 #' @export
-loadFacetsdata <- function(path, pattern = "[.]csv[.]gz$") {
+loadFACETSdata <- function(path, pattern = "[.]csv[.]gz$") {
     pathnames <- list.files(path, pattern = pattern, full.names = TRUE)
     dat <- lapply(pathnames, FUN=function(ff) {
         df <- facets::readSnpMatrix(ff)
@@ -39,20 +39,20 @@ loadFacetsdata <- function(path, pattern = "[.]csv[.]gz$") {
 #' if (require("facets", quietly=TRUE)) {
 #' \dontrun{
 #' path <- system.file("extdata", package = "facets")
-#' segDat <- Facetswrapper(path, stat = "TCN")
+#' segDat <- FACETSwrapper(path, stat = "TCN")
 #' print(segDat)
 #' resc3co <- c3co(NULL, segDat = segDat)
 #' }
 #' }
 #'
 #' @export
-Facetswrapper <- function(path, stat) {
+FACETSwrapper <- function(path, stat) {
     if (!requireNamespace("facets", quietly=TRUE)) {
       stop("Package 'facets' needed. See https://github.com/mskcc/facets",
            call. = FALSE)
     }
     ### To do may be cut this function into several function
-    dat <- loadFacetsdata(path)
+    dat <- loadFACETSdata(path)
     if (length(dat) == 0L) {
         stop("Found no FACETS data file in folder: ", sQuote(path))
     }

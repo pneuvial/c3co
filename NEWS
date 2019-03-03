@@ -1,7 +1,7 @@
 Package: c3co
 =============
 
-Version: 0.3.0-9000 [2019-02-21]
+Version: 0.3.0-9000 [2019-03-02]
 
  * ...
  
@@ -12,6 +12,9 @@ SIGNIFICANT CHANGES:
    
  * positiveFusedLasso() and fitC3co() gained argument 'intercept' to control 
    whether a normal subclone should be modelled or not.
+
+ * Renamed loadFacetsdata() and Facetswrapper() to loadFACETSdata() and
+   FACETSwrapper().
 
 SOFTWARE QUALITY:
 
