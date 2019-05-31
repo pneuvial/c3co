@@ -2,10 +2,16 @@
 % Please edit documentation in R/c3co.R
 \name{c3co}
 \alias{c3co}
+\alias{c3co.list}
+\alias{c3co.NULL}
 \title{Cancer subclone inference}
 \usage{
-c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"),
-  segDat = NULL, ..., verbose = FALSE)
+c3co(dat, ...)
+
+\method{c3co}{list}(dat, parameters.grid = NULL, stat = c("C1C2",
+  "TCN"), segDat = NULL, ..., verbose = FALSE)
+
+\method{c3co}{NULL}(dat, ...)
 }
 \arguments{
 \item{dat}{A list of data frames for each patient, each of them of the form:
@@ -15,6 +21,8 @@ c3co(dat, parameters.grid = NULL, stat = c("C1C2", "TCN"),
 \item{\code{pos}}{Position on the genome}
 \item{\code{chr}}{Chromosome}
 }}
+
+\item{\dots}{Further arguments to be passed to \code{\link[=fitC3co]{fitC3co()}}.}
 
 \item{parameters.grid}{Is a list composed of : the penalty coefficients
 named either \code{lambda}, \code{lambda1} and \code{lambda2}. For the model on minor and
@@ -29,8 +37,6 @@ of features in the model.}
 \item{segDat}{Either a path to the file that contains segmentation
 (\file{*.rds} file), by default \code{NULL}, or a file that contains segmentation
 (e.g. from \code{\link[=segmentData]{segmentData()}}).}
-
-\item{\dots}{Further arguments to be passed to \code{\link[=fitC3co]{fitC3co()}}.}
 
 \item{verbose}{A logical value indicating whether to print extra
 information. Defaults to \code{FALSE}.}

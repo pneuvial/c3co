@@ -1,9 +1,11 @@
 Package: c3co
 =============
 
-Version: 0.4.0-9000 [2019-03-03]
+Version: 0.4.0-9000 [2019-05-31]
 
- * ...
+NEW FEATURES:
+
+ * c3co() is now a generic function with S3 methods for lists and NULL.
  
 
 Version: 0.4.0 [2019-03-03]

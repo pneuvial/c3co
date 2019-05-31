@@ -51,7 +51,12 @@
 #' ## FIXME: resC <- c3co(dat, stat="TCN", parameters.grid =parameters.grid)
 #' @importFrom methods new
 #' @export
-c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
+c3co <- function(dat, ...) UseMethod("c3co")
+
+
+#' @rdname c3co
+#' @export
+c3co.list <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
                  segDat=NULL, ..., verbose=FALSE) {
     ## Sanity checks
     stat <- match.arg(stat)
@@ -135,3 +140,13 @@ c3co <- function(dat, parameters.grid=NULL, stat=c("C1C2", "TCN"),
     
     reslist
 }
+
+
+#' @rdname c3co
+#' @export
+c3co.NULL <- function(dat, ...) {
+  ## AD HOC: Why do we get c3co(NULL) and what is it really supposed
+  ## to return. /HB 2019-05-31
+  c3co.list(dat, ...)
+}
+
