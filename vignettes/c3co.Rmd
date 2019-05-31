@@ -205,4 +205,4 @@ sessionInfo()
 
 [acnr]: https://cran.r-project.org/package=acnr
 [FLLat]: https://cran.r-project.org/package=FLLat
-[PyCGH]: http://slipguru.disi.unige.it/Software/PyCGH/
+[PyCGH]: https://github.com/slipguru/PyCGH
