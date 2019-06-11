@@ -9,7 +9,7 @@ test_that("Consistency of get.W", {
   J <- ncol(reference_data$Y)
   
   ## solving with c3co (limSolve)
-  W_c3co <- c3co:::get.W(t(reference_data$Z), reference_data$Y)  
+  W_c3co <- c3co:::get.W(t(reference_data$Z), reference_data$Y, nu = 0)  
     
   expect_lt(sum((reference_data$W_hat_ref - W_c3co)^2), 1e-10)
 })

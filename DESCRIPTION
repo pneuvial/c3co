@@ -17,7 +17,7 @@ Imports:
     graphics,
     grDevices,
     jointseg (>= 1.0.2),
-    limSolve,
+    quadprog,
     methods,
     Matrix,
     matrixStats (>= 0.54.0),
