@@ -51,8 +51,6 @@ get.W <- function(Zt, Y, nu = 1e-8) {
       w
   })
 
-  if (!converged) return(matrix(NA_real_, nrow=n, ncol=K))
-
   ## WORKAROUND: https://github.com/pneuvial/c3co/issues/52
   if (K == 1L) {
     dim(W) <- c(n, K)
