@@ -7,12 +7,6 @@ NEW FEATURES:
 
  * c3co() is now a generic function with S3 methods for lists and NULL.
 
-PERFORMANCE:
-
- * MEMORY: If not converged, get.W() would return a logical (NA) matrix
-   instead of a numeric (NA_real_) matrix, which resulted in a unnecessary
-   coercion from logical to numeric.
-
 
 Version: 0.4.0 [2019-03-03]
  
