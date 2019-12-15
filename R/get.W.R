@@ -49,7 +49,7 @@ get.W <- function(Zt, Y, type = 1L) { # partial fix to #58
     converged <<- !lsei_out$IsError
     lsei_out$X
   })
-  if (!converged) return(matrix(NA, n, K))
+  if (!converged) return(matrix(NA_real_, nrow=n, ncol=K))
     
   ## WORKAROUND: https://github.com/pneuvial/c3co/issues/52
   if (K == 1L) {
