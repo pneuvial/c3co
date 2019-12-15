@@ -1,12 +1,12 @@
 #' Get the matrix of weights W for fixed values of the subclones Z and data Y
 #' 
-#' Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
+#' Optimisation is done by solving a least square problem with equality + inequality constraint thanks to the \pkg{quadprog} package
 #' 
 #' @param Zt The transpose of Z where Z is a matrix with K rows (number of subclones) and M x J columns (number of signal x number of segments) 
 #' 
 #' @param Y a matrix with n rows (number of samples) and M x J columns (number of signal x number of segments) 
-#'
-#' @param type integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package \pkg{quadprog}
+#' 
+#' @param nu positive double standing for ridge regularization in the quadratic programming solver. Default is 1e-8.
 #'
 #' @return a matrix with n rows (number of samples) and K columns (number of subclones)
 #' 
@@ -30,27 +30,29 @@
 #'
 #' What <- c3co:::get.W(t(Z), Y)
 #' 
-#' @importFrom limSolve lsei
-get.W <- function(Zt, Y, type = 1L) { # partial fix to #58
+#' @importFrom quadprog solve.QP
+get.W <- function(Zt, Y, nu = 1e-8) {
   K <- ncol(Zt)
   n <- nrow(Y)
   
   ## Sanity checks
   stop_if_not(ncol(Y) == nrow(Zt))
   stop_if_not(K <= ncol(Y))
-  
-  E <- matrix(rep(1, times = K), nrow = 1L, ncol = K)
-  H <- double(K)
-  G <- diag(K)
 
-  converged <- TRUE # check if the problem is solvable
+  ## Definition od the quadratic program
+  Dmat <- crossprod(Zt) + diag(nu, ncol = K, nrow = K)
+  Amat <- cbind(rep(1L, times = K), diag(1L, ncol = K, nrow = K))
+  bvec <- c(1.0, double(K))
+
   W <- apply(Y, MARGIN = 1L, FUN = function(y) {
-    lsei_out <- lsei(A = Zt, B = y, E = E, F = 1, H = H, G = G, type = type)
-    converged <<- !lsei_out$IsError
-    lsei_out$X
+      dvec <- crossprod(Zt, y)
+      w <- solve.QP(Dmat, dvec, Amat, bvec, meq = 1)$solution
+      w[abs(w) < sqrt(.Machine$double.eps)] <- 0
+      w
   })
+
   if (!converged) return(matrix(NA_real_, nrow=n, ncol=K))
-    
+
   ## WORKAROUND: https://github.com/pneuvial/c3co/issues/52
   if (K == 1L) {
     dim(W) <- c(n, K)

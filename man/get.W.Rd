@@ -4,20 +4,20 @@
 \alias{get.W}
 \title{Get the matrix of weights W for fixed values of the subclones Z and data Y}
 \usage{
-get.W(Zt, Y, type = 1L)
+get.W(Zt, Y, nu = 1e-08)
 }
 \arguments{
 \item{Zt}{The transpose of Z where Z is a matrix with K rows (number of subclones) and M x J columns (number of signal x number of segments)}
 
 \item{Y}{a matrix with n rows (number of samples) and M x J columns (number of signal x number of segments)}
 
-\item{type}{integer code determining algorithm to use 1=lsei, 2=solve.QP from R-package \pkg{quadprog}}
+\item{nu}{positive double standing for ridge regularization in the quadratic programming solver}
 }
 \value{
 a matrix with n rows (number of samples) and K columns (number of subclones)
 }
 \description{
-Optimisation is done by solving a least square problem with inequality constraint thanks to \pkg{lsei} package
+Optimisation is done by solving a least square problem with equality + inequality constraint thanks to the \pkg{quadprog} package
 }
 \examples{
 ## Example with M = 1 signal
