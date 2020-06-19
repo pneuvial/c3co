@@ -11,7 +11,7 @@ _WARNING 2019-03-03: The **c3co** package is under heavy development._
 ## Installation
 
 ```r
-remotes::install_github("pneuvial/c3co", build_vignettes = TRUE)
+remotes::install_github("pneuvial/c3co", ref="master", build_vignettes = TRUE)
 ```
 
 ## Model 
